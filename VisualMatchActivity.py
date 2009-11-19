@@ -43,6 +43,7 @@ import locale
 import os.path
 
 from sprites import *
+from namingalert import NamingAlert
 import window
 
 SERVICE = 'org.sugarlabs.VisualMatchActivity'
@@ -74,7 +75,7 @@ class VisualMatchActivity(activity.Activity):
             toolbar_box.toolbar.insert(self.button1, -1)
             self.button1.show()
 
-            # 3x3 Button
+            # Button 2
             self.button2 = ToolButton( "button2on" )
             self.button2.set_tooltip(_('Button 2'))
             self.button2.props.sensitive = True
@@ -94,14 +95,36 @@ class VisualMatchActivity(activity.Activity):
             toolbar_box.toolbar.insert(results_toolitem,-1)
 
             separator = gtk.SeparatorToolItem()
+            separator.props.draw = True
+            separator.set_expand(False)
+            separator.show()
+            toolbar_box.toolbar.insert(separator, -1)
+
+            self.button3 = ToolButton( "button3on" )
+            self.button3.set_tooltip(_('Button 3'))
+            self.button3.props.sensitive = True
+            self.button3.connect('clicked', self._button3_cb)
+            toolbar_box.toolbar.insert(self.button3, -1)
+            self.button3.show()
+
+            separator = gtk.SeparatorToolItem()
             separator.props.draw = False
             separator.set_expand(True)
             separator.show()
             toolbar_box.toolbar.insert(separator, -1)
 
+            # Write in the Journal
+            journal_button = ToolButton( "journal-write" )
+            journal_button.set_tooltip(_('Write in Journal'))
+            journal_button.props.accelerator = '<Ctrl>j'
+            journal_button.connect('clicked', self._journal_cb, 
+                                   activity.get_bundle_path())
+            toolbar_box.toolbar.insert(journal_button, -1)
+            journal_button.show()
+
             # The ever-present Stop Button
             stop_button = StopButton(self)
-            stop_button.props.accelerator = '<Ctrl>Q'
+            stop_button.props.accelerator = '<Ctrl>q'
             toolbar_box.toolbar.insert(stop_button, -1)
             stop_button.show()
 
@@ -164,6 +187,20 @@ class VisualMatchActivity(activity.Activity):
         self.button2.set_icon("button2on")
         self.metadata['status'] = "two"
         # do something here
+
+    def _button3_cb(self, button):
+        self.show_button2()
+        return True
+
+    def show_button3(self):
+        self.button3.set_icon("button2on")
+
+    def _journal_cb(self, button, path):
+        title_alert = NamingAlert(self, path)
+        title_alert.set_transient_for(self.get_toplevel())
+        title_alert.show()
+        self.reveal()
+        return True
 
     """
     Write the additional status to the Journal
