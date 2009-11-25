@@ -152,7 +152,7 @@ class VisualMatchActivity(activity.Activity):
         # Initialize the canvas
         self.tw = window.new_window(canvas, \
                                     os.path.join(activity.get_bundle_path(), \
-                                                 'images/card'), \
+                                                 'images/card-'), \
                                     self)
 
         # Read the mode from the Journal

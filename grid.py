@@ -35,17 +35,28 @@ class Grid:
         self.grid = []
         # create the deck of cards
         self.deck = {}
-        # stuff to keep around for the graphics
-        self.w = tw.width
-        self.h = tw.height
-        self.d = tw.card_dim
-        self.s = tw.scale
+        # remember the position in the deck
+        self.index = 0
+        # how many cards are in the deck?
+        self.count = 0
+
         # Initialize the deck of cards
         # some loop through all the patterns
-        # self.deck[i] = Card(tw,pattern)
+        for shape in range(1,4):
+            for color in range(1,5):
+                for num in range(1,4):
+                    for fill in range(1,4):
+                        pattern.shape = shape
+                        pattern.color = color
+                        pattern.num = num
+                        pattern.fill = fill
+                        self.deck[self.count] = Card(tw,pattern)
+                        self.count += 1
+
+        self.shuffle()
 
     # shuffle the deck
-    def shuffle(self,tw):
+    def shuffle(self):
         return
 
     # initial layout of 12 cards on the table

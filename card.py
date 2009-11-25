@@ -1,4 +1,5 @@
 #Copyright (c) 2009, Walter Bender
+#Copyright (c) 2009, Michele Pratusevich
 
 #Permission is hereby granted, free of charge, to any person obtaining a copy
 #of this software and associated documentation files (the "Software"), to deal
@@ -28,22 +29,38 @@ from sprites import *
 
 #
 # class for defining individual cards
+# tw - image related
+# pattern - game logic related
+# card index is generated in the following loop:
+"""
+        for shape in range(1,4):
+            for color in range(1,5):
+                for num in range(1,4):
+                    for fill in range(1,4):
+"""
 #
 class Card:
-    def __init__(self,tw,pattern):
-        # what do we need to know about each card?
-        # self.??? = ???
-        # create sprite from svg file
-        self.spr = sprNew(tw, 0, 0,\
-                          self.load_image(tw.path,tw.card_dim*tw.scale))
-        self.spr.label = ""
+   def __init__(self,tw,pattern):
+       # what do we need to know about each card?
+       self.shape = pattern.shape
+       self.color = pattern.color
+       self.num = pattern.num
+       self.fill = pattern.fill
+       self.index = self.shape*4*3*3+self.color*3*3+self.num*3+self.fill
+       # create sprite from svg file
+       self.spr = sprNew(tw, 0, 0,\
+                         self.load_image(tw.path+str(self.index),tw.card_w*tw.scale,
+                                         tw.card_h*tw.scale))
+       self.spr.label = ""
 
-    def draw_card(self):
-        setlayer(self.spr,2000)
-        draw(self.spr)
 
-    def load_image(self, file, wh):
-        return gtk.gdk.pixbuf_new_from_file_at_size(os.path.join(file + \
-                                                                 '.svg'), \
-                                                    int(wh), int(wh))
+
+   def draw_card(self):
+       setlayer(self.spr,2000)
+       draw(self.spr)
+
+   def load_image(self, file, w, h):
+       return gtk.gdk.pixbuf_new_from_file_at_size(os.path.join(file + \
+                                                                '.svg'), \
+                                                   int(w), int(h))
 
