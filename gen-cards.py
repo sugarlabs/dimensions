@@ -37,24 +37,29 @@ fill_styles = ("none","gradient","solid")
 
 card_types = ("X","O","C")
 
-def header(f, w, h):
+def background(f):
+    f.write("<rect width=\"74.5\" height=\"124.5\" rx=\"11\" ry=\"9\" x=\"0.25\" y=\"0.25\"\n")
+    f.write("style=\"fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-width:0.5\" />\n")
+
+def header(f):
     f.write("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>\n")
     f.write("<!-- Created with Emacs -->\n")
     f.write("<svg\n")
     f.write("   xmlns:svg=\"http://www.w3.org/2000/svg\"\n")
     f.write("   xmlns=\"http://www.w3.org/2000/svg\"\n")
     f.write("   version=\"1.0\"\n")
-    f.write("   width=\"" + str(w) + "\"\n")
-    f.write("   height=\"" + str(h) + "\">\n")
-    f.write("  <g>\n")
+    f.write("   width=\"75\"\n")
+    f.write("   height=\"125\">\n")
+    background(f)
+    f.write("<g>\n")
 
 def footer(f):
-    f.write("  </g>\n")
+    f.write("</g>\n")
     f.write("</svg>\n")
 
 def circle(f, y, style, stroke, fill):
     f.write("<circle cx=\"27\" cy=\"11\" r=\"8\"\n")
-    f.write("   transform=\"matrix(1.9,0,0,1.9,-25," + str(y) + ")\"\n")
+    f.write("   transform=\"matrix(1.9,0,0,1.9,-15," + str(y) + ")\"\n")
     if style == "none":
         f.write("   style=\"fill:#FFFFFF;stroke:" + stroke + \
               ";stroke-width:1.8;\" />\n")
@@ -65,13 +70,13 @@ def circle(f, y, style, stroke, fill):
         f.write("   style=\"fill:" + stroke + ";stroke:" + stroke + \
               ";stroke-width:1.8;\" />\n")
     f.write("<circle cx=\"27\" cy=\"11\" r=\"8\"\n")
-    f.write("   transform=\"matrix(0.9,0,0,0.9,2.5," + str(y+11) + ")\"\n")
+    f.write("   transform=\"matrix(0.9,0,0,0.9,12.5," + str(y+11) + ")\"\n")
     f.write("   style=\"fill:#FFFFFF;stroke:" + stroke + \
             ";stroke-width:3.5;\" />\n")
 
 def check(f, y, style, stroke, fill):
     f.write("<path d=\"m 28.3575,70.160499 -5.861,5.861 -5.861,-5.866001 -4.102,-4.1 c -0.747,-0.747999 -1.212,-1.784999 -1.212,-2.93 0,-2.288998 1.854,-4.145998 4.146,-4.145998 1.143,0 2.18,0.465 2.93,1.214 l 4.099,4.101999 14.102,-14.102998 c 0.754,-0.749 1.787,-1.214 2.934,-1.214 2.289,0 4.146,1.856001 4.146,4.145001 0,1.146 -0.467,2.18 -1.217,2.932 l -14.104,14.104997 z\"\n")
-    f.write("   transform=\"translate(0," + str(y-40) + ")\"\n")
+    f.write("   transform=\"translate(10," + str(y-40) + ")\"\n")
     if style == "none":
         f.write("   style=\"fill:#FFFFFF;stroke:" + stroke + \
               ";stroke-width:1.8;\" />\n")
@@ -84,7 +89,7 @@ def check(f, y, style, stroke, fill):
 
 def cross(f, y, style, stroke, fill):
     f.write("<path d=\"m 33.3585,62.5035 10.102,10.1 c 0.752,0.75 1.217,1.783 1.217,2.932 0,2.287 -1.855,4.143 -4.146,4.143 -1.145,0 -2.178,-0.463 -2.932,-1.211 l -10.102,-10.103 -10.1,10.1 c -0.75,0.75 -1.787,1.211 -2.934,1.211 -2.284,0 -4.143,-1.854 -4.143,-4.141 0,-1.146 0.465,-2.184 1.212,-2.934 l 10.104,-10.102 -10.102,-10.1 c -0.747,-0.748 -1.212,-1.785 -1.212,-2.93 0,-2.289 1.854,-4.146 4.146,-4.146 1.143,0 2.18,0.465 2.93,1.214 l 10.099,10.102 10.102,-10.103 c 0.754,-0.749 1.787,-1.214 2.934,-1.214 2.289,0 4.146,1.856 4.146,4.145 0,1.146 -0.467,2.18 -1.217,2.932 l -10.104,10.105 z\"\n")
-    f.write("   transform=\"translate(0," + str(y-40) + ")\"\n")
+    f.write("   transform=\"translate(10," + str(y-40) + ")\"\n")
     if style == "none":
         f.write("   style=\"fill:#FFFFFF;stroke:" + stroke + \
               ";stroke-width:1.8;\" />\n")
@@ -141,7 +146,7 @@ for t in card_types:
             for s in fill_styles:
                 i += 1
                 f = open_file(i)
-                header(f,55,125)
+                header(f)
                 if t == "O":
                     circle_card(f,n,s,c[0],c[1])
                 elif t == "C":
