@@ -22,6 +22,7 @@ import pygtk
 pygtk.require('2.0')
 import gtk
 import gobject
+import random
 
 from sprites import *
 from card import *
@@ -69,6 +70,16 @@ class Grid:
 
     # shuffle the deck
     def shuffle(self):
+        for n in range(0,532):
+            i = random.randrange(108)
+            j = random.randrange(108)
+            self.swap_cards(i,j)            
+        return
+
+    def swap_cards(self,i,j):
+        tmp = self.deck[j]
+        self.deck[j] = self.deck[i]
+        self.deck[i] = tmp
         return
 
     # initial layout of 12 cards on the table
