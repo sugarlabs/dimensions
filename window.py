@@ -71,7 +71,7 @@ def new_window(canvas, path, parent=None):
    tw.height = gtk.gdk.screen_height()-GRID_CELL_SIZE
    tw.card_w = CARD_W
    tw.card_h = CARD_H
-   tw.scale = 0.8 * tw.height/(tw.card_dim*3)
+   tw.scale = 0.8 * tw.height/(tw.card_h*3)
    tw.area = tw.canvas.window
    tw.gc = tw.area.new_gc()
    tw.cm = tw.gc.get_colormap()
@@ -80,7 +80,6 @@ def new_window(canvas, path, parent=None):
 
    # make the cards, the deck and start playing...
    tw.deck = Grid(tw)
-   tw.deck.shuffle(tw)
    tw.deck.start(tw)
 
    # Start doing something

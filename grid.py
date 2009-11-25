@@ -42,18 +42,30 @@ class Grid:
 
         # Initialize the deck of cards
         # some loop through all the patterns
-        for shape in range(1,4):
-            for color in range(1,5):
-                for num in range(1,4):
-                    for fill in range(1,4):
-                        pattern.shape = shape
-                        pattern.color = color
-                        pattern.num = num
-                        pattern.fill = fill
-                        self.deck[self.count] = Card(tw,pattern)
+        for shape in range(0,3):
+            for color in range(0,4):
+                for num in range(0,3):
+                    for fill in range(0,3):
+                        self.deck[self.count] = Card(tw,shape,color,num,fill)
                         self.count += 1
 
+        # shuffle the deck
         self.shuffle()
+
+        # layout the initial 12 cards from the deck
+        # find upper left corner of grid
+        x = int((tw.width-(tw.card_w*5.5*tw.scale))/2)
+        y = int((tw.height-(tw.card_h*3*tw.scale))/2)
+        for r in range(0,3):
+            for c in range(0,4):
+                print "dealing card " + str(self.index)
+                self.deck[self.index].spr.x = x
+                self.deck[self.index].spr.y = y
+                self.deck[self.index].draw_card()
+                self.index += 1
+                x += int(tw.card_w*1.5*tw.scale)
+            x = int((tw.width-(tw.card_w*5.5*tw.scale))/2)
+            y += int(tw.card_h*tw.scale)
 
     # shuffle the deck
     def shuffle(self):

@@ -33,20 +33,20 @@ from sprites import *
 # pattern - game logic related
 # card index is generated in the following loop:
 """
-        for shape in range(1,4):
-            for color in range(1,5):
-                for num in range(1,4):
-                    for fill in range(1,4):
+        for shape in range(0,3):
+            for color in range(0,4):
+                for num in range(0,3):
+                    for fill in range(0,3):
 """
 #
 class Card:
-   def __init__(self,tw,pattern):
+   def __init__(self,tw,shape,color,num,fill):
        # what do we need to know about each card?
-       self.shape = pattern.shape
-       self.color = pattern.color
-       self.num = pattern.num
-       self.fill = pattern.fill
-       self.index = self.shape*4*3*3+self.color*3*3+self.num*3+self.fill
+       self.shape = shape
+       self.color = color
+       self.num = num
+       self.fill = fill
+       self.index = self.shape*4*3*3+self.color*3*3+self.num*3+self.fill+1
        # create sprite from svg file
        self.spr = sprNew(tw, 0, 0,\
                          self.load_image(tw.path+str(self.index),tw.card_w*tw.scale,
