@@ -1,0 +1,14 @@
+<?xml version="1.0" ?><!DOCTYPE svg  PUBLIC '-//W3C//DTD SVG 1.1//EN'  'http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd' [
+	<!ENTITY stroke_color "#666666">
+	<!ENTITY fill_color "#ffffff">
+]><svg enable-background="new 0 0 55 55" height="55px" id="Layer_1" version="1.1" viewBox="0 0 55 55" width="55px" x="0px" xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" y="0px"><g display="block" id="activity-journal">
+	<path d="M45.866,44.669   c0,2.511-1.528,4.331-4.332,4.331H12.077V6h29.458c2.15,0,4.332,2.154,4.332,4.33L45.866,44.669L45.866,44.669z" fill="&fill_color;" stroke="&stroke_color;" stroke-linecap="round" stroke-linejoin="round" stroke-width="3.5"/>
+	
+		<line fill="none" stroke="&stroke_color;" stroke-linecap="round" stroke-linejoin="round" stroke-width="3.5" x1="21.341" x2="21.341" y1="6.121" y2="48.881"/>
+	<path d="M7.384,14.464   c0,0,2.084,0.695,4.17,0.695c2.086,0,4.173-0.695,4.173-0.695" fill="none" stroke="&stroke_color;" stroke-linecap="round" stroke-linejoin="round" stroke-width="3.5"/>
+	<path d="M7.384,28.021   c0,0,1.912,0.695,4.345,0.695s3.999-0.695,3.999-0.695" fill="none" stroke="&stroke_color;" stroke-linecap="round" stroke-linejoin="round" stroke-width="3.5"/>
+	<path d="M7.384,41.232   c0,0,1.736,0.695,4.518,0.695c2.781,0,3.825-0.695,3.825-0.695" fill="none" stroke="&stroke_color;" stroke-linecap="round" stroke-linejoin="round" stroke-width="3.5"/>
+</g>
+<path d="m 43.819706,15.72449 -10.192,13.495 -2.088,2.717 -3.475,8.266 c -0.046,0.104 -0.018,0.223 0.069,0.295 0.089,0.072 0.211,0.084 0.307,0.02 l 7.826,-5.037 c 0.011,-0.008 0.011,-0.027 0.022,-0.043 0.065,-0.049 0.142,-0.092 0.196,-0.162 0.003,-0.002 0.034,-0.041 0.034,-0.049 l 1.831,-2.271 5.469,-7.054 8.011,-10.329 c 0.022,-0.023 0.149,-0.203 0.149,-0.203 0.096,-0.161 0.148,-0.345 0.148,-0.556 0,-0.061 0,-0.118 -0.012,-0.176 -0.087,-0.763 -0.715,-1.682 -1.639,-2.413 -0.923,-0.728 -1.969,-1.123 -2.728,-1.034 -0.326,0.042 -0.789,0.375 -0.789,0.375 l -3.139,4.159 z"
+     style="fill:&fill_color;;stroke:&stroke_color;;stroke-width:3.5" />
+</svg>
