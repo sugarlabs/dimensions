@@ -142,9 +142,7 @@ def _button_release_cb(win, event, tw):
            else:
                print "selected card not found"
            i = tw.clicked.index(a)
-           print "filling slot " + str(i)
            tw.clicked[i] = spr
-           print "using selection mask " + str(i)
            tw.selected[i].spr.x = spr.x
            tw.selected[i].spr.y = spr.y
            tw.selected[i].draw_card()
@@ -159,12 +157,16 @@ def _button_release_cb(win, event, tw):
        if set_check([tw.deck.spr_to_card(tw.clicked[0]),
                      tw.deck.spr_to_card(tw.clicked[1]),
                      tw.deck.spr_to_card(tw.clicked[2])]):
-           print "found a set"
+           tw.activity.results_label.set_text(_("found a set"))
+           # remove the set
+
+           # draw three new cards from the deck
+
        else:
-           print "not a set"
+           tw.activity.results_label.set_text(_("not a set"))
+
        print "reseting board"
-       for a in tw.clicked:
-           a = None
+       tw.clicked = [None, None, None]
        for a in tw.selected:
            a.hide_card()
    return True
@@ -191,11 +193,10 @@ def _destroy_cb(win, event, tw):
 
 #
 # Check whether three cards are a set based on the criteria that
-# in all characteristics, either all cards are the same of all cards are different
+# in all characteristics:
+# either all cards are the same of all cards are different
 #
-
 def set_check(cardarray):
-   print cardarray
    for a in cardarray:
        if a is None:
            return False

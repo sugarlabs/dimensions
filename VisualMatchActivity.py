@@ -88,7 +88,7 @@ class VisualMatchActivity(activity.Activity):
             toolbar_box.toolbar.insert(separator, -1)
 
             # Label for showing status
-            self.results_label = gtk.Label(_("say something here"))
+            self.results_label = gtk.Label(_("look for a set"))
             self.results_label.show()
             results_toolitem = gtk.ToolItem()
             results_toolitem.add(self.results_label)
