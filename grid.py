@@ -50,16 +50,14 @@ class Grid:
                         self.deck[self.count] = Card(tw,shape,color,num,fill)
                         self.count += 1
 
-        # shuffle the deck
-        self.shuffle()
-
+    def deal(self, tw):
         # layout the initial 12 cards from the deck
         # find upper left corner of grid
         x = int((tw.width-(tw.card_w*5.5*tw.scale))/2)
         y = int((tw.height-(tw.card_h*3*tw.scale))/2)
         for r in range(0,3):
             for c in range(0,4):
-                print "dealing card " + str(self.index)
+                # print "dealing card " + str(self.index)
                 self.deck[self.index].spr.x = x
                 self.deck[self.index].spr.y = y
                 self.deck[self.index].draw_card()
@@ -82,16 +80,12 @@ class Grid:
         self.deck[i] = tmp
         return
 
-    # initial layout of 12 cards on the table
-    def start(self, tw):
-        return
+    # given a spr, find the corresponding card in the deck
+    def spr_to_card(self, spr):
+        for c in self.deck:
+            if self.deck[c].spr == spr:
+                return self.deck[c]
+        return None
 
-    # draw a card from the deck
-    def draw_a_card(self, tw):
-        return
-
-    # find a set
-    def find_a_set(self, tw):
-        return
 
 

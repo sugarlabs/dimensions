@@ -38,29 +38,38 @@ from sprites import *
                 for num in range(0,3):
                     for fill in range(0,3):
 """
+# if shape == -1 then generate special card-selected overlay
 #
 class Card:
-   def __init__(self,tw,shape,color,num,fill):
-       # what do we need to know about each card?
-       self.shape = shape
-       self.color = color
-       self.num = num
-       self.fill = fill
-       self.index = self.shape*4*3*3+self.color*3*3+self.num*3+self.fill+1
-       # create sprite from svg file
-       self.spr = sprNew(tw, 0, 0,\
-                         self.load_image(tw.path+str(self.index),tw.card_w*tw.scale,
-                                         tw.card_h*tw.scale))
-       self.spr.label = ""
+    def __init__(self,tw,shape,color,num,fill):
+        # what do we need to know about each card?
+        if shape == -1:
+            self.spr = sprNew(tw, 0, 0, self.load_image(tw.path+"selected",
+                                                        tw.card_w*tw.scale,
+                                                        tw.card_h*tw.scale))
+            self.index = 0
+        else:
+            self.shape = shape
+            self.color = color
+            self.num = num
+            self.fill = fill
+            self.index = self.shape*4*3*3+self.color*3*3+self.num*3+self.fill+1
+            # create sprite from svg file
+            self.spr = sprNew(tw, 0, 0, self.load_image(tw.path+\
+                                                        str(self.index),
+                                                        tw.card_w*tw.scale,
+                                                        tw.card_h*tw.scale))
+        self.spr.label = ""
 
+    def draw_card(self):
+        setlayer(self.spr,2000)
+        draw(self.spr)
 
+    def hide_card(self):
+        hide(self.spr)
 
-   def draw_card(self):
-       setlayer(self.spr,2000)
-       draw(self.spr)
-
-   def load_image(self, file, w, h):
-       return gtk.gdk.pixbuf_new_from_file_at_size(os.path.join(file + \
-                                                                '.svg'), \
-                                                   int(w), int(h))
+    def load_image(self, file, w, h):
+        return gtk.gdk.pixbuf_new_from_file_at_size(os.path.join(file+".svg"),
+                                                    int(w),
+                                                    int(h))
 

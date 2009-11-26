@@ -77,19 +77,25 @@ def new_window(canvas, path, parent=None):
    tw.cm = tw.gc.get_colormap()
    tw.msgcolor = tw.cm.alloc_color('black')
    tw.sprites = []
+   tw.selected = []
 
-   # make the cards, the deck and start playing...
+   # create a deck of cards, shuffle, and then deal
    tw.deck = Grid(tw)
-   tw.deck.start(tw)
+   tw.deck.shuffle()
+   tw.deck.deal(tw)
+
+   # initialize three card-selected overlays
+   for i in range(0,3):
+       tw.selected.append(Card(tw,-1,0,0,0))
+
+   # make an array of three cards that are clicked
+   tw.clicked = [None, None, None]
 
    # Start doing something
    tw.keypress = ""
    tw.press = -1
    tw.release = -1
    tw.start_drag = [0,0]
-
-   # make an array of three cards that are clicked
-   tw.clicked = [None, None, None]
 
    return tw
 
@@ -122,14 +128,45 @@ def _button_release_cb(win, event, tw):
        return True
    # take note of card under button release
    tw.release = spr
-   for a in tw.clicked:
-       if (a is None) and (tw.clicked.index(a) <= 2):
-           tw.clicked[tw.clicked.index(a)]= spr
 
+   # check to make sure that the current card isn't already selected
+   for a in tw.clicked:
+       if a is spr:
+           return True
+
+   # add the selected card to the list
+   for a in tw.clicked:
+       if a is None:
+           if tw.deck.spr_to_card(spr).index is not None:
+               print "selecting card " + str(tw.deck.spr_to_card(spr).index)
+           else:
+               print "selected card not found"
+           i = tw.clicked.index(a)
+           print "filling slot " + str(i)
+           tw.clicked[i] = spr
+           print "using selection mask " + str(i)
+           tw.selected[i].spr.x = spr.x
+           tw.selected[i].spr.y = spr.y
+           tw.selected[i].draw_card()
+           # we only want to add the card to the list once
+           break
+
+   # if we have three cards selected, test for a set
    #check to see if it's a set
-   if (set_check()):
+   try:
+       tw.clicked.index(None)
+   except ValueError:
+       if set_check([tw.deck.spr_to_card(tw.clicked[0]),
+                     tw.deck.spr_to_card(tw.clicked[1]),
+                     tw.deck.spr_to_card(tw.clicked[2])]):
+           print "found a set"
+       else:
+           print "not a set"
+       print "reseting board"
        for a in tw.clicked:
            a = None
+       for a in tw.selected:
+           a.hide_card()
    return True
 
 #
@@ -158,6 +195,7 @@ def _destroy_cb(win, event, tw):
 #
 
 def set_check(cardarray):
+   print cardarray
    for a in cardarray:
        if a is None:
            return False
