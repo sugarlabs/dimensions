@@ -20,13 +20,13 @@
 #THE SOFTWARE.
 
 RED_STROKE = "#FF0000"
-RED_FILL = "#FF9090"
+RED_FILL = "#FFA0A0"
 BLUE_STROKE = "#0000FF"
-BLUE_FILL = "#9090FF"
-GREEN_STROKE = "#00D000"
+BLUE_FILL = "#A0A0FF"
+GREEN_STROKE = "#00C000"
 GREEN_FILL = "#90D090"
-PURPLE_STROKE = "#FF00FF"
-PURPLE_FILL = "#FF90FF"
+PURPLE_STROKE = "#E000E0"
+PURPLE_FILL = "#FFA0FF"
 
 color_pairs = ([RED_STROKE,RED_FILL],
                [GREEN_STROKE,GREEN_FILL],
@@ -34,12 +34,11 @@ color_pairs = ([RED_STROKE,RED_FILL],
                [PURPLE_STROKE,PURPLE_FILL])
 
 fill_styles = ("none","gradient","solid")
-
 card_types = ("X","O","C")
 
 def background(f):
     f.write("<rect width=\"74.5\" height=\"124.5\" rx=\"11\" ry=\"9\" x=\"0.25\" y=\"0.25\"\n")
-    f.write("style=\"fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-width:0.5\" />\n")
+    f.write("style=\"fill:#FFFFFF;fill-opacity:1;stroke:#000000;stroke-width:0.5\" />\n")
 
 def header(f):
     f.write("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>\n")
@@ -58,8 +57,8 @@ def footer(f):
     f.write("</svg>\n")
 
 def circle(f, y, style, stroke, fill):
-    f.write("<circle cx=\"27\" cy=\"11\" r=\"8\"\n")
-    f.write("   transform=\"matrix(1.9,0,0,1.9,-15," + str(y) + ")\"\n")
+    f.write("<circle cx=\"27\" cy=\"11\" r=\"16\"\n")
+    f.write("   transform=\"translate(11," + str(y+11) + ")\"\n")
     if style == "none":
         f.write("   style=\"fill:#FFFFFF;stroke:" + stroke + \
               ";stroke-width:1.8;\" />\n")
@@ -70,9 +69,9 @@ def circle(f, y, style, stroke, fill):
         f.write("   style=\"fill:" + stroke + ";stroke:" + stroke + \
               ";stroke-width:1.8;\" />\n")
     f.write("<circle cx=\"27\" cy=\"11\" r=\"8\"\n")
-    f.write("   transform=\"matrix(0.9,0,0,0.9,12.5," + str(y+11) + ")\"\n")
+    f.write("   transform=\"translate(11," + str(y+11) + ")\"\n")
     f.write("   style=\"fill:#FFFFFF;stroke:" + stroke + \
-            ";stroke-width:3.5;\" />\n")
+            ";stroke-width:1.8;\" />\n")
 
 def check(f, y, style, stroke, fill):
     f.write("<path d=\"m 28.3575,70.160499 -5.861,5.861 -5.861,-5.866001 -4.102,-4.1 c -0.747,-0.747999 -1.212,-1.784999 -1.212,-2.93 0,-2.288998 1.854,-4.145998 4.146,-4.145998 1.143,0 2.18,0.465 2.93,1.214 l 4.099,4.101999 14.102,-14.102998 c 0.754,-0.749 1.787,-1.214 2.934,-1.214 2.289,0 4.146,1.856001 4.146,4.145001 0,1.146 -0.467,2.18 -1.217,2.932 l -14.104,14.104997 z\"\n")
