@@ -68,10 +68,16 @@ class Grid:
 
     # shuffle the deck
     def shuffle(self):
+        # hide all the cards
+        for c in self.deck:
+            self.deck[c].hide_card()
+        # randomize the deck
         for n in range(0,532):
             i = random.randrange(108)
             j = random.randrange(108)
             self.swap_cards(i,j)            
+        # reset the index to the beginning of the deck after a shuffle
+        self.index = 0
         return
 
     def swap_cards(self,i,j):
