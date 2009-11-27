@@ -31,6 +31,7 @@ try: # 0.86+ toolbar widgets
     from sugar.activity.widgets import StopButton
     from sugar.graphics.toolbarbox import ToolbarBox
     from sugar.graphics.toolbarbox import ToolbarButton
+    from namingalert import NamingAlert
 except ImportError:
     pass
 from sugar.graphics.toolbutton import ToolButton
@@ -43,7 +44,6 @@ import locale
 import os.path
 
 from sprites import *
-from namingalert import NamingAlert
 import window
 
 SERVICE = 'org.sugarlabs.VisualMatchActivity'
@@ -80,7 +80,7 @@ class VisualMatchActivity(activity.Activity):
             toolbar_box.toolbar.insert(separator, -1)
 
             # Label for showing status
-            self.results_label = gtk.Label(_("look for a set"))
+            self.results_label = gtk.Label(_("Look for a set"))
             self.results_label.show()
             results_toolitem = gtk.ToolItem()
             results_toolitem.add(self.results_label)
@@ -120,16 +120,6 @@ class VisualMatchActivity(activity.Activity):
 
             self.toolbox.show()
 
-        # Read the mode from the Journal
-        try:
-            if self.metadata['status'] == 'one':
-                self.show_button1()
-            elif self.metadata['status'] == 'two':
-                self.show_button2()
-        except:
-            self.metadata['status'] = "two"
-
-
         # Create a canvas
         canvas = gtk.DrawingArea()
         canvas.set_size_request(gtk.gdk.screen_width(), \
@@ -153,7 +143,6 @@ class VisualMatchActivity(activity.Activity):
 
     def show_button1(self, tw):
         self.button1.set_icon("button1on")
-        self.button2.set_icon("button2off")
         self.metadata['status'] = "one"
         tw.deck.shuffle()
         tw.deck.deal(tw)
@@ -166,12 +155,6 @@ class VisualMatchActivity(activity.Activity):
         self.reveal()
         return True
 
-    """
-    Write the additional status to the Journal
-    """
-    def write_file(self, file_path):
-        pass
-
 #
 # Project toolbar for pre-0.86 toolbars
 #
@@ -183,7 +166,7 @@ class ProjectToolbar(gtk.Toolbar):
 
         # Button 1
         self.activity.button1 = ToolButton( "button1off" )
-        self.activity.button1.set_tooltip(_('Button 1'))
+        self.activity.button1.set_tooltip(_('New game'))
         self.activity.button1.props.sensitive = True
         self.activity.button1.connect('clicked', self.activity._button1_cb, 
                                       self.activity)

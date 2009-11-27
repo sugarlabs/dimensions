@@ -1,0 +1,18 @@
+3
+
+* Eliminate naming alert from pre-0.86 toolbar
+* New pot file
+
+2
+
+* New icon
+* Fixed problem with the New Game button
+
+1
+
+* Version 1 of a visual matching game. The object is to find sets of
+  three cards where each attribute—color, shape, number of elements,
+  and shading—either match on all three cards or are different on all
+  three cards. Version 1 doesn't yet support sharing with multiple
+  players or saving to the Journal, but it can be played by a single
+  player.
