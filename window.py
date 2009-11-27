@@ -217,6 +217,14 @@ def set_check(cardarray):
       cardarray[1].color != cardarray[2].color and \
       cardarray[0].color == cardarray[2].color:
       return False
+   if cardarray[0].color != cardarray[1].color and \
+      cardarray[1].color == cardarray[2].color and \
+      cardarray[0].color != cardarray[2].color:
+      return False
+   if cardarray[0].color == cardarray[1].color and \
+      cardarray[1].color == cardarray[2].color and \
+      cardarray[0].color != cardarray[2].color:
+      return False
    return True
    """
    if (cardarray[0].num == cardarray[1].num):
