@@ -87,5 +87,29 @@ class Grid:
                 return self.deck[c]
         return None
 
+    # remove a set from positions
+    def remove_a_set(self, set, tw):
+        for a in set:
+            c = self.draw_a_card()
+            if c is not None:
+                c.spr.x = a.x
+                c.spr.y = a.y
+                # self.spr_to_card(a).hide_card()
+                a.x = 10
+                a.y = set.index(a)*int(tw.card_h*tw.scale) + \
+                      int((tw.height-(tw.card_h*3*tw.scale))/2)
+                self.spr_to_card(a).draw_card()
+                c.draw_card()
+        if c is None:
+            return False
+        else:
+            return True
 
+    def draw_a_card(self):
+        self.index += 1
+        if self.index == self.count:
+            return None
+        else:
+            return self.deck[self.index]        
+        return
 

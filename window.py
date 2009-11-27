@@ -158,10 +158,10 @@ def _button_release_cb(win, event, tw):
                      tw.deck.spr_to_card(tw.clicked[1]),
                      tw.deck.spr_to_card(tw.clicked[2])]):
            tw.activity.results_label.set_text(_("found a set"))
-           # remove the set
-
+           # remove the set and
            # draw three new cards from the deck
-
+           if tw.deck.remove_a_set(tw.clicked, tw) is None:
+               tw.activity.results_label.set_text(_("deck is empty"))
        else:
            tw.activity.results_label.set_text(_("not a set"))
 
