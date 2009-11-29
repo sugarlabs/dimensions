@@ -132,6 +132,10 @@ def _button_release_cb(win, event, tw):
    # take note of card under button release
    tw.release = spr
 
+   # check to make sure a card in the matched pile isn't selected
+   if spr.x == 10:
+      return True
+
    # check to make sure that the current card isn't already selected
    for a in tw.clicked:
        if a is spr:
