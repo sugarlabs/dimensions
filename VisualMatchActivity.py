@@ -68,12 +68,20 @@ class VisualMatchActivity(activity.Activity):
             activity_button.show()
 
             # Button 1
-            self.button1 = ToolButton( "button1off" )
+            self.button1 = ToolButton( "new-game" )
             self.button1.set_tooltip(_('New game'))
             self.button1.props.sensitive = True
             self.button1.connect('clicked', self._button1_cb, self)
             toolbar_box.toolbar.insert(self.button1, -1)
             self.button1.show()
+
+            # Button 2
+            self.button2 = ToolButton( "plus-3" )
+            self.button2.set_tooltip(_('Add three extra cards'))
+            self.button2.props.sensitive = True
+            self.button2.connect('clicked', self._button2_cb, self)
+            toolbar_box.toolbar.insert(self.button2, -1)
+            self.button2.show()
 
             separator = gtk.SeparatorToolItem()
             separator.show()
@@ -142,11 +150,19 @@ class VisualMatchActivity(activity.Activity):
         return True
 
     def show_button1(self, tw):
-        self.button1.set_icon("button1on")
-        self.metadata['status'] = "one"
+        self.button1.set_icon("new-game-on")
         tw.deck.shuffle()
         tw.deck.deal(tw)
-        # do something here
+        self.button1.set_icon("new-game")
+
+    def _button2_cb(self, button, activity):
+        self.show_button2(activity.tw)
+        return True
+
+    def show_button2(self, tw):
+        self.button2.set_icon("plus-3on")
+        tw.deck.deal_3_extra_cards(tw)
+        self.button2.set_icon("plus-3")
 
     def _journal_cb(self, button, path):
         title_alert = NamingAlert(self, path)
@@ -164,14 +180,24 @@ class ProjectToolbar(gtk.Toolbar):
         gtk.Toolbar.__init__(self)
         self.activity = pc
 
+
         # Button 1
-        self.activity.button1 = ToolButton( "button1off" )
+        self.activity.button1 = ToolButton( "new-game" )
         self.activity.button1.set_tooltip(_('New game'))
         self.activity.button1.props.sensitive = True
         self.activity.button1.connect('clicked', self.activity._button1_cb, 
                                       self.activity)
         self.insert(self.activity.button1, -1)
         self.activity.button1.show()
+
+        # Button 1
+        self.activity.button2 = ToolButton( "plus-3" )
+        self.activity.button2.set_tooltip(_('Add three extra cards'))
+        self.activity.button2.props.sensitive = True
+        self.activity.button2.connect('clicked', self.activity._button2_cb, 
+                                      self.activity)
+        self.insert(self.activity.button2, -1)
+        self.activity.button2.show()
 
         # Label for showing status
         self.activity.results_label = gtk.Label(\
