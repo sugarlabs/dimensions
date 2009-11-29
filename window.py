@@ -84,6 +84,7 @@ def new_window(canvas, path, parent=None):
    tw.deck = Grid(tw)
    tw.deck.shuffle()
    tw.deck.deal(tw)
+   tw.matches = 0
 
    # initialize three card-selected overlays
    for i in range(0,3):
@@ -138,17 +139,12 @@ def _button_release_cb(win, event, tw):
    # add the selected card to the list
    for a in tw.clicked:
        if a is None:
-           if tw.deck.spr_to_card(spr).index is not None:
-               print "selecting card " + str(tw.deck.spr_to_card(spr).index)
-           else:
-               print "selected card not found"
            i = tw.clicked.index(a)
            tw.clicked[i] = spr
            tw.selected[i].spr.x = spr.x
            tw.selected[i].spr.y = spr.y
            tw.selected[i].draw_card()
-           # we only want to add the card to the list once
-           break
+           break # we only want to add the card to the list once
 
    # if we have three cards selected, test for a set
    #check to see if it's a set
@@ -158,15 +154,28 @@ def _button_release_cb(win, event, tw):
        if set_check([tw.deck.spr_to_card(tw.clicked[0]),
                      tw.deck.spr_to_card(tw.clicked[1]),
                      tw.deck.spr_to_card(tw.clicked[2])]):
-           tw.activity.results_label.set_text(_("found a set"))
+           tw.matches += 1
+           if tw.matches == 1:
+               tw.activity.results_label.set_text(
+                   _("Found a match. ") + \
+                   _("%d cards remain in the deck") % \
+                  (tw.deck.count-tw.deck.index))
+           else:
+               tw.activity.results_label.set_text(
+                   _("Found %d matches. ") % (tw.matches) + \
+                   _("%d cards remain in the deck") % \
+                  (tw.deck.count-tw.deck.index))
+
            # remove the set and
            # draw three new cards from the deck
            if tw.deck.remove_and_replace(tw.clicked, tw) is None:
-               tw.activity.results_label.set_text(_("deck is empty"))
+               tw.activity.results_label.set_text(
+                   _("Found %d matches. ") % (tw.matches) + \
+                   _("The deck is empty."))
        else:
-           tw.activity.results_label.set_text(_("not a set"))
-
-       print "reseting board"
+           tw.activity.results_label.set_text(_("Not a match. ")+\
+                   _("%d cards remain in the deck") % \
+                  (tw.deck.count-tw.deck.index))
        tw.clicked = [None, None, None]
        for a in tw.selected:
            a.hide_card()
