@@ -4,10 +4,6 @@
 	<!ENTITY fill_color "#eee">
 ]>
 <svg height="55px" viewBox="0 0 55 55" width="55px" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" stroke-linecap="round" stroke-linejoin="round" stroke-width="3.5" stroke="&stroke_color;" fill="&fill_color;">
-  <path
-     d="M 1,54 1,1 54,1 54,54 1,54 z"
-     id="path4"
-     style="fill:none;&stroke_color;;stroke-width:2;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none" />
   <g
      transform="translate(-0.4863184,-0.23390232)"
      id="g4042">
