@@ -66,10 +66,10 @@ class Grid:
         y = self.top
         for r in range(0,3):
             for c in range(0,4):
+                self.grid.append(self.deck[self.index])
                 self.draw_a_card(x,y)
-                self.grid.append(True)
                 x += self.xinc
-            self.grid.append(False) # leave a space for the extra cards
+            self.grid.append(None) # leave a space for the extra cards
             x = self.left
             y += self.yinc
 
@@ -79,8 +79,8 @@ class Grid:
             # add 3 extra cards to the playing field
             self.cards = 15
             for r in range(0,3):
-                i = self.grid.index(False)
-                self.grid[i] = True
+                i = self.grid.index(None)
+                self.grid[i] = self.deck[self.index]
                 x = self.left+self.xinc*(i%5)
                 y = self.top+self.yinc*int(i/5)
                 self.draw_a_card(x,y)
@@ -117,19 +117,21 @@ class Grid:
     def remove_and_replace(self, clicked_set, tw):
         for a in clicked_set:
             # only add new cards if we are down to 12 cards
+            i = int(5*(a.y-self.top)/self.yinc) + \
+                int((a.x-self.left)/self.xinc)
             if self.cards == 12:
                 if self.index < self.count:
+                    # save card in grid position of card we are replacing
+                    self.grid[i] = self.deck[self.index]
                     self.draw_a_card(a.x,a.y)
             else:
                 self.cards -= 1
                 # mark grid positions of cards we are not replacing
-                i = int(5*(a.y-self.top)/self.yinc) + \
-                    int((a.x-self.left)/self.xinc)
-                self.grid[i] = False
+                self.grid[i] = None
             # move clicked card to the set area
             a.x = 10
             a.y = self.top + clicked_set.index(a)*self.yinc
-            self.spr_to_card(a).draw_card()
+            self.spr_to_card(a).show_card()
         # Any more cards in the deck?
         if self.index < self.count:
             return True
@@ -139,5 +141,5 @@ class Grid:
     def draw_a_card(self,x,y):
         self.deck[self.index].spr.x = x
         self.deck[self.index].spr.y = y
-        self.deck[self.index].draw_card()
+        self.deck[self.index].show_card()
         self.index += 1

@@ -61,7 +61,7 @@ class Card:
                                                         tw.card_h*tw.scale))
         self.spr.label = ""
 
-    def draw_card(self):
+    def show_card(self):
         setlayer(self.spr,2000)
         draw(self.spr)
 

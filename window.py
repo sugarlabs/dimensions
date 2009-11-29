@@ -137,13 +137,14 @@ def _button_release_cb(win, event, tw):
            return True
 
    # add the selected card to the list
+   # and show the selection mask
    for a in tw.clicked:
        if a is None:
            i = tw.clicked.index(a)
            tw.clicked[i] = spr
            tw.selected[i].spr.x = spr.x
            tw.selected[i].spr.y = spr.y
-           tw.selected[i].draw_card()
+           tw.selected[i].show_card()
            break # we only want to add the card to the list once
 
    # if we have three cards selected, test for a set
@@ -151,7 +152,7 @@ def _button_release_cb(win, event, tw):
    try:
        tw.clicked.index(None)
    except ValueError:
-       if set_check([tw.deck.spr_to_card(tw.clicked[0]),
+       if match_check([tw.deck.spr_to_card(tw.clicked[0]),
                      tw.deck.spr_to_card(tw.clicked[1]),
                      tw.deck.spr_to_card(tw.clicked[2])]):
            if tw.deck.remove_and_replace(tw.clicked, tw) is None:
@@ -196,12 +197,24 @@ def _expose_cb(win, event, tw):
 def _destroy_cb(win, event, tw):
    gtk.main_quit()
 
+
 #
-# Check whether three cards are a set based on the criteria that
+# Check to see whether there are any matches on the board
+#
+def find_a_match(tw):
+    a = [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14]
+    for i in Permutation(a):
+        cardarray = [tw.deck.grid[i[0]],tw.deck.grid[i[1]],tw.deck.grid[i[2]]]
+        if match_check(cardarray) is True:
+            return True
+    return False
+
+#
+# Check whether three cards are a match based on the criteria that
 # in all characteristics:
 # either all cards are the same of all cards are different
 #
-def set_check(cardarray):
+def match_check(cardarray):
    for a in cardarray:
        if a is None:
            return False
@@ -228,3 +241,24 @@ def set_check(cardarray):
       cardarray[0].color != cardarray[2].color:
       return False
    return True
+
+#
+# Permutaion class for checking for all possible matches on the grid
+#    
+class Permutation: 
+    def __init__(self, justalist): 
+        self._data = justalist[:] 
+        self._sofar = [] 
+    def __iter__(self): 
+        return self.next() 
+    def next(self): 
+         for elem in self._data: 
+             if elem not in self._sofar: 
+                 self._sofar.append(elem) 
+                 if len(self._sofar) == 3: 
+                     yield self._sofar[:] 
+                 else: 
+                     for v in self.next(): 
+                         yield v 
+                 self._sofar.pop() 
+

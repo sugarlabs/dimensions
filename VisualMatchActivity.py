@@ -67,7 +67,7 @@ class VisualMatchActivity(activity.Activity):
             toolbar_box.toolbar.insert(activity_button, 0)
             activity_button.show()
 
-            # New game button
+            # New-game Button
             self.button1 = ToolButton( "new-game" )
             self.button1.set_tooltip(_('New game'))
             self.button1.props.sensitive = True
@@ -75,13 +75,21 @@ class VisualMatchActivity(activity.Activity):
             toolbar_box.toolbar.insert(self.button1, -1)
             self.button1.show()
 
-            # Add three extra cards button
+            # Add-three-extra-cards Button
             self.button2 = ToolButton( "plus-3" )
             self.button2.set_tooltip(_('Add three extra cards'))
             self.button2.props.sensitive = True
             self.button2.connect('clicked', self._button2_cb, self)
             toolbar_box.toolbar.insert(self.button2, -1)
             self.button2.show()
+
+            # Help Button
+            self.button3 = ToolButton( "search" )
+            self.button3.set_tooltip(_('Is there a match?'))
+            self.button3.props.sensitive = True
+            self.button3.connect('clicked', self._button3_cb, self)
+            toolbar_box.toolbar.insert(self.button3, -1)
+            self.button3.show()
 
             separator = gtk.SeparatorToolItem()
             separator.show()
@@ -188,6 +196,16 @@ class VisualMatchActivity(activity.Activity):
                                         (tw.deck.count-tw.deck.index))
         self.button2.set_icon("plus-3")
 
+    def _button3_cb(self, button, activity):
+        self.show_button3(activity.tw)
+        return True
+
+    def show_button3(self, tw):
+       if window.find_a_match(tw) is True:
+           tw.activity.status_label.set_text(_("Keep looking."))
+       else:
+           tw.activity.status_label.set_text(_("No matches found."))
+
     def _journal_cb(self, button, path):
         title_alert = NamingAlert(self, path)
         title_alert.set_transient_for(self.get_toplevel())
@@ -204,7 +222,7 @@ class ProjectToolbar(gtk.Toolbar):
         gtk.Toolbar.__init__(self)
         self.activity = pc
 
-        # New game button
+        # New-game Button
         self.activity.button1 = ToolButton( "new-game" )
         self.activity.button1.set_tooltip(_('New game'))
         self.activity.button1.props.sensitive = True
@@ -213,7 +231,7 @@ class ProjectToolbar(gtk.Toolbar):
         self.insert(self.activity.button1, -1)
         self.activity.button1.show()
 
-        # Add three extra cards button
+        # Add-three-extra-cards Button
         self.activity.button2 = ToolButton( "plus-3" )
         self.activity.button2.set_tooltip(_('Add three extra cards'))
         self.activity.button2.props.sensitive = True
@@ -221,6 +239,15 @@ class ProjectToolbar(gtk.Toolbar):
                                       self.activity)
         self.insert(self.activity.button2, -1)
         self.activity.button2.show()
+
+        # Help Button
+        self.activity.button3 = ToolButton( "search" )
+        self.activity.button3.set_tooltip(_('Is there a match?'))
+        self.activity.button3.props.sensitive = True
+        self.activity.button3.connect('clicked', self.activity._button3_cb, 
+                                      self.activity)
+        self.insert(self.activity.button3, -1)
+        self.activity.button3.show()
 
         separator = gtk.SeparatorToolItem()
         separator.set_draw(True)
