@@ -118,7 +118,7 @@ def _button_press_cb(win, event, tw):
    return True
 
 #
-# Button release
+# Button release, where all the work is done
 #
 def _button_release_cb(win, event, tw):
    win.grab_focus()
@@ -154,28 +154,23 @@ def _button_release_cb(win, event, tw):
        if set_check([tw.deck.spr_to_card(tw.clicked[0]),
                      tw.deck.spr_to_card(tw.clicked[1]),
                      tw.deck.spr_to_card(tw.clicked[2])]):
-           tw.matches += 1
-           if tw.matches == 1:
-               tw.activity.results_label.set_text(
-                   _("Found a match. ") + \
-                   _("%d cards remain in the deck") % \
-                  (tw.deck.count-tw.deck.index))
-           else:
-               tw.activity.results_label.set_text(
-                   _("Found %d matches. ") % (tw.matches) + \
-                   _("%d cards remain in the deck") % \
-                  (tw.deck.count-tw.deck.index))
-
-           # remove the set and
-           # draw three new cards from the deck
            if tw.deck.remove_and_replace(tw.clicked, tw) is None:
-               tw.activity.results_label.set_text(
-                   _("Found %d matches. ") % (tw.matches) + \
-                   _("The deck is empty."))
-       else:
-           tw.activity.results_label.set_text(_("Not a match. ")+\
+               tw.activity.deck_label.set_text(_("The deck is empty."))
+           else:
+               tw.activity.deck_label.set_text(
                    _("%d cards remain in the deck") % \
                   (tw.deck.count-tw.deck.index))
+           tw.matches += 1
+           tw.activity.status_label.set_text(_("Found a match."))
+           if tw.matches == 1:
+               tw.activity.match_label.set_text(
+                  _("%d match found.") % (tw.matches))
+           else:
+               tw.activity.match_label.set_text(
+                  _("%d matches found.") % (tw.matches))
+
+       else:
+           tw.activity.status_label.set_text(_("Not a match."))
        tw.clicked = [None, None, None]
        for a in tw.selected:
            a.hide_card()
