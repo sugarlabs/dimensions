@@ -85,6 +85,7 @@ def new_window(canvas, path, parent=None):
    tw.deck.shuffle()
    tw.deck.deal(tw)
    tw.matches = 0
+   tw.msg = ""
 
    # initialize three card-selected overlays
    for i in range(0,3):
@@ -206,6 +207,7 @@ def find_a_match(tw):
     for i in Permutation(a):
         cardarray = [tw.deck.grid[i[0]],tw.deck.grid[i[1]],tw.deck.grid[i[2]]]
         if match_check(cardarray) is True:
+            tw.msg = str(i)
             return True
     return False
 

@@ -124,6 +124,8 @@ class Grid:
                     # save card in grid position of card we are replacing
                     self.grid[i] = self.deck[self.index]
                     self.draw_a_card(a.x,a.y)
+                else:
+                    self.grid[i] = None
             else:
                 self.cards -= 1
                 # mark grid positions of cards we are not replacing
