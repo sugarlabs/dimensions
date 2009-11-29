@@ -202,7 +202,8 @@ class VisualMatchActivity(activity.Activity):
 
     def show_button3(self, tw):
        if window.find_a_match(tw) is True:
-           tw.activity.status_label.set_text(_("Keep looking.") + " " + tw.msg)
+           tw.activity.status_label.set_text(_("Keep looking."))
+           print tw.msg
        else:
            tw.activity.status_label.set_text(_("No matches found."))
 

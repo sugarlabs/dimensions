@@ -204,7 +204,7 @@ def _destroy_cb(win, event, tw):
 #
 def find_a_match(tw):
     a = [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14]
-    for i in Permutation(a):
+    for i in Permutation(a): # really should be Combination
         cardarray = [tw.deck.grid[i[0]],tw.deck.grid[i[1]],tw.deck.grid[i[2]]]
         if match_check(cardarray) is True:
             tw.msg = str(i)
