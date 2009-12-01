@@ -23,6 +23,7 @@
 import pygtk
 pygtk.require('2.0')
 import gtk
+import gobject
 from gettext import gettext as _
 
 try:
@@ -100,7 +101,11 @@ def new_window(canvas, path, parent=None):
    tw.release = -1
    tw.start_drag = [0,0]
 
+   tw.start_time = gobject.get_current_time()
+   tw.timeout_id = None
+   _counter(tw)
    return tw
+
 
 #
 # Button press
@@ -161,22 +166,29 @@ def _button_release_cb(win, event, tw):
                      tw.deck.spr_to_card(tw.clicked[1]),
                      tw.deck.spr_to_card(tw.clicked[2])]):
            if tw.deck.remove_and_replace(tw.clicked, tw) is None:
-               tw.activity.deck_label.set_text(_("The deck is empty."))
+               tw.activity.deck_label.set_text(_("No more cards"))
            else:
                tw.activity.deck_label.set_text(
-                   _("%d cards remain in the deck") % \
+                   _("%d cards remaining") % \
                   (tw.deck.count-tw.deck.index))
            tw.matches += 1
-           tw.activity.status_label.set_text(_("Found a match."))
+           tw.activity.status_label.set_text(_("Match"))
            if tw.matches == 1:
                tw.activity.match_label.set_text(
-                  _("%d match found.") % (tw.matches))
+                  _("%d match") % (tw.matches))
            else:
                tw.activity.match_label.set_text(
-                  _("%d matches found.") % (tw.matches))
+                  _("%d matches") % (tw.matches))
+
+           # reset the game clock
+           if tw.timeout_id is not None:
+               gobject.source_remove(tw.timeout_id)
+           tw.start_time = gobject.get_current_time()
+           tw.timeout_id = None
+           _counter(tw)
 
        else:
-           tw.activity.status_label.set_text(_("Not a match."))
+           tw.activity.status_label.set_text(_("No match"))
        tw.clicked = [None, None, None]
        for a in tw.selected:
            a.hide_card()
@@ -202,6 +214,14 @@ def _expose_cb(win, event, tw):
 def _destroy_cb(win, event, tw):
    gtk.main_quit()
 
+
+#
+# Display # of seconds since start_time
+#
+def _counter(tw):
+    tw.activity.clock_label.set_text(str(int(gobject.get_current_time()-\
+                                             tw.start_time)))
+    tw.timeout_id = gobject.timeout_add(1000,_counter,tw)
 
 #
 # Check to see whether there are any matches on the board
