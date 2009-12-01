@@ -11,15 +11,15 @@ style="fill:#FFFFFF;fill-opacity:1;stroke:#000000;stroke-width:0.5" />
 <g>
 <circle cx="27" cy="11" r="16"
    transform="translate(11,32.5)"
-   style="fill:#FFFFFF;stroke:#E000E0;stroke-width:1.8;" />
+   style="fill:#FFFFFF;stroke:#780078;stroke-width:1.8;" />
 <circle cx="27" cy="11" r="8"
    transform="translate(11,32.5)"
-   style="fill:#FFFFFF;stroke:#E000E0;stroke-width:1.8;" />
+   style="fill:#FFFFFF;stroke:#780078;stroke-width:1.8;" />
 <circle cx="27" cy="11" r="16"
    transform="translate(11,72.5)"
-   style="fill:#FFFFFF;stroke:#E000E0;stroke-width:1.8;" />
+   style="fill:#FFFFFF;stroke:#780078;stroke-width:1.8;" />
 <circle cx="27" cy="11" r="8"
    transform="translate(11,72.5)"
-   style="fill:#FFFFFF;stroke:#E000E0;stroke-width:1.8;" />
+   style="fill:#FFFFFF;stroke:#780078;stroke-width:1.8;" />
 </g>
 </svg>
