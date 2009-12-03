@@ -235,6 +235,35 @@ def find_a_match(tw):
             return True
     return False
 
+"""
+def find_a_match(tw, size):
+    a = range(0, size)
+    cardarray = [tw.deck.grid[a[size-1]]]
+    for x in a:
+	indices.append(tw.deck.grid[x].index)
+    for i in range(0, size-1):
+	for j in find_third_card([tw.deck.grid[a[size-1]], tw.deck.grid[i]]):
+	    if indices.count(j) > 0: return true
+    find_a_match(tw, size-1)
+    return false
+	
+	
+#
+# Given two cards, finds possibilities for third card
+#
+def find_third_card(cardarray):
+    cardindex = ((-cardarray[0].shape - cardarray[1].shape)%3)*4*3*3 \
+    +((-cardarray[0].num - cardarray[1].num)%3)*3 \
+    +((-cardarray[0].fill - cardarray[1].fill)
+    if cardarray[0].color == cardarray[1].color:
+	return [(cardindex + cardarray[0].color*3*3)]
+    else:
+	colors = [0, 1, 2, 3]
+	colors.remove(cardarray[0].color)
+	colors.remove(cardarray[1].color)
+	return [(cardindex + colors[0]*3*3, cardindex + colors[1]*3*3]
+"""
+
 #
 # Check whether three cards are a match based on the criteria that
 # in all characteristics:
