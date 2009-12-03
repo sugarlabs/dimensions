@@ -274,20 +274,28 @@ def match_check(cardarray):
        if a is None:
            return False
 
-   if (cardarray[0].num + cardarray[1].num + cardarray[2].num)%3 == 0:
-      return True
-   if (cardarray[0].fill + cardarray[1].fill + cardarray[2].fill)%3 == 0:
-      return True
-   if (cardarray[0].shape + cardarray[1].shape + cardarray[2].shape)%3 == 0:
-      return True
+   if (cardarray[0].num + cardarray[1].num + cardarray[2].num)%3 != 0:
+      return False
+   if (cardarray[0].fill + cardarray[1].fill + cardarray[2].fill)%3 != 0:
+      return False
+   if (cardarray[0].shape + cardarray[1].shape + cardarray[2].shape)%3 != 0:
+      return False
    if cardarray[0].color == cardarray[1].color and \
-      cardarray[1].color == cardarray[2].color:
-      return True
+      cardarray[1].color != cardarray[2].color:
+      return False
    if cardarray[0].color != cardarray[1].color and \
       cardarray[1].color != cardarray[2].color and \
+      cardarray[0].color == cardarray[2].color:
+      return False
+   if cardarray[0].color != cardarray[1].color and \
+      cardarray[1].color == cardarray[2].color and \
       cardarray[0].color != cardarray[2].color:
-      return True
-   return False
+      return False
+   if cardarray[0].color == cardarray[1].color and \
+      cardarray[1].color == cardarray[2].color and \
+      cardarray[0].color != cardarray[2].color:
+      return False
+   return True
 
 #
 # Permutaion class for checking for all possible matches on the grid

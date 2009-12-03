@@ -75,14 +75,6 @@ class VisualMatchActivity(activity.Activity):
             toolbar_box.toolbar.insert(self.button1, -1)
             self.button1.show()
 
-            # Add-three-extra-cards Button
-            self.button2 = ToolButton( "plus-3" )
-            self.button2.set_tooltip(_('Add three extra cards'))
-            self.button2.props.sensitive = True
-            self.button2.connect('clicked', self._button2_cb, self)
-            toolbar_box.toolbar.insert(self.button2, -1)
-            self.button2.show()
-
             # Help Button
             self.button3 = ToolButton( "search" )
             self.button3.set_tooltip(_('Is there a match?'))
@@ -194,18 +186,8 @@ class VisualMatchActivity(activity.Activity):
         self.button1.set_icon("new-game-on")
         tw.deck.shuffle()
         tw.deck.deal(tw)
+        tw.matches = 0
         self.button1.set_icon("new-game")
-
-    def _button2_cb(self, button, activity):
-        self.show_button2(activity.tw)
-        return True
-
-    def show_button2(self, tw):
-        self.button2.set_icon("plus-3on")
-        tw.deck.deal_3_extra_cards(tw)
-        tw.activity.deck_label.set_text(_("%d cards remaining") % \
-                                        (tw.deck.count-tw.deck.index))
-        self.button2.set_icon("plus-3")
 
     def _button3_cb(self, button, activity):
         self.show_button3(activity.tw)
@@ -213,10 +195,13 @@ class VisualMatchActivity(activity.Activity):
 
     def show_button3(self, tw):
        if window.find_a_match(tw) is True:
-           tw.activity.status_label.set_text(_("Keep looking."))
+           tw.activity.status_label.set_text(_("Keep looking"))
            print tw.msg
        else:
            tw.activity.status_label.set_text(_("No matches."))
+           tw.deck.deal_3_extra_cards(tw)
+           tw.activity.deck_label.set_text(_("%d cards remaining") % \
+                                           (tw.deck.count-tw.deck.index))
 
     def _journal_cb(self, button, path):
         title_alert = NamingAlert(self, path)
@@ -242,15 +227,6 @@ class ProjectToolbar(gtk.Toolbar):
                                       self.activity)
         self.insert(self.activity.button1, -1)
         self.activity.button1.show()
-
-        # Add-three-extra-cards Button
-        self.activity.button2 = ToolButton( "plus-3" )
-        self.activity.button2.set_tooltip(_('Add three extra cards'))
-        self.activity.button2.props.sensitive = True
-        self.activity.button2.connect('clicked', self.activity._button2_cb, 
-                                      self.activity)
-        self.insert(self.activity.button2, -1)
-        self.activity.button2.show()
 
         # Help Button
         self.activity.button3 = ToolButton( "search" )
