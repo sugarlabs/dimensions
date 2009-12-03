@@ -96,7 +96,7 @@ class VisualMatchActivity(activity.Activity):
             toolbar_box.toolbar.insert(separator, -1)
 
             # Label for showing deck status
-            self.deck_label = gtk.Label(_("%d cards remain in the deck") % (96))
+            self.deck_label = gtk.Label(_("%d cards remaining") % (96))
             self.deck_label.show()
             deck_toolitem = gtk.ToolItem()
             deck_toolitem.add(self.deck_label)
@@ -107,7 +107,7 @@ class VisualMatchActivity(activity.Activity):
             toolbar_box.toolbar.insert(separator, -1)
 
             # Label for showing match status
-            self.match_label = gtk.Label(_("%d matches found.") % (0))
+            self.match_label = gtk.Label(_("%d matches") % (0))
             self.match_label.show()
             match_toolitem = gtk.ToolItem()
             match_toolitem.add(self.match_label)
@@ -117,8 +117,19 @@ class VisualMatchActivity(activity.Activity):
             separator.show()
             toolbar_box.toolbar.insert(separator, -1)
 
+            # Label for showing counter
+            self.clock_label = gtk.Label(_("-"))
+            self.clock_label.show()
+            clock_toolitem = gtk.ToolItem()
+            clock_toolitem.add(self.clock_label)
+            toolbar_box.toolbar.insert(clock_toolitem,-1)
+
+            separator = gtk.SeparatorToolItem()
+            separator.show()
+            toolbar_box.toolbar.insert(separator, -1)
+
             # Label for showing play status
-            self.status_label = gtk.Label(_("Try to find a match."))
+            self.status_label = gtk.Label(_("Find a match."))
             self.status_label.show()
             status_toolitem = gtk.ToolItem()
             status_toolitem.add(self.status_label)
@@ -192,7 +203,7 @@ class VisualMatchActivity(activity.Activity):
     def show_button2(self, tw):
         self.button2.set_icon("plus-3on")
         tw.deck.deal_3_extra_cards(tw)
-        tw.activity.deck_label.set_text(_("%d cards remain in the deck") % \
+        tw.activity.deck_label.set_text(_("%d cards remaining") % \
                                         (tw.deck.count-tw.deck.index))
         self.button2.set_icon("plus-3")
 
@@ -205,7 +216,7 @@ class VisualMatchActivity(activity.Activity):
            tw.activity.status_label.set_text(_("Keep looking."))
            print tw.msg
        else:
-           tw.activity.status_label.set_text(_("No matches found."))
+           tw.activity.status_label.set_text(_("No matches."))
 
     def _journal_cb(self, button, path):
         title_alert = NamingAlert(self, path)
@@ -270,7 +281,7 @@ class ProjectToolbar(gtk.Toolbar):
         separator.show()
 
         # Label for showing match status
-        self.activity.match_label = gtk.Label(_("%d matches found.") % (0))
+        self.activity.match_label = gtk.Label(_("%d matches") % (0))
         self.activity.match_label.show()
         self.activity.match_toolitem = gtk.ToolItem()
         self.activity.match_toolitem.add(self.activity.match_label)
@@ -282,8 +293,21 @@ class ProjectToolbar(gtk.Toolbar):
         self.insert(separator, -1)
         separator.show()
 
-        # Label for showing play  status
-        self.activity.status_label = gtk.Label(_("Try to find a match."))
+        # Label for showing counter
+        self.activity.clock_label = gtk.Label(_("-"))
+        self.activity.clock_label.show()
+        self.activity.clock_toolitem = gtk.ToolItem()
+        self.activity.clock_toolitem.add(self.activity.clock_label)
+        self.insert(self.activity.clock_toolitem, -1)
+        self.activity.clock_toolitem.show()
+
+        separator = gtk.SeparatorToolItem()
+        separator.set_draw(True)
+        self.insert(separator, -1)
+        separator.show()
+
+        # Label for showing play status
+        self.activity.status_label = gtk.Label(_("Find a match."))
         self.activity.status_label.show()
         self.activity.status_toolitem = gtk.ToolItem()
         self.activity.status_toolitem.add(self.activity.status_label)
