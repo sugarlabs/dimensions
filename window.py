@@ -159,9 +159,7 @@ def _button_release_cb(win, event, tw):
 
    # if we have three cards selected, test for a set
    #check to see if it's a set
-   try:
-       tw.clicked.index(None)
-   except ValueError:
+   if None is not in tw.clicked.index:
        if match_check([tw.deck.spr_to_card(tw.clicked[0]),
                      tw.deck.spr_to_card(tw.clicked[1]),
                      tw.deck.spr_to_card(tw.clicked[2])]):
@@ -172,6 +170,7 @@ def _button_release_cb(win, event, tw):
                    tw.activity.status_label.set_text(_("Game over") + \
                        + " " + str(tw.total_time))
                    gobject.source_remove(tw.timeout_id)
+                   return True
            else:
                tw.activity.deck_label.set_text(
                    _("%d cards remaining") % \
