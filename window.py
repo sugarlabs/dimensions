@@ -86,7 +86,7 @@ def new_window(canvas, path, parent=None):
    tw.deck.shuffle()
    tw.deck.deal(tw)
    tw.matches = 0
-   tw.msg = ""
+   tw.total_time = 0
 
    # initialize three card-selected overlays
    for i in range(0,3):
@@ -167,6 +167,11 @@ def _button_release_cb(win, event, tw):
                      tw.deck.spr_to_card(tw.clicked[2])]):
            if tw.deck.remove_and_replace(tw.clicked, tw) is None:
                tw.activity.deck_label.set_text(_("No more cards"))
+               # test to see if the game is over
+               if find_a_match(tw) is False:
+                   tw.activity.status_label.set_text(_("Game over") + \
+                       + " " + str(tw.total_time))
+                   gobject.source_remove(tw.timeout_id)
            else:
                tw.activity.deck_label.set_text(
                    _("%d cards remaining") % \
@@ -183,6 +188,7 @@ def _button_release_cb(win, event, tw):
            # reset the game clock
            if tw.timeout_id is not None:
                gobject.source_remove(tw.timeout_id)
+           tw.total_time += gobject.get_current_time()-tw.start_time
            tw.start_time = gobject.get_current_time()
            tw.timeout_id = None
            _counter(tw)

@@ -187,6 +187,7 @@ class VisualMatchActivity(activity.Activity):
         tw.deck.shuffle()
         tw.deck.deal(tw)
         tw.matches = 0
+        tw.total_time = 0
         self.button1.set_icon("new-game")
 
     def _button3_cb(self, button, activity):
@@ -196,7 +197,6 @@ class VisualMatchActivity(activity.Activity):
     def show_button3(self, tw):
        if window.find_a_match(tw) is True:
            tw.activity.status_label.set_text(_("Keep looking"))
-           print tw.msg
        else:
            tw.activity.status_label.set_text(_("No matches."))
            tw.deck.deal_3_extra_cards(tw)
