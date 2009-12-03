@@ -159,22 +159,29 @@ def _button_release_cb(win, event, tw):
 
    # if we have three cards selected, test for a set
    #check to see if it's a set
-   if None is not in tw.clicked.index:
+   if None in tw.clicked:
+       pass
+   else:
        if match_check([tw.deck.spr_to_card(tw.clicked[0]),
                      tw.deck.spr_to_card(tw.clicked[1]),
                      tw.deck.spr_to_card(tw.clicked[2])]):
-           if tw.deck.remove_and_replace(tw.clicked, tw) is None:
-               tw.activity.deck_label.set_text(_("No more cards"))
-               # test to see if the game is over
+           # stop the timer
+           if tw.timeout_id is not None:
+               gobject.source_remove(tw.timeout_id)
+           tw.total_time += gobject.get_current_time()-tw.start_time
+           # out with the old and in with the new
+           tw.deck.remove_and_replace(tw.clicked, tw)
+           tw.activity.deck_label.set_text(_("%d cards remaining") % \
+                                           (tw.deck.count-tw.deck.index))
+           # test to see if the game is over
+           if tw.deck.count-tw.deck.index == 0:
                if find_a_match(tw) is False:
                    tw.activity.status_label.set_text(_("Game over") + \
-                       + " " + str(tw.total_time))
+                                                     " (" + \
+                                                     str(int(tw.total_time)) + \
+                                                     " " + _("seconds") + ")")
                    gobject.source_remove(tw.timeout_id)
                    return True
-           else:
-               tw.activity.deck_label.set_text(
-                   _("%d cards remaining") % \
-                  (tw.deck.count-tw.deck.index))
            tw.matches += 1
            tw.activity.status_label.set_text(_("Match"))
            if tw.matches == 1:
@@ -184,10 +191,7 @@ def _button_release_cb(win, event, tw):
                tw.activity.match_label.set_text(
                   _("%d matches") % (tw.matches))
 
-           # reset the game clock
-           if tw.timeout_id is not None:
-               gobject.source_remove(tw.timeout_id)
-           tw.total_time += gobject.get_current_time()-tw.start_time
+           # reset the timer
            tw.start_time = gobject.get_current_time()
            tw.timeout_id = None
            _counter(tw)

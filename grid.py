@@ -134,11 +134,6 @@ class Grid:
             a.x = 10
             a.y = self.top + clicked_set.index(a)*self.yinc
             self.spr_to_card(a).show_card()
-        # Any more cards in the deck?
-        if self.index < self.count:
-            return True
-        else:
-            return False
 
     def draw_a_card(self,x,y):
         self.deck[self.index].spr.x = x
