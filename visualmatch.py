@@ -89,7 +89,7 @@ class VisualMatchMain:
         if window.find_a_match(self.tw) is True:
            self.win.set_title("%s: %s" % (_("Visual Match"),_("Keep looking")))
         else:
-           self.tw.deck.deal_3_extra_cards(tw)
+           self.tw.deck.deal_3_extra_cards(self.tw)
            self.win.set_title("%s: %d %s" % (_("Visual Match"),
                               self.tw.deck.count-self.tw.deck.index,
                               _("cards remaining")))
