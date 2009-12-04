@@ -132,6 +132,10 @@ def _button_release_cb(win, event, tw):
     # check to make sure that the current card isn't already selected
     for a in tw.clicked:
         if a is spr:
+            # on second click, unselect
+            i = tw.clicked.index(a)
+            tw.clicked[i] = None
+            tw.selected[i].hide_card()
             return True
 
     # add the selected card to the list
