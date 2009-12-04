@@ -7,25 +7,25 @@
    width="75"
    height="125">
 <rect width="74.5" height="124.5" rx="11" ry="9" x="0.25" y="0.25"
-style="fill:#FFFFFF;fill-opacity:1;stroke:#000000;stroke-width:0.5" />
+style="fill:#AFE8A8;fill-opacity:1;stroke:#000000;stroke-width:0.5" />
 <g>
 <circle cx="27" cy="11" r="16"
    transform="translate(11,12.5)"
    style="fill:#AFE8A8;stroke:#00B418;stroke-width:1.8;" />
 <circle cx="27" cy="11" r="8"
    transform="translate(11,12.5)"
-   style="fill:#FFFFFF;stroke:#00B418;stroke-width:1.8;" />
+   style="fill:#AFE8A8;stroke:#00B418;stroke-width:1.8;" />
 <circle cx="27" cy="11" r="16"
    transform="translate(11,52.5)"
    style="fill:#AFE8A8;stroke:#00B418;stroke-width:1.8;" />
 <circle cx="27" cy="11" r="8"
    transform="translate(11,52.5)"
-   style="fill:#FFFFFF;stroke:#00B418;stroke-width:1.8;" />
+   style="fill:#AFE8A8;stroke:#00B418;stroke-width:1.8;" />
 <circle cx="27" cy="11" r="16"
    transform="translate(11,92.5)"
    style="fill:#AFE8A8;stroke:#00B418;stroke-width:1.8;" />
 <circle cx="27" cy="11" r="8"
    transform="translate(11,92.5)"
-   style="fill:#FFFFFF;stroke:#00B418;stroke-width:1.8;" />
+   style="fill:#AFE8A8;stroke:#00B418;stroke-width:1.8;" />
 </g>
 </svg>

@@ -36,11 +36,11 @@ color_pairs = ([RED_STROKE,RED_FILL],
 fill_styles = ("none","gradient","solid")
 card_types = ("X","O","C")
 
-def background(f):
+def background(f,fill):
     f.write("<rect width=\"74.5\" height=\"124.5\" rx=\"11\" ry=\"9\" x=\"0.25\" y=\"0.25\"\n")
-    f.write("style=\"fill:#FFFFFF;fill-opacity:1;stroke:#000000;stroke-width:0.5\" />\n")
+    f.write("style=\"fill:" + fill + ";fill-opacity:1;stroke:#000000;stroke-width:0.5\" />\n")
 
-def header(f):
+def header(f,fill):
     f.write("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>\n")
     f.write("<!-- Created with Emacs -->\n")
     f.write("<svg\n")
@@ -49,7 +49,7 @@ def header(f):
     f.write("   version=\"1.0\"\n")
     f.write("   width=\"75\"\n")
     f.write("   height=\"125\">\n")
-    background(f)
+    background(f,fill)
     f.write("<g>\n")
 
 def footer(f):
@@ -70,7 +70,7 @@ def circle(f, y, style, stroke, fill):
               ";stroke-width:1.8;\" />\n")
     f.write("<circle cx=\"27\" cy=\"11\" r=\"8\"\n")
     f.write("   transform=\"translate(11," + str(y+11) + ")\"\n")
-    f.write("   style=\"fill:#FFFFFF;stroke:" + stroke + \
+    f.write("   style=\"fill:" + fill + ";stroke:" + stroke + \
             ";stroke-width:1.8;\" />\n")
 
 def check(f, y, style, stroke, fill):
@@ -145,7 +145,7 @@ for t in card_types:
             for s in fill_styles:
                 i += 1
                 f = open_file(i)
-                header(f)
+                header(f,c[1])
                 if t == "O":
                     circle_card(f,n,s,c[0],c[1])
                 elif t == "C":
