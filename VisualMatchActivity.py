@@ -184,10 +184,7 @@ class VisualMatchActivity(activity.Activity):
 
     def show_button1(self, tw):
         self.button1.set_icon("new-game-on")
-        tw.deck.shuffle()
-        tw.deck.deal(tw)
-        tw.matches = 0
-        tw.total_time = 0
+        window.new_game(tw)
         self.button1.set_icon("new-game")
 
     def _button3_cb(self, button, activity):
