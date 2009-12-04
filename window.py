@@ -176,11 +176,13 @@ def _button_release_cb(win, event, tw):
            # test to see if the game is over
            if tw.deck.count-tw.deck.index == 0:
                if find_a_match(tw) is False:
+                   tw.activity.deck_label.set_text("")
                    tw.activity.status_label.set_text(_("Game over") + \
                                                      " (" + \
                                                      str(int(tw.total_time)) + \
                                                      " " + _("seconds") + ")")
                    gobject.source_remove(tw.timeout_id)
+                   unselect(tw)
                    return True
            tw.matches += 1
            tw.activity.status_label.set_text(_("Match"))
@@ -190,18 +192,23 @@ def _button_release_cb(win, event, tw):
            else:
                tw.activity.match_label.set_text(
                   _("%d matches") % (tw.matches))
-
            # reset the timer
            tw.start_time = gobject.get_current_time()
            tw.timeout_id = None
            _counter(tw)
-
        else:
            tw.activity.status_label.set_text(_("No match"))
-       tw.clicked = [None, None, None]
-       for a in tw.selected:
-           a.hide_card()
+       unselect(tw)
    return True
+
+#
+# unselect the cards
+#
+def unselect(tw):
+    tw.clicked = [None, None, None]
+    for a in tw.selected:
+        a.hide_card()
+
 
 #
 # Keypress
