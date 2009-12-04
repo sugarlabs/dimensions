@@ -88,7 +88,7 @@ class VisualMatchActivity(activity.Activity):
             toolbar_box.toolbar.insert(separator, -1)
 
             # Label for showing deck status
-            self.deck_label = gtk.Label(_("%d cards remaining") % (96))
+            self.deck_label = gtk.Label("%d %s" % (96,_("cards remaining")))
             self.deck_label.show()
             deck_toolitem = gtk.ToolItem()
             deck_toolitem.add(self.deck_label)
@@ -174,6 +174,18 @@ class VisualMatchActivity(activity.Activity):
                                     os.path.join(activity.get_bundle_path(), \
                                                  'images/card-'), \
                                     self)
+
+        # Read the high score from the Journal
+        try:
+            self.tw.low_score = int(self.metadata['low_score'])
+        except:
+            self.tw.low_score = -1
+
+    #
+    # Write the slider positions to the Journal
+    #
+    def write_file(self, file_path):
+        self.metadata['low_score'] = self.tw.low_score
 
     #
     # Button callbacks

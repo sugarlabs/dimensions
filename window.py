@@ -92,6 +92,7 @@ def new_window(canvas, path, parent=None):
     tw.clicked = [None, None, None]
 
     # Start doing something
+    tw.low_score = -1
     tw.keypress = ""
     new_game(tw)
     return tw
@@ -174,6 +175,12 @@ def _button_release_cb(win, event, tw):
                         (_("Game over"),int(tw.total_time),_("seconds")))
                     gobject.source_remove(tw.timeout_id)
                     unselect(tw)
+                    if tw.low_score == -1:
+                        tw.low_score = tw.total_time
+                    elif tw.total_time < tw.low_score:
+                        tw.low_score = tw.total_time
+                        set_label(tw,"status","%s (%d %s)" % 
+                            (_("New record"),int(tw.total_time),_("seconds")))
                     return True
             tw.matches += 1
             set_label(tw,"status",_("match"))
