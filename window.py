@@ -168,8 +168,8 @@ def _button_release_cb(win, event, tw):
             # test to see if the game is over
             if tw.deck.count-tw.deck.index == 0:
                 if find_a_match(tw) is False:
-                    tw.activity.deck_label.set_text("")
-                    tw.activity.clock_label.set_text("")
+                    set_label(tw,"deck","")
+                    set_label(tw,"clock","")
                     set_label(tw,"status","%s (%d %s)" % 
                         (_("Game over"),int(tw.total_time),_("seconds")))
                     gobject.source_remove(tw.timeout_id)
