@@ -197,8 +197,9 @@ class VisualMatchActivity(activity.Activity):
        else:
            tw.activity.status_label.set_text(_("No matches."))
            tw.deck.deal_3_extra_cards(tw)
-           tw.activity.deck_label.set_text(_("%d cards remaining") % \
-                                           (tw.deck.count-tw.deck.index))
+           tw.activity.deck_label.set_text("%d %s" % 
+                                           (tw.deck.count-tw.deck.index,
+                                           _("cards remaining")))
 
     def _journal_cb(self, button, path):
         title_alert = NamingAlert(self, path)

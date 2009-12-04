@@ -163,34 +163,30 @@ def _button_release_cb(win, event, tw):
             tw.total_time += gobject.get_current_time()-tw.start_time
             # out with the old and in with the new
             tw.deck.remove_and_replace(tw.clicked, tw)
-            tw.activity.deck_label.set_text(_("%d cards remaining") % \
-                                            (tw.deck.count-tw.deck.index))
+            set_label(tw, "deck", "%d %s" % 
+                    (tw.deck.count-tw.deck.index, _("cards remaining")))
             # test to see if the game is over
             if tw.deck.count-tw.deck.index == 0:
                 if find_a_match(tw) is False:
                     tw.activity.deck_label.set_text("")
                     tw.activity.clock_label.set_text("")
-                    tw.activity.status_label.set_text(_("Game over") +\
-                                                      " (" +\
-                                                      str(int(tw.total_time)) +\
-                                                      " " + _("seconds") + ")")
+                    set_label(tw,"status","%s (%d %s)" % 
+                        (_("Game over"),int(tw.total_time),_("seconds")))
                     gobject.source_remove(tw.timeout_id)
                     unselect(tw)
                     return True
             tw.matches += 1
-            tw.activity.status_label.set_text(_("Match"))
+            set_label(tw,"status",_("match"))
             if tw.matches == 1:
-                tw.activity.match_label.set_text(
-                   _("%d match") % (tw.matches))
+                set_label(tw,"match","%d %s" % (tw.matches,_("match")))
             else:
-                tw.activity.match_label.set_text(
-                   _("%d matches") % (tw.matches))
+                set_label(tw,"match","%d %s" % (tw.matches,_("matches")))
             # reset the timer
             tw.start_time = gobject.get_current_time()
             tw.timeout_id = None
             _counter(tw)
         else:
-            tw.activity.status_label.set_text(_("No match"))
+            set_label(tw,"status",_("no match"))
         unselect(tw)
     return True
 
@@ -223,12 +219,27 @@ def _expose_cb(win, event, tw):
 def _destroy_cb(win, event, tw):
     gtk.main_quit()
 
+#
+# write a string to a label in the toolbar
+def set_label(tw, label, s):
+    if tw.sugar is True:
+        if label == "deck":
+            tw.activity.deck_label.set_text(s)
+        elif label == "status":
+            tw.activity.status_label.set_text(s)
+        elif label == "clock":
+            tw.activity.clock_label.set_text(s)
+        elif label == "match":
+            tw.activity.match_label.set_text(s)
+    else:
+        if hasattr(tw,"win") and label is not "clock":
+            tw.win.set_title("%s: %s" % (_("Visual Match"),s))
 
 #
 # Display # of seconds since start_time
 #
 def _counter(tw):
-     tw.activity.clock_label.set_text(str(int(gobject.get_current_time()-\
+     set_label(tw,"clock",str(int(gobject.get_current_time()-\
                                               tw.start_time)))
      tw.timeout_id = gobject.timeout_add(1000,_counter,tw)
 
