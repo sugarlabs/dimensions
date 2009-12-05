@@ -39,8 +39,8 @@ class VisualMatchMain:
         # create a new window
         self.win = gtk.Window(gtk.WINDOW_TOPLEVEL)
         self.win.maximize()
-        self.win.set_title(_("Visual Match") + ": " + 
-                           _("Click on cards to create sets of three."))
+        self.win.set_title("%s: %s" % (_("Visual Match"),
+                           _("Click on cards to create sets of three.")))
         self.win.connect("delete_event", lambda w,e: gtk.main_quit())
 
         menu = gtk.Menu()
@@ -77,6 +77,26 @@ class VisualMatchMain:
                                os.path.join(os.path.abspath('.'), \
                                             'images/card-'))
         self.tw.win = self.win
+        self.tw.activity = self
+        self.load_score()
+
+    def load_score(self):
+         try:
+             f = file(os.path.join(os.path.abspath('.'),
+                                   'visualmatch.score'),"r")
+             s = f.read().split(":")
+             f.close
+             self.tw.low_score = int(s[1])
+             print "low score is: %d" % (self.tw.low_score)
+         except:
+             print "low score is: %d" % (self.tw.low_score)
+             self.tw.low_score = -1
+
+    def save_score(self):
+         print "saving low score: %d" % (int(self.tw.low_score))        
+         f = file(os.path.join(os.path.abspath('.'),'visualmatch.score'),"w")
+         f.write("low_score:%s" % str(self.tw.low_score))
+         f.close
 
     def set_title(self, title):
         self.win.set_title(title)

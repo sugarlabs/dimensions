@@ -105,6 +105,9 @@ def new_game(tw):
     tw.deck.deal(tw)
     tw.matches = 0
     tw.total_time = 0
+    set_label(tw, "deck", "%d %s" % 
+        (tw.deck.count-tw.deck.index, _("cards remaining")))
+    set_label(tw,"match","%d %s" % (tw.matches,_("matches")))
     tw.start_time = gobject.get_current_time()
     tw.timeout_id = None
     _counter(tw)
@@ -181,6 +184,9 @@ def _button_release_cb(win, event, tw):
                         tw.low_score = tw.total_time
                         set_label(tw,"status","%s (%d %s)" % 
                             (_("New record"),int(tw.total_time),_("seconds")))
+                    if tw.sugar is False:
+                        print "calling save_score"
+                        tw.activity.save_score()
                     return True
             tw.matches += 1
             set_label(tw,"status",_("match"))
