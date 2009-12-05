@@ -43,7 +43,7 @@ class Grid:
         # how many cards are in the deck?
         self.count = 0
         # how many cards are on the playing field
-        self.cards = 12
+        self.cards = 0
         # card spacing
         self.left = int((tw.width-(tw.card_w*5.5*tw.scale))/2)
         self.xinc = int(tw.card_w*1.5*tw.scale)
@@ -62,7 +62,7 @@ class Grid:
     def deal(self, tw):
         # layout the initial 12 cards from the deck
         # find upper left corner of grid
-        self.cards = 12
+        self.cards = 0
         self.grid = []
         x = self.left
         y = self.top
@@ -71,21 +71,22 @@ class Grid:
                 self.grid.append(self.deck[self.index])
                 self.draw_a_card(x,y)
                 x += self.xinc
+                self.cards += 1
             self.grid.append(None) # leave a space for the extra cards
             x = self.left
             y += self.yinc
 
     def deal_3_extra_cards(self, tw):
         # if there are still cards in the deck and only 12 cards in the grid
-        if self.index < self.count and self.cards == 12:
+        if self.index < self.count and self.cards == DEAL:
             # add 3 extra cards to the playing field
-            self.cards = 15
             for r in range(0,3):
                 i = self.grid.index(None)
                 self.grid[i] = self.deck[self.index]
                 x = self.left+self.xinc*(i%5)
                 y = self.top+self.yinc*int(i/5)
                 self.draw_a_card(x,y)
+                self.cards += 1
 
     # shuffle the deck
     def shuffle(self):
@@ -93,9 +94,9 @@ class Grid:
         for c in self.deck:
             self.deck[c].hide_card()
         # randomize the deck
-        for n in range(0,532):
-            i = random.randrange(108)
-            j = random.randrange(108)
+        for n in range(0,DECKSIZE*4):
+            i = random.randrange(DECKSIZE)
+            j = random.randrange(DECKSIZE)
             self.swap_cards(i,j)            
         # reset the index to the beginning of the deck after a shuffle
         self.index = 0
@@ -121,7 +122,7 @@ class Grid:
             # only add new cards if we are down to 12 cards
             i = int(5*(a.y-self.top)/self.yinc) + \
                 int((a.x-self.left)/self.xinc)
-            if self.cards == 12:
+            if self.cards == DEAL:
                 if self.index < self.count:
                     # save card in grid position of card we are replacing
                     self.grid[i] = self.deck[self.index]

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-12-04 01:13+0000\n"
+"POT-Creation-Date: 2009-12-04 16:41+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -16,62 +16,82 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: activity/activity.info:2
+#: activity/activity.info:2 /home/walter/Desktop/set/window.py:236
+#: /home/walter/Desktop/set/visualmatch.py:42
+#: /home/walter/Desktop/set/visualmatch.py:90
+#: /home/walter/Desktop/set/visualmatch.py:93
 msgid "Visual Match"
 msgstr ""
 
+#: /home/walter/Desktop/set/window.py:167
+#: /home/walter/Desktop/set/visualmatch.py:95
+#: /home/walter/Desktop/set/VisualMatchActivity.py:202
+msgid "cards remaining"
+msgstr ""
+
 #: /home/walter/Desktop/set/window.py:174
+msgid "Game over"
+msgstr ""
+
+#: /home/walter/Desktop/set/window.py:174
+msgid "seconds"
+msgstr ""
+
+#: /home/walter/Desktop/set/window.py:179
+#: /home/walter/Desktop/set/window.py:181
+msgid "match"
+msgstr ""
+
+#: /home/walter/Desktop/set/window.py:183
+msgid "matches"
+msgstr ""
+
+#: /home/walter/Desktop/set/window.py:189
+msgid "no match"
+msgstr ""
+
+#: /home/walter/Desktop/set/visualmatch.py:43
+msgid "Click on cards to create sets of three."
+msgstr ""
+
+#: /home/walter/Desktop/set/visualmatch.py:47
+#: /home/walter/Desktop/set/VisualMatchActivity.py:72
+#: /home/walter/Desktop/set/VisualMatchActivity.py:222
+msgid "New game"
+msgstr ""
+
+#: /home/walter/Desktop/set/visualmatch.py:51
+msgid "Find a match"
+msgstr ""
+
+#: /home/walter/Desktop/set/visualmatch.py:90
+#: /home/walter/Desktop/set/VisualMatchActivity.py:196
+msgid "Keep looking"
+msgstr ""
+
+#: /home/walter/Desktop/set/VisualMatchActivity.py:80
+#: /home/walter/Desktop/set/VisualMatchActivity.py:231
+msgid "Is there a match?"
+msgstr ""
+
 #: /home/walter/Desktop/set/VisualMatchActivity.py:91
-#: /home/walter/Desktop/set/VisualMatchActivity.py:203
 #, python-format
 msgid "%d cards remaining"
 msgstr ""
 
-#: /home/walter/Desktop/set/window.py:181
-msgid "Game over"
-msgstr ""
-
-#: /home/walter/Desktop/set/window.py:184
-msgid "seconds"
-msgstr ""
-
-#: /home/walter/Desktop/set/window.py:189
-msgid "Match"
-msgstr ""
-
-#: /home/walter/Desktop/set/window.py:192
-#, python-format
-msgid "%d match"
-msgstr ""
-
-#: /home/walter/Desktop/set/window.py:195
 #: /home/walter/Desktop/set/VisualMatchActivity.py:102
-#: /home/walter/Desktop/set/VisualMatchActivity.py:260
+#: /home/walter/Desktop/set/VisualMatchActivity.py:258
 #, python-format
 msgid "%d matches"
 msgstr ""
 
-#: /home/walter/Desktop/set/window.py:201
-msgid "No match"
-msgstr ""
-
-#: /home/walter/Desktop/set/VisualMatchActivity.py:72
-#: /home/walter/Desktop/set/VisualMatchActivity.py:224
-msgid "New game"
-msgstr ""
-
-#: /home/walter/Desktop/set/VisualMatchActivity.py:80
-#: /home/walter/Desktop/set/VisualMatchActivity.py:233
-msgid "Is there a match?"
-msgstr ""
-
 #: /home/walter/Desktop/set/VisualMatchActivity.py:113
-#: /home/walter/Desktop/set/VisualMatchActivity.py:273
+#: /home/walter/Desktop/set/VisualMatchActivity.py:271
 msgid "-"
 msgstr ""
 
 #: /home/walter/Desktop/set/VisualMatchActivity.py:124
-#: /home/walter/Desktop/set/VisualMatchActivity.py:286
+#: /home/walter/Desktop/set/VisualMatchActivity.py:284
 msgid "Find a match."
 msgstr ""
 
@@ -83,15 +103,11 @@ msgstr ""
 msgid "Project"
 msgstr ""
 
-#: /home/walter/Desktop/set/VisualMatchActivity.py:199
-msgid "Keep looking"
-msgstr ""
-
-#: /home/walter/Desktop/set/VisualMatchActivity.py:201
+#: /home/walter/Desktop/set/VisualMatchActivity.py:198
 msgid "No matches."
 msgstr ""
 
-#: /home/walter/Desktop/set/VisualMatchActivity.py:247
+#: /home/walter/Desktop/set/VisualMatchActivity.py:245
 #, python-format
 msgid "%d cards remain in the deck"
 msgstr ""

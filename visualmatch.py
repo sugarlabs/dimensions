@@ -89,7 +89,6 @@ class VisualMatchMain:
              self.tw.low_score = int(s[1])
              print "low score is: %d" % (self.tw.low_score)
          except:
-             print "low score is: %d" % (self.tw.low_score)
              self.tw.low_score = -1
 
     def save_score(self):

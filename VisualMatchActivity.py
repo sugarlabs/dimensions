@@ -43,8 +43,10 @@ from gettext import gettext as _
 import locale
 import os.path
 
+from constants import *
 from sprites import *
 import window
+
 
 SERVICE = 'org.sugarlabs.VisualMatchActivity'
 IFACE = SERVICE
@@ -88,7 +90,8 @@ class VisualMatchActivity(activity.Activity):
             toolbar_box.toolbar.insert(separator, -1)
 
             # Label for showing deck status
-            self.deck_label = gtk.Label("%d %s" % (96,_("cards remaining")))
+            self.deck_label = gtk.Label("%d %s" % (DECKSIZE-DEAL,
+                                        _("cards remaining")))
             self.deck_label.show()
             deck_toolitem = gtk.ToolItem()
             deck_toolitem.add(self.deck_label)
@@ -253,8 +256,8 @@ class ProjectToolbar(gtk.Toolbar):
         separator.show()
 
         # Label for showing deck status
-        self.activity.deck_label = gtk.Label(\
-            _("%d cards remain in the deck") % (96))
+        self.activity.deck_label = gtk.Label("%d %s" % (DECKSIZE-DEAL,
+                                              _("cards remain in the deck")))
         self.activity.deck_label.show()
         self.activity.deck_toolitem = gtk.ToolItem()
         self.activity.deck_toolitem.add(self.activity.deck_label)
@@ -267,7 +270,7 @@ class ProjectToolbar(gtk.Toolbar):
         separator.show()
 
         # Label for showing match status
-        self.activity.match_label = gtk.Label(_("%d matches") % (0))
+        self.activity.match_label = gtk.Label("%d %s" % (0,_("matches")))
         self.activity.match_label.show()
         self.activity.match_toolitem = gtk.ToolItem()
         self.activity.match_toolitem.add(self.activity.match_label)

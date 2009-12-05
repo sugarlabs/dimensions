@@ -50,6 +50,16 @@ class Card:
                                                      tw.card_w*tw.scale,
                                                      tw.card_h*tw.scale))
             self.index = SELECTMASK
+        elif shape == PLAYMASK:
+            self.spr = sprNew(tw,0,0,self.load_image(tw.path+"play",
+                                                     tw.card_w*tw.scale,
+                                                     tw.card_h*tw.scale))
+            self.index = PLAYMASK
+        elif shape == MATCHMASK:
+            self.spr = sprNew(tw,0,0,self.load_image(tw.path+"match",
+                                                     tw.card_w*tw.scale,
+                                                     tw.card_h*tw.scale))
+            self.index = MATCHMASK
         else:
             self.shape = shape
             self.color = color
