@@ -165,33 +165,33 @@ class VisualMatchActivity(activity.Activity):
         self.show_all()
 
         # Initialize the canvas
-        self.tw = window.new_window(canvas, \
+        self.vmw = window.new_window(canvas, \
                                     os.path.join(activity.get_bundle_path(), \
                                                  'images/card-'), \
                                     self)
 
         # Read the high score from the Journal
         try:
-            self.tw.low_score = int(self.metadata['low_score'])
+            self.vmw.low_score = int(self.metadata['low_score'])
         except:
-            self.tw.low_score = -1
+            self.vmw.low_score = -1
 
     #
     # Write the slider positions to the Journal
     #
     def write_file(self, file_path):
-        self.metadata['low_score'] = self.tw.low_score
+        self.metadata['low_score'] = self.vmw.low_score
 
     #
     # Button callbacks
     #
     def _button1_cb(self, button, activity):
-        self.show_button1(activity.tw)
+        self.show_button1(activity.vmw)
         return True
 
-    def show_button1(self, tw):
+    def show_button1(self, vmw):
         self.button1.set_icon("new-game-on")
-        window.new_game(tw)
+        window.new_game(vmw)
         self.button1.set_icon("new-game")
 
     def _journal_cb(self, button, path):

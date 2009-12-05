@@ -34,26 +34,24 @@ from sprites import *
 # tw - image related
 # pattern - game logic related
 # card index is generated in the following loop:
-"""
-        for shape in range(0,SHAPES):
-            for color in range(0,COLORS):
-                for num in range(0,NUMBER):
-                    for fill in range(0,FILLS):
-"""
+#        for shape in range(0,SHAPES):
+#            for color in range(0,COLORS):
+#                for num in range(0,NUMBER):
+#                    for fill in range(0,FILLS):
 # if shape == SELECTMASK then generate special card-selected overlay
 #
 class Card:
-    def __init__(self,tw,shape,color,num,fill):
+    def __init__(self,vmw,shape,color,num,fill):
         # what do we need to know about each card?
         if shape == SELECTMASK:
-            self.spr = sprNew(tw,0,0,self.load_image(tw.path+"selected",
-                                                     tw.card_w*tw.scale,
-                                                     tw.card_h*tw.scale))
+            self.spr = sprNew(vmw,0,0,self.load_image(vmw.path+"selected",
+                                                      vmw.card_w*vmw.scale,
+                                                      vmw.card_h*vmw.scale))
             self.index = SELECTMASK
         elif shape == MATCHMASK:
-            self.spr = sprNew(tw,0,0,self.load_image(tw.path+"match",
-                                                     tw.card_w*tw.scale,
-                                                     tw.card_h*tw.scale))
+            self.spr = sprNew(vmw,0,0,self.load_image(vmw.path+"match",
+                                                      vmw.card_w*vmw.scale,
+                                                      vmw.card_h*vmw.scale))
             self.index = MATCHMASK
         else:
             self.shape = shape
@@ -65,10 +63,10 @@ class Card:
                          self.num*FILLS+\
                          self.fill
             # create sprite from svg file
-            self.spr = sprNew(tw,0,0,self.load_image(tw.path+\
-                                                     str(self.index),
-                                                     tw.card_w*tw.scale,
-                                                     tw.card_h*tw.scale))
+            self.spr = sprNew(vmw,0,0,self.load_image(vmw.path+\
+                                                      str(self.index),
+                                                      vmw.card_w*vmw.scale,
+                                                      vmw.card_h*vmw.scale))
         self.spr.label = ""
 
     def show_card(self):

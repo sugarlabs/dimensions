@@ -32,7 +32,7 @@ from card import *
 # class for defining deck of cards
 #
 class Deck:
-    def __init__(self, tw):
+    def __init__(self, vmw):
         # create the deck of cards
         self.deck = {}
         # remember the position in the deck
@@ -44,7 +44,7 @@ class Deck:
             for color in range(0,COLORS):
                 for num in range(0,NUMBER):
                     for fill in range(0,FILLS):
-                        self.deck[self.count] = Card(tw,shape,color,num,fill)
+                        self.deck[self.count] = Card(vmw,shape,color,num,fill)
                         self.count += 1
 
     # shuffle the deck

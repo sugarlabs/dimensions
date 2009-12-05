@@ -69,11 +69,11 @@ class VisualMatchMain:
         self.win.show_all()
 
         # Join the activity
-        self.tw = window.new_window(canvas, \
+        self.vmw = window.new_window(canvas, \
                                os.path.join(os.path.abspath('.'), \
                                             'images/card-'))
-        self.tw.win = self.win
-        self.tw.activity = self
+        self.vmw.win = self.win
+        self.vmw.activity = self
         self.load_score()
 
     def load_score(self):
@@ -82,31 +82,31 @@ class VisualMatchMain:
                                    'visualmatch.score'),"r")
              s = f.read().split(":")
              f.close
-             self.tw.low_score = int(s[1])
-             print "low score is: %d" % (self.tw.low_score)
+             self.vmw.low_score = int(s[1])
+             print "low score is: %d" % (self.vmw.low_score)
          except:
-             self.tw.low_score = -1
+             self.vmw.low_score = -1
 
     def save_score(self):
-         print "saving low score: %d" % (int(self.tw.low_score))        
+         print "saving low score: %d" % (int(self.vmw.low_score))        
          f = file(os.path.join(os.path.abspath('.'),'visualmatch.score'),"w")
-         f.write("low_score:%s" % str(self.tw.low_score))
+         f.write("low_score:%s" % str(self.vmw.low_score))
          f.close
 
     def set_title(self, title):
         self.win.set_title(title)
 
     def _new_game_cb(self, widget):
-        window.new_game(self.tw)
+        window.new_game(self.vmw)
         return True
 
     def _match_check_cb(self, widget):
-        if window.find_a_match(self.tw) is True:
+        if window.find_a_match(self.vmw) is True:
            self.win.set_title("%s: %s" % (_("Visual Match"),_("Keep looking")))
         else:
-           self.tw.deck.deal_3_extra_cards(self.tw)
+           self.vmw.deck.deal_3_extra_cards(self.vmw)
            self.win.set_title("%s: %d %s" % (_("Visual Match"),
-                              self.tw.deck.count-self.tw.deck.index,
+                              self.vmw.deck.count-self.vmw.deck.index,
                               _("cards remaining")))
         return True
 

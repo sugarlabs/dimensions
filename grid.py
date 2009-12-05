@@ -34,20 +34,20 @@ from constants import *
 # class for managing 4x3 matrix of cards
 #
 class Grid:
-    def __init__(self, tw):
+    def __init__(self, vmw):
         # the playing surface is a 3x4 grid
         self.grid = []
         # how many cards are on the playing field
         self.cards = 0
         # card spacing
-        self.left = int((tw.width-(tw.card_w*5.5*tw.scale))/2)
-        self.xinc = int(tw.card_w*1.5*tw.scale)
-        # self.top = int((tw.height-(tw.card_h*3.5*tw.scale))/2)
+        self.left = int((vmw.width-(vmw.card_w*5.5*vmw.scale))/2)
+        self.xinc = int(vmw.card_w*1.5*vmw.scale)
+        # self.top = int((vmw.height-(vmw.card_h*3.5*vmw.scale))/2)
         self.top = 10
-        self.yinc = int(tw.card_h*1.25*tw.scale)
+        self.yinc = int(vmw.card_h*1.25*vmw.scale)
 
     # deal the initial 12 cards
-    def deal(self, tw):
+    def deal(self, vmw):
         # layout the initial 12 cards from the deck
         # find upper left corner of grid
         self.cards = 0
@@ -56,7 +56,7 @@ class Grid:
         y = self.top
         for r in range(0,3):
             for c in range(0,4):
-                a = tw.deck.deal_next_card()
+                a = vmw.deck.deal_next_card()
                 self.grid.append(a)
                 self.place_a_card(a,x,y)
                 x += self.xinc
@@ -67,13 +67,13 @@ class Grid:
             y += self.yinc
 
     # add cards when there is no match
-    def deal_extra_cards(self, tw):
+    def deal_extra_cards(self, vmw):
         # if there are still cards in the deck and only 12 cards in the grid
-        if tw.deck.empty() is False and self.cards == DEAL:
+        if vmw.deck.empty() is False and self.cards == DEAL:
             # add 3 extra cards to the playing field
             for r in range(0,3):
                 i = self.grid.index(None)
-                self.grid[i] = tw.deck.deal_next_card()
+                self.grid[i] = vmw.deck.deal_next_card()
                 x = self.left+self.xinc*(i%5)
                 y = self.top+self.yinc*int(i/5)
                 self.place_a_card(self.grid[i],x,y)
@@ -81,26 +81,28 @@ class Grid:
 
     # remove a set from grid
     # and deal new cards from the deck
-    def remove_and_replace(self, clicked_set, tw):
+    def remove_and_replace(self, clicked_set, vmw):
         for a in clicked_set:
             # find the position in the grid of the clicked card
             i = self.xy_to_grid(a.x,a.y)
             # only add new cards if we are down to 12 cards
             if self.cards == DEAL:
-                if tw.deck.empty():
+                if vmw.deck.empty():
                     self.grid[i] = None
                 else:
                     # save card in grid position of card we are replacing
-                    self.grid[i] = tw.deck.deal_next_card()
+                    self.grid[i] = vmw.deck.deal_next_card()
                     self.place_a_card(self.grid[i],a.x,a.y)
             else:
                 self.cards -= 1
                 # mark grid positions of cards we are not replacing
                 self.grid[i] = None
             # move clicked card to the set area
+            # print "moving spr from (%d, %d) to (%d, %d)" % (a.x,a.y,
+            #    10,self.top + clicked_set.index(a)*self.yinc)
             a.x = 10
             a.y = self.top + clicked_set.index(a)*self.yinc
-            tw.deck.spr_to_card(a).show_card()
+            vmw.deck.spr_to_card(a).show_card()
 
     # place a card at position x,y and display it
     def place_a_card(self,c,x,y):
