@@ -52,10 +52,10 @@ class Grid:
 
         # Initialize the deck of cards
         # some loop through all the patterns
-        for shape in range(0,3):
-            for color in range(0,4):
-                for num in range(0,3):
-                    for fill in range(0,3):
+        for shape in range(0,SHAPES):
+            for color in range(0,COLORS):
+                for num in range(0,NUMBER):
+                    for fill in range(0,FILLS):
                         self.deck[self.count] = Card(tw,shape,color,num,fill)
                         self.count += 1
 

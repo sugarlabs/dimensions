@@ -35,10 +35,10 @@ from sprites import *
 # pattern - game logic related
 # card index is generated in the following loop:
 """
-        for shape in range(0,3):
-            for color in range(0,4):
-                for num in range(0,3):
-                    for fill in range(0,3):
+        for shape in range(0,SHAPES):
+            for color in range(0,COLORS):
+                for num in range(0,NUMBER):
+                    for fill in range(0,FILLS):
 """
 # if shape == SELECTMASK then generate special card-selected overlay
 #
@@ -65,7 +65,10 @@ class Card:
             self.color = color
             self.num = num
             self.fill = fill
-            self.index = self.shape*4*3*3+self.color*3*3+self.num*3+self.fill
+            self.index = self.shape*COLORS*NUMBER*FILLS+\
+                         self.color*NUMBER*FILLS+\
+                         self.num*FILLS+\
+                         self.fill
             # create sprite from svg file
             self.spr = sprNew(tw,0,0,self.load_image(tw.path+\
                                                      str(self.index),
