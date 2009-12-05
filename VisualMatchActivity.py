@@ -77,14 +77,6 @@ class VisualMatchActivity(activity.Activity):
             toolbar_box.toolbar.insert(self.button1, -1)
             self.button1.show()
 
-            # Help Button
-            self.button3 = ToolButton( "search" )
-            self.button3.set_tooltip(_('Is there a match?'))
-            self.button3.props.sensitive = True
-            self.button3.connect('clicked', self._button3_cb, self)
-            toolbar_box.toolbar.insert(self.button3, -1)
-            self.button3.show()
-
             separator = gtk.SeparatorToolItem()
             separator.show()
             toolbar_box.toolbar.insert(separator, -1)
@@ -202,20 +194,6 @@ class VisualMatchActivity(activity.Activity):
         window.new_game(tw)
         self.button1.set_icon("new-game")
 
-    def _button3_cb(self, button, activity):
-        self.show_button3(activity.tw)
-        return True
-
-    def show_button3(self, tw):
-       if window.find_a_match(tw) is True:
-           tw.activity.status_label.set_text(_("Keep looking"))
-       else:
-           tw.activity.status_label.set_text(_("No matches."))
-           tw.deck.deal_3_extra_cards(tw)
-           tw.activity.deck_label.set_text("%d %s" % 
-                                           (tw.deck.count-tw.deck.index,
-                                           _("cards remaining")))
-
     def _journal_cb(self, button, path):
         title_alert = NamingAlert(self, path)
         title_alert.set_transient_for(self.get_toplevel())
@@ -240,15 +218,6 @@ class ProjectToolbar(gtk.Toolbar):
                                       self.activity)
         self.insert(self.activity.button1, -1)
         self.activity.button1.show()
-
-        # Help Button
-        self.activity.button3 = ToolButton( "search" )
-        self.activity.button3.set_tooltip(_('Is there a match?'))
-        self.activity.button3.props.sensitive = True
-        self.activity.button3.connect('clicked', self.activity._button3_cb, 
-                                      self.activity)
-        self.insert(self.activity.button3, -1)
-        self.activity.button3.show()
 
         separator = gtk.SeparatorToolItem()
         separator.set_draw(True)

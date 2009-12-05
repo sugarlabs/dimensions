@@ -34,6 +34,7 @@ except:
 
 from constants import *
 from grid import *
+from deck import *
 from card import *
 
 from math import sqrt
@@ -79,24 +80,18 @@ def new_window(canvas, path, parent=None):
     tw.sprites = []
     tw.selected = []
 
-    '''
-    tw.playing_field = Card(tw,PLAYMASK,0,0,0)
-    tw.match_field = Card(tw,MATCHMASK,0,0,0)
-    '''
+    tw.match_field = [Card(tw,MATCHMASK,0,0,0),\
+                      Card(tw,MATCHMASK,0,0,0),\
+                      Card(tw,MATCHMASK,0,0,0)]
 
     # create a deck of cards, shuffle, and then deal
-    tw.deck = Grid(tw)
+    tw.deck = Deck(tw)
+    tw.grid = Grid(tw)
 
-    '''
-    # position the field of play
-    tw.playing_field.spr.x = tw.deck.left-10
-    tw.playing_field.spr.y = tw.deck.top-10
-    tw.playing_field.show_card()
-
-    tw.match_field.spr.x = 0
-    tw.match_field.spr.y = tw.deck.top-10
-    tw.match_field.show_card()
-    '''
+    for i in range(0,3):
+       tw.match_field[i].spr.x = 10
+       tw.match_field[i].spr.y = tw.grid.top+i*tw.grid.yinc
+       tw.match_field[i].show_card()
 
     # initialize three card-selected overlays
     for i in range(0,3):
@@ -116,7 +111,7 @@ def new_window(canvas, path, parent=None):
 #
 def new_game(tw):
     tw.deck.shuffle()
-    tw.deck.deal(tw)
+    tw.grid.deal(tw)
     tw.matches = 0
     tw.total_time = 0
     set_label(tw, "deck", "%d %s" % 
@@ -180,11 +175,11 @@ def _button_release_cb(win, event, tw):
                 gobject.source_remove(tw.timeout_id)
             tw.total_time += gobject.get_current_time()-tw.start_time
             # out with the old and in with the new
-            tw.deck.remove_and_replace(tw.clicked, tw)
+            tw.grid.remove_and_replace(tw.clicked, tw)
             set_label(tw, "deck", "%d %s" % 
                     (tw.deck.count-tw.deck.index, _("cards remaining")))
             # test to see if the game is over
-            if tw.deck.count-tw.deck.index == 0:
+            if tw.deck.empty():
                 if find_a_match(tw) is False:
                     set_label(tw,"deck","")
                     set_label(tw,"clock","")
@@ -201,6 +196,9 @@ def _button_release_cb(win, event, tw):
                     if tw.sugar is False:
                          tw.activity.save_score()
                     return True
+            # test to see if we need to deal extra cards
+            if find_a_match(tw) is False:
+                tw.grid.deal_extra_cards(tw)            
             tw.matches += 1
             set_label(tw,"status",_("match"))
             if tw.matches == 1:
@@ -275,40 +273,11 @@ def _counter(tw):
 def find_a_match(tw):
      a = [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14]
      for i in Permutation(a): # really should be Combination
-         cardarray = [tw.deck.grid[i[0]],tw.deck.grid[i[1]],tw.deck.grid[i[2]]]
+         cardarray = [tw.grid.grid[i[0]],tw.grid.grid[i[1]],tw.grid.grid[i[2]]]
          if match_check(cardarray) is True:
              tw.msg = str(i)
              return True
      return False
-
-"""
-def find_a_match(tw, size):
-     a = range(0, size)
-     cardarray = [tw.deck.grid[a[size-1]]]
-     for x in a:
-	indices.append(tw.deck.grid[x].index)
-     for i in range(0, size-1):
-	for j in find_third_card([tw.deck.grid[a[size-1]], tw.deck.grid[i]]):
-	    if indices.count(j) > 0: return true
-     find_a_match(tw, size-1)
-     return false
-	
-	
-#
-# Given two cards, finds possibilities for third card
-#
-def find_third_card(cardarray):
-     cardindex = ((-cardarray[0].shape - cardarray[1].shape)%3)*4*3*3 \
-     +((-cardarray[0].num - cardarray[1].num)%3)*3 \
-     +((-cardarray[0].fill - cardarray[1].fill)
-     if cardarray[0].color == cardarray[1].color:
-	return [(cardindex + cardarray[0].color*3*3)]
-     else:
-	colors = [0, 1, 2, 3]
-	colors.remove(cardarray[0].color)
-	colors.remove(cardarray[1].color)
-	return [(cardindex + colors[0]*3*3, cardindex + colors[1]*3*3]
-"""
 
 #
 # Check whether three cards are a match based on the criteria that
