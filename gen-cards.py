@@ -143,7 +143,6 @@ for t in card_types:
     for c in color_pairs:
         for n in range(1,4):
             for s in fill_styles:
-                i += 1
                 f = open_file(i)
                 header(f,c[1])
                 if t == "O":
@@ -154,3 +153,4 @@ for t in card_types:
                     cross_card(f,n,s,c[0],c[1])
                 footer(f)
                 close_file(f)
+                i += 1

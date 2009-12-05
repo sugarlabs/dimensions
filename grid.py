@@ -27,6 +27,8 @@ import random
 from sprites import *
 from card import *
 
+from constants import *
+
 #
 # class for defining 4x3 matrix of cards
 #
@@ -45,8 +47,8 @@ class Grid:
         # card spacing
         self.left = int((tw.width-(tw.card_w*5.5*tw.scale))/2)
         self.xinc = int(tw.card_w*1.5*tw.scale)
-        self.top = int((tw.height-(tw.card_h*3*tw.scale))/2)
-        self.yinc = int(tw.card_h*tw.scale)
+        self.top = int((tw.height-(tw.card_h*3.5*tw.scale))/2)
+        self.yinc = int(tw.card_h*1.25*tw.scale)
 
         # Initialize the deck of cards
         # some loop through all the patterns

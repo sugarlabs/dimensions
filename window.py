@@ -32,13 +32,11 @@ try:
 except:
    GRID_CELL_SIZE = 0
 
+from constants import *
 from grid import *
 from card import *
 
 from math import sqrt
-
-CARD_W = 55
-CARD_H = 125
 
 class taWindow: pass
 
@@ -73,7 +71,7 @@ def new_window(canvas, path, parent=None):
     tw.height = gtk.gdk.screen_height()-GRID_CELL_SIZE
     tw.card_w = CARD_W
     tw.card_h = CARD_H
-    tw.scale = 0.8 * tw.height/(tw.card_h*3)
+    tw.scale = 0.8 * tw.height/(tw.card_h*3.5)
     tw.area = tw.canvas.window
     tw.gc = tw.area.new_gc()
     tw.cm = tw.gc.get_colormap()
@@ -81,12 +79,28 @@ def new_window(canvas, path, parent=None):
     tw.sprites = []
     tw.selected = []
 
+    '''
+    tw.playing_field = Card(tw,PLAYMASK,0,0,0)
+    tw.match_field = Card(tw,MATCHMASK,0,0,0)
+    '''
+
     # create a deck of cards, shuffle, and then deal
     tw.deck = Grid(tw)
 
+    '''
+    # position the field of play
+    tw.playing_field.spr.x = tw.deck.left-10
+    tw.playing_field.spr.y = tw.deck.top-10
+    tw.playing_field.show_card()
+
+    tw.match_field.spr.x = 0
+    tw.match_field.spr.y = tw.deck.top-10
+    tw.match_field.show_card()
+    '''
+
     # initialize three card-selected overlays
     for i in range(0,3):
-        tw.selected.append(Card(tw,-1,0,0,0))
+        tw.selected.append(Card(tw,SELECTMASK,0,0,0))
 
     # make an array of three cards that are clicked
     tw.clicked = [None, None, None]
@@ -185,8 +199,7 @@ def _button_release_cb(win, event, tw):
                         set_label(tw,"status","%s (%d %s)" % 
                             (_("New record"),int(tw.total_time),_("seconds")))
                     if tw.sugar is False:
-                        print "calling save_score"
-                        tw.activity.save_score()
+                         tw.activity.save_score()
                     return True
             tw.matches += 1
             set_label(tw,"status",_("match"))

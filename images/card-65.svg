@@ -11,7 +11,7 @@ style="fill:#E4AAE4;fill-opacity:1;stroke:#000000;stroke-width:0.5" />
 <g>
 <circle cx="27" cy="11" r="16"
    transform="translate(11,52.5)"
-   style="fill:#E4AAE4;stroke:#780078;stroke-width:1.8;" />
+   style="fill:#780078;stroke:#780078;stroke-width:1.8;" />
 <circle cx="27" cy="11" r="8"
    transform="translate(11,52.5)"
    style="fill:#E4AAE4;stroke:#780078;stroke-width:1.8;" />

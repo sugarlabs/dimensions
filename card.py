@@ -25,6 +25,8 @@ import gtk
 import gobject
 import os.path
 
+from constants import *
+
 from sprites import *
 
 #
@@ -38,27 +40,27 @@ from sprites import *
                 for num in range(0,3):
                     for fill in range(0,3):
 """
-# if shape == -1 then generate special card-selected overlay
+# if shape == SELECTMASK then generate special card-selected overlay
 #
 class Card:
     def __init__(self,tw,shape,color,num,fill):
         # what do we need to know about each card?
-        if shape == -1:
-            self.spr = sprNew(tw, 0, 0, self.load_image(tw.path+"selected",
-                                                        tw.card_w*tw.scale,
-                                                        tw.card_h*tw.scale))
-            self.index = 0
+        if shape == SELECTMASK:
+            self.spr = sprNew(tw,0,0,self.load_image(tw.path+"selected",
+                                                     tw.card_w*tw.scale,
+                                                     tw.card_h*tw.scale))
+            self.index = SELECTMASK
         else:
             self.shape = shape
             self.color = color
             self.num = num
             self.fill = fill
-            self.index = self.shape*4*3*3+self.color*3*3+self.num*3+self.fill+1
+            self.index = self.shape*4*3*3+self.color*3*3+self.num*3+self.fill
             # create sprite from svg file
-            self.spr = sprNew(tw, 0, 0, self.load_image(tw.path+\
-                                                        str(self.index),
-                                                        tw.card_w*tw.scale,
-                                                        tw.card_h*tw.scale))
+            self.spr = sprNew(tw,0,0,self.load_image(tw.path+\
+                                                     str(self.index),
+                                                     tw.card_w*tw.scale,
+                                                     tw.card_h*tw.scale))
         self.spr.label = ""
 
     def show_card(self):

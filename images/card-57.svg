@@ -10,10 +10,16 @@
 style="fill:#ACC8E4;fill-opacity:1;stroke:#000000;stroke-width:0.5" />
 <g>
 <circle cx="27" cy="11" r="16"
-   transform="translate(11,52.5)"
-   style="fill:#0060C8;stroke:#0060C8;stroke-width:1.8;" />
+   transform="translate(11,32.5)"
+   style="fill:#FFFFFF;stroke:#0060C8;stroke-width:1.8;" />
 <circle cx="27" cy="11" r="8"
-   transform="translate(11,52.5)"
+   transform="translate(11,32.5)"
+   style="fill:#ACC8E4;stroke:#0060C8;stroke-width:1.8;" />
+<circle cx="27" cy="11" r="16"
+   transform="translate(11,72.5)"
+   style="fill:#FFFFFF;stroke:#0060C8;stroke-width:1.8;" />
+<circle cx="27" cy="11" r="8"
+   transform="translate(11,72.5)"
    style="fill:#ACC8E4;stroke:#0060C8;stroke-width:1.8;" />
 </g>
 </svg>
