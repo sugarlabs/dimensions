@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Emacs -->
+<svg
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   version="1.0"
+   width="75"
+   height="125">
+<rect width="74.5" height="124.5" rx="11" ry="9" x="0.25" y="0.25"
+style="fill:#FFC4B8;fill-opacity:1;stroke:#000000;stroke-width:0.5" />
+<g>
+  <text
+     style="font-size:12px;text-anchor:middle;text-align:center;font-family:Bitstream Vera Sans;fill:#FF6040">
+      <tspan
+       x="37.25"
+       y="75"
+       style="font-size:32px;">(5)</tspan>
+  </text></g>
+</svg>

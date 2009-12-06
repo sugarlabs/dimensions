@@ -71,7 +71,7 @@ class VisualMatchMain:
         # Join the activity
         self.vmw = window.new_window(canvas, \
                                os.path.join(os.path.abspath('.'), \
-                                            'images/card-'))
+                                            'images/number-'))
         self.vmw.win = self.win
         self.vmw.activity = self
         self.load_score()
