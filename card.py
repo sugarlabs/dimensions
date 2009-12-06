@@ -44,14 +44,16 @@ class Card:
     def __init__(self,vmw,shape,color,num,fill):
         # what do we need to know about each card?
         if shape == SELECTMASK:
-            self.spr = sprNew(vmw,0,0,self.load_image(vmw.path+"selected",
-                                                      vmw.card_w*vmw.scale,
-                                                      vmw.card_h*vmw.scale))
+            self.spr = sprNew(vmw,0,0,self.load_image(
+                                          vmw.path+vmw.cardtype+"selected",
+                                          vmw.card_w*vmw.scale,
+                                          vmw.card_h*vmw.scale))
             self.index = SELECTMASK
         elif shape == MATCHMASK:
-            self.spr = sprNew(vmw,0,0,self.load_image(vmw.path+"match",
-                                                      vmw.card_w*vmw.scale,
-                                                      vmw.card_h*vmw.scale))
+            self.spr = sprNew(vmw,0,0,self.load_image(
+                                          vmw.path+vmw.cardtype+"match",
+                                          vmw.card_w*vmw.scale,
+                                          vmw.card_h*vmw.scale))
             self.index = MATCHMASK
         else:
             self.shape = shape
@@ -62,11 +64,14 @@ class Card:
                          self.color*NUMBER*FILLS+\
                          self.num*FILLS+\
                          self.fill
+            # ignore card shape for number cards
+            if vmw.cardtype == 'number-':
+                self.shape = 0
             # create sprite from svg file
-            self.spr = sprNew(vmw,0,0,self.load_image(vmw.path+\
-                                                      str(self.index),
-                                                      vmw.card_w*vmw.scale,
-                                                      vmw.card_h*vmw.scale))
+            self.spr = sprNew(vmw,0,0,self.load_image(
+                                          vmw.path+vmw.cardtype+str(self.index),
+                                          vmw.card_w*vmw.scale,
+                                          vmw.card_h*vmw.scale))
         self.spr.label = ""
 
     def show_card(self):

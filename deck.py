@@ -88,3 +88,9 @@ class Deck:
             return False
         else:
             return True
+
+    # hide the deck
+    def hide(self):
+        for c in self.deck:
+            self.deck[c].hide_card()
+

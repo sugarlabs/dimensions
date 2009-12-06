@@ -44,7 +44,7 @@ class vmWindow: pass
 #
 # handle launch from both within and without of Sugar environment
 #
-def new_window(canvas, path, parent=None):
+def new_window(canvas, path, cardtype, parent=None):
     vmw = vmWindow()
     vmw.path = path
     vmw.activity = parent
@@ -72,6 +72,7 @@ def new_window(canvas, path, parent=None):
     vmw.height = gtk.gdk.screen_height()-GRID_CELL_SIZE
     vmw.card_w = CARD_W
     vmw.card_h = CARD_H
+    vmw.cardtype = cardtype
     vmw.scale = 0.8 * vmw.height/(vmw.card_h*3.5)
     vmw.area = vmw.canvas.window
     vmw.gc = vmw.area.new_gc()
@@ -104,13 +105,17 @@ def new_window(canvas, path, parent=None):
     # Start doing something
     vmw.low_score = -1
     vmw.keypress = ""
-    new_game(vmw)
+    new_game(vmw, cardtype)
     return vmw
 
 #
 # Initialize for a new game
 #
-def new_game(vmw):
+def new_game(vmw,cardtype):
+    vmw.deck.hide()
+    if vmw.cardtype is not cardtype:
+        vmw.cardtype = cardtype
+        vmw.deck = Deck(vmw)
     vmw.deck.shuffle()
     vmw.grid.deal(vmw)
     vmw.matches = 0
@@ -296,6 +301,8 @@ def match_check(cardarray):
     if (cardarray[0].fill + cardarray[1].fill + cardarray[2].fill)%3 != 0:
        return False
     if (cardarray[0].shape + cardarray[1].shape + cardarray[2].shape)%3 != 0:
+       print "failed shape test %d %d %d" %\
+           (cardarray[0].shape,cardarray[1].shape,cardarray[2].shape)
        return False
     if cardarray[0].color == cardarray[1].color and \
        cardarray[1].color != cardarray[2].color:

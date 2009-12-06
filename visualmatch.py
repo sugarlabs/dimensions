@@ -44,9 +44,13 @@ class VisualMatchMain:
         self.win.connect("delete_event", lambda w,e: gtk.main_quit())
 
         menu = gtk.Menu()
-        menu_items = gtk.MenuItem(_("New game"))
+        menu_items = gtk.MenuItem(_("New pattern game"))
         menu.append(menu_items)
         menu_items.connect("activate", self._new_game_cb)
+        menu_items.show()
+        menu_items = gtk.MenuItem(_("New number game"))
+        menu.append(menu_items)
+        menu_items.connect("activate", self._new_number_game_cb)
         menu_items.show()
         root_menu = gtk.MenuItem("Tools")
         root_menu.show()
@@ -71,7 +75,7 @@ class VisualMatchMain:
         # Join the activity
         self.vmw = window.new_window(canvas, \
                                os.path.join(os.path.abspath('.'), \
-                                            'images/number-'))
+                                            'images/'),'card-')
         self.vmw.win = self.win
         self.vmw.activity = self
         self.load_score()
@@ -97,7 +101,11 @@ class VisualMatchMain:
         self.win.set_title(title)
 
     def _new_game_cb(self, widget):
-        window.new_game(self.vmw)
+        window.new_game(self.vmw,'card-')
+        return True
+
+    def _new_number_game_cb(self, widget):
+        window.new_game(self.vmw,'number-')
         return True
 
     def _match_check_cb(self, widget):

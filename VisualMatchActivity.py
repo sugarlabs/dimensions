@@ -71,10 +71,18 @@ class VisualMatchActivity(activity.Activity):
 
             # New-game Button
             self.button1 = ToolButton( "new-game" )
-            self.button1.set_tooltip(_('New game'))
+            self.button1.set_tooltip(_('New pattern game'))
             self.button1.props.sensitive = True
             self.button1.connect('clicked', self._button1_cb, self)
             toolbar_box.toolbar.insert(self.button1, -1)
+            self.button1.show()
+
+            # New-number-game Button
+            self.button2 = ToolButton( "new-number-game" )
+            self.button2.set_tooltip(_('New number game'))
+            self.button2.props.sensitive = True
+            self.button2.connect('clicked', self._button2_cb, self)
+            toolbar_box.toolbar.insert(self.button2, -1)
             self.button1.show()
 
             separator = gtk.SeparatorToolItem()
@@ -167,8 +175,7 @@ class VisualMatchActivity(activity.Activity):
         # Initialize the canvas
         self.vmw = window.new_window(canvas, \
                                     os.path.join(activity.get_bundle_path(), \
-                                                 'images/card-'), \
-                                    self)
+                                                 'images/'), 'card-', self)
 
         # Read the high score from the Journal
         try:
@@ -190,9 +197,16 @@ class VisualMatchActivity(activity.Activity):
         return True
 
     def show_button1(self, vmw):
-        self.button1.set_icon("new-game-on")
-        window.new_game(vmw)
+        window.new_game(vmw, 'card-')
         self.button1.set_icon("new-game")
+
+    def _button2_cb(self, button, activity):
+        self.show_button2(activity.vmw)
+        return True
+
+    def show_button2(self, vmw):
+        window.new_game(vmw, 'number-')
+        self.button2.set_icon("new-number-game")
 
     def _journal_cb(self, button, path):
         title_alert = NamingAlert(self, path)
