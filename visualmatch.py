@@ -46,11 +46,15 @@ class VisualMatchMain:
         menu = gtk.Menu()
         menu_items = gtk.MenuItem(_("New pattern game"))
         menu.append(menu_items)
-        menu_items.connect("activate", self._new_game_cb)
+        menu_items.connect("activate", self._new_game_cb, 'card-')
         menu_items.show()
         menu_items = gtk.MenuItem(_("New number game"))
         menu.append(menu_items)
-        menu_items.connect("activate", self._new_number_game_cb)
+        menu_items.connect("activate", self._new_game_cb, 'number-')
+        menu_items.show()
+        menu_items = gtk.MenuItem(_("New word game"))
+        menu.append(menu_items)
+        menu_items.connect("activate", self._new_game_cb, 'word-')
         menu_items.show()
         root_menu = gtk.MenuItem("Tools")
         root_menu.show()
@@ -94,18 +98,14 @@ class VisualMatchMain:
     def save_score(self):
          print "saving low score: %d" % (int(self.vmw.low_score))        
          f = file(os.path.join(os.path.abspath('.'),'visualmatch.score'),"w")
-         f.write("low_score:%s" % str(self.vmw.low_score))
+         f.write("low_score:%s" % str(int(self.vmw.low_score)))
          f.close
 
     def set_title(self, title):
         self.win.set_title(title)
 
-    def _new_game_cb(self, widget):
-        window.new_game(self.vmw,'card-')
-        return True
-
-    def _new_number_game_cb(self, widget):
-        window.new_game(self.vmw,'number-')
+    def _new_game_cb(self, widget, game):
+        window.new_game(self.vmw, game)
         return True
 
     def _match_check_cb(self, widget):

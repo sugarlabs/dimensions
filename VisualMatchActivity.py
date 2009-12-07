@@ -47,6 +47,7 @@ from constants import *
 from sprites import *
 import window
 
+import gencards
 
 SERVICE = 'org.sugarlabs.VisualMatchActivity'
 IFACE = SERVICE
@@ -61,6 +62,12 @@ class VisualMatchActivity(activity.Activity):
         super(VisualMatchActivity,self).__init__(handle)
 
         try:
+            datapath = os.path.join(activity.get_activity_root(), "data")
+        except:
+            datapath = os.path.join(os.environ['HOME'], SERVICE, "data")
+        gencards.generator(datapath)
+
+        try:
             # Use 0.86 toolbar design
             toolbar_box = ToolbarBox()
 
@@ -69,7 +76,7 @@ class VisualMatchActivity(activity.Activity):
             toolbar_box.toolbar.insert(activity_button, 0)
             activity_button.show()
 
-            # New-game Button
+            # New-pattern-game Button
             self.button1 = ToolButton( "new-game" )
             self.button1.set_tooltip(_('New pattern game'))
             self.button1.props.sensitive = True
@@ -83,7 +90,15 @@ class VisualMatchActivity(activity.Activity):
             self.button2.props.sensitive = True
             self.button2.connect('clicked', self._button2_cb, self)
             toolbar_box.toolbar.insert(self.button2, -1)
-            self.button1.show()
+            self.button2.show()
+
+            # New-word-game Button
+            self.button3 = ToolButton( "new-word-game" )
+            self.button3.set_tooltip(_('New word game'))
+            self.button3.props.sensitive = True
+            self.button3.connect('clicked', self._button3_cb, self)
+            toolbar_box.toolbar.insert(self.button3, -1)
+            self.button3.show()
 
             separator = gtk.SeparatorToolItem()
             separator.show()
@@ -166,16 +181,14 @@ class VisualMatchActivity(activity.Activity):
 
         # Create a canvas
         canvas = gtk.DrawingArea()
-        canvas.set_size_request(gtk.gdk.screen_width(), \
+        canvas.set_size_request(gtk.gdk.screen_width(),
                                 gtk.gdk.screen_height())
         self.set_canvas(canvas)
         canvas.show()
         self.show_all()
 
         # Initialize the canvas
-        self.vmw = window.new_window(canvas, \
-                                    os.path.join(activity.get_bundle_path(), \
-                                                 'images/'), 'card-', self)
+        self.vmw = window.new_window(canvas, datapath, 'pattern', self)
 
         # Read the high score from the Journal
         try:
@@ -193,20 +206,19 @@ class VisualMatchActivity(activity.Activity):
     # Button callbacks
     #
     def _button1_cb(self, button, activity):
-        self.show_button1(activity.vmw)
+        self.select_game(activity.vmw, 'pattern')
         return True
-
-    def show_button1(self, vmw):
-        window.new_game(vmw, 'card-')
-        self.button1.set_icon("new-game")
 
     def _button2_cb(self, button, activity):
-        self.show_button2(activity.vmw)
+        self.select_game(activity.vmw, 'number')
         return True
 
-    def show_button2(self, vmw):
-        window.new_game(vmw, 'number-')
-        self.button2.set_icon("new-number-game")
+    def _button3_cb(self, button, activity):
+        self.select_game(activity.vmw, 'word')
+        return True
+
+    def select_game(self, vmw, cardtype):
+        window.new_game(vmw, cardtype)
 
     def _journal_cb(self, button, path):
         title_alert = NamingAlert(self, path)

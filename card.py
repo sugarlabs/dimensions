@@ -45,18 +45,24 @@ class Card:
         # what do we need to know about each card?
         if shape == SELECTMASK:
             self.spr = sprNew(vmw,0,0,self.load_image(
-                                          vmw.path+vmw.cardtype+"selected",
+                                          vmw.path,
+                                          "selected",
                                           vmw.card_w*vmw.scale,
                                           vmw.card_h*vmw.scale))
             self.index = SELECTMASK
         elif shape == MATCHMASK:
             self.spr = sprNew(vmw,0,0,self.load_image(
-                                          vmw.path+vmw.cardtype+"match",
+                                          vmw.path,
+                                          "match",
                                           vmw.card_w*vmw.scale,
                                           vmw.card_h*vmw.scale))
             self.index = MATCHMASK
         else:
-            self.shape = shape
+            # include card shape only for pattern cards
+            if vmw.cardtype == 'pattern':
+                self.shape = shape
+            else:
+                self.shape = 0
             self.color = color
             self.num = num
             self.fill = fill
@@ -64,14 +70,12 @@ class Card:
                          self.color*NUMBER*FILLS+\
                          self.num*FILLS+\
                          self.fill
-            # ignore card shape for number cards
-            if vmw.cardtype == 'number-':
-                self.shape = 0
             # create sprite from svg file
             self.spr = sprNew(vmw,0,0,self.load_image(
-                                          vmw.path+vmw.cardtype+str(self.index),
-                                          vmw.card_w*vmw.scale,
-                                          vmw.card_h*vmw.scale))
+                                vmw.path,
+                                vmw.cardtype+"-"+str(self.index),
+                                vmw.card_w*vmw.scale,
+                                vmw.card_h*vmw.scale))
         self.spr.label = ""
 
     def show_card(self):
@@ -81,8 +85,7 @@ class Card:
     def hide_card(self):
         hide(self.spr)
 
-    def load_image(self, file, w, h):
-        return gtk.gdk.pixbuf_new_from_file_at_size(os.path.join(file+".svg"),
-                                                    int(w),
-                                                    int(h))
+    def load_image(self, path, file, w, h):
+        return gtk.gdk.pixbuf_new_from_file_at_size(
+            os.path.join(path, file+".svg"), int(w), int(h))
 
