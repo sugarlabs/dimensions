@@ -188,16 +188,18 @@ def _button_release_cb(win, event, vmw):
                 if find_a_match(vmw) is False:
                     set_label(vmw,"deck","")
                     set_label(vmw,"clock","")
-                    set_label(vmw,"status","%s (%d %s)" % 
-                        (_("Game over"),int(vmw.total_time),_("seconds")))
+                    set_label(vmw,"status","%s (%d:%02d)" % 
+                        (_("Game over"),int(vmw.total_time/60),
+                         int(vmw.total_time%60)))
                     gobject.source_remove(vmw.timeout_id)
                     unselect(vmw)
                     if vmw.low_score == -1:
                         vmw.low_score = vmw.total_time
                     elif vmw.total_time < vmw.low_score:
                         vmw.low_score = vmw.total_time
-                        set_label(vmw,"status","%s (%d %s)" % 
-                            (_("New record"),int(vmw.total_time),_("seconds")))
+                        set_label(vmw,"status","%s (%d:%02d)" % 
+                            (_("New record"),int(vmw.total_time/60),
+                             int(vmw.total_time%60)))
                     if vmw.sugar is False:
                          vmw.activity.save_score()
                     return True
