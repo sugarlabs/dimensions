@@ -80,7 +80,8 @@ class VisualMatchActivity(activity.Activity):
             self.button1 = ToolButton( "new-pattern-game" )
             self.button1.set_tooltip(_('New pattern game'))
             self.button1.props.sensitive = True
-            self.button1.connect('clicked', self._button1_cb, self)
+            self.button1.connect('clicked', self._select_game_cb, self,
+                                 'pattern')
             toolbar_box.toolbar.insert(self.button1, -1)
             self.button1.show()
 
@@ -88,7 +89,8 @@ class VisualMatchActivity(activity.Activity):
             self.button2 = ToolButton( "new-number-game" )
             self.button2.set_tooltip(_('New number game'))
             self.button2.props.sensitive = True
-            self.button2.connect('clicked', self._button2_cb, self)
+            self.button2.connect('clicked', self._select_game_cb, self,
+                                 'number')
             toolbar_box.toolbar.insert(self.button2, -1)
             self.button2.show()
 
@@ -96,7 +98,8 @@ class VisualMatchActivity(activity.Activity):
             self.button3 = ToolButton( "new-word-game" )
             self.button3.set_tooltip(_('New word game'))
             self.button3.props.sensitive = True
-            self.button3.connect('clicked', self._button3_cb, self)
+            self.button3.connect('clicked', self._select_game_cb, self,
+                                 'word')
             toolbar_box.toolbar.insert(self.button3, -1)
             self.button3.show()
 
@@ -117,7 +120,7 @@ class VisualMatchActivity(activity.Activity):
             toolbar_box.toolbar.insert(separator, -1)
 
             # Label for showing match status
-            self.match_label = gtk.Label(_("%d matches") % (0))
+            self.match_label = gtk.Label("%d %s" % (0,_("matches")))
             self.match_label.show()
             match_toolitem = gtk.ToolItem()
             match_toolitem.add(self.match_label)
@@ -128,7 +131,7 @@ class VisualMatchActivity(activity.Activity):
             toolbar_box.toolbar.insert(separator, -1)
 
             # Label for showing counter
-            self.clock_label = gtk.Label(_("-"))
+            self.clock_label = gtk.Label("-")
             self.clock_label.show()
             clock_toolitem = gtk.ToolItem()
             clock_toolitem.add(self.clock_label)
@@ -205,20 +208,9 @@ class VisualMatchActivity(activity.Activity):
     #
     # Button callbacks
     #
-    def _button1_cb(self, button, activity):
-        self.select_game(activity.vmw, 'pattern')
-        return True
-
-    def _button2_cb(self, button, activity):
-        self.select_game(activity.vmw, 'number')
-        return True
-
-    def _button3_cb(self, button, activity):
-        self.select_game(activity.vmw, 'word')
-        return True
-
-    def select_game(self, vmw, cardtype):
-        window.new_game(vmw, cardtype)
+    def _select_game_cb(self, button, activity, cardtype):
+        print "in _select_game_cb: %s" % (cardtype)
+        window.new_game(activity.vmw, cardtype)
 
     def _journal_cb(self, button, path):
         title_alert = NamingAlert(self, path)
@@ -240,8 +232,8 @@ class ProjectToolbar(gtk.Toolbar):
         self.activity.button1 = ToolButton( "new-pattern-game" )
         self.activity.button1.set_tooltip(_('New pattern game'))
         self.activity.button1.props.sensitive = True
-        self.activity.button1.connect('clicked', self.activity._button1_cb, 
-                                      self.activity)
+        self.activity.button1.connect('clicked', self.activity._select_game_cb, 
+                                      self.activity, 'pattern')
         self.insert(self.activity.button1, -1)
         self.activity.button1.show()
 
@@ -249,8 +241,8 @@ class ProjectToolbar(gtk.Toolbar):
         self.activity.button2 = ToolButton( "new-number-game" )
         self.activity.button2.set_tooltip(_('New number game'))
         self.activity.button2.props.sensitive = True
-        self.activity.button2.connect('clicked', self.activity._button2_cb, 
-                                      self.activity)
+        self.activity.button2.connect('clicked', self.activity._select_game_cb, 
+                                      self.activity, 'number')
         self.insert(self.activity.button2, -1)
         self.activity.button2.show()
 
@@ -258,8 +250,8 @@ class ProjectToolbar(gtk.Toolbar):
         self.activity.button3 = ToolButton( "new-word-game" )
         self.activity.button3.set_tooltip(_('New word game'))
         self.activity.button3.props.sensitive = True
-        self.activity.button3.connect('clicked', self.activity._button3_cb, 
-                                      self.activity)
+        self.activity.button3.connect('clicked', self.activity._select_game_cb, 
+                                      self.activity, 'word')
         self.insert(self.activity.button3, -1)
         self.activity.button3.show()
 
@@ -296,7 +288,7 @@ class ProjectToolbar(gtk.Toolbar):
         separator.show()
 
         # Label for showing counter
-        self.activity.clock_label = gtk.Label(_("-"))
+        self.activity.clock_label = gtk.Label("-")
         self.activity.clock_label.show()
         self.activity.clock_toolitem = gtk.ToolItem()
         self.activity.clock_toolitem.add(self.activity.clock_label)
