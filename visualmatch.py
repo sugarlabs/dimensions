@@ -25,12 +25,13 @@ pygtk.require('2.0')
 import gtk
 
 from gettext import gettext as _
-import os.path
+import os
 
 import window
 import grid
 import card
 import sprites
+import gencards
 
 class VisualMatchMain:
     def __init__(self):
@@ -43,18 +44,22 @@ class VisualMatchMain:
                            _("Click on cards to create sets of three.")))
         self.win.connect("delete_event", lambda w,e: gtk.main_quit())
 
+        if not os.path.exists(os.path.join(os.path.abspath('.'), 'images')):
+            os.mkdir(os.path.join(os.path.abspath('.'), 'images'))
+        gencards.generator(os.path.join(os.path.abspath('.'), 'images'))
+
         menu = gtk.Menu()
         menu_items = gtk.MenuItem(_("New pattern game"))
         menu.append(menu_items)
-        menu_items.connect("activate", self._new_game_cb, 'card-')
+        menu_items.connect("activate", self._new_game_cb, 'pattern')
         menu_items.show()
         menu_items = gtk.MenuItem(_("New number game"))
         menu.append(menu_items)
-        menu_items.connect("activate", self._new_game_cb, 'number-')
+        menu_items.connect("activate", self._new_game_cb, 'number')
         menu_items.show()
         menu_items = gtk.MenuItem(_("New word game"))
         menu.append(menu_items)
-        menu_items.connect("activate", self._new_game_cb, 'word-')
+        menu_items.connect("activate", self._new_game_cb, 'word')
         menu_items.show()
         root_menu = gtk.MenuItem("Tools")
         root_menu.show()
@@ -79,7 +84,7 @@ class VisualMatchMain:
         # Join the activity
         self.vmw = window.new_window(canvas, \
                                os.path.join(os.path.abspath('.'), \
-                                            'images/'),'card-')
+                                            'images/'),'pattern')
         self.vmw.win = self.win
         self.vmw.activity = self
         self.load_score()
@@ -106,16 +111,6 @@ class VisualMatchMain:
 
     def _new_game_cb(self, widget, game):
         window.new_game(self.vmw, game)
-        return True
-
-    def _match_check_cb(self, widget):
-        if window.find_a_match(self.vmw) is True:
-           self.win.set_title("%s: %s" % (_("Visual Match"),_("Keep looking")))
-        else:
-           self.vmw.deck.deal_3_extra_cards(self.vmw)
-           self.win.set_title("%s: %d %s" % (_("Visual Match"),
-                              self.vmw.deck.count-self.vmw.deck.index,
-                              _("cards remaining")))
         return True
 
 def main():
