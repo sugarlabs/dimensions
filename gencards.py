@@ -19,7 +19,7 @@
 #OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 #THE SOFTWARE.
 
-import os.path
+import os
 from gettext import gettext as _
 
 RED_STROKE = "#FF6040"
@@ -232,5 +232,7 @@ def main():
     return 0
 
 if __name__ == "__main__":
+    if not os.path.exists(os.path.join(os.path.abspath('.'), 'images')):
+        os.mkdir(os.path.join(os.path.abspath('.'), 'images'))
     generator(os.path.join(os.path.abspath('.'), 'images'))
     main()
