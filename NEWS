@@ -1,9 +1,12 @@
 9
 
+* auto-deal of extra cards when needed
 * added glue for launching outside of Sugar
 * save "low score" to Journal
 * added numbers and words games
 * autogenerate cards on the fly
+* minutes:seconds display for total time
+* general code cleanup
 
 8
 
