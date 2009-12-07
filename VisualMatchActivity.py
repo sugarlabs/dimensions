@@ -77,7 +77,7 @@ class VisualMatchActivity(activity.Activity):
             activity_button.show()
 
             # New-pattern-game Button
-            self.button1 = ToolButton( "new-game" )
+            self.button1 = ToolButton( "new-pattern-game" )
             self.button1.set_tooltip(_('New pattern game'))
             self.button1.props.sensitive = True
             self.button1.connect('clicked', self._button1_cb, self)
@@ -236,14 +236,32 @@ class ProjectToolbar(gtk.Toolbar):
         gtk.Toolbar.__init__(self)
         self.activity = pc
 
-        # New-game Button
-        self.activity.button1 = ToolButton( "new-game" )
-        self.activity.button1.set_tooltip(_('New game'))
+        # New-pattern-game Button
+        self.activity.button1 = ToolButton( "new-pattern-game" )
+        self.activity.button1.set_tooltip(_('New pattern game'))
         self.activity.button1.props.sensitive = True
         self.activity.button1.connect('clicked', self.activity._button1_cb, 
                                       self.activity)
         self.insert(self.activity.button1, -1)
         self.activity.button1.show()
+
+        # New-number-game Button
+        self.activity.button2 = ToolButton( "new-number-game" )
+        self.activity.button2.set_tooltip(_('New number game'))
+        self.activity.button2.props.sensitive = True
+        self.activity.button2.connect('clicked', self.activity._button2_cb, 
+                                      self.activity)
+        self.insert(self.activity.button2, -1)
+        self.activity.button2.show()
+
+        # New-word-game Button
+        self.activity.button3 = ToolButton( "new-word-game" )
+        self.activity.button3.set_tooltip(_('New word game'))
+        self.activity.button3.props.sensitive = True
+        self.activity.button3.connect('clicked', self.activity._button3_cb, 
+                                      self.activity)
+        self.insert(self.activity.button3, -1)
+        self.activity.button3.show()
 
         separator = gtk.SeparatorToolItem()
         separator.set_draw(True)
