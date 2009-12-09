@@ -31,20 +31,20 @@ from deck import *
 from constants import *
 
 #
-# class for managing 4x3 matrix of cards
+# class for managing 3x5 matrix of cards
 #
 class Grid:
     def __init__(self, vmw):
-        # the playing surface is a 3x4 grid
+        # the playing surface is a 3x5 grid
         self.grid = []
         # how many cards are on the playing field
         self.cards = 0
         # card spacing
-        self.left = int((vmw.width-(vmw.card_w*5.5*vmw.scale))/2)
-        self.xinc = int(vmw.card_w*1.5*vmw.scale)
+        self.left = int((vmw.width-(vmw.card_w*2*vmw.scale))/2)
+        self.xinc = int(vmw.card_w*1.2*vmw.scale)
         # self.top = int((vmw.height-(vmw.card_h*3.5*vmw.scale))/2)
         self.top = 10
-        self.yinc = int(vmw.card_h*1.25*vmw.scale)
+        self.yinc = int(vmw.card_h*1.33*vmw.scale)
 
     # deal the initial 12 cards
     def deal(self, vmw):
@@ -54,17 +54,18 @@ class Grid:
         self.grid = []
         x = self.left
         y = self.top
-        for r in range(0,3):
-            for c in range(0,4):
+        for r in range(0,4):
+            for c in range(0,3):
                 a = vmw.deck.deal_next_card()
                 self.grid.append(a)
                 self.place_a_card(a,x,y)
                 x += self.xinc
                 self.cards += 1
-            # leave a space for the extra cards
-            self.grid.append(None)
             x = self.left
             y += self.yinc
+        for c in range(0,3):
+            # leave a space for the extra cards
+            self.grid.append(None)
 
     # add cards when there is no match
     def deal_extra_cards(self, vmw):
@@ -74,8 +75,8 @@ class Grid:
             for r in range(0,3):
                 i = self.grid.index(None)
                 self.grid[i] = vmw.deck.deal_next_card()
-                x = self.left+self.xinc*(i%5)
-                y = self.top+self.yinc*int(i/5)
+                x = self.left+self.xinc*(i%3)
+                y = self.top+self.yinc*int(i/3)
                 self.place_a_card(self.grid[i],x,y)
                 self.cards += 1
 
@@ -113,4 +114,4 @@ class Grid:
 
     # convert from sprite x,y to grid index
     def xy_to_grid(self,x,y):
-        return int(5*(y-self.top)/self.yinc) + int((x-self.left)/self.xinc)
+        return int(3*(y-self.top)/self.yinc) + int((x-self.left)/self.xinc)

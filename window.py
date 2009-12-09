@@ -73,7 +73,7 @@ def new_window(canvas, path, cardtype, parent=None):
     vmw.card_w = CARD_W
     vmw.card_h = CARD_H
     vmw.cardtype = cardtype
-    vmw.scale = 0.8 * vmw.height/(vmw.card_h*3.5)
+    vmw.scale = 0.8 * vmw.height/(vmw.card_h*5.5)
     vmw.area = vmw.canvas.window
     vmw.gc = vmw.area.new_gc()
     vmw.cm = vmw.gc.get_colormap()
@@ -206,8 +206,10 @@ def _button_release_cb(win, event, vmw):
             # test to see if we need to deal extra cards
             if find_a_match(vmw) is False:
                 vmw.grid.deal_extra_cards(vmw)            
+            else:
+                # set_label(vmw,"status",vmw.msg)
+                set_label(vmw,"status",_("match"))
             vmw.matches += 1
-            set_label(vmw,"status",_("match"))
             if vmw.matches == 1:
                 set_label(vmw,"match","%d %s" % (vmw.matches,_("match")))
             else:
@@ -303,8 +305,6 @@ def match_check(cardarray):
     if (cardarray[0].fill + cardarray[1].fill + cardarray[2].fill)%3 != 0:
        return False
     if (cardarray[0].shape + cardarray[1].shape + cardarray[2].shape)%3 != 0:
-       print "failed shape test %d %d %d" %\
-           (cardarray[0].shape,cardarray[1].shape,cardarray[2].shape)
        return False
     if cardarray[0].color == cardarray[1].color and \
        cardarray[1].color != cardarray[2].color:
