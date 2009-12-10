@@ -58,11 +58,7 @@ class Card:
                                           vmw.card_h*vmw.scale))
             self.index = MATCHMASK
         else:
-            # include card shape only for pattern cards
-            if vmw.cardtype == 'pattern':
-                self.shape = shape
-            else:
-                self.shape = 0
+            self.shape = shape
             self.color = color
             self.num = num
             self.fill = fill

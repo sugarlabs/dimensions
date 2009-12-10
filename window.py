@@ -174,7 +174,8 @@ def _button_release_cb(win, event, vmw):
     else:
         if match_check([vmw.deck.spr_to_card(vmw.clicked[0]),
                         vmw.deck.spr_to_card(vmw.clicked[1]),
-                        vmw.deck.spr_to_card(vmw.clicked[2])]):
+                        vmw.deck.spr_to_card(vmw.clicked[2])],
+                       vmw.cardtype):
             # stop the timer
             if vmw.timeout_id is not None:
                 gobject.source_remove(vmw.timeout_id)
@@ -231,7 +232,6 @@ def unselect(vmw):
      for a in vmw.selected:
          a.hide_card()
 
-
 #
 # Keypress
 #
@@ -285,7 +285,7 @@ def find_a_match(vmw):
          cardarray = [vmw.grid.grid[i[0]],\
                       vmw.grid.grid[i[1]],\
                       vmw.grid.grid[i[2]]]
-         if match_check(cardarray) is True:
+         if match_check(cardarray, vmw.cardtype) is True:
              vmw.msg = str(i)
              return True
      return False
@@ -295,31 +295,41 @@ def find_a_match(vmw):
 # in all characteristics:
 # either all cards are the same of all cards are different
 #
-def match_check(cardarray):
+def match_check(cardarray, cardtype):
     for a in cardarray:
         if a is None:
             return False
 
     if (cardarray[0].num + cardarray[1].num + cardarray[2].num)%3 != 0:
-       return False
-    if (cardarray[0].fill + cardarray[1].fill + cardarray[2].fill)%3 != 0:
-       return False
-    if (cardarray[0].shape + cardarray[1].shape + cardarray[2].shape)%3 != 0:
-       return False
+        return False
     if cardarray[0].color == cardarray[1].color and \
        cardarray[1].color != cardarray[2].color:
-       return False
+        return False
     if cardarray[0].color != cardarray[1].color and \
        cardarray[1].color != cardarray[2].color and \
        cardarray[0].color == cardarray[2].color:
-       return False
+        return False
     if cardarray[0].color != cardarray[1].color and \
        cardarray[1].color == cardarray[2].color and \
        cardarray[0].color != cardarray[2].color:
-       return False
+        return False
     if cardarray[0].color == cardarray[1].color and \
        cardarray[1].color == cardarray[2].color and \
        cardarray[0].color != cardarray[2].color:
+        return False
+    # special case for the word game
+    # only check fill when numbers are the same
+    if cardtype == 'word':
+        if cardarray[0].num == cardarray[1].num and \
+           cardarray[0].num == cardarray[2].num and \
+           (cardarray[0].fill + cardarray[1].fill + cardarray[2].fill)%3 != 0:
+            return False
+    else:
+        if (cardarray[0].fill + cardarray[1].fill + cardarray[2].fill)%3 != 0:
+            return False
+    # don't check shape except in pattern game
+    if cardtype == 'pattern' and \
+       (cardarray[0].shape + cardarray[1].shape + cardarray[2].shape)%3 != 0:
        return False
     return True
 

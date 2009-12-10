@@ -77,10 +77,11 @@ class Deck:
 
     # deal the next card from the deck
     def deal_next_card(self):
-        self.index += 1
         if self.empty():
             return None
-        return self.deck[self.index]
+        c = self.deck[self.index]
+        self.index += 1
+        return c
  
     # is the deck empty?
     def empty(self):

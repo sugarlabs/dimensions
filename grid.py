@@ -30,6 +30,9 @@ from deck import *
 
 from constants import *
 
+ROW = 5
+COL = 3
+
 #
 # class for managing 3x5 matrix of cards
 #
@@ -46,16 +49,15 @@ class Grid:
         self.top = 10
         self.yinc = int(vmw.card_h*1.33*vmw.scale)
 
-    # deal the initial 12 cards
+    # deal the initial set of cards
     def deal(self, vmw):
-        # layout the initial 12 cards from the deck
         # find upper left corner of grid
         self.cards = 0
         self.grid = []
         x = self.left
         y = self.top
-        for r in range(0,4):
-            for c in range(0,3):
+        for r in range(0,ROW-1):
+            for c in range(0,COL):
                 a = vmw.deck.deal_next_card()
                 self.grid.append(a)
                 self.place_a_card(a,x,y)
@@ -63,8 +65,8 @@ class Grid:
                 self.cards += 1
             x = self.left
             y += self.yinc
-        for c in range(0,3):
-            # leave a space for the extra cards
+        for c in range(0,COL):
+            # leave a blank row for extra cards
             self.grid.append(None)
 
     # add cards when there is no match
@@ -72,11 +74,11 @@ class Grid:
         # if there are still cards in the deck and only 12 cards in the grid
         if vmw.deck.empty() is False and self.cards == DEAL:
             # add 3 extra cards to the playing field
-            for r in range(0,3):
+            for c in range(0,COL):
                 i = self.grid.index(None)
                 self.grid[i] = vmw.deck.deal_next_card()
-                x = self.left+self.xinc*(i%3)
-                y = self.top+self.yinc*int(i/3)
+                x = self.left+self.xinc*(i%COL)
+                y = self.top+self.yinc*int(i/ROW)
                 self.place_a_card(self.grid[i],x,y)
                 self.cards += 1
 
@@ -91,6 +93,8 @@ class Grid:
                 if vmw.deck.empty():
                     self.grid[i] = None
                 else:
+                    # print "new card (%d) to grid position %d" % \
+                    #      (vmw.deck.index,i)
                     # save card in grid position of card we are replacing
                     self.grid[i] = vmw.deck.deal_next_card()
                     self.place_a_card(self.grid[i],a.x,a.y)
@@ -114,4 +118,4 @@ class Grid:
 
     # convert from sprite x,y to grid index
     def xy_to_grid(self,x,y):
-        return int(3*(y-self.top)/self.yinc) + int((x-self.left)/self.xinc)
+        return int(COL*(y-self.top)/self.yinc) + int((x-self.left)/self.xinc)
