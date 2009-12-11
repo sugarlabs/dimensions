@@ -118,6 +118,8 @@ def new_game(vmw,cardtype):
         vmw.deck = Deck(vmw)
     vmw.deck.shuffle()
     vmw.grid.deal(vmw)
+    if find_a_match(vmw) is False:
+        vmw.grid.deal_extra_cards(vmw)            
     vmw.matches = 0
     vmw.total_time = 0
     set_label(vmw, "deck", "%d %s" % 
