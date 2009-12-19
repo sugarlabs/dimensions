@@ -21,6 +21,7 @@
 
 import os
 from gettext import gettext as _
+import random
 
 RED_STROKE = "#FF6040"
 RED_FILL = "#FFC4B8"
@@ -33,8 +34,9 @@ PURPLE_FILL = "#E4AAE4"
 
 color_pairs = ([RED_STROKE,RED_FILL],
                [GREEN_STROKE,GREEN_FILL],
-               [BLUE_STROKE,BLUE_FILL],
-               [PURPLE_STROKE,PURPLE_FILL])
+               [BLUE_STROKE,BLUE_FILL])
+#               [BLUE_STROKE,BLUE_FILL],
+#               [PURPLE_STROKE,PURPLE_FILL])
 
 fill_styles = ("none","gradient","solid")
 card_types = ("X","O","C")
@@ -58,6 +60,91 @@ def header(f,stroke,fill,width):
 def footer(f):
     f.write("</g>\n")
     f.write("</svg>\n")
+
+def dots(f, n, x, y, stroke):
+    f.write("     <g\n")
+    f.write("   transform=\"translate(" + str(x) + ", " + str(y) + ")\">\n")
+    if n%5 == 0:
+        ox = 37.5
+        j = 5
+    elif n%7 == 0:
+        ox = 27.5
+        j = 7
+    else:
+        ox = 7.5
+        j = 11
+    if n%3 == 0:
+        oy = 12.5
+    elif n%2 == 0:
+        oy = 22.5
+    else:
+        oy = 32.5
+    x = ox
+    y = oy
+    for i in range(n):
+        f.write("       <circle\n")
+        f.write("          cx=\""+str(x)+"\"\n")
+        f.write("          cy=\""+str(y)+"\"\n")
+        f.write("          r=\"3\"\n")
+        f.write("          style=\"fill:"+str(stroke)+";stroke:"+\
+                str(stroke)+";stroke-width:2;stroke-opacity:1\" />\n")
+        x += 10
+        if (i+1)%j == 0:
+            x = ox
+            y += 20
+    f.write("     </g>\n")
+
+def die(f, n, x, y, stroke):
+    f.write("     <g\n")
+    f.write("   transform=\"translate(" + str(x) + ", " + str(y) + ")\">\n")
+    f.write("       <rect\n")
+    f.write("          width=\"25\"\n")
+    f.write("          height=\"25\"\n")
+    f.write("          rx=\"2\"\n")
+    f.write("          ry=\"2\"\n")
+    f.write("          x=\"0\"\n")
+    f.write("          y=\"0\"\n")
+    f.write("          style=\"fill:none;stroke:"+str(stroke)+";stroke-width:2;stroke-opacity:1\" />\n")
+    if n in [2,3,4,5,6]:
+        f.write("       <circle\n")
+        f.write("          cx=\"6\"\n")
+        f.write("          cy=\"6\"\n")
+        f.write("          r=\"1.5\"\n")
+        f.write("          style=\"fill:"+str(stroke)+";stroke:"+str(stroke)+";stroke-width:2;stroke-opacity:1\" />\n")
+        f.write("       <circle\n")
+        f.write("          cx=\"19\"\n")
+        f.write("          cy=\"19\"\n")
+        f.write("          r=\"1.5\"\n")
+        f.write("          style=\"fill:"+str(stroke)+";stroke:"+str(stroke)+";stroke-width:2;stroke-opacity:1\" />\n")
+    if n in [1,3,5]:
+        f.write("       <circle\n")
+        f.write("          cx=\"12.5\"\n")
+        f.write("          cy=\"12.5\"\n")
+        f.write("          r=\"1.5\"\n")
+        f.write("          style=\"fill:"+str(stroke)+";stroke:"+str(stroke)+";stroke-width:2;stroke-opacity:1\" />\n")
+    if n in [4,5,6]:
+        f.write("       <circle\n")
+        f.write("          cx=\"19\"\n")
+        f.write("          cy=\"6\"\n")
+        f.write("          r=\"1.5\"\n")
+        f.write("          style=\"fill:"+str(stroke)+";stroke:"+str(stroke)+";stroke-width:2;stroke-opacity:1\" />\n")
+        f.write("       <circle\n")
+        f.write("          cx=\"6\"\n")
+        f.write("          cy=\"19\"\n")
+        f.write("          r=\"1.5\"\n")
+        f.write("          style=\"fill:"+str(stroke)+";stroke:"+str(stroke)+";stroke-width:2;stroke-opacity:1\" />\n")
+    if n in [6]:
+        f.write("       <circle\n")
+        f.write("          cx=\"6\"\n")
+        f.write("          cy=\"12.5\"\n")
+        f.write("          r=\"1.5\"\n")
+        f.write("          style=\"fill:"+str(stroke)+";stroke:"+str(stroke)+";stroke-width:2;stroke-opacity:1\" />\n")
+        f.write("       <circle\n")
+        f.write("          cx=\"19\"\n")
+        f.write("          cy=\"12.5\"\n")
+        f.write("          r=\"1.5\"\n")
+        f.write("          style=\"fill:"+str(stroke)+";stroke:"+str(stroke)+";stroke-width:2;stroke-opacity:1\" />\n")
+    f.write("     </g>\n")
 
 def circle(f, x, style, stroke, fill):
     f.write("<circle cx=\"11\" cy=\"27\" r=\"16\"\n")
@@ -145,7 +232,50 @@ def number(f, x, string, stroke):
     f.write("  </text>")
 
 def number_card(f, t, n, stroke):
-    number(f, 63.5, str(n), stroke)
+    if t == 'X':
+        number(f, 63.5, str(n), stroke)
+    elif t == 'O':
+        if n == 5:
+            die(f, 5, 50, 25, stroke)
+        elif n == 10:
+            die(f, 5, 30, 25, stroke)
+            die(f, 5, 70, 25, stroke)
+        elif n == 15:
+            die(f, 5, 15, 25, stroke)
+            die(f, 5, 50, 25, stroke)
+            die(f, 5, 85, 25, stroke)
+        elif n == 7:
+            die(f, 3, 50, 10, stroke)
+            die(f, 4, 50, 40, stroke)
+        elif n == 14:
+            die(f, 4, 30, 10, stroke)
+            die(f, 3, 70, 10, stroke)
+            die(f, 3, 30, 40, stroke)
+            die(f, 4, 70, 40, stroke)
+        elif n == 21:
+            die(f, 3, 15, 10, stroke)
+            die(f, 4, 50, 10, stroke)
+            die(f, 3, 85, 10, stroke)
+            die(f, 4, 15, 40, stroke)
+            die(f, 3, 50, 40, stroke)
+            die(f, 4, 85, 40, stroke)
+        elif n == 11:
+            die(f, 5, 50, 10, stroke)
+            die(f, 6, 50, 40, stroke)
+        elif n == 22:
+            die(f, 6, 30, 10, stroke)
+            die(f, 5, 70, 10, stroke)
+            die(f, 5, 30, 40, stroke)
+            die(f, 6, 70, 40, stroke)
+        elif n == 33:
+            die(f, 5, 15, 10, stroke)
+            die(f, 6, 50, 10, stroke)
+            die(f, 5, 85, 10, stroke)
+            die(f, 6, 15, 40, stroke)
+            die(f, 5, 50, 40, stroke)
+            die(f, 6, 85, 40, stroke)
+    else:
+        dots(f, n, 5, 5, stroke)
 
 def word(f, x, string, stroke):
     f.write("  <text\n")

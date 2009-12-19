@@ -304,6 +304,10 @@ def match_check(cardarray, cardtype):
 
     if (cardarray[0].num + cardarray[1].num + cardarray[2].num)%3 != 0:
         return False
+    if (cardarray[0].color + cardarray[1].color + cardarray[2].color)%3 != 0:
+        return False
+    '''
+    # code for checking 4 colors
     if cardarray[0].color == cardarray[1].color and \
        cardarray[1].color != cardarray[2].color:
         return False
@@ -319,6 +323,7 @@ def match_check(cardarray, cardtype):
        cardarray[1].color == cardarray[2].color and \
        cardarray[0].color != cardarray[2].color:
         return False
+    '''
     # special case for the word game
     # only check fill when numbers are the same
     if cardtype == 'word':
@@ -329,8 +334,8 @@ def match_check(cardarray, cardtype):
     else:
         if (cardarray[0].fill + cardarray[1].fill + cardarray[2].fill)%3 != 0:
             return False
-    # don't check shape except in pattern game
-    if cardtype == 'pattern' and \
+    # don't check shape for word game
+    if cardtype != 'word' and \
        (cardarray[0].shape + cardarray[1].shape + cardarray[2].shape)%3 != 0:
        return False
     return True
