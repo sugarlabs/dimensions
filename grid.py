@@ -49,7 +49,7 @@ class Grid:
         self.top = 10
         self.yinc = int(vmw.card_h*1.33*vmw.scale)
 
-    # deal the initial set of cards
+    # deal the initial deck of cards
     def deal(self, vmw):
         # find upper left corner of grid
         self.cards = 0
@@ -78,12 +78,11 @@ class Grid:
                 i = self.grid.index(None)
                 self.grid[i] = vmw.deck.deal_next_card()
                 x = self.left+self.xinc*(i%COL)
-                y = self.top+self.yinc*int(i/ROW)
+                y = self.top+self.yinc*int(i/COL)
                 self.place_a_card(self.grid[i],x,y)
                 self.cards += 1
 
-    # remove a set from grid
-    # and deal new cards from the deck
+    # remove a match from the grid and deal new cards from the deck
     def remove_and_replace(self, clicked_set, vmw):
         for a in clicked_set:
             # find the position in the grid of the clicked card
@@ -102,9 +101,7 @@ class Grid:
                 self.cards -= 1
                 # mark grid positions of cards we are not replacing
                 self.grid[i] = None
-            # move clicked card to the set area
-            # print "moving spr from (%d, %d) to (%d, %d)" % (a.x,a.y,
-            #    10,self.top + clicked_set.index(a)*self.yinc)
+            # move clicked card to the match area
             a.x = 10
             a.y = self.top + clicked_set.index(a)*self.yinc
             vmw.deck.spr_to_card(a).show_card()
