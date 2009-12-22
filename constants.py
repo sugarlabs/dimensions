@@ -28,6 +28,7 @@ DEAL=12
 EXTRAS=3
 SELECTMASK = -1
 MATCHMASK = -2
-CARD_W = 125
-CARD_H = 75
+CARD_WIDTH = 125
+CARD_HEIGHT = 75
+KEYMAP = ['1','2','3','q','w','e','a','s','d','z','x','c','8','9','0']
 

@@ -26,7 +26,6 @@ import gobject
 import os.path
 
 from constants import *
-
 from sprites import *
 
 #
@@ -41,21 +40,14 @@ from sprites import *
 # if shape == SELECTMASK then generate special card-selected overlay
 #
 class Card:
-    def __init__(self, vmw, path, cardtype, width, height, attributes):
-        # what do we need to know about each card?
+    def __init__(self, sprites, path, cardtype, width, height, attributes):
         if attributes[0] == SELECTMASK:
-            self.spr = sprNew(vmw,0,0,self.load_image(
-                                          path,
-                                          "selected",
-                                          width,
-                                          height))
+            self.spr = Sprite(sprites, 0, 0,
+                              self.load_image(path, "selected", width, height))
             self.index = SELECTMASK
         elif attributes[0] == MATCHMASK:
-            self.spr = sprNew(vmw,0,0,self.load_image(
-                                          path,
-                                          "match",
-                                          width,
-                                          height))
+            self.spr = Sprite(sprites, 0, 0,
+                              self.load_image(path, "match", width, height))
             self.index = MATCHMASK
         else:
             self.shape = attributes[0]
@@ -66,19 +58,17 @@ class Card:
                          self.color*NUMBER*FILLS+\
                          self.num*FILLS+\
                          self.fill
-            # create sprite from svg file
-            self.spr = sprNew(vmw,0,0,self.load_image(
-                                path,
-                                cardtype+"-"+str(self.index),
-                                width, height))
-        self.spr.label = ""
+            self.spr = Sprite(sprites, 0, 0,
+                              self.load_image(path, cardtype+"-"+\
+                                              str(self.index),
+                                              width, height))
 
     def show_card(self):
-        setlayer(self.spr,2000)
-        draw(self.spr)
+        self.spr.setlayer(2000)
+        self.spr.draw()
 
     def hide_card(self):
-        hide(self.spr)
+        self.spr.hide()
 
     def load_image(self, path, file, w, h):
         return gtk.gdk.pixbuf_new_from_file_at_size(

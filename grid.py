@@ -37,17 +37,17 @@ COL = 3
 # class for managing 3x5 matrix of cards
 #
 class Grid:
-    def __init__(self, width, height, card_width, card_height, scale):
+    def __init__(self, width, height, card_width, card_height):
         # the playing surface is a 3x5 grid
         self.grid = []
         # how many cards are on the playing field
         self.cards = 0
         # card spacing
-        self.left = int((width-(card_width*2*scale))/2)
-        self.xinc = int(card_width*1.2*scale)
-        # self.top = int((height-(card_height*3.5*card_scale))/2)
+        self.left = int((width-(card_width*2))/2)
+        self.xinc = int(card_width*1.2)
+        # self.top = int((height-(card_height*3.5))/2)
         self.top = 10
-        self.yinc = int(card_height*1.33*scale)
+        self.yinc = int(card_height*1.33)
 
     # deal the initial deck of cards
     def deal(self, deck):
@@ -60,7 +60,7 @@ class Grid:
             for c in range(0, COL):
                 a = deck.deal_next_card()
                 self.grid.append(a)
-                self.place_a_card(a,x,y)
+                self.place_a_card(a, x, y)
                 x += self.xinc
                 self.cards += 1
             x = self.left
@@ -79,7 +79,7 @@ class Grid:
                 self.grid[i] = deck.deal_next_card()
                 x = self.left+self.xinc*(i%COL)
                 y = self.top+self.yinc*int(i/COL)
-                self.place_a_card(self.grid[i],x,y)
+                self.place_a_card(self.grid[i], x, y)
                 self.cards += 1
 
     # remove a match from the grid and deal new cards from the deck
@@ -94,7 +94,7 @@ class Grid:
                 else:
                     # save card in grid position of card we are replacing
                     self.grid[i] = deck.deal_next_card()
-                    self.place_a_card(self.grid[i],a.x,a.y)
+                    self.place_a_card(self.grid[i], a.x, a.y)
             else:
                 self.cards -= 1
                 # mark grid positions of cards we are not replacing
@@ -105,12 +105,18 @@ class Grid:
             deck.spr_to_card(a).show_card()
 
     # place a card at position x,y and display it
-    def place_a_card(self,c,x,y):
+    def place_a_card(self, c, x, y):
         if c is not None:
             c.spr.x = x
             c.spr.y = y
             c.show_card()
 
     # convert from sprite x,y to grid index
-    def xy_to_grid(self,x,y):
+    def xy_to_grid(self, x, y):
         return int(COL*(y-self.top)/self.yinc) + int((x-self.left)/self.xinc)
+
+
+    # return sprite in grid element i
+    def grid_to_spr(self, i):
+        print self.grid[i].spr
+        return self.grid[i].spr

@@ -209,7 +209,6 @@ class VisualMatchActivity(activity.Activity):
     # Button callbacks
     #
     def _select_game_cb(self, button, activity, cardtype):
-        print "in _select_game_cb: %s" % (cardtype)
         window.new_game(activity.vmw, cardtype)
 
     def _journal_cb(self, button, path):

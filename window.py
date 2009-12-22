@@ -36,8 +36,7 @@ from constants import *
 from grid import *
 from deck import *
 from card import *
-
-from math import sqrt
+from sprites import *
 
 class vmWindow: pass
 
@@ -70,32 +69,26 @@ def new_window(canvas, path, cardtype, parent=None):
     vmw.canvas.connect("key_press_event", _keypress_cb, vmw)
     vmw.width = gtk.gdk.screen_width()
     vmw.height = gtk.gdk.screen_height()-GRID_CELL_SIZE
-    vmw.card_width = CARD_W
-    vmw.card_height = CARD_H
     vmw.cardtype = cardtype
-    vmw.scale = 0.8 * vmw.height/(vmw.card_height*5.5)
-    vmw.area = vmw.canvas.window
-    vmw.gc = vmw.area.new_gc()
-    vmw.cm = vmw.gc.get_colormap()
-    vmw.msgcolor = vmw.cm.alloc_color('black')
-    vmw.sprites = []
+    scale = 0.8 * vmw.height/(CARD_HEIGHT*5.5)
+    vmw.card_width = CARD_WIDTH*scale
+    vmw.card_height = CARD_HEIGHT*scale
+    vmw.sprites = Sprites(vmw.canvas.window, vmw.canvas.window.new_gc())
     vmw.selected = []
     vmw.match_display_area = []
 
     # create a deck of cards and a grid for the playing field
-    vmw.deck = Deck(vmw, vmw.path, vmw.cardtype, vmw.card_width*vmw.scale, 
-                    vmw.card_height*vmw.scale)
-    vmw.grid = Grid(vmw.width,vmw.height,vmw.card_width,vmw.card_height,
-                    vmw.scale)
+    vmw.deck = Deck(vmw.sprites, vmw.path, vmw.cardtype, vmw.card_width, 
+                    vmw.card_height)
+    vmw.grid = Grid(vmw.width, vmw.height, vmw.card_width, vmw.card_height)
 
-    # initialize three card-selected overlays and
-    # a place to put the matched cards
+    # initialize three card-selected overlays and a place for the matches
     for i in range(0,3):
-        vmw.selected.append(Card(vmw,vmw.path,"",vmw.card_width*vmw.scale,
-                            vmw.card_height*vmw.scale,[SELECTMASK,0,0,0]))
-        vmw.match_display_area.append(Card(vmw,vmw.path,"",
-                            vmw.card_width*vmw.scale,
-                            vmw.card_height*vmw.scale,[MATCHMASK,0,0,0]))
+        vmw.selected.append(Card(vmw.sprites, vmw.path, "", vmw.card_width,
+                            vmw.card_height, [SELECTMASK,0,0,0]))
+        vmw.match_display_area.append(Card(vmw.sprites, vmw.path, "",
+                            vmw.card_width,
+                            vmw.card_height, [MATCHMASK,0,0,0]))
         vmw.match_display_area[i].spr.x = 10
         vmw.match_display_area[i].spr.y = vmw.grid.top+i*vmw.grid.yinc
         vmw.match_display_area[i].show_card()
@@ -105,7 +98,6 @@ def new_window(canvas, path, cardtype, parent=None):
 
     # Start doing something
     vmw.low_score = -1
-    vmw.keypress = ""
     new_game(vmw, cardtype)
     return vmw
 
@@ -116,12 +108,13 @@ def new_game(vmw,cardtype):
     vmw.deck.hide()
     if vmw.cardtype is not cardtype:
         vmw.cardtype = cardtype
-        vmw.deck = Deck(vmw, vmw.path, vmw.cardtype, vmw.card_width*vmw.scale, 
-                        vmw.card_height*vmw.scale)
+        vmw.deck = Deck(vmw.sprites, vmw.path, vmw.cardtype, 
+                        vmw.card_width, vmw.card_height)
     vmw.deck.shuffle()
     vmw.grid.deal(vmw.deck)
     if find_a_match(vmw) is False:
         vmw.grid.deal_extra_cards(vmw.deck)
+    unselect(vmw)
     vmw.matches = 0
     vmw.total_time = 0
     set_label(vmw, "deck", "%d %s" % 
@@ -144,10 +137,12 @@ def _button_press_cb(win, event, vmw):
 def _button_release_cb(win, event, vmw):
     win.grab_focus()
     x, y = map(int, event.get_coords())
-    spr = findsprite(vmw,(x,y))
+    spr = vmw.sprites.findsprite((x, y))
     if spr is None:
         return True
+    return _process_selection(vmw, spr)
 
+def _process_selection(vmw, spr):
     # check to make sure a card in the matched pile isn't selected
     if spr.x == 10:
        return True
@@ -210,7 +205,7 @@ def _button_release_cb(win, event, vmw):
                     return True
             # test to see if we need to deal extra cards
             if find_a_match(vmw) is False:
-                vmw.grid.deal_extra_cards(vmw.deck)            
+                vmw.grid.deal_extra_cards(vmw.deck)
             else:
                 # set_label(vmw,"status",vmw.msg)
                 set_label(vmw,"status",_("match"))
@@ -240,14 +235,16 @@ def unselect(vmw):
 # Keypress
 #
 def _keypress_cb(area, event, vmw):
-    vmw.keypress = gtk.gdk.keyval_name(event.keyval)
+    k = gtk.gdk.keyval_name(event.keyval)
+    if k in KEYMAP:
+        return _process_selection(vmw, vmw.grid.grid_to_spr(KEYMAP.index(k)))
     return True
 
 #
 # Repaint
 #
 def _expose_cb(win, event, vmw):
-    redrawsprites(vmw)
+    vmw.sprites.redrawsprites()
     return True
 
 #
@@ -273,7 +270,7 @@ def set_label(vmw, label, s):
             vmw.win.set_title("%s: %s" % (_("Visual Match"),s))
 
 #
-# Display # of seconds since start_time
+# Display of seconds since start_time
 #
 def _counter(vmw):
      set_label(vmw,"clock",str(int(gobject.get_current_time()-\
