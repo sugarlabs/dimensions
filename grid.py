@@ -73,7 +73,7 @@ class Grid:
     def deal_extra_cards(self, vmw):
         # if there are still cards in the deck and only 12 cards in the grid
         if vmw.deck.empty() is False and self.cards == DEAL:
-            # add 3 extra cards to the playing field
+            # add three extra cards to the playing field
             for c in range(0,COL):
                 i = self.grid.index(None)
                 self.grid[i] = vmw.deck.deal_next_card()
@@ -92,8 +92,6 @@ class Grid:
                 if vmw.deck.empty():
                     self.grid[i] = None
                 else:
-                    # print "new card (%d) to grid position %d" % \
-                    #      (vmw.deck.index,i)
                     # save card in grid position of card we are replacing
                     self.grid[i] = vmw.deck.deal_next_card()
                     self.place_a_card(self.grid[i],a.x,a.y)
