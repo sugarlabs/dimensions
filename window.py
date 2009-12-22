@@ -70,34 +70,35 @@ def new_window(canvas, path, cardtype, parent=None):
     vmw.canvas.connect("key_press_event", _keypress_cb, vmw)
     vmw.width = gtk.gdk.screen_width()
     vmw.height = gtk.gdk.screen_height()-GRID_CELL_SIZE
-    vmw.card_w = CARD_W
-    vmw.card_h = CARD_H
+    vmw.card_width = CARD_W
+    vmw.card_height = CARD_H
     vmw.cardtype = cardtype
-    vmw.scale = 0.8 * vmw.height/(vmw.card_h*5.5)
+    vmw.scale = 0.8 * vmw.height/(vmw.card_height*5.5)
     vmw.area = vmw.canvas.window
     vmw.gc = vmw.area.new_gc()
     vmw.cm = vmw.gc.get_colormap()
     vmw.msgcolor = vmw.cm.alloc_color('black')
     vmw.sprites = []
     vmw.selected = []
+    vmw.match_display_area = []
 
+    # create a deck of cards and a grid for the playing field
+    vmw.deck = Deck(vmw, vmw.path, vmw.cardtype, vmw.card_width*vmw.scale, 
+                    vmw.card_height*vmw.scale)
+    vmw.grid = Grid(vmw.width,vmw.height,vmw.card_width,vmw.card_height,
+                    vmw.scale)
+
+    # initialize three card-selected overlays and
     # a place to put the matched cards
-    vmw.match_field = [Card(vmw,MATCHMASK,0,0,0),\
-                       Card(vmw,MATCHMASK,0,0,0),\
-                       Card(vmw,MATCHMASK,0,0,0)]
-
-    # create a deck of cards, shuffle, and then deal
-    vmw.deck = Deck(vmw)
-    vmw.grid = Grid(vmw)
-
     for i in range(0,3):
-       vmw.match_field[i].spr.x = 10
-       vmw.match_field[i].spr.y = vmw.grid.top+i*vmw.grid.yinc
-       vmw.match_field[i].show_card()
-
-    # initialize three card-selected overlays
-    for i in range(0,3):
-        vmw.selected.append(Card(vmw,SELECTMASK,0,0,0))
+        vmw.selected.append(Card(vmw,vmw.path,"",vmw.card_width*vmw.scale,
+                            vmw.card_height*vmw.scale,[SELECTMASK,0,0,0]))
+        vmw.match_display_area.append(Card(vmw,vmw.path,"",
+                            vmw.card_width*vmw.scale,
+                            vmw.card_height*vmw.scale,[MATCHMASK,0,0,0]))
+        vmw.match_display_area[i].spr.x = 10
+        vmw.match_display_area[i].spr.y = vmw.grid.top+i*vmw.grid.yinc
+        vmw.match_display_area[i].show_card()
 
     # make an array of three cards that are clicked
     vmw.clicked = [None, None, None]
@@ -115,15 +116,16 @@ def new_game(vmw,cardtype):
     vmw.deck.hide()
     if vmw.cardtype is not cardtype:
         vmw.cardtype = cardtype
-        vmw.deck = Deck(vmw)
+        vmw.deck = Deck(vmw, vmw.path, vmw.cardtype, vmw.card_width*vmw.scale, 
+                        vmw.card_height*vmw.scale)
     vmw.deck.shuffle()
-    vmw.grid.deal(vmw)
+    vmw.grid.deal(vmw.deck)
     if find_a_match(vmw) is False:
-        vmw.grid.deal_extra_cards(vmw)            
+        vmw.grid.deal_extra_cards(vmw.deck)
     vmw.matches = 0
     vmw.total_time = 0
     set_label(vmw, "deck", "%d %s" % 
-        (vmw.deck.count-vmw.deck.index, _("cards remaining")))
+        (vmw.deck.cards_remaining(), _("cards remaining")))
     set_label(vmw,"match","%d %s" % (vmw.matches,_("matches")))
     vmw.start_time = gobject.get_current_time()
     vmw.timeout_id = None
@@ -183,9 +185,9 @@ def _button_release_cb(win, event, vmw):
                 gobject.source_remove(vmw.timeout_id)
             vmw.total_time += gobject.get_current_time()-vmw.start_time
             # out with the old and in with the new
-            vmw.grid.remove_and_replace(vmw.clicked, vmw)
+            vmw.grid.remove_and_replace(vmw.clicked, vmw.deck)
             set_label(vmw, "deck", "%d %s" % 
-                    (vmw.deck.count-vmw.deck.index, _("cards remaining")))
+                    (vmw.deck.cards_remaining(), _("cards remaining")))
             # test to see if the game is over
             if vmw.deck.empty():
                 if find_a_match(vmw) is False:
@@ -208,7 +210,7 @@ def _button_release_cb(win, event, vmw):
                     return True
             # test to see if we need to deal extra cards
             if find_a_match(vmw) is False:
-                vmw.grid.deal_extra_cards(vmw)            
+                vmw.grid.deal_extra_cards(vmw.deck)            
             else:
                 # set_label(vmw,"status",vmw.msg)
                 set_label(vmw,"status",_("match"))
@@ -306,7 +308,9 @@ def match_check(cardarray, cardtype):
         return False
     if (cardarray[0].color + cardarray[1].color + cardarray[2].color)%3 != 0:
         return False
-    # special case for the word game
+    if (cardarray[0].shape + cardarray[1].shape + cardarray[2].shape)%3 != 0:
+       return False
+    # special case for the word game:
     # only check fill when numbers are the same
     if cardtype == 'word':
         if cardarray[0].num == cardarray[1].num and \
@@ -316,8 +320,6 @@ def match_check(cardarray, cardtype):
     else:
         if (cardarray[0].fill + cardarray[1].fill + cardarray[2].fill)%3 != 0:
             return False
-    if (cardarray[0].shape + cardarray[1].shape + cardarray[2].shape)%3 != 0:
-       return False
     return True
 
 #

@@ -41,37 +41,36 @@ from sprites import *
 # if shape == SELECTMASK then generate special card-selected overlay
 #
 class Card:
-    def __init__(self,vmw,shape,color,num,fill):
+    def __init__(self, vmw, path, cardtype, width, height, attributes):
         # what do we need to know about each card?
-        if shape == SELECTMASK:
+        if attributes[0] == SELECTMASK:
             self.spr = sprNew(vmw,0,0,self.load_image(
-                                          vmw.path,
+                                          path,
                                           "selected",
-                                          vmw.card_w*vmw.scale,
-                                          vmw.card_h*vmw.scale))
+                                          width,
+                                          height))
             self.index = SELECTMASK
-        elif shape == MATCHMASK:
+        elif attributes[0] == MATCHMASK:
             self.spr = sprNew(vmw,0,0,self.load_image(
-                                          vmw.path,
+                                          path,
                                           "match",
-                                          vmw.card_w*vmw.scale,
-                                          vmw.card_h*vmw.scale))
+                                          width,
+                                          height))
             self.index = MATCHMASK
         else:
-            self.shape = shape
-            self.color = color
-            self.num = num
-            self.fill = fill
+            self.shape = attributes[0]
+            self.color = attributes[1]
+            self.num = attributes[2]
+            self.fill = attributes[3]
             self.index = self.shape*COLORS*NUMBER*FILLS+\
                          self.color*NUMBER*FILLS+\
                          self.num*FILLS+\
                          self.fill
             # create sprite from svg file
             self.spr = sprNew(vmw,0,0,self.load_image(
-                                vmw.path,
-                                vmw.cardtype+"-"+str(self.index),
-                                vmw.card_w*vmw.scale,
-                                vmw.card_h*vmw.scale))
+                                path,
+                                cardtype+"-"+str(self.index),
+                                width, height))
         self.spr.label = ""
 
     def show_card(self):
