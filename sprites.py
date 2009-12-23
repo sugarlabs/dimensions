@@ -116,7 +116,7 @@ class Sprite:
         self.layer = layer
         for i in range(self.sprites.length_of_list()):
             if layer < self.sprites.get_sprite(i).layer:
-                self.sprites.insert_in_list(i, self)
+                self.sprites.insert_in_list(self, i)
                 self.inval()
                 return
         self.sprites.append_to_list(self)
@@ -124,7 +124,7 @@ class Sprite:
 
     def set_label(self, label):
         if type(label) is str or type(label) is unicode:
-            self.label = label.replace("\0"," ")
+            self.label = label.replace("\0"," ") # pango doesn't like nulls
         else:
             self.label = str(label)
         if self.fd is None:
