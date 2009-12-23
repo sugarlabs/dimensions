@@ -33,7 +33,6 @@ class Sprites:
         self.area = self.canvas.window
         self.gc = self.area.new_gc()
         self.cm = self.gc.get_colormap()
-        self.color = self.cm.alloc_color('black')
         self.fd = pango.FontDescription('Sans')
         self.list = []
 
@@ -75,6 +74,7 @@ class Sprites:
 
 class Sprite:
     def __init__(self, sprites, x, y, image):
+        self.sprites = sprites
         self.x = x
         self.y = y
         self.layer = 100
@@ -82,8 +82,8 @@ class Sprite:
         self.scale = 12
         self.horiz_align = "center"
         self.vert_align = "middle"
+        self.color = self.sprites.cm.alloc_color('black')
         self.set_image(image)
-        self.sprites = sprites
         self.sprites.append_to_list(self)
 
     def set_image(self, image):
@@ -121,6 +121,9 @@ class Sprite:
         else:
             self.label = str(label)
         self.inval()
+
+    def set_label_color(self, r, g, b):
+        self.color = self.sprites.cm.alloc_color(r, g, b)
 
     def set_label_attributes(self, scale, horiz_align="center",
                              vert_align="middle"):
@@ -165,6 +168,7 @@ class Sprite:
         self.sprites.fd.set_size(int(self.scale*pango.SCALE))
         pl.set_font_description(self.sprites.fd)
         w = pl.get_size()[0]/pango.SCALE
+        # check to see if w excedes self.width, in which case, rescale
         if self.horiz_align == "center":
             x = int(self.x+(self.width-w)/2)
         elif self.horiz_align == 'left':
@@ -178,5 +182,5 @@ class Sprite:
             y = self.y
         else: # bottom align
             y = int(self.y+self.height-h)
-        self.sprites.gc.set_foreground(self.sprites.color)
+        self.sprites.gc.set_foreground(self.color)
         self.sprites.area.draw_layout(self.sprites.gc, x, y, pl)
