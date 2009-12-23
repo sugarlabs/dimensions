@@ -137,7 +137,7 @@ def _button_press_cb(win, event, vmw):
 def _button_release_cb(win, event, vmw):
     win.grab_focus()
     x, y = map(int, event.get_coords())
-    spr = vmw.sprites.findsprite((x, y))
+    spr = vmw.sprites.find_sprite((x, y))
     if spr is None:
         return True
     return _process_selection(vmw, spr)
@@ -244,7 +244,7 @@ def _keypress_cb(area, event, vmw):
 # Repaint
 #
 def _expose_cb(win, event, vmw):
-    vmw.sprites.redrawsprites()
+    vmw.sprites.redraw_sprites()
     return True
 
 #

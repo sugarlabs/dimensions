@@ -1,3 +1,15 @@
+12
+
+* reverting to 3 colors to simplify game play
+* experimenting with different style number games
+* adding bold, italic to word cards
+* refactoring of sprites library
+
+11
+
+* add check for match on first deal
+* fixed bug in extra card positions
+
 10
 
 * es, fr translation

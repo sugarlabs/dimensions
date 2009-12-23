@@ -57,14 +57,14 @@ class Sprites:
         if spr in self.list:
             self.list.remove(spr)
 
-    def findsprite(self, pos):
+    def find_sprite(self, pos):
         list = self.list
         list.reverse()
         for spr in list:
             if spr.hit(pos): return spr
         return None
 
-    def redrawsprites(self):
+    def redraw_sprites(self):
         for spr in self.list:
             spr.draw()
 
@@ -74,11 +74,11 @@ class Sprite:
         self.x = x
         self.y = y
         self.layer = 100
-        self.setimage(image)
+        self.set_image(image)
         self.sprites = sprites
         self.sprites.append_to_list(self)
 
-    def setimage(self, image):
+    def set_image(self, image):
         self.image = image
         if isinstance(self.image,gtk.gdk.Pixbuf):
             self.width = self.image.get_width()
@@ -91,12 +91,12 @@ class Sprite:
         self.x,self.y = pos
         self.inval()
 
-    def setshape(self, image):
+    def set_shape(self, image):
         self.inval()
-        self.setimage(image)
+        self.set_image(image)
         self.inval()
 
-    def setlayer(self, layer):
+    def set_layer(self, layer):
         self.sprites.remove_from_list(self)
         self.layer = layer
         for i in range(self.sprites.length_of_list()):

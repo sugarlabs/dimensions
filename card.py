@@ -64,7 +64,7 @@ class Card:
                                               width, height))
 
     def show_card(self):
-        self.spr.setlayer(2000)
+        self.spr.set_layer(2000)
         self.spr.draw()
 
     def hide_card(self):
