@@ -28,9 +28,13 @@ import gobject
 import pango
 
 class Sprites:
-    def __init__(self, area, gc):
-        self.area = area
-        self.gc = gc
+    def __init__(self, canvas):
+        self.canvas = canvas
+        self.area = self.canvas.window
+        self.gc = self.area.new_gc()
+        self.cm = self.gc.get_colormap()
+        self.color = self.cm.alloc_color('black')
+        self.fd = pango.FontDescription('Sans')
         self.list = []
 
     def get_sprite(self, i):
@@ -74,6 +78,7 @@ class Sprite:
         self.x = x
         self.y = y
         self.layer = 100
+        self.label = None
         self.set_image(image)
         self.sprites = sprites
         self.sprites.append_to_list(self)
@@ -107,6 +112,13 @@ class Sprite:
         self.sprites.append_to_list(self)
         self.inval()
 
+    def set_label(self, label):
+        if type(label) is str or type(label) is unicode:
+            self.label = label.replace("\0"," ")
+        else:
+            self.label = str(label)
+        inval(self)
+
     def hide(self):
         self.inval()
         self.sprites.remove_from_list(self)
@@ -135,3 +147,25 @@ class Sprite:
             return False
         return True
 
+    def draw_label(self, scale, horiz_align="center", vert_align="middle"):
+        if self.label is None:
+            return
+        pl = self.sprites.canvas.create_pango_layout(self.label)
+        self.sprites.fd.set_size(int(scale*pango.SCALE))
+        pl.set_font_description(self.sprites.fd)
+        w = pl.get_size()[0]/pango.SCALE
+        if horiz_align == "center":
+            x = int(((self.x+self.width)/2)-(w/2))
+        elif horiz_align == 'left':
+            x = self.x
+        else: # right align
+            x = self.x+self.width-w
+        h = pl.get_size()[1]/pango.SCALE
+        if vert_align == "middle":
+            y = int(((self.y+self.height)/2)-h/2)
+        elif vert_align == "top":
+            y = int(h/2)
+        else: # bottom align
+            y = int(self.height-h)
+        self.sprites.gc.set_foreground(self.sprites.color)
+        self.sprites.area.draw_layout(self.sprites.gc, x, y, pl)

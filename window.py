@@ -73,7 +73,7 @@ def new_window(canvas, path, cardtype, parent=None):
     scale = 0.8 * vmw.height/(CARD_HEIGHT*5.5)
     vmw.card_width = CARD_WIDTH*scale
     vmw.card_height = CARD_HEIGHT*scale
-    vmw.sprites = Sprites(vmw.canvas.window, vmw.canvas.window.new_gc())
+    vmw.sprites = Sprites(vmw.canvas)
     vmw.selected = []
     vmw.match_display_area = []
 
