@@ -79,6 +79,9 @@ class Sprite:
         self.y = y
         self.layer = 100
         self.label = None
+        self.scale = 12
+        self.horiz_align = "center"
+        self.vert_align = "middle"
         self.set_image(image)
         self.sprites = sprites
         self.sprites.append_to_list(self)
@@ -117,7 +120,13 @@ class Sprite:
             self.label = label.replace("\0"," ")
         else:
             self.label = str(label)
-        inval(self)
+        self.inval()
+
+    def set_label_attributes(self, scale, horiz_align="center",
+                             vert_align="middle"):
+        self.scale = scale
+        self.horiz_align = horiz_align
+        self.vert_align = vert_align
 
     def hide(self):
         self.inval()
@@ -134,6 +143,8 @@ class Sprite:
         else:
             self.sprites.area.draw_drawable(
                 self.sprites.gc, self.image, 0, 0, self.x, self.y, -1, -1)
+        if self.label is not None:
+            self.draw_label()
 
     def hit(self, pos):
         x, y = pos
@@ -147,25 +158,25 @@ class Sprite:
             return False
         return True
 
-    def draw_label(self, scale, horiz_align="center", vert_align="middle"):
+    def draw_label(self):
         if self.label is None:
             return
         pl = self.sprites.canvas.create_pango_layout(self.label)
-        self.sprites.fd.set_size(int(scale*pango.SCALE))
+        self.sprites.fd.set_size(int(self.scale*pango.SCALE))
         pl.set_font_description(self.sprites.fd)
         w = pl.get_size()[0]/pango.SCALE
-        if horiz_align == "center":
-            x = int(((self.x+self.width)/2)-(w/2))
-        elif horiz_align == 'left':
+        if self.horiz_align == "center":
+            x = int(self.x+(self.width-w)/2)
+        elif self.horiz_align == 'left':
             x = self.x
         else: # right align
-            x = self.x+self.width-w
+            x = int(self.x+self.width-w)
         h = pl.get_size()[1]/pango.SCALE
-        if vert_align == "middle":
-            y = int(((self.y+self.height)/2)-h/2)
-        elif vert_align == "top":
-            y = int(h/2)
+        if self.vert_align == "middle":
+            y = int(self.y+(self.height-h)/2)
+        elif self.vert_align == "top":
+            y = self.y
         else: # bottom align
-            y = int(self.height-h)
+            y = int(self.y+self.height-h)
         self.sprites.gc.set_foreground(self.sprites.color)
         self.sprites.area.draw_layout(self.sprites.gc, x, y, pl)
