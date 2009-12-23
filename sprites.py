@@ -27,13 +27,15 @@ import gtk
 import gobject
 import pango
 
+#
+# A class for the list of sprites and everything they share in common
+#
 class Sprites:
     def __init__(self, canvas):
         self.canvas = canvas
         self.area = self.canvas.window
         self.gc = self.area.new_gc()
         self.cm = self.gc.get_colormap()
-        self.fd = pango.FontDescription('Sans')
         self.list = []
 
     def get_sprite(self, i):
@@ -72,6 +74,9 @@ class Sprites:
             spr.draw()
 
 
+#
+# A class for the individual sprites
+#
 class Sprite:
     def __init__(self, sprites, x, y, image):
         self.sprites = sprites
@@ -79,10 +84,12 @@ class Sprite:
         self.y = y
         self.layer = 100
         self.label = None
-        self.scale = 12
+        self.scale = 24
+        self.rescale = True
         self.horiz_align = "center"
         self.vert_align = "middle"
-        self.color = self.sprites.cm.alloc_color('black')
+        self.fd = None
+        self.color = None
         self.set_image(image)
         self.sprites.append_to_list(self)
 
@@ -120,16 +127,24 @@ class Sprite:
             self.label = label.replace("\0"," ")
         else:
             self.label = str(label)
+        if self.fd is None:
+            self.fd = pango.FontDescription('Sans')
+        if self.color is None:
+            self.color = self.sprites.cm.alloc_color('black')
         self.inval()
+
+    def set_label_font(self, font):
+        self.fd = pango.FontDescription(font)
 
     def set_label_color(self, r, g, b):
         self.color = self.sprites.cm.alloc_color(r, g, b)
 
     def set_label_attributes(self, scale, horiz_align="center",
-                             vert_align="middle"):
+                             vert_align="middle", rescale="True"):
         self.scale = scale
         self.horiz_align = horiz_align
         self.vert_align = vert_align
+        self.rescale = rescale
 
     def hide(self):
         self.inval()
@@ -165,22 +180,35 @@ class Sprite:
         if self.label is None:
             return
         pl = self.sprites.canvas.create_pango_layout(self.label)
-        self.sprites.fd.set_size(int(self.scale*pango.SCALE))
-        pl.set_font_description(self.sprites.fd)
+        self.fd.set_size(int(self.scale*pango.SCALE))
+        pl.set_font_description(self.fd)
         w = pl.get_size()[0]/pango.SCALE
-        # check to see if w excedes self.width, in which case, rescale
+        if w > self.width:
+            if self.rescale is True:
+                self.fd.set_size(int(self.scale*pango.SCALE*self.width/w))
+                pl.set_font_description(self.fd)
+                w = pl.get_size()[0]/pango.SCALE
+            else:
+                i = len(self.label)-1
+                while(w > self.width and i > 0):
+                    label = "…"+self.label[len(self.label)-i:]
+                    pl = self.sprites.canvas.create_pango_layout(label)
+                    self.fd.set_size(int(self.scale*pango.SCALE))
+                    pl.set_font_description(self.fd)
+                    w = pl.get_size()[0]/pango.SCALE        
+                    i -= 1
         if self.horiz_align == "center":
             x = int(self.x+(self.width-w)/2)
         elif self.horiz_align == 'left':
             x = self.x
-        else: # right align
+        else: # right
             x = int(self.x+self.width-w)
         h = pl.get_size()[1]/pango.SCALE
         if self.vert_align == "middle":
             y = int(self.y+(self.height-h)/2)
         elif self.vert_align == "top":
             y = self.y
-        else: # bottom align
+        else: # bottom
             y = int(self.y+self.height-h)
         self.sprites.gc.set_foreground(self.color)
         self.sprites.area.draw_layout(self.sprites.gc, x, y, pl)
