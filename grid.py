@@ -104,6 +104,18 @@ class Grid:
             a.y = self.top + clicked_set.index(a)*self.yinc
             deck.spr_to_card(a).show_card()
 
+    # if we have removed cards from a grid of 15, we may need to consolidate
+    def consolidate(self):
+        for j in range(12,15):
+            i = 0
+            while(self.grid[j] is not None):
+                if self.grid[i] is None:
+                    self.grid[i] = self.grid[j]
+                    self.grid[i].spr.move(self.grid_to_xy(i))
+                    self.grid[j] = None
+                else:
+                    i+=1
+
     # place a card at position x,y and display it
     def place_a_card(self, c, x, y):
         if c is not None:
@@ -115,6 +127,9 @@ class Grid:
     def xy_to_grid(self, x, y):
         return int(COL*(y-self.top)/self.yinc) + int((x-self.left)/self.xinc)
 
+    # convert from grid index to sprite x,y
+    def grid_to_xy(self, i):
+        return ((self.left+i%COL*self.xinc),(self.top+(i/COL)*self.yinc))
 
     # return sprite in grid element i
     def grid_to_spr(self, i):

@@ -203,6 +203,8 @@ def _process_selection(vmw, spr):
                     if vmw.sugar is False:
                          vmw.activity.save_score()
                     return True
+            # consolidate the grid
+            vmw.grid.consolidate()
             # test to see if we need to deal extra cards
             if find_a_match(vmw) is False:
                 vmw.grid.deal_extra_cards(vmw.deck)
