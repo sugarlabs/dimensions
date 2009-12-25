@@ -22,6 +22,7 @@
 import os
 from gettext import gettext as _
 import random
+from math import sin, cos, pi
 
 RED_STROKE = "#FF6040"
 RED_FILL = "#FFC4B8"
@@ -29,8 +30,8 @@ BLUE_STROKE = "#0060C8"
 BLUE_FILL = "#ACC8E4"
 GREEN_STROKE = "#00B418"
 GREEN_FILL = "#AFE8A8"
-PURPLE_STROKE = "#780078"
-PURPLE_FILL = "#E4AAE4"
+# PURPLE_STROKE = "#780078"
+# PURPLE_FILL = "#E4AAE4"
 
 color_pairs = ([RED_STROKE,RED_FILL],
                [GREEN_STROKE,GREEN_FILL],
@@ -39,11 +40,89 @@ color_pairs = ([RED_STROKE,RED_FILL],
 fill_styles = ("none","gradient","solid")
 card_types = ("X","O","C")
 
+roman_numerals = {5:'V',7:'VII',10:'X',11:'XI',14:'XIV',15:'XV',\
+                  21:'XXI',22:'XXII',33:'XXXIII'}
+
+number_names = {5:_('five'),7:_('seven'),11:_('eleven'),10:_('ten'),\
+                14:_('fourteen'),15:_('fifteen'),22:_('twenty two'),\
+                21:_('twenty one'),33:_('thirty three')}
+
+#
+# SVG generators
+#
+def svg_rect(f,w,h,rx,ry,x,y,stroke,fill,stroke_width):
+    f.write("       <rect\n")
+    f.write("          width=\""+str(w)+"\"\n")
+    f.write("          height=\""+str(h)+"\"\n")
+    f.write("          rx=\""+str(rx)+"\"\n")
+    f.write("          ry=\""+str(ry)+"\"\n")
+    f.write("          x=\""+str(x)+"\"\n")
+    f.write("          y=\""+str(y)+"\"\n")
+    f.write("          style=\"fill:"+str(fill)+";stroke:"+str(stroke)+\
+            ";stroke-width:"+str(stroke_width)+";stroke-opacity:1\" />\n")
+
+def svg_circle(f,cx,cy,r,stroke,fill,stroke_width):
+    f.write("       <circle\n")
+    f.write("          cx=\""+str(cx)+"\"\n")
+    f.write("          cy=\""+str(cy)+"\"\n")
+    f.write("          r=\""+str(r)+"\"\n")
+    f.write("          style=\"fill:"+str(fill)+";stroke:"+str(stroke)+\
+            ";stroke-width:"+str(stroke_width)+";stroke-opacity:1\" />\n")
+
+def svg_line(f,x1,y1,x2,y2,stroke,stroke_width):
+    f.write("<line x1=\""+str(x1)+"\" y1=\""+str(y1)+\
+            "\" x2=\""+str(x2)+"\" y2=\""+str(y2)+"\"\n")
+    f.write("   style=\"stroke:"+stroke+\
+            ";stroke-width:"+str(stroke_width)+";stroke-linecap:round;\" />\n")
+
+def svg_text(f,x,y,size,stroke,font,style,string):
+    f.write("  <text\n")
+    f.write("     style=\"font-size:12px;text-anchor:middle;"+style+\
+            "text-align:center;font-family:"+font+";fill:"+stroke+"\">\n")
+    f.write("      <tspan\n")
+    f.write("       x=\""+str(x)+"\"\n")
+    f.write("       y=\""+str(y)+"\"\n")
+    f.write("       style=\"font-size:"+str(size)+"px;\">"+string+"</tspan>\n")
+    f.write("  </text>\n")
+
+
+def svg_check(f, x, style, stroke, fill):
+    f.write("<path d=\"m 28.4,70.2 -5.9,5.9 -5.9,-5.9 -4.1,-4.1 c -0.7,-0.7" +\
+            " -1.2,-1.8 -1.2,-2.9 0,-2.3 1.9,-4.1 4.1,-4.1 1.1,0 2.2,0.5" +\
+            " 2.9,1.2 l 4.1,4.1 14.1,-14.1 c 0.8,-0.7 1.8,-1.2 2.9,-1.2 2.3,"+\
+            "0 4.1,1.9 4.1,4.1 0,1.1 -0.5,2.2 -1.2,2.9 l -14.1,14.1 z\"\n")
+    f.write("   transform=\"translate("+str(x-10)+", -25)\"\n")
+    if style == "none":
+        f.write("   style=\"fill:#FFFFFF;stroke:"+stroke+\
+              ";stroke-width:1.8;\" />\n")
+    elif style == "gradient":
+        f.write("   style=\"fill:"+fill+";stroke:"+stroke+\
+              ";stroke-width:1.8;\" />\n")
+    else:
+        f.write("   style=\"fill:"+stroke+";stroke:"+stroke+\
+              ";stroke-width:1.8;\" />\n")
+
+def svg_cross(f, x, style, stroke, fill):
+    f.write("<path d=\"m 33.4,62.5 10.1,10.1 c 0.8,0.8 1.2,1.8 1.2,2.9 0,2.3"+\
+            " -1.9,4.1 -4.1,4.1 -1.1,0 -2.2,-0.5 -2.9,-1.2 l -10.1,-10.1"+\
+            " -10.1,10.1 c -0.8,0.8 -1.8,1.2 -2.9,1.2 -2.3,0 -4.1,-1.9 -4.1,"+\
+            "-4.1 0,-1.1 0.5,-2.2 1.2,-2.9 l 10.1,-10.1 -10.1,-10.1 c -0.7,"+\
+            "-0.7 -1.2,-1.8 -1.2,-2.9 0,-2.3 1.9,-4.1 4.1,-4.1 1.1,0 2.2,"+\
+            "0.5 2.9,1.2 l 10.1,10.1 10.1,-10.1 c 0.8,-0.7 1.8,-1.2 2.9,-1.2"+\
+            " 2.3,0 4.1,1.9 4.1,4.1 0,1.1 -0.5,2.2 -1.2,2.9 l -10.1,10.1 z\"\n")
+    f.write("   transform=\"translate("+str(x-10)+", -25)\"\n")
+    if style == "none":
+        f.write("   style=\"fill:#FFFFFF;stroke:"+stroke+\
+              ";stroke-width:1.8;\" />\n")
+    elif style == "gradient":
+        f.write("   style=\"fill:"+fill+";stroke:"+stroke+\
+              ";stroke-width:1.8;\" />\n")
+    else:
+        f.write("   style=\"fill:"+stroke+";stroke:"+stroke+\
+              ";stroke-width:1.8;\" />\n")
+
 def background(f,stroke,fill,width):
-    f.write("<rect width=\"124.5\" height=\"74.5\" rx=\"11\" ry=\"9\"" +\
-            " x=\"0.25\" y=\"0.25\"\n")
-    f.write("style=\"fill:" + fill + ";fill-opacity:1;stroke:" + stroke + \
-            ";stroke-width:"+width+"\" />\n")
+    svg_rect(f,124.5,74.5,11,9,0.25,0.25,stroke,fill,width)
 
 def header(f,stroke,fill,width):
     f.write("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>\n")
@@ -61,172 +140,280 @@ def footer(f):
     f.write("</g>\n")
     f.write("</svg>\n")
 
-def dots(f, n, x, y, stroke):
-    f.write("     <g\n")
-    f.write("   transform=\"translate(" + str(x) + ", " + str(y) + ")\">\n")
+#
+# Card pattern generators
+#
+def line_of_dots(f, n, x, y, stroke):
+    f.write("<g\n")
+    f.write("   transform=\"translate("+str(x)+", "+str(y)+")\">\n")
     if n%5 == 0:
-        ox = 37.5
-        j = 5
+        cx = 37.5
     elif n%7 == 0:
-        ox = 27.5
-        j = 7
+        cx = 27.5
     else:
-        ox = 7.5
-        j = 11
-    if n%3 == 0:
-        oy = 12.5
-    elif n%2 == 0:
-        oy = 22.5
-    else:
-        oy = 32.5
-    x = ox
-    y = oy
+        cx = 7.5
+    cy = 5
     for i in range(n):
-        f.write("       <circle\n")
-        f.write("          cx=\""+str(x)+"\"\n")
-        f.write("          cy=\""+str(y)+"\"\n")
-        f.write("          r=\"3\"\n")
-        f.write("          style=\"fill:"+str(stroke)+";stroke:"+\
-                str(stroke)+";stroke-width:2;stroke-opacity:1\" />\n")
-        x += 10
-        if (i+1)%j == 0:
-            x = ox
-            y += 20
-    f.write("     </g>\n")
+        svg_circle(f,cx,cy,3,stroke,stroke,2)
+        cx += 10
+    f.write("</g>\n")
+
+def hash(f, n, x, y, stroke):
+    f.write("<g\n")
+    f.write("   transform=\"translate("+str(x)+", "+str(y)+")\">\n")
+    if n%5 == 0:
+        cx = 42.5
+    elif n%7 == 0:
+        cx = 32.5
+    else:
+        cx = 22.5
+    cy = 5
+    x1 = 7.5+cx
+    x2 = cx
+    for i in range(n):
+        if (i+1)%5==0:
+            svg_line(f,x1-40,7.5,x2,7.5,stroke,1.8)
+        else:
+            svg_line(f,x1,0,x2,15,stroke,1.8)
+        x1 += 7.5
+        x2 += 7.5
+    f.write("</g>\n")
+
+def dots_in_a_line(f, t, n, stroke):
+    if n%3 == 0:
+        y = 12.5
+        nn = n/3
+    elif n%2 == 0:
+        y = 22.5
+        nn = n/2
+    else:
+        y = 32.5
+        nn = n
+    if n%5 == 0:
+        n/=5
+    elif n%7 == 0:
+        n/=7
+    else:
+        n/=11
+    for i in range(n):
+        line_of_dots(f, nn, 5, y, stroke)
+        y += 20
+
+def circle_of_dots(f, n, x, y, stroke):
+    f.write("<g\n")
+    f.write("   transform=\"translate("+str(x)+", "+str(y)+")\">\n")
+    j = n
+    ox = 0
+    oy = 32.5
+    if j == 5:
+       r = 9
+    elif j == 7:
+       r = 13
+    else:
+       r = 17
+    da = pi*2/j
+    a = 0
+    x = ox+sin(a)*r
+    y = oy+cos(a)*r
+    for i in range(n):
+        svg_circle(f,x,y,3,stroke,stroke,2)
+        a += da
+        x = ox+sin(a)*r
+        y = oy+cos(a)*r
+    f.write("</g>\n")
+
+def points_in_a_star(f, t, n, stroke):
+    if n%3 == 0:
+        x = 25
+        nn = n/3
+    elif n%2 == 0:
+        x = 37.5
+        nn = n/2
+    else:
+        x = 62.5
+        nn = n
+    if n%5 == 0:
+        n/=5
+        y = 15
+    elif n%7 == 0:
+        n/=7
+        y = 15
+    else:
+        n/=11
+        y = 15
+    for i in range(n):
+        if n == 3:
+            if i == 0:
+                y+=12
+            elif i == 1:
+                y-=24
+            else:
+                y+=24
+        star(f, nn, x, y, stroke)
+        if n == 2:
+            x += 50
+        else:
+            x += 37.5
+
+def dots_in_a_circle(f, t, n, stroke):
+    if n%3 == 0:
+        x = 25
+        nn = n/3
+    elif n%2 == 0:
+        x = 37.5
+        nn = n/2
+    else:
+        x = 62.5
+        nn = n
+    if n%5 == 0:
+        n/=5
+        y = 5
+    elif n%7 == 0:
+        n/=7
+        y = 5
+    else:
+        n/=11
+        y = 5
+    for i in range(n):
+        if n == 3:
+            if i == 0:
+                y+=12
+            elif i == 1:
+                y-=24
+            else:
+                y+=24
+        circle_of_dots(f, nn, x, y, stroke)
+        if n == 2:
+            x += 50
+        else:
+            x += 37.5
 
 def die(f, n, x, y, stroke):
-    f.write("     <g\n")
-    f.write("   transform=\"translate(" + str(x) + ", " + str(y) + ")\">\n")
-    f.write("       <rect\n")
-    f.write("          width=\"25\"\n")
-    f.write("          height=\"25\"\n")
-    f.write("          rx=\"2\"\n")
-    f.write("          ry=\"2\"\n")
-    f.write("          x=\"0\"\n")
-    f.write("          y=\"0\"\n")
-    f.write("          style=\"fill:none;stroke:"+str(stroke)+\
-            ";stroke-width:2;stroke-opacity:1\" />\n")
+    f.write("<g\n")
+    f.write("   transform=\"translate("+str(x)+", "+str(y)+")\">\n")
+    svg_rect(f,25,25,2,2,0,0,stroke,"none",1.5)
     if n in [2,3,4,5,6]:
-        f.write("       <circle\n")
-        f.write("          cx=\"6\"\n")
-        f.write("          cy=\"6\"\n")
-        f.write("          r=\"1.5\"\n")
-        f.write("          style=\"fill:"+str(stroke)+";stroke:"+str(stroke)+\
-                ";stroke-width:2;stroke-opacity:1\" />\n")
-        f.write("       <circle\n")
-        f.write("          cx=\"19\"\n")
-        f.write("          cy=\"19\"\n")
-        f.write("          r=\"1.5\"\n")
-        f.write("          style=\"fill:"+str(stroke)+";stroke:"+str(stroke)+\
-                ";stroke-width:2;stroke-opacity:1\" />\n")
+        svg_circle(f,6,6,1.5,stroke,stroke,2)
+        svg_circle(f,19,19,1.5,stroke,stroke,2)
     if n in [1,3,5]:
-        f.write("       <circle\n")
-        f.write("          cx=\"12.5\"\n")
-        f.write("          cy=\"12.5\"\n")
-        f.write("          r=\"1.5\"\n")
-        f.write("          style=\"fill:"+str(stroke)+";stroke:"+str(stroke)+\
-                ";stroke-width:2;stroke-opacity:1\" />\n")
+        svg_circle(f,12.5,12.5,1.5,stroke,stroke,2)
     if n in [4,5,6]:
-        f.write("       <circle\n")
-        f.write("          cx=\"19\"\n")
-        f.write("          cy=\"6\"\n")
-        f.write("          r=\"1.5\"\n")
-        f.write("          style=\"fill:"+str(stroke)+";stroke:"+str(stroke)+\
-                ";stroke-width:2;stroke-opacity:1\" />\n")
-        f.write("       <circle\n")
-        f.write("          cx=\"6\"\n")
-        f.write("          cy=\"19\"\n")
-        f.write("          r=\"1.5\"\n")
-        f.write("          style=\"fill:"+str(stroke)+";stroke:"+str(stroke)+\
-                ";stroke-width:2;stroke-opacity:1\" />\n")
+        svg_circle(f,19,6,1.5,stroke,stroke,2)
+        svg_circle(f,6,19,1.5,stroke,stroke,2)
     if n in [6]:
-        f.write("       <circle\n")
-        f.write("          cx=\"6\"\n")
-        f.write("          cy=\"12.5\"\n")
-        f.write("          r=\"1.5\"\n")
-        f.write("          style=\"fill:"+str(stroke)+";stroke:"+str(stroke)+\
-                ";stroke-width:2;stroke-opacity:1\" />\n")
-        f.write("       <circle\n")
-        f.write("          cx=\"19\"\n")
-        f.write("          cy=\"12.5\"\n")
-        f.write("          r=\"1.5\"\n")
-        f.write("          style=\"fill:"+str(stroke)+";stroke:"+str(stroke)+\
-                ";stroke-width:2;stroke-opacity:1\" />\n")
-    f.write("     </g>\n")
+        svg_circle(f,6,12.5,1.5,stroke,stroke,2)
+        svg_circle(f,19,12.5,1.5,stroke,stroke,2)
+    f.write("</g>\n")
+
+def number_hash(f, t, n, stroke):
+    if n%3 == 0:
+        y = 12.5
+        nn = n/3
+    elif n%2 == 0:
+        y = 22.5
+        nn = n/2
+    else:
+        y = 32.5
+        nn = n
+    if n%5 == 0:
+        n/=5
+    elif n%7 == 0:
+        n/=7
+    else:
+        n/=11
+    for i in range(n):
+        hash(f, nn, 5, y, stroke)
+        y += 20
+    
+
+def dice(f, t, n, stroke):
+    if n == 5:
+        die(f, 5, 50, 25, stroke)
+    elif n == 10:
+        die(f, 5, 30, 25, stroke)
+        die(f, 5, 70, 25, stroke)
+    elif n == 15:
+        die(f, 5, 15, 25, stroke)
+        die(f, 5, 50, 25, stroke)
+        die(f, 5, 85, 25, stroke)
+    elif n == 7:
+        die(f, 3, 50, 10, stroke)
+        die(f, 4, 50, 40, stroke)
+    elif n == 14:
+        die(f, 4, 30, 10, stroke)
+        die(f, 3, 70, 10, stroke)
+        die(f, 3, 30, 40, stroke)
+        die(f, 4, 70, 40, stroke)
+    elif n == 21:
+        die(f, 3, 15, 10, stroke)
+        die(f, 4, 50, 10, stroke)
+        die(f, 3, 85, 10, stroke)
+        die(f, 4, 15, 40, stroke)
+        die(f, 3, 50, 40, stroke)
+        die(f, 4, 85, 40, stroke)
+    elif n == 11:
+        die(f, 5, 50, 10, stroke)
+        die(f, 6, 50, 40, stroke)
+    elif n == 22:
+        die(f, 6, 30, 10, stroke)
+        die(f, 5, 70, 10, stroke)
+        die(f, 5, 30, 40, stroke)
+        die(f, 6, 70, 40, stroke)
+    elif n == 33:
+        die(f, 5, 15, 10, stroke)
+        die(f, 6, 50, 10, stroke)
+        die(f, 5, 85, 10, stroke)
+        die(f, 6, 15, 40, stroke)
+        die(f, 5, 50, 40, stroke)
+        die(f, 6, 85, 40, stroke)
+
+def star(f, n, x, y, stroke):
+    turntable = {5:3,7:3,11:5}
+    f.write("<g\n")
+    f.write("   transform=\"translate("+str(x)+", "+ str(y)+")\">\n")    
+    turns = turntable[n]
+    x1 = 0
+    y1 = 0
+    a = 0
+    for i in range(n*turns):
+        x2 = x1+sin(a)*40
+        y2 = y1+cos(a)*40
+        svg_line(f,x1,y1,x2,y2,stroke,1.8)
+        x1 = x2
+        y1 = y2
+        a += turns*2*pi/n
+    f.write("</g>\n")
 
 def circle(f, x, style, stroke, fill):
-    f.write("<circle cx=\"11\" cy=\"27\" r=\"16\"\n")
-    f.write("   transform=\"translate(" + str(x+6) + ", 11)\"\n")
     if style == "none":
-        f.write("   style=\"fill:#FFFFFF;stroke:" + stroke + \
-              ";stroke-width:1.8;\" />\n")
+        svg_circle(f,x+17,38,16,stroke,"#FFFFFF",1.8)
     elif style == "gradient":
-        f.write("   style=\"fill:" + fill + ";stroke:" + stroke + \
-              ";stroke-width:1.8;\" />\n")
+        svg_circle(f,x+17,38,16,stroke,fill,1.8)
     else:
-        f.write("   style=\"fill:" + stroke + ";stroke:" + stroke + \
-              ";stroke-width:1.8;\" />\n")
-    f.write("<circle cx=\"11\" cy=\"27\" r=\"8\"\n")
-    f.write("   transform=\"translate(" + str(x+6) + ", 11)\"\n")
-    f.write("   style=\"fill:" + fill + ";stroke:" + stroke + \
-            ";stroke-width:1.8;\" />\n")
-
-def check(f, x, style, stroke, fill):
-    f.write("<path d=\"m 28.4,70.2 -5.9,5.9 -5.9,-5.9 -4.1,-4.1 c -0.7,-0.7" +\
-            " -1.2,-1.8 -1.2,-2.9 0,-2.3 1.9,-4.1 4.1,-4.1 1.1,0 2.2,0.5" +\
-            " 2.9,1.2 l 4.1,4.1 14.1,-14.1 c 0.8,-0.7 1.8,-1.2 2.9,-1.2 2.3,"+\
-            "0 4.1,1.9 4.1,4.1 0,1.1 -0.5,2.2 -1.2,2.9 l -14.1,14.1 z\"\n")
-    f.write("   transform=\"translate(" + str(x-10) + ", -25)\"\n")
-    if style == "none":
-        f.write("   style=\"fill:#FFFFFF;stroke:" + stroke + \
-              ";stroke-width:1.8;\" />\n")
-    elif style == "gradient":
-        f.write("   style=\"fill:" + fill + ";stroke:" + stroke + \
-              ";stroke-width:1.8;\" />\n")
-    else:
-        f.write("   style=\"fill:" + stroke + ";stroke:" + stroke + \
-              ";stroke-width:1.8;\" />\n")
-
-def cross(f, x, style, stroke, fill):
-    f.write("<path d=\"m 33.4,62.5 10.1,10.1 c 0.8,0.8 1.2,1.8 1.2,2.9 0,2.3"+\
-            " -1.9,4.1 -4.1,4.1 -1.1,0 -2.2,-0.5 -2.9,-1.2 l -10.1,-10.1"+\
-            " -10.1,10.1 c -0.8,0.8 -1.8,1.2 -2.9,1.2 -2.3,0 -4.1,-1.9 -4.1,"+\
-            "-4.1 0,-1.1 0.5,-2.2 1.2,-2.9 l 10.1,-10.1 -10.1,-10.1 c -0.7,"+\
-            "-0.7 -1.2,-1.8 -1.2,-2.9 0,-2.3 1.9,-4.1 4.1,-4.1 1.1,0 2.2,"+\
-            "0.5 2.9,1.2 l 10.1,10.1 10.1,-10.1 c 0.8,-0.7 1.8,-1.2 2.9,-1.2"+\
-            " 2.3,0 4.1,1.9 4.1,4.1 0,1.1 -0.5,2.2 -1.2,2.9 l -10.1,10.1 z\"\n")
-    f.write("   transform=\"translate(" + str(x-10) + ", -25)\"\n")
-    if style == "none":
-        f.write("   style=\"fill:#FFFFFF;stroke:" + stroke + \
-              ";stroke-width:1.8;\" />\n")
-    elif style == "gradient":
-        f.write("   style=\"fill:" + fill + ";stroke:" + stroke + \
-              ";stroke-width:1.8;\" />\n")
-    else:
-        f.write("   style=\"fill:" + stroke + ";stroke:" + stroke + \
-              ";stroke-width:1.8;\" />\n")
+        svg_circle(f,x+17,38,16,stroke,stroke,1.8)
+    svg_circle(f,x+17,38,8,stroke,fill,1.8)
 
 def check_card(f, n, style, stroke, fill):
     if n == 1:
-       check(f, 45.5, style, stroke, fill)
+       svg_check(f, 45.5, style, stroke, fill)
     elif n == 2:
-       check(f, 25.5, style, stroke, fill)
-       check(f, 65.5, style, stroke, fill)
+       svg_check(f, 25.5, style, stroke, fill)
+       svg_check(f, 65.5, style, stroke, fill)
     else:
-       check(f,  5.5, style, stroke, fill)
-       check(f, 45.5, style, stroke, fill)
-       check(f, 85.5, style, stroke, fill)
+       svg_check(f,  5.5, style, stroke, fill)
+       svg_check(f, 45.5, style, stroke, fill)
+       svg_check(f, 85.5, style, stroke, fill)
 
 def cross_card(f, n, style, stroke, fill):
     if n == 1:
-       cross(f, 45.5, style, stroke, fill)
+       svg_cross(f, 45.5, style, stroke, fill)
     elif n == 2:
-       cross(f, 25.5, style, stroke, fill)
-       cross(f, 65.5, style, stroke, fill)
+       svg_cross(f, 25.5, style, stroke, fill)
+       svg_cross(f, 65.5, style, stroke, fill)
     else:
-       cross(f,  5.5, style, stroke, fill)
-       cross(f, 45.5, style, stroke, fill)
-       cross(f, 85.5, style, stroke, fill)
+       svg_cross(f,  5.5, style, stroke, fill)
+       svg_cross(f, 45.5, style, stroke, fill)
+       svg_cross(f, 85.5, style, stroke, fill)
 
 def circle_card(f, n, style, stroke, fill):
     if n == 1:
@@ -239,81 +426,41 @@ def circle_card(f, n, style, stroke, fill):
        circle(f, 45.5, style, stroke, fill)
        circle(f, 85.5, style, stroke, fill)
 
-def number(f, x, string, stroke):
-    f.write("  <text\n")
-    f.write("     style=\"font-size:12px;text-anchor:middle;"+\
-            "text-align:center;font-family:Bitstream Vera Sans;fill:"+\
-            stroke+"\">\n")
-    f.write("      <tspan\n")
-    f.write("       x=\""+str(x)+"\"\n")
-    f.write("       y=\"55.25\"\n")
-    f.write("       style=\"font-size:48px;\">"+string+"</tspan>\n")
-    f.write("  </text>")
+def number_arabic(f, t, n, stroke):
+    x = 63.5
+    string = str(n)
+    svg_text(f,x,55.25,48,stroke,"DejaVu","",string)
 
-def number_card(f, t, n, stroke):
-    if t == 'X':
-        number(f, 63.5, str(n), stroke)
-    elif t == 'O':
-        if n == 5:
-            die(f, 5, 50, 25, stroke)
-        elif n == 10:
-            die(f, 5, 30, 25, stroke)
-            die(f, 5, 70, 25, stroke)
-        elif n == 15:
-            die(f, 5, 15, 25, stroke)
-            die(f, 5, 50, 25, stroke)
-            die(f, 5, 85, 25, stroke)
-        elif n == 7:
-            die(f, 3, 50, 10, stroke)
-            die(f, 4, 50, 40, stroke)
-        elif n == 14:
-            die(f, 4, 30, 10, stroke)
-            die(f, 3, 70, 10, stroke)
-            die(f, 3, 30, 40, stroke)
-            die(f, 4, 70, 40, stroke)
-        elif n == 21:
-            die(f, 3, 15, 10, stroke)
-            die(f, 4, 50, 10, stroke)
-            die(f, 3, 85, 10, stroke)
-            die(f, 4, 15, 40, stroke)
-            die(f, 3, 50, 40, stroke)
-            die(f, 4, 85, 40, stroke)
-        elif n == 11:
-            die(f, 5, 50, 10, stroke)
-            die(f, 6, 50, 40, stroke)
-        elif n == 22:
-            die(f, 6, 30, 10, stroke)
-            die(f, 5, 70, 10, stroke)
-            die(f, 5, 30, 40, stroke)
-            die(f, 6, 70, 40, stroke)
-        elif n == 33:
-            die(f, 5, 15, 10, stroke)
-            die(f, 6, 50, 10, stroke)
-            die(f, 5, 85, 10, stroke)
-            die(f, 6, 15, 40, stroke)
-            die(f, 5, 50, 40, stroke)
-            die(f, 6, 85, 40, stroke)
+def number_roman(f, t, n, stroke):
+    x = 63.5
+    string = roman_numerals[n]
+    svg_text(f,x,53.25,32,stroke,"DejaVu Serif","",string)
+
+def number_word(f, t, n, stroke):
+    x = 63.5
+    strings = number_names[n].split(' ')
+    if len(strings) == 1:
+        svg_text(f,x,48.25,26,stroke,"DejaVu Serif","",strings[0])
     else:
-        dots(f, n, 5, 5, stroke)
+        svg_text(f,x,35.25,26,stroke,"DejaVu Serif","",strings[0])
+        svg_text(f,x,63.25,26,stroke,"DejaVu Serif","",strings[1])
 
-def word(f, x, string, stroke,style):
-    f.write("  <text\n")
-    f.write("     style=\"font-size:12px;text-anchor:middle;"+style+\
-            "text-align:center;font-family:Bitstream Vera Sans;fill:"+\
-            stroke+"\">\n")
-    f.write("      <tspan\n")
-    f.write("       x=\""+str(x)+"\"\n")
-    f.write("       y=\"45.25\"\n")
-    f.write("       style=\"font-size:30px;\">"+string+"</tspan>\n")
-    f.write("  </text>")
+def number_card(f, t, n, stroke, methodX, methodO, methodC):
+    if t == 'X':
+        methodX(f, t, n, stroke)
+    elif t == 'O':
+        methodO(f, t, n, stroke)
+    else:
+        methodC(f, t, n, stroke)
 
 def word_card(f, t, s, string, stroke):
     if t == 'X':
-        word(f, 63.5, string[s], stroke, "font-weight:bold;")
+        svg_text(f,63.5,45.5,30,stroke,"DejaVu","font-weight:bold;",string[s])
     elif t == 'O':
-        word(f, 63.5, string[s], stroke, "font-style:italic;")
+        svg_text(f,63.5,45.5,30,stroke,"DejaVu Serif","font-style:italic;",\
+                 string[s])
     else:
-        word(f, 63.5, string[s], stroke, "")
+        svg_text(f,63.5,45.5,30,stroke,"DejaVu","",string[s])
 
 def open_file(datapath, filename):
     return file(os.path.join(datapath, filename), "w")
@@ -342,6 +489,24 @@ def generator(datapath):
                     i += 1
 
     # number cards
+    # choose different card styles each time
+    methodX = number_arabic
+    r = random.randrange(3)
+    if r == 0:
+        methodO = number_roman
+    elif r == 1:
+        methodO = number_hash
+    else:
+        methodO = number_word
+    r = random.randrange(4)
+    if r == 0:
+        methodC = dots_in_a_line
+    elif r == 1:
+        methodC = dots_in_a_circle
+    elif r == 2:
+        methodC = points_in_a_star
+    else:
+        methodC = dice
     i = 0
     for t in card_types: # ignoring this field
         for c in color_pairs:
@@ -350,7 +515,7 @@ def generator(datapath):
                     filename = "number-%d.svg" % (i)
                     f = open_file(datapath, filename)
                     header(f,"#000000",c[1],"0.5")
-                    number_card(f,t,n*s,c[0])
+                    number_card(f,t,n*s,c[0],methodX,methodO,methodC)
                     footer(f)
                     close_file(f)
                     i += 1
