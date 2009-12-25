@@ -1,8 +1,9 @@
 12
 
-* reverting to 3 colors to simplify game play
-* experimenting with different style number games
-* adding bold, italic to word cards
+* reverting to three colors to simplify game play
+* experimenting with different number-game card styles
+* adding bold and italic to word cards
+* consolidate grid after dealing extra cards
 * refactoring of sprites library
 
 11
