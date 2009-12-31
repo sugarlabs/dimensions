@@ -47,6 +47,13 @@ number_names = {5:_('five'),7:_('seven'),11:_('eleven'),10:_('ten'),\
                 14:_('fourteen'),15:_('fifteen'),22:_('twenty two'),\
                 21:_('twenty one'),33:_('thirty three')}
 
+number_products = {5:'1×5',7:'1×7',11:'1×11',10:'2×5',\
+                   14:'2×7',15:'3×5',22:'2×11',\
+                   21:'3×7',33:'3×11'}
+
+chinese_numerals = {5:'五',7:'七',10:'十',11:'十一',14:'十四',15:'十五',\
+                  21:'廿一',22:'廿二',33:'卅三'}
+
 #
 # SVG generators
 #
@@ -429,21 +436,31 @@ def circle_card(f, n, style, stroke, fill):
 def number_arabic(f, t, n, stroke):
     x = 63.5
     string = str(n)
-    svg_text(f,x,55.25,48,stroke,"DejaVu","",string)
+    svg_text(f,x,55,48,stroke,"DejaVu","",string)
 
 def number_roman(f, t, n, stroke):
     x = 63.5
     string = roman_numerals[n]
-    svg_text(f,x,53.25,32,stroke,"DejaVu Serif","",string)
+    svg_text(f,x,53,32,stroke,"DejaVu Serif","",string)
+
+def number_chinese(f, t, n, stroke):
+    x = 63.5
+    string = chinese_numerals[n]
+    svg_text(f,x,55,48,stroke,"DejaVu","",string)
+
+def number_product(f, t, n, stroke):
+    x = 63.5
+    string = number_products[n]
+    svg_text(f,x,53,36,stroke,"DejaVu","",string)
 
 def number_word(f, t, n, stroke):
     x = 63.5
     strings = number_names[n].split(' ')
     if len(strings) == 1:
-        svg_text(f,x,48.25,26,stroke,"DejaVu Serif","",strings[0])
+        svg_text(f,x,48,26,stroke,"DejaVu Serif","",strings[0])
     else:
-        svg_text(f,x,35.25,26,stroke,"DejaVu Serif","",strings[0])
-        svg_text(f,x,63.25,26,stroke,"DejaVu Serif","",strings[1])
+        svg_text(f,x,35,26,stroke,"DejaVu Serif","",strings[0])
+        svg_text(f,x,63,26,stroke,"DejaVu Serif","",strings[1])
 
 def number_card(f, t, n, stroke, methodX, methodO, methodC):
     if t == 'X':
@@ -491,11 +508,15 @@ def generator(datapath):
     # number cards
     # choose different card styles each time
     methodX = number_arabic
-    r = random.randrange(3)
+    r = random.randrange(5)
     if r == 0:
         methodO = number_roman
     elif r == 1:
         methodO = number_hash
+    elif r == 2:
+        methodO = number_product
+    elif r == 3:
+        methodO = number_chinese
     else:
         methodO = number_word
     r = random.randrange(4)
