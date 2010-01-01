@@ -32,6 +32,7 @@ import grid
 import card
 import sprites
 import gencards
+from constants import *
 
 class VisualMatchMain:
     def __init__(self):
@@ -48,22 +49,92 @@ class VisualMatchMain:
             os.mkdir(os.path.join(os.path.abspath('.'), 'images'))
         gencards.generator(os.path.join(os.path.abspath('.'), 'images'))
 
-        menu = gtk.Menu()
+        menu1 = gtk.Menu()
         menu_items = gtk.MenuItem(_("New pattern game"))
-        menu.append(menu_items)
+        menu1.append(menu_items)
         menu_items.connect("activate", self._new_game_cb, 'pattern')
         menu_items.show()
         menu_items = gtk.MenuItem(_("New number game"))
-        menu.append(menu_items)
+        menu1.append(menu_items)
         menu_items.connect("activate", self._new_game_cb, 'number')
         menu_items.show()
         menu_items = gtk.MenuItem(_("New word game"))
-        menu.append(menu_items)
+        menu1.append(menu_items)
         menu_items.connect("activate", self._new_game_cb, 'word')
         menu_items.show()
-        root_menu = gtk.MenuItem("Tools")
-        root_menu.show()
-        root_menu.set_submenu(menu)
+        game_menu = gtk.MenuItem("Games")
+        game_menu.show()
+        game_menu.set_submenu(menu1)
+
+        menu2 = gtk.Menu()
+        menu_items = gtk.MenuItem(_("Robot on/off"))
+        menu2.append(menu_items)
+        menu_items.connect("activate", self._robot_cb)
+        menu_items.show()
+        menu_items = gtk.MenuItem(_("90 sec."))
+        menu2.append(menu_items)
+        menu_items.connect("activate", self._robot_time_cb, 90)
+        menu_items.show()
+        menu_items = gtk.MenuItem(_("60 sec."))
+        menu2.append(menu_items)
+        menu_items.connect("activate", self._robot_time_cb, 60)
+        menu_items.show()
+        menu_items = gtk.MenuItem(_("45 sec."))
+        menu2.append(menu_items)
+        menu_items.connect("activate", self._robot_time_cb, 45)
+        menu_items.show()
+        menu_items = gtk.MenuItem(_("30 sec."))
+        menu2.append(menu_items)
+        menu_items.connect("activate", self._robot_time_cb, 30)
+        menu_items.show()
+        menu_items = gtk.MenuItem(_("15 sec."))
+        menu2.append(menu_items)
+        menu_items.connect("activate", self._robot_time_cb, 15)
+        menu_items.show()
+        tool_menu = gtk.MenuItem("Robot")
+        tool_menu.show()
+        tool_menu.set_submenu(menu2)
+
+        menu3 = gtk.Menu()
+        menu_items = gtk.MenuItem(_("Product"))
+        menu3.append(menu_items)
+        menu_items.connect("activate", self._number_card_O_cb, PRODUCT)
+        menu_items.show()
+        menu_items = gtk.MenuItem(_("Roman"))
+        menu3.append(menu_items)
+        menu_items.connect("activate", self._number_card_O_cb, ROMAN)
+        menu_items.show()
+        menu_items = gtk.MenuItem(_("Word"))
+        menu3.append(menu_items)
+        menu_items.connect("activate", self._number_card_O_cb, WORD)
+        menu_items.show()
+        menu_items = gtk.MenuItem(_("Chinese"))
+        menu3.append(menu_items)
+        menu_items.connect("activate", self._number_card_O_cb, CHINESE)
+        menu_items.show()
+        menu_items = gtk.MenuItem(_("Hash"))
+        menu3.append(menu_items)
+        menu_items.connect("activate", self._number_card_C_cb, HASH)
+        menu_items.show()
+        menu_items = gtk.MenuItem(_("Dice"))
+        menu3.append(menu_items)
+        menu_items.connect("activate", self._number_card_C_cb, DICE)
+        menu_items.show()
+        menu_items = gtk.MenuItem(_("Dots"))
+        menu3.append(menu_items)
+        menu_items.connect("activate", self._number_card_C_cb, DOTS)
+        menu_items.show()
+        menu_items = gtk.MenuItem(_("Star"))
+        menu3.append(menu_items)
+        menu_items.connect("activate", self._number_card_C_cb, STAR)
+        menu_items.show()
+        menu_items = gtk.MenuItem(_("Lines"))
+        menu3.append(menu_items)
+        menu_items.connect("activate", self._number_card_C_cb, LINES)
+        menu_items.show()
+        num_menu = gtk.MenuItem("Numbers")
+        num_menu.show()
+        num_menu.set_submenu(menu3)
 
         # A vbox to put a menu and the canvas in:
         vbox = gtk.VBox(False, 0)
@@ -78,7 +149,9 @@ class VisualMatchMain:
         vbox.pack_end(canvas, True, True)
         canvas.show()
 
-        menu_bar.append(root_menu)
+        menu_bar.append(game_menu)
+        menu_bar.append(tool_menu)
+        menu_bar.append(num_menu)
         self.win.show_all()
 
         # Join the activity
@@ -87,6 +160,10 @@ class VisualMatchMain:
                                             'images/'),'pattern')
         self.vmw.win = self.win
         self.vmw.activity = self
+        self.vmw.robot = False
+        self.vmw.robot_time = 60
+        self.vmw.numberO = PRODUCT
+        self.vmw.numberC = HASH
         self.load_score()
 
     def load_score(self):
@@ -112,6 +189,31 @@ class VisualMatchMain:
     def _new_game_cb(self, widget, game):
         window.new_game(self.vmw, game)
         return True
+
+    def _robot_cb(self, widget):
+        if self.vmw.robot is True:
+            self.vmw.robot = False
+        else:
+            self.vmw.robot = True
+
+    def _robot_time_cb(self, widget, time):
+        self.vmw.robot_time = time
+
+    def _number_card_O_cb(self, widget, numberO):
+        self.vmw.numberO = numberO
+        gencards.generate_number_cards(self.vmw.path,
+                                       self.vmw.numberO,
+                                       self.vmw.numberC)
+        self.vmw.cardtype = ''
+        window.new_game(self.vmw, 'number')
+
+    def _number_card_C_cb(self, widget, numberC):
+        self.vmw.numberC = numberC
+        gencards.generate_number_cards(self.vmw.path,
+                                       self.vmw.numberO,
+                                       self.vmw.numberC)
+        self.vmw.cardtype = ''
+        window.new_game(self.vmw, 'number')
 
 def main():
     gtk.main()
