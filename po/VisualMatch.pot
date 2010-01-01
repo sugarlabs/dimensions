@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-12-25 20:51+0000\n"
+"POT-Creation-Date: 2010-01-01 23:31+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -16,168 +16,236 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: activity/activity.info:2 /home/walter/Desktop/set/window.py:272
-#: /home/walter/Desktop/set/visualmatch.py:43
+#: activity/activity.info:2
+#: /home/liveuser/Activities/VisualMatch.activity/window.py:275
+#: /home/liveuser/Activities/VisualMatch.activity/visualmatch.py:44
 msgid "Visual Match"
 msgstr ""
 
-#: /home/walter/Desktop/set/window.py:121
-#: /home/walter/Desktop/set/window.py:185
-#: /home/walter/Desktop/set/VisualMatchActivity.py:112
-msgid "cards remaining"
+#: /home/liveuser/Activities/VisualMatch.activity/window.py:123
+#: /home/liveuser/Activities/VisualMatch.activity/window.py:191
+#: /home/liveuser/Activities/VisualMatch.activity/VisualMatchActivity.py:234
+#: /home/liveuser/Activities/VisualMatch.activity/VisualMatchActivity.py:514
+msgid "cards"
 msgstr ""
 
-#: /home/walter/Desktop/set/window.py:122
-#: /home/walter/Desktop/set/window.py:218
-#: /home/walter/Desktop/set/VisualMatchActivity.py:123
-#: /home/walter/Desktop/set/VisualMatchActivity.py:277
+#: /home/liveuser/Activities/VisualMatch.activity/window.py:124
+#: /home/liveuser/Activities/VisualMatch.activity/window.py:223
+#: /home/liveuser/Activities/VisualMatch.activity/VisualMatchActivity.py:245
+#: /home/liveuser/Activities/VisualMatch.activity/VisualMatchActivity.py:527
 msgid "matches"
 msgstr ""
 
-#: /home/walter/Desktop/set/window.py:192
+#: /home/liveuser/Activities/VisualMatch.activity/window.py:198
 msgid "Game over"
 msgstr ""
 
-#: /home/walter/Desktop/set/window.py:201
+#: /home/liveuser/Activities/VisualMatch.activity/window.py:207
 msgid "New record"
 msgstr ""
 
-#: /home/walter/Desktop/set/window.py:213
-#: /home/walter/Desktop/set/window.py:216
+#: /home/liveuser/Activities/VisualMatch.activity/window.py:218
+#: /home/liveuser/Activities/VisualMatch.activity/window.py:221
 msgid "match"
 msgstr ""
 
-#: /home/walter/Desktop/set/window.py:224
-msgid "no match"
-msgstr ""
-
-#: /home/walter/Desktop/set/visualmatch.py:44
-msgid "Click on cards to create sets of three."
-msgstr ""
-
-#: /home/walter/Desktop/set/visualmatch.py:52
-#: /home/walter/Desktop/set/VisualMatchActivity.py:81
-#: /home/walter/Desktop/set/VisualMatchActivity.py:232
-msgid "New pattern game"
-msgstr ""
-
-#: /home/walter/Desktop/set/visualmatch.py:56
-#: /home/walter/Desktop/set/VisualMatchActivity.py:90
-#: /home/walter/Desktop/set/VisualMatchActivity.py:241
-msgid "New number game"
-msgstr ""
-
-#: /home/walter/Desktop/set/visualmatch.py:60
-#: /home/walter/Desktop/set/VisualMatchActivity.py:99
-#: /home/walter/Desktop/set/VisualMatchActivity.py:250
-msgid "New word game"
-msgstr ""
-
-#: /home/walter/Desktop/set/gencards.py:46
-msgid "five"
-msgstr ""
-
-#: /home/walter/Desktop/set/gencards.py:46
-msgid "seven"
-msgstr ""
-
-#: /home/walter/Desktop/set/gencards.py:46
-msgid "eleven"
-msgstr ""
-
-#: /home/walter/Desktop/set/gencards.py:46
-msgid "ten"
-msgstr ""
-
-#: /home/walter/Desktop/set/gencards.py:47
-msgid "fourteen"
-msgstr ""
-
-#: /home/walter/Desktop/set/gencards.py:47
-msgid "fifteen"
-msgstr ""
-
-#: /home/walter/Desktop/set/gencards.py:47
-msgid "twenty two"
-msgstr ""
-
-#: /home/walter/Desktop/set/gencards.py:48
-msgid "twenty one"
-msgstr ""
-
-#: /home/walter/Desktop/set/gencards.py:48
-msgid "thirty three"
-msgstr ""
-
-#: /home/walter/Desktop/set/gencards.py:533
-msgid "dog"
-msgstr ""
-
-#: /home/walter/Desktop/set/gencards.py:533
-msgid "cat"
-msgstr ""
-
-#: /home/walter/Desktop/set/gencards.py:533
-msgid "mouse"
-msgstr ""
-
-#: /home/walter/Desktop/set/gencards.py:535
-msgid "apple"
-msgstr ""
-
-#: /home/walter/Desktop/set/gencards.py:535
-msgid "bread"
-msgstr ""
-
-#: /home/walter/Desktop/set/gencards.py:535
-msgid "cheese"
-msgstr ""
-
-#: /home/walter/Desktop/set/gencards.py:538
-msgid "sun"
-msgstr ""
-
-#: /home/walter/Desktop/set/gencards.py:538
-msgid "moon"
-msgstr ""
-
-#: /home/walter/Desktop/set/gencards.py:538
-msgid "earth"
-msgstr ""
-
-#: /home/walter/Desktop/set/VisualMatchActivity.py:145
-#: /home/walter/Desktop/set/VisualMatchActivity.py:303
-msgid "Find a match."
-msgstr ""
-
-#: /home/walter/Desktop/set/VisualMatchActivity.py:159
-msgid "Write in Journal"
-msgstr ""
-
-#: /home/walter/Desktop/set/VisualMatchActivity.py:181
-msgid "Project"
-msgstr ""
-
-#: /home/walter/Desktop/set/VisualMatchActivity.py:264
-msgid "cards remain in the deck"
-msgstr ""
-
-#: /home/walter/Desktop/set/namingalert.py:82
+#: /home/liveuser/Activities/VisualMatch.activity/namingalert.py:82
 msgid "Describe your activity"
 msgstr ""
 
-#: /home/walter/Desktop/set/namingalert.py:87
+#: /home/liveuser/Activities/VisualMatch.activity/namingalert.py:87
 msgid "Keep"
 msgstr ""
 
-#: /home/walter/Desktop/set/namingalert.py:283
+#: /home/liveuser/Activities/VisualMatch.activity/namingalert.py:283
 msgid "Untitled"
 msgstr ""
 
-#: /home/walter/Desktop/set/namingalert.py:290
+#: /home/liveuser/Activities/VisualMatch.activity/namingalert.py:290
 msgid "Description:"
 msgstr ""
 
-#: /home/walter/Desktop/set/namingalert.py:314
+#: /home/liveuser/Activities/VisualMatch.activity/namingalert.py:314
 msgid "Tags:"
+msgstr ""
+
+#: /home/liveuser/Activities/VisualMatch.activity/gencards.py:46
+msgid "five"
+msgstr ""
+
+#: /home/liveuser/Activities/VisualMatch.activity/gencards.py:46
+msgid "seven"
+msgstr ""
+
+#: /home/liveuser/Activities/VisualMatch.activity/gencards.py:46
+msgid "eleven"
+msgstr ""
+
+#: /home/liveuser/Activities/VisualMatch.activity/gencards.py:46
+msgid "ten"
+msgstr ""
+
+#: /home/liveuser/Activities/VisualMatch.activity/gencards.py:47
+msgid "fourteen"
+msgstr ""
+
+#: /home/liveuser/Activities/VisualMatch.activity/gencards.py:47
+msgid "fifteen"
+msgstr ""
+
+#: /home/liveuser/Activities/VisualMatch.activity/gencards.py:47
+msgid "twenty two"
+msgstr ""
+
+#: /home/liveuser/Activities/VisualMatch.activity/gencards.py:48
+msgid "twenty one"
+msgstr ""
+
+#: /home/liveuser/Activities/VisualMatch.activity/gencards.py:48
+msgid "thirty three"
+msgstr ""
+
+#: /home/liveuser/Activities/VisualMatch.activity/gencards.py:541
+msgid "dog"
+msgstr ""
+
+#: /home/liveuser/Activities/VisualMatch.activity/gencards.py:541
+msgid "cat"
+msgstr ""
+
+#: /home/liveuser/Activities/VisualMatch.activity/gencards.py:541
+msgid "mouse"
+msgstr ""
+
+#: /home/liveuser/Activities/VisualMatch.activity/gencards.py:543
+msgid "apple"
+msgstr ""
+
+#: /home/liveuser/Activities/VisualMatch.activity/gencards.py:543
+msgid "bread"
+msgstr ""
+
+#: /home/liveuser/Activities/VisualMatch.activity/gencards.py:543
+msgid "cheese"
+msgstr ""
+
+#: /home/liveuser/Activities/VisualMatch.activity/gencards.py:546
+msgid "sun"
+msgstr ""
+
+#: /home/liveuser/Activities/VisualMatch.activity/gencards.py:546
+msgid "moon"
+msgstr ""
+
+#: /home/liveuser/Activities/VisualMatch.activity/gencards.py:546
+msgid "earth"
+msgstr ""
+
+#: /home/liveuser/Activities/VisualMatch.activity/visualmatch.py:45
+msgid "Click on cards to create sets of three."
+msgstr ""
+
+#: /home/liveuser/Activities/VisualMatch.activity/visualmatch.py:53
+#: /home/liveuser/Activities/VisualMatch.activity/VisualMatchActivity.py:111
+#: /home/liveuser/Activities/VisualMatch.activity/VisualMatchActivity.py:482
+msgid "New pattern game"
+msgstr ""
+
+#: /home/liveuser/Activities/VisualMatch.activity/visualmatch.py:57
+#: /home/liveuser/Activities/VisualMatch.activity/VisualMatchActivity.py:120
+#: /home/liveuser/Activities/VisualMatch.activity/VisualMatchActivity.py:491
+msgid "New number game"
+msgstr ""
+
+#: /home/liveuser/Activities/VisualMatch.activity/visualmatch.py:61
+#: /home/liveuser/Activities/VisualMatch.activity/VisualMatchActivity.py:129
+#: /home/liveuser/Activities/VisualMatch.activity/VisualMatchActivity.py:500
+msgid "New word game"
+msgstr ""
+
+#: /home/liveuser/Activities/VisualMatch.activity/visualmatch.py:70
+msgid "Robot on/off"
+msgstr ""
+
+#: /home/liveuser/Activities/VisualMatch.activity/visualmatch.py:74
+msgid "90 sec."
+msgstr ""
+
+#: /home/liveuser/Activities/VisualMatch.activity/visualmatch.py:78
+msgid "60 sec."
+msgstr ""
+
+#: /home/liveuser/Activities/VisualMatch.activity/visualmatch.py:82
+msgid "45 sec."
+msgstr ""
+
+#: /home/liveuser/Activities/VisualMatch.activity/visualmatch.py:86
+msgid "30 sec."
+msgstr ""
+
+#: /home/liveuser/Activities/VisualMatch.activity/visualmatch.py:90
+msgid "15 sec."
+msgstr ""
+
+#: /home/liveuser/Activities/VisualMatch.activity/visualmatch.py:99
+msgid "Product"
+msgstr ""
+
+#: /home/liveuser/Activities/VisualMatch.activity/visualmatch.py:103
+msgid "Roman"
+msgstr ""
+
+#: /home/liveuser/Activities/VisualMatch.activity/visualmatch.py:107
+msgid "Word"
+msgstr ""
+
+#: /home/liveuser/Activities/VisualMatch.activity/visualmatch.py:111
+msgid "Chinese"
+msgstr ""
+
+#: /home/liveuser/Activities/VisualMatch.activity/visualmatch.py:115
+msgid "Hash"
+msgstr ""
+
+#: /home/liveuser/Activities/VisualMatch.activity/visualmatch.py:119
+msgid "Dice"
+msgstr ""
+
+#: /home/liveuser/Activities/VisualMatch.activity/visualmatch.py:123
+msgid "Dots"
+msgstr ""
+
+#: /home/liveuser/Activities/VisualMatch.activity/visualmatch.py:127
+msgid "Star"
+msgstr ""
+
+#: /home/liveuser/Activities/VisualMatch.activity/visualmatch.py:131
+msgid "Lines"
+msgstr ""
+
+#: /home/liveuser/Activities/VisualMatch.activity/VisualMatchActivity.py:99
+msgid "Write in Journal"
+msgstr ""
+
+#: /home/liveuser/Activities/VisualMatch.activity/VisualMatchActivity.py:139
+#: /home/liveuser/Activities/VisualMatch.activity/VisualMatchActivity.py:335
+#: /home/liveuser/Activities/VisualMatch.activity/VisualMatchActivity.py:381
+msgid "Play with the computer."
+msgstr ""
+
+#: /home/liveuser/Activities/VisualMatch.activity/VisualMatchActivity.py:267
+#: /home/liveuser/Activities/VisualMatch.activity/VisualMatchActivity.py:553
+msgid "Find a match."
+msgstr ""
+
+#: /home/liveuser/Activities/VisualMatch.activity/VisualMatchActivity.py:294
+msgid "Project"
+msgstr ""
+
+#: /home/liveuser/Activities/VisualMatch.activity/VisualMatchActivity.py:297
+msgid "Tools"
+msgstr ""
+
+#: /home/liveuser/Activities/VisualMatch.activity/VisualMatchActivity.py:340
+msgid "Stop playing with the computer."
 msgstr ""
