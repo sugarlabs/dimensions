@@ -77,7 +77,15 @@ class VisualMatchActivity(activity.Activity):
             datapath = os.path.join(activity.get_activity_root(), "data")
         except:
             datapath = os.path.join(os.environ['HOME'], SERVICE, "data")
-        gencards.generator(datapath)
+
+        # Read the number card preferences from the Journal
+        try:
+            numberO = int(self.metadata['numberO'])
+            numberC = int(self.metadata['numberC'])
+        except:
+            numberO = PRODUCT
+            numberC = HASH
+        gencards.generator(datapath,numberO,numberC)
 
         try:
             # Use 0.86 toolbar design
@@ -129,7 +137,7 @@ class VisualMatchActivity(activity.Activity):
             tools_toolbar = gtk.Toolbar()
             self.robot_button = ToolButton('robot-off')
             self.robot_button.set_tooltip(_("Play with the computer."))
-            self.robot_button.connect('clicked', self._robot_cb)
+            self.robot_button.connect('clicked', self._robot_cb, self)
             tools_toolbar.insert(self.robot_button,-1)
             self.robot_button.show()
 
@@ -150,6 +158,65 @@ class VisualMatchActivity(activity.Activity):
             separator.props.draw = True
             tools_toolbar.insert(separator, -1)
             separator.show()
+
+            self.product_button = ToolButton('product')
+            self.product_button.connect('clicked', self._number_card_O_cb,
+                                        self, PRODUCT)
+            tools_toolbar.insert(self.product_button,-1)
+            self.product_button.show()
+
+            self.roman_button = ToolButton('roman')
+            self.roman_button.connect('clicked', self._number_card_O_cb,
+                                        self, ROMAN)
+            tools_toolbar.insert(self.roman_button,-1)
+            self.roman_button.show()
+
+            self.word_button = ToolButton('word')
+            self.word_button.connect('clicked', self._number_card_O_cb,
+                                        self, WORD)
+            tools_toolbar.insert(self.word_button,-1)
+            self.word_button.show()
+
+            self.chinese_button = ToolButton('chinese')
+            self.chinese_button.connect('clicked', self._number_card_O_cb,
+                                        self, CHINESE)
+            tools_toolbar.insert(self.chinese_button,-1)
+            self.chinese_button.show()
+
+            separator = gtk.SeparatorToolItem()
+            separator.props.draw = True
+            tools_toolbar.insert(separator, -1)
+            separator.show()
+
+            self.hash_button = ToolButton('hash')
+            self.hash_button.connect('clicked', self._number_card_C_cb,
+                                        self, HASH)
+            tools_toolbar.insert(self.hash_button,-1)
+            self.hash_button.show()
+
+            self.dots_button = ToolButton('dots')
+            self.dots_button.connect('clicked', self._number_card_C_cb,
+                                        self, DOTS)
+            tools_toolbar.insert(self.dots_button,-1)
+            self.dots_button.show()
+
+            self.star_button = ToolButton('star')
+            self.star_button.connect('clicked', self._number_card_C_cb,
+                                        self, STAR)
+            tools_toolbar.insert(self.star_button,-1)
+            self.star_button.show()
+
+            self.dice_button = ToolButton('dice')
+            self.dice_button.connect('clicked', self._number_card_C_cb,
+                                        self, DICE)
+            tools_toolbar.insert(self.dice_button,-1)
+            self.dice_button.show()
+
+            self.lines_button = ToolButton('lines')
+            self.lines_button.connect('clicked', self._number_card_C_cb,
+                                        self, LINES)
+            tools_toolbar.insert(self.lines_button,-1)
+            self.lines_button.show()
 
             tools_toolbar_button = ToolbarButton(
                     page=tools_toolbar,
@@ -226,6 +293,9 @@ class VisualMatchActivity(activity.Activity):
             self.projectToolbar = ProjectToolbar(self)
             self.toolbox.add_toolbar( _('Project'), self.projectToolbar )
 
+            self.toolsToolbar = ToolsToolbar(self)
+            self.toolbox.add_toolbar( _('Tools'), self.toolsToolbar )
+
             self.toolbox.show()
 
         # Create a canvas
@@ -241,6 +311,8 @@ class VisualMatchActivity(activity.Activity):
         self.vmw.robot = False
         self.vmw.robot_time = robot_time
         self.vmw.low_score = low_score
+        self.vmw.numberO = numberO
+        self.vmw.numberC = numberC
 
     #
     # Write misc. data to the Journal
@@ -248,6 +320,8 @@ class VisualMatchActivity(activity.Activity):
     def write_file(self, file_path):
         self.metadata['low_score'] = self.vmw.low_score
         self.metadata['robot_time'] = self.vmw.robot_time
+        self.metadata['numberO'] = self.vmw.numberO
+        self.metadata['numberC'] = self.vmw.numberC
 
     #
     # Button callbacks
@@ -255,16 +329,32 @@ class VisualMatchActivity(activity.Activity):
     def _select_game_cb(self, button, activity, cardtype):
         window.new_game(activity.vmw, cardtype)
 
-    def _robot_cb(self, button):
-        if self.vmw.robot is True:
-            self.vmw.robot = False
+    def _robot_cb(self, button, activity):
+        if activity.vmw.robot is True:
+            activity.vmw.robot = False
             self.robot_button.set_tooltip(_("Play with the computer."))
             self.robot_button.set_icon('robot-off')
         else:
-            self.vmw.robot = True
+            activity.vmw.robot = True
             self.robot_button.set_tooltip(
                 _("Stop playing with the computer."))
             self.robot_button.set_icon('robot-on')
+
+    def _number_card_O_cb(self, button, activity, numberO):
+        activity.vmw.numberO = numberO
+        gencards.generate_number_cards(activity.vmw.path,
+                                       activity.vmw.numberO,
+                                       activity.vmw.numberC)
+        activity.vmw.cardtype = ''
+        window.new_game(activity.vmw, 'number')
+
+    def _number_card_C_cb(self, button, activity, numberC):
+        activity.vmw.numberC = numberC
+        gencards.generate_number_cards(activity.vmw.path,
+                                       activity.vmw.numberO,
+                                       activity.vmw.numberC)
+        activity.vmw.cardtype = ''
+        window.new_game(activity.vmw, 'number')
 
     def _robot_time_spin_cb(self, button):
         self.vmw.robot_time = self._robot_time_spin.get_value_as_int()
@@ -278,13 +368,114 @@ class VisualMatchActivity(activity.Activity):
         return True
 
 #
-# Project toolbar for pre-0.86 toolbars
+# Toolbars for pre-0.86 toolbars
 #
+class ToolsToolbar(gtk.Toolbar):
+
+    def __init__(self, activity):
+        gtk.Toolbar.__init__(self)
+        self.activity = activity
+
+        # Robot
+        self.activity.robot_button = ToolButton( "robot-off" )
+        self.activity.robot_button.set_tooltip(_('Play with the computer.'))
+        self.activity.robot_button.props.sensitive = True
+        self.activity.robot_button.connect('clicked', self.activity._robot_cb, 
+                                           self.activity)
+        self.insert(self.activity.robot_button, -1)
+        self.activity.robot_button.show()
+
+        self.activity._robot_time_spin_adj = gtk.Adjustment(60,15,180,5,15,0)
+        self.activity._robot_time_spin = gtk.SpinButton(
+            self.activity._robot_time_spin_adj, 0, 0)
+        self.activity._robot_time_spin_id = \
+            self.activity._robot_time_spin.connect('value-changed', 
+                self.activity._robot_time_spin_cb)
+        self.activity._robot_time_spin.set_numeric(True)
+        self.activity._robot_time_spin.show()
+        self.activity.tool_item_robot_time = gtk.ToolItem()
+        self.activity.tool_item_robot_time.add(self.activity._robot_time_spin)
+        self.insert(self.activity.tool_item_robot_time, -1)
+        self.activity.tool_item_robot_time.show()
+
+        separator = gtk.SeparatorToolItem()
+        separator.set_draw(True)
+        self.insert(separator, -1)
+        separator.show()
+
+        self.activity.product_button = ToolButton( "product" )
+        self.activity.product_button.props.sensitive = True
+        self.activity.product_button.connect('clicked', 
+            self.activity._number_card_O_cb, self.activity, PRODUCT)
+        self.insert(self.activity.product_button, -1)
+        self.activity.product_button.show()
+
+        self.activity.roman_button = ToolButton( "roman" )
+        self.activity.roman_button.props.sensitive = True
+        self.activity.roman_button.connect('clicked', 
+            self.activity._number_card_O_cb, self.activity, ROMAN)
+        self.insert(self.activity.roman_button, -1)
+        self.activity.roman_button.show()
+
+        self.activity.word_button = ToolButton( "word" )
+        self.activity.word_button.props.sensitive = True
+        self.activity.word_button.connect('clicked', 
+            self.activity._number_card_O_cb, self.activity, WORD)
+        self.insert(self.activity.word_button, -1)
+        self.activity.word_button.show()
+
+        self.activity.chinese_button = ToolButton( "chinese" )
+        self.activity.chinese_button.props.sensitive = True
+        self.activity.chinese_button.connect('clicked', 
+            self.activity._number_card_O_cb, self.activity, CHINESE)
+        self.insert(self.activity.chinese_button, -1)
+        self.activity.chinese_button.show()
+
+        separator = gtk.SeparatorToolItem()
+        separator.set_draw(True)
+        self.insert(separator, -1)
+        separator.show()
+
+        self.activity.hash_button = ToolButton( "hash" )
+        self.activity.hash_button.props.sensitive = True
+        self.activity.hash_button.connect('clicked', 
+            self.activity._number_card_C_cb, self.activity, HASH)
+        self.insert(self.activity.hash_button, -1)
+        self.activity.hash_button.show()
+
+        self.activity.dots_button = ToolButton( "dots" )
+        self.activity.dots_button.props.sensitive = True
+        self.activity.dots_button.connect('clicked', 
+            self.activity._number_card_C_cb, self.activity, DOTS)
+        self.insert(self.activity.dots_button, -1)
+        self.activity.dots_button.show()
+
+        self.activity.star_button = ToolButton( "star" )
+        self.activity.star_button.props.sensitive = True
+        self.activity.star_button.connect('clicked', 
+            self.activity._number_card_C_cb, self.activity, STAR)
+        self.insert(self.activity.star_button, -1)
+        self.activity.star_button.show()
+
+        self.activity.dice_button = ToolButton( "dice" )
+        self.activity.dice_button.props.sensitive = True
+        self.activity.dice_button.connect('clicked', 
+            self.activity._number_card_C_cb, self.activity, DICE)
+        self.insert(self.activity.dice_button, -1)
+        self.activity.dice_button.show()
+
+        self.activity.lines_button = ToolButton( "lines" )
+        self.activity.lines_button.props.sensitive = True
+        self.activity.lines_button.connect('clicked', 
+            self.activity._number_card_C_cb, self.activity, LINES)
+        self.insert(self.activity.lines_button, -1)
+        self.activity.lines_button.show()
+
 class ProjectToolbar(gtk.Toolbar):
 
-    def __init__(self, pc):
+    def __init__(self, activity):
         gtk.Toolbar.__init__(self)
-        self.activity = pc
+        self.activity = activity
 
         # New-pattern-game Button
         self.activity.button1 = ToolButton( "new-pattern-game" )

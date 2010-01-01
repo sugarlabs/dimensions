@@ -21,7 +21,7 @@
 
 import os
 from gettext import gettext as _
-import random
+from constants import *
 from math import sin, cos, pi
 
 RED_STROKE = "#FF6040"
@@ -76,10 +76,10 @@ def svg_circle(f,cx,cy,r,stroke,fill,stroke_width):
     f.write("          style=\"fill:"+str(fill)+";stroke:"+str(stroke)+\
             ";stroke-width:"+str(stroke_width)+";stroke-opacity:1\" />\n")
 
-def svg_line(f,x1,y1,x2,y2,stroke,stroke_width):
+def svg_line(f,x1,y1,x2,y2,stroke,fill,stroke_width):
     f.write("<line x1=\""+str(x1)+"\" y1=\""+str(y1)+\
             "\" x2=\""+str(x2)+"\" y2=\""+str(y2)+"\"\n")
-    f.write("   style=\"stroke:"+stroke+\
+    f.write("   style=\"fill:"+str(fill)+";stroke:"+str(stroke)+\
             ";stroke-width:"+str(stroke_width)+";stroke-linecap:round;\" />\n")
 
 def svg_text(f,x,y,size,stroke,font,style,string):
@@ -179,9 +179,9 @@ def hash(f, n, x, y, stroke):
     x2 = cx
     for i in range(n):
         if (i+1)%5==0:
-            svg_line(f,x1-40,7.5,x2,7.5,stroke,1.8)
+            svg_line(f,x1-40,7.5,x2,7.5,stroke,"none",1.8)
         else:
-            svg_line(f,x1,0,x2,15,stroke,1.8)
+            svg_line(f,x1,0,x2,15,stroke,"none",1.8)
         x1 += 7.5
         x2 += 7.5
     f.write("</g>\n")
@@ -385,7 +385,7 @@ def star(f, n, x, y, stroke):
     for i in range(n*turns):
         x2 = x1+sin(a)*40
         y2 = y1+cos(a)*40
-        svg_line(f,x1,y1,x2,y2,stroke,1.8)
+        svg_line(f,x1,y1,x2,y2,stroke,stroke,1.8)
         x1 = x2
         y1 = y2
         a += turns*2*pi/n
@@ -485,8 +485,12 @@ def open_file(datapath, filename):
 def close_file(f):
     f.close()
 
-def generator(datapath):
-    # pattern cards
+def generator(datapath,numberO=PRODUCT,numberC=HASH):
+    generate_pattern_cards(datapath)
+    generate_number_cards(datapath,numberO,numberC)
+    generate_word_cards(datapath)
+
+def generate_pattern_cards(datapath):
     i = 0
     for t in card_types:
         for c in color_pairs:
@@ -505,45 +509,28 @@ def generator(datapath):
                     close_file(f)
                     i += 1
 
-    # number cards
-    # choose different card styles each time
+def generate_number_cards(datapath,numberO,numberC):
+    methodO = [number_roman, number_product, number_chinese, number_word]
+    methodC = [dots_in_a_line, dots_in_a_circle, points_in_a_star,\
+                number_hash, dice]
     methodX = number_arabic
-    r = random.randrange(5)
-    if r == 0:
-        methodO = number_roman
-    elif r == 1:
-        methodO = number_hash
-    elif r == 2:
-        methodO = number_product
-    elif r == 3:
-        methodO = number_chinese
-    else:
-        methodO = number_word
-    r = random.randrange(4)
-    if r == 0:
-        methodC = dots_in_a_line
-    elif r == 1:
-        methodC = dots_in_a_circle
-    elif r == 2:
-        methodC = points_in_a_star
-    else:
-        methodC = dice
     i = 0
-    for t in card_types: # ignoring this field
+    for t in card_types:
         for c in color_pairs:
             for n in range(1,4):
                 for s in [5,7,11]:
                     filename = "number-%d.svg" % (i)
                     f = open_file(datapath, filename)
                     header(f,"#000000",c[1],"0.5")
-                    number_card(f,t,n*s,c[0],methodX,methodO,methodC)
+                    number_card(f,t,n*s,c[0],
+                                methodX,methodO[numberO],methodC[numberC])
                     footer(f)
                     close_file(f)
                     i += 1
 
-    # word cards
+def generate_word_cards(datapath):
     i = 0
-    for t in card_types: # ignoring this field
+    for t in card_types:
         for c in color_pairs:
             for n in range(0,3):
                 for s in range(0,3):
