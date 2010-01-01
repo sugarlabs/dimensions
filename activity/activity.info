@@ -1,6 +1,6 @@
 [Activity]
 name = Visual Match
-activity_version = 12
+activity_version = 14
 license = GPLv3
 bundle_id = org.sugarlabs.VisualMatchActivity
 exec = sugar-activity VisualMatchActivity.VisualMatchActivity
