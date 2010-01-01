@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   version="1.0"
+   width="55"
+   height="55"
+   id="svg2">
+  <defs
+     id="defs4" />
+  <rect
+     width="50.94099"
+     height="50.940994"
+     rx="8.1506357"
+     ry="7.0263433"
+     x="2.0295048"
+     y="2.0295029"
+     id="rect2817"
+     style="fill:#000000;fill-opacity:1;stroke:#808080;stroke-width:4.05900621;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none" />
+  <g
+     transform="translate(-33.75,-12.5)"
+     id="g6"
+     style="fill:none;stroke:#ffffff;stroke-opacity:1">
+    <g
+       transform="translate(5,32.5)"
+       id="g8"
+       style="fill:none;stroke:#ffffff;stroke-opacity:1">
+      <line
+         x1="50"
+         y1="0"
+         x2="42.5"
+         y2="15"
+         style="fill:none;stroke:#ffffff;stroke-width:1.79999995;stroke-linecap:round;stroke-opacity:1"
+         id="line10" />
+      <line
+         x1="57.5"
+         y1="0"
+         x2="50"
+         y2="15"
+         style="fill:none;stroke:#ffffff;stroke-width:1.79999995;stroke-linecap:round;stroke-opacity:1"
+         id="line12" />
+      <line
+         x1="65"
+         y1="0"
+         x2="57.5"
+         y2="15"
+         style="fill:none;stroke:#ffffff;stroke-width:1.79999995;stroke-linecap:round;stroke-opacity:1"
+         id="line14" />
+      <line
+         x1="72.5"
+         y1="0"
+         x2="65"
+         y2="15"
+         style="fill:none;stroke:#ffffff;stroke-width:1.79999995;stroke-linecap:round;stroke-opacity:1"
+         id="line16" />
+      <line
+         x1="40"
+         y1="7.5"
+         x2="72.5"
+         y2="7.5"
+         style="fill:none;stroke:#ffffff;stroke-width:1.79999995;stroke-linecap:round;stroke-opacity:1"
+         id="line18" />
+    </g>
+  </g>
+</svg>
