@@ -76,6 +76,8 @@ def new_window(canvas, path, cardtype, parent=None):
     vmw.sprites = Sprites(vmw.canvas)
     vmw.selected = []
     vmw.match_display_area = []
+    vmw.robot = False
+    vmw.robot_time = 60
 
     # create a deck of cards and a grid for the playing field
     vmw.deck = Deck(vmw.sprites, vmw.path, vmw.cardtype, vmw.card_width, 
@@ -118,7 +120,7 @@ def new_game(vmw,cardtype):
     vmw.matches = 0
     vmw.total_time = 0
     set_label(vmw, "deck", "%d %s" % 
-        (vmw.deck.cards_remaining(), _("cards remaining")))
+        (vmw.deck.cards_remaining(), _("cards")))
     set_label(vmw,"match","%d %s" % (vmw.matches,_("matches")))
     vmw.start_time = gobject.get_current_time()
     vmw.timeout_id = None
@@ -171,59 +173,60 @@ def _process_selection(vmw, spr):
     if None in vmw.clicked:
         pass
     else:
-        if match_check([vmw.deck.spr_to_card(vmw.clicked[0]),
-                        vmw.deck.spr_to_card(vmw.clicked[1]),
-                        vmw.deck.spr_to_card(vmw.clicked[2])],
-                       vmw.cardtype):
-            # stop the timer
-            if vmw.timeout_id is not None:
-                gobject.source_remove(vmw.timeout_id)
-            vmw.total_time += gobject.get_current_time()-vmw.start_time
-            # out with the old and in with the new
-            vmw.grid.remove_and_replace(vmw.clicked, vmw.deck)
-            set_label(vmw, "deck", "%d %s" % 
-                    (vmw.deck.cards_remaining(), _("cards remaining")))
-            # test to see if the game is over
-            if vmw.deck.empty():
-                if find_a_match(vmw) is False:
-                    set_label(vmw,"deck","")
-                    set_label(vmw,"clock","")
-                    set_label(vmw,"status","%s (%d:%02d)" % 
-                        (_("Game over"),int(vmw.total_time/60),
-                         int(vmw.total_time%60)))
-                    gobject.source_remove(vmw.timeout_id)
-                    unselect(vmw)
-                    if vmw.low_score == -1:
-                        vmw.low_score = vmw.total_time
-                    elif vmw.total_time < vmw.low_score:
-                        vmw.low_score = vmw.total_time
-                        set_label(vmw,"status","%s (%d:%02d)" % 
-                            (_("New record"),int(vmw.total_time/60),
-                             int(vmw.total_time%60)))
-                    if vmw.sugar is False:
-                         vmw.activity.save_score()
-                    return True
-            # consolidate the grid
-            vmw.grid.consolidate()
-            # test to see if we need to deal extra cards
-            if find_a_match(vmw) is False:
-                vmw.grid.deal_extra_cards(vmw.deck)
-            else:
-                # set_label(vmw,"status",vmw.msg)
-                set_label(vmw,"status",_("match"))
-            vmw.matches += 1
-            if vmw.matches == 1:
-                set_label(vmw,"match","%d %s" % (vmw.matches,_("match")))
-            else:
-                set_label(vmw,"match","%d %s" % (vmw.matches,_("matches")))
-            # reset the timer
-            vmw.start_time = gobject.get_current_time()
-            vmw.timeout_id = None
-            _counter(vmw)
-        else:
-            set_label(vmw,"status",_("no match"))
-        unselect(vmw)
+        process_a_match(vmw)
     return True
+
+def process_a_match(vmw):
+    if match_check([vmw.deck.spr_to_card(vmw.clicked[0]),
+                    vmw.deck.spr_to_card(vmw.clicked[1]),
+                    vmw.deck.spr_to_card(vmw.clicked[2])],
+                   vmw.cardtype):
+        # stop the timer
+        if vmw.timeout_id is not None:
+            gobject.source_remove(vmw.timeout_id)
+        vmw.total_time += gobject.get_current_time()-vmw.start_time
+        # out with the old and in with the new
+        vmw.grid.remove_and_replace(vmw.clicked, vmw.deck)
+        set_label(vmw, "deck", "%d %s" % 
+                (vmw.deck.cards_remaining(), _("cards")))
+        # test to see if the game is over
+        if vmw.deck.empty():
+            if find_a_match(vmw) is False:
+                set_label(vmw,"deck","")
+                set_label(vmw,"clock","")
+                set_label(vmw,"status","%s (%d:%02d)" % 
+                    (_("Game over"),int(vmw.total_time/60),
+                     int(vmw.total_time%60)))
+                gobject.source_remove(vmw.timeout_id)
+                unselect(vmw)
+                if vmw.low_score == -1:
+                    vmw.low_score = vmw.total_time
+                elif vmw.total_time < vmw.low_score:
+                    vmw.low_score = vmw.total_time
+                    set_label(vmw,"status","%s (%d:%02d)" % 
+                        (_("New record"),int(vmw.total_time/60),
+                         int(vmw.total_time%60)))
+                if vmw.sugar is False:
+                     vmw.activity.save_score()
+                return True
+        # consolidate the grid
+        vmw.grid.consolidate()
+        # test to see if we need to deal extra cards
+        if find_a_match(vmw) is False:
+            vmw.grid.deal_extra_cards(vmw.deck)
+        else:
+            set_label(vmw,"status",_("match"))
+        vmw.matches += 1
+        if vmw.matches == 1:
+            set_label(vmw,"match","%d %s" % (vmw.matches,_("match")))
+        else:
+            set_label(vmw,"match","%d %s" % (vmw.matches,_("matches")))
+        # reset the timer
+        vmw.start_time = gobject.get_current_time()
+        vmw.timeout_id = None
+        _counter(vmw)
+        vmw.sprites.redraw_sprites()
+    unselect(vmw)
 
 #
 # unselect the cards
@@ -272,24 +275,32 @@ def set_label(vmw, label, s):
             vmw.win.set_title("%s: %s" % (_("Visual Match"),s))
 
 #
-# Display of seconds since start_time
+# Display of seconds since start_time or find a match
 #
 def _counter(vmw):
-     set_label(vmw,"clock",str(int(gobject.get_current_time()-\
-                                              vmw.start_time)))
-     vmw.timeout_id = gobject.timeout_add(1000,_counter,vmw)
+     seconds = int(gobject.get_current_time()-vmw.start_time)
+     set_label(vmw,"clock",str(seconds))
+     if vmw.robot is True and vmw.robot_time < seconds:
+         print "robot time"
+         find_a_match(vmw, True)
+     else:
+         vmw.timeout_id = gobject.timeout_add(1000,_counter,vmw)
 
 #
 # Check to see whether there are any matches on the board
 #
-def find_a_match(vmw):
+def find_a_match(vmw, robot_match=False):
      a = [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14]
      for i in Permutation(a): # really should be Combination
          cardarray = [vmw.grid.grid[i[0]],\
                       vmw.grid.grid[i[1]],\
                       vmw.grid.grid[i[2]]]
          if match_check(cardarray, vmw.cardtype) is True:
-             vmw.msg = str(i)
+             if robot_match is True:
+                 print "processing robot match"
+                 for j in range(3):
+                     vmw.clicked[j]=vmw.grid.grid[i[j]].spr
+                 process_a_match(vmw)
              return True
      return False
 

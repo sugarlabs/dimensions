@@ -61,6 +61,18 @@ class VisualMatchActivity(activity.Activity):
     def __init__(self, handle):
         super(VisualMatchActivity,self).__init__(handle)
 
+        # Read the high score from the Journal
+        try:
+            low_score = int(self.metadata['low_score'])
+        except:
+            low_score = -1
+
+        # Read the robot time from the Journal
+        try:
+            robot_time = int(self.metadata['robot_time'])
+        except:
+            robot_time = 60
+
         try:
             datapath = os.path.join(activity.get_activity_root(), "data")
         except:
@@ -73,6 +85,16 @@ class VisualMatchActivity(activity.Activity):
 
             # Buttons added to the Activity toolbar
             activity_button = ActivityToolbarButton(self)
+
+            # Write in the Journal
+            journal_button = ToolButton( "journal-write" )
+            journal_button.set_tooltip(_('Write in Journal'))
+            journal_button.props.accelerator = '<Ctrl>j'
+            journal_button.connect('clicked', self._journal_cb, 
+                                   activity.get_bundle_path())
+            activity_button.props.page.insert(journal_button, -1)
+            journal_button.show()
+
             toolbar_box.toolbar.insert(activity_button, 0)
             activity_button.show()
 
@@ -103,13 +125,46 @@ class VisualMatchActivity(activity.Activity):
             toolbar_box.toolbar.insert(self.button3, -1)
             self.button3.show()
 
+            # The tools toolbar
+            tools_toolbar = gtk.Toolbar()
+            self.robot_button = ToolButton('robot-off')
+            self.robot_button.set_tooltip(_("Play with the computer."))
+            self.robot_button.connect('clicked', self._robot_cb)
+            tools_toolbar.insert(self.robot_button,-1)
+            self.robot_button.show()
+
+            self._robot_time_spin_adj = gtk.Adjustment(robot_time,
+                                                       15, 180, 5, 15, 0)
+            self._robot_time_spin = gtk.SpinButton(self._robot_time_spin_adj,
+                                                   0, 0)
+            self._robot_time_spin_id = self._robot_time_spin.connect(
+                'value-changed', self._robot_time_spin_cb)
+            self._robot_time_spin.set_numeric(True)
+            self._robot_time_spin.show()
+            self.tool_item_robot_time = gtk.ToolItem()
+            self.tool_item_robot_time.add(self._robot_time_spin)
+            tools_toolbar.insert(self.tool_item_robot_time, -1)
+            self.tool_item_robot_time.show()
+
+            separator = gtk.SeparatorToolItem()
+            separator.props.draw = True
+            tools_toolbar.insert(separator, -1)
+            separator.show()
+
+            tools_toolbar_button = ToolbarButton(
+                    page=tools_toolbar,
+                    icon_name='view-source')
+            tools_toolbar.show()
+            toolbar_box.toolbar.insert(tools_toolbar_button, -1)
+            tools_toolbar_button.show()
+
             separator = gtk.SeparatorToolItem()
             separator.show()
             toolbar_box.toolbar.insert(separator, -1)
 
             # Label for showing deck status
             self.deck_label = gtk.Label("%d %s" % (DECKSIZE-DEAL,
-                                        _("cards remaining")))
+                                        _("cards")))
             self.deck_label.show()
             deck_toolitem = gtk.ToolItem()
             deck_toolitem.add(self.deck_label)
@@ -154,15 +209,6 @@ class VisualMatchActivity(activity.Activity):
             separator.show()
             toolbar_box.toolbar.insert(separator, -1)
 
-            # Write in the Journal
-            journal_button = ToolButton( "journal-write" )
-            journal_button.set_tooltip(_('Write in Journal'))
-            journal_button.props.accelerator = '<Ctrl>j'
-            journal_button.connect('clicked', self._journal_cb, 
-                                   activity.get_bundle_path())
-            toolbar_box.toolbar.insert(journal_button, -1)
-            journal_button.show()
-
             # The ever-present Stop Button
             stop_button = StopButton(self)
             stop_button.props.accelerator = '<Ctrl>q'
@@ -192,24 +238,37 @@ class VisualMatchActivity(activity.Activity):
 
         # Initialize the canvas
         self.vmw = window.new_window(canvas, datapath, 'pattern', self)
-
-        # Read the high score from the Journal
-        try:
-            self.vmw.low_score = int(self.metadata['low_score'])
-        except:
-            self.vmw.low_score = -1
+        self.vmw.robot = False
+        self.vmw.robot_time = robot_time
+        self.vmw.low_score = low_score
 
     #
-    # Write the slider positions to the Journal
+    # Write misc. data to the Journal
     #
     def write_file(self, file_path):
         self.metadata['low_score'] = self.vmw.low_score
+        self.metadata['robot_time'] = self.vmw.robot_time
 
     #
     # Button callbacks
     #
     def _select_game_cb(self, button, activity, cardtype):
         window.new_game(activity.vmw, cardtype)
+
+    def _robot_cb(self, button):
+        if self.vmw.robot is True:
+            self.vmw.robot = False
+            self.robot_button.set_tooltip(_("Play with the computer."))
+            self.robot_button.set_icon('robot-off')
+        else:
+            self.vmw.robot = True
+            self.robot_button.set_tooltip(
+                _("Stop playing with the computer."))
+            self.robot_button.set_icon('robot-on')
+
+    def _robot_time_spin_cb(self, button):
+        self.vmw.robot_time = self._robot_time_spin.get_value_as_int()
+        return
 
     def _journal_cb(self, button, path):
         title_alert = NamingAlert(self, path)
@@ -261,7 +320,7 @@ class ProjectToolbar(gtk.Toolbar):
 
         # Label for showing deck status
         self.activity.deck_label = gtk.Label("%d %s" % (DECKSIZE-DEAL,
-                                              _("cards remain in the deck")))
+                                              _("cards")))
         self.activity.deck_label.show()
         self.activity.deck_toolitem = gtk.ToolItem()
         self.activity.deck_toolitem.add(self.activity.deck_label)
