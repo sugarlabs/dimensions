@@ -20,15 +20,33 @@
      id="rect2817"
      style="fill:#000000;fill-opacity:1;stroke:#808080;stroke-width:4.05900621;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none" />
   <text
-     x="7.4902344"
-     y="34.956055"
+     x="33.90443"
+     y="34.780273"
      id="text2394"
      xml:space="preserve"
      style="font-size:40px;font-style:normal;font-weight:normal;fill:#ffffff;fill-opacity:1;stroke:none;font-family:Bitstream Vera Sans"><tspan
-       x="7.4902344"
-       y="34.956055"
+       x="33.90443"
+       y="34.780273"
        id="tspan2396"
-       style="font-size:20px;fill:#a0a0a0;fill-opacity:1">12<tspan
-   id="tspan3658"
-   style="font-weight:bold;fill:#ffffff;fill-opacity:1;-inkscape-font-specification:AlArabiya Bold">3</tspan></tspan></text>
+       style="font-size:20px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;fill:#ffffff;fill-opacity:1;font-family:DejaVu Sans;-inkscape-font-specification:DejaVu Sans Bold">3</tspan></text>
+  <text
+     x="21.035156"
+     y="34.921875"
+     id="text2394-2"
+     xml:space="preserve"
+     style="font-size:40px;font-style:normal;font-weight:normal;fill:#ffffff;fill-opacity:1;stroke:none;font-family:Bitstream Vera Sans"><tspan
+       x="21.035156"
+       y="34.921875"
+       id="tspan2396-7"
+       style="font-size:20px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;fill:#a0a0a0;fill-opacity:1;font-family:DejaVu Sans;-inkscape-font-specification:DejaVu Sans">2</tspan></text>
+  <text
+     x="8.3027344"
+     y="34.790039"
+     id="text2394-4"
+     xml:space="preserve"
+     style="font-size:40px;font-style:normal;font-weight:normal;fill:#ffffff;fill-opacity:1;stroke:none;font-family:Bitstream Vera Sans"><tspan
+       x="8.3027344"
+       y="34.790039"
+       id="tspan2396-6"
+       style="font-size:20px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;fill:#a0a0a0;fill-opacity:1;font-family:DejaVu Sans;-inkscape-font-specification:DejaVu Sans">1</tspan></text>
 </svg>
