@@ -106,7 +106,6 @@ def new_game(vmw, cardtype):
             vmw.match_display_area[i].spr.y = vmw.grid.top+i*vmw.grid.yinc
             vmw.match_display_area[i].show_card()
 
-    print "difficulty level is %s" % (difficulty_level[vmw.level])
     vmw.deck.hide()
     if vmw.cardtype is not cardtype:
         vmw.cardtype = cardtype

@@ -44,7 +44,6 @@ class Deck:
             fill_range = FILLS
         else:
             fill_range = 1
-        print "fill range is %d" % (fill_range)
         # Initialize the deck of cards by looping through all the patterns
         for shape in range(0, SHAPES):
             for color in range(0, COLORS):

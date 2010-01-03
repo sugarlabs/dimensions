@@ -49,6 +49,15 @@ class VisualMatchMain:
             os.mkdir(os.path.join(os.path.abspath('.'), 'images'))
         gencards.generator(os.path.join(os.path.abspath('.'), 'images'))
 
+        menu0 = gtk.Menu()
+        menu_items = gtk.MenuItem(_("Toggle level"))
+        menu0.append(menu_items)
+        menu_items.connect("activate", self._level_cb)
+        menu_items.show()
+        level_menu = gtk.MenuItem("Level")
+        level_menu.show()
+        level_menu.set_submenu(menu0)
+
         menu1 = gtk.Menu()
         menu_items = gtk.MenuItem(_("New pattern game"))
         menu1.append(menu_items)
@@ -150,6 +159,7 @@ class VisualMatchMain:
         canvas.show()
 
         menu_bar.append(game_menu)
+        menu_bar.append(level_menu)
         menu_bar.append(tool_menu)
         menu_bar.append(num_menu)
         self.win.show_all()
@@ -193,6 +203,12 @@ class VisualMatchMain:
     def _new_game_cb(self, widget, game):
         window.new_game(self.vmw, game)
         return True
+
+    def _level_cb(self, widget):
+        cardtype = self.vmw.cardtype
+        self.vmw.cardtype = ''
+        self.vmw.level = 1-self.vmw.level
+        window.new_game(self.vmw, cardtype)
 
     def _robot_cb(self, widget):
         if self.vmw.robot is True:

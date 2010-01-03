@@ -340,7 +340,6 @@ class VisualMatchActivity(activity.Activity):
         self.vmw.low_score = low_score
         self.vmw.numberO = numberO
         self.vmw.numberC = numberC
-        print "calling new game with level %d" % (self.vmw.level)
         window.new_game(self.vmw, self.vmw.cardtype)
 
     #
@@ -372,7 +371,6 @@ class VisualMatchActivity(activity.Activity):
 
     def _level_cb(self, button, activity):
         activity.vmw.level = 1-activity.vmw.level
-        print "setting level to %d" % (activity.vmw.level)
         self.level_button.set_icon(level_icons[activity.vmw.level])
         cardtype = activity.vmw.cardtype
         activity.vmw.cardtype = '' # force generation of new deck 
