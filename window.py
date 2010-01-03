@@ -45,7 +45,7 @@ class vmWindow: pass
 #
 # handle launch from both within and without of Sugar environment
 #
-def new_window(canvas, path, cardtype, parent=None):
+def new_window(canvas, path, parent=None):
     vmw = vmWindow()
     vmw.path = path
     vmw.activity = parent
@@ -71,44 +71,42 @@ def new_window(canvas, path, cardtype, parent=None):
     vmw.canvas.connect("key_press_event", _keypress_cb, vmw)
     vmw.width = gtk.gdk.screen_width()
     vmw.height = gtk.gdk.screen_height()-GRID_CELL_SIZE
-    vmw.cardtype = cardtype
     scale = 0.8 * vmw.height/(CARD_HEIGHT*5.5)
     vmw.card_width = CARD_WIDTH*scale
     vmw.card_height = CARD_HEIGHT*scale
     vmw.sprites = Sprites(vmw.canvas)
     vmw.selected = []
     vmw.match_display_area = []
-    vmw.robot = False
-    vmw.robot_time = 60
-
-    # create a deck of cards and a grid for the playing field
-    vmw.deck = Deck(vmw.sprites, vmw.path, vmw.cardtype, vmw.card_width, 
-                    vmw.card_height)
-    vmw.grid = Grid(vmw.width, vmw.height, vmw.card_width, vmw.card_height)
-
-    # initialize three card-selected overlays and a place for the matches
-    for i in range(0,3):
-        vmw.selected.append(Card(vmw.sprites, vmw.path, "", vmw.card_width,
-                            vmw.card_height, [SELECTMASK,0,0,0]))
-        vmw.match_display_area.append(Card(vmw.sprites, vmw.path, "",
-                            vmw.card_width,
-                            vmw.card_height, [MATCHMASK,0,0,0]))
-        vmw.match_display_area[i].spr.x = MATCH_POSITION
-        vmw.match_display_area[i].spr.y = vmw.grid.top+i*vmw.grid.yinc
-        vmw.match_display_area[i].show_card()
 
     # make an array of three cards that are clicked
     vmw.clicked = [None, None, None]
 
     # Start doing something
     vmw.low_score = -1
-    new_game(vmw, cardtype)
     return vmw
 
 #
 # Initialize for a new game
 #
-def new_game(vmw,cardtype):
+def new_game(vmw, cardtype):
+    if not hasattr(vmw, 'deck'):
+        # first time through, initialize the deck and grid
+        vmw.deck = Deck(vmw.sprites, vmw.path, cardtype, vmw.card_width, 
+                    vmw.card_height, difficulty_level[vmw.level])
+        vmw.grid = Grid(vmw.width, vmw.height, vmw.card_width, vmw.card_height)
+
+        # initialize three card-selected overlays and a place for the matches
+        for i in range(0,3):
+            vmw.selected.append(Card(vmw.sprites, vmw.path, "", vmw.card_width,
+                            vmw.card_height, [SELECTMASK,0,0,0]))
+            vmw.match_display_area.append(Card(vmw.sprites, vmw.path, "",
+                            vmw.card_width,
+                            vmw.card_height, [MATCHMASK,0,0,0]))
+            vmw.match_display_area[i].spr.x = MATCH_POSITION
+            vmw.match_display_area[i].spr.y = vmw.grid.top+i*vmw.grid.yinc
+            vmw.match_display_area[i].show_card()
+
+    print "difficulty level is %s" % (difficulty_level[vmw.level])
     vmw.deck.hide()
     if vmw.cardtype is not cardtype:
         vmw.cardtype = cardtype

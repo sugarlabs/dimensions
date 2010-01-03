@@ -157,14 +157,18 @@ class VisualMatchMain:
         # Join the activity
         self.vmw = window.new_window(canvas, \
                                os.path.join(os.path.abspath('.'), \
-                                            'images/'),'pattern')
+                                            'images/'))
         self.vmw.win = self.win
         self.vmw.activity = self
+        self.vmw.cardtype = 'pattern'
+        self.vmw.level = 1
         self.vmw.robot = False
         self.vmw.robot_time = 60
         self.vmw.numberO = PRODUCT
         self.vmw.numberC = HASH
         self.load_score()
+
+        window.new_game(self.vmw, self.vmw.cardtype)
 
     def load_score(self):
          try:

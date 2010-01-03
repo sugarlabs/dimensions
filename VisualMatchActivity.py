@@ -67,6 +67,7 @@ class VisualMatchActivity(activity.Activity):
         # Read settings from the Journal
         try:
             play_level = int(self.metadata['play_level'])
+            print "saved play level was %d" % (play_level)
         except:
             play_level = 0
         try:
@@ -331,13 +332,16 @@ class VisualMatchActivity(activity.Activity):
         self.show_all()
 
         # Initialize the canvas
-        self.vmw = window.new_window(canvas, datapath, 'pattern', self)
+        self.vmw = window.new_window(canvas, datapath, self)
         self.vmw.level = play_level
+        self.vmw.cardtype = 'pattern'
         self.vmw.robot = False
         self.vmw.robot_time = robot_time
         self.vmw.low_score = low_score
         self.vmw.numberO = numberO
         self.vmw.numberC = numberC
+        print "calling new game with level %d" % (self.vmw.level)
+        window.new_game(self.vmw, self.vmw.cardtype)
 
     #
     # Write misc. data to the Journal
