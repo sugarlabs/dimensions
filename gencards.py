@@ -37,7 +37,7 @@ color_pairs = ([RED_STROKE,RED_FILL],
                [GREEN_STROKE,GREEN_FILL],
                [BLUE_STROKE,BLUE_FILL])
 
-fill_styles = ("none","gradient","solid")
+fill_styles = ("solid","none","gradient")
 card_types = ("X","O","C")
 
 roman_numerals = {5:'V',7:'VII',10:'X',11:'XI',14:'XIV',15:'XV',\

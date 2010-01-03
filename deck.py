@@ -32,18 +32,24 @@ from card import *
 # class for defining deck of cards
 #
 class Deck:
-    def __init__(self, sprites, path, cardtype, width, height):
-        # create the deck of cards
+    def __init__(self, sprites, path, cardtype, width, height, level=HIGH):
+        # Create the deck of cards.
         self.cards = {}
-        # remember the position in the deck
+        # Remember the position in the deck.
         self.index = 0
-        # how many cards are in the deck?
+        # Track how many cards are in the deck.
         self.count = 0
+        # If level is 'simple', only generate one fill type
+        if level == HIGH:
+            fill_range = FILLS
+        else:
+            fill_range = 1
+        print "fill range is %d" % (fill_range)
         # Initialize the deck of cards by looping through all the patterns
         for shape in range(0, SHAPES):
             for color in range(0, COLORS):
                 for num in range(0, NUMBER):
-                    for fill in range(0, FILLS):
+                    for fill in range(0, fill_range):
                         self.cards[self.count] = Card(sprites, path, cardtype, 
                                                      width, height,
                                                      [shape,color,num,fill])
@@ -51,13 +57,14 @@ class Deck:
 
     # shuffle the deck
     def shuffle(self):
+        decksize = self.count
         # hide all the cards
         for c in self.cards:
             self.cards[c].hide_card()
         # randomize the deck
-        for n in range(0, DECKSIZE*4):
-            i = random.randrange(DECKSIZE)
-            j = random.randrange(DECKSIZE)
+        for n in range(0, decksize*4):
+            i = random.randrange(decksize)
+            j = random.randrange(decksize)
             self.swap_cards(i,j)            
         # reset the index to the beginning of the deck after a shuffle
         self.index = 0

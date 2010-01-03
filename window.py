@@ -38,6 +38,8 @@ from deck import *
 from card import *
 from sprites import *
 
+difficulty_level = [LOW,HIGH]
+
 class vmWindow: pass
 
 #
@@ -91,7 +93,7 @@ def new_window(canvas, path, cardtype, parent=None):
         vmw.match_display_area.append(Card(vmw.sprites, vmw.path, "",
                             vmw.card_width,
                             vmw.card_height, [MATCHMASK,0,0,0]))
-        vmw.match_display_area[i].spr.x = 10
+        vmw.match_display_area[i].spr.x = MATCH_POSITION
         vmw.match_display_area[i].spr.y = vmw.grid.top+i*vmw.grid.yinc
         vmw.match_display_area[i].show_card()
 
@@ -111,7 +113,8 @@ def new_game(vmw,cardtype):
     if vmw.cardtype is not cardtype:
         vmw.cardtype = cardtype
         vmw.deck = Deck(vmw.sprites, vmw.path, vmw.cardtype, 
-                        vmw.card_width, vmw.card_height)
+                        vmw.card_width, vmw.card_height, 
+                        difficulty_level[vmw.level])
     vmw.deck.shuffle()
     vmw.grid.deal(vmw.deck)
     if find_a_match(vmw) is False:
@@ -146,7 +149,7 @@ def _button_release_cb(win, event, vmw):
 
 def _process_selection(vmw, spr):
     # check to make sure a card in the matched pile isn't selected
-    if spr.x == 10:
+    if spr.x == MATCH_POSITION:
        return True
 
     # check to make sure that the current card isn't already selected

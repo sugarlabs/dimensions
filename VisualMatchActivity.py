@@ -49,6 +49,9 @@ import window
 
 import gencards
 
+level_icons = ['level1','level2']
+
+
 SERVICE = 'org.sugarlabs.VisualMatchActivity'
 IFACE = SERVICE
 PATH = '/org/augarlabs/VisualMatchActivity'
@@ -61,32 +64,34 @@ class VisualMatchActivity(activity.Activity):
     def __init__(self, handle):
         super(VisualMatchActivity,self).__init__(handle)
 
-        # Read the high score from the Journal
+        # Read settings from the Journal
+        try:
+            play_level = int(self.metadata['play_level'])
+        except:
+            play_level = 0
         try:
             low_score = int(self.metadata['low_score'])
         except:
             low_score = -1
-
-        # Read the robot time from the Journal
         try:
             robot_time = int(self.metadata['robot_time'])
         except:
             robot_time = 60
-
-        try:
-            datapath = os.path.join(activity.get_activity_root(), "data")
-        except:
-            datapath = os.path.join(os.environ['HOME'], SERVICE, "data")
-
-        # Read the number card preferences from the Journal
         try:
             numberO = int(self.metadata['numberO'])
             numberC = int(self.metadata['numberC'])
         except:
             numberO = PRODUCT
             numberC = HASH
+
+        # Find a path to write card files
+        try:
+            datapath = os.path.join(activity.get_activity_root(), 'data')
+        except:
+            datapath = os.path.join(os.environ['HOME'], SERVICE, 'data')
         gencards.generator(datapath,numberO,numberC)
 
+        # Create the toolbars
         try:
             # Use 0.86 toolbar design
             toolbar_box = ToolbarBox()
@@ -135,8 +140,14 @@ class VisualMatchActivity(activity.Activity):
 
             # The tools toolbar
             tools_toolbar = gtk.Toolbar()
+            self.level_button = ToolButton(level_icons[play_level])
+            self.level_button.set_tooltip(_('Set difficulty level.'))
+            self.level_button.connect('clicked', self._level_cb, self)
+            tools_toolbar.insert(self.level_button,-1)
+            self.level_button.show()
+
             self.robot_button = ToolButton('robot-off')
-            self.robot_button.set_tooltip(_("Play with the computer."))
+            self.robot_button.set_tooltip(_('Play with the computer.'))
             self.robot_button.connect('clicked', self._robot_cb, self)
             tools_toolbar.insert(self.robot_button,-1)
             self.robot_button.show()
@@ -162,24 +173,28 @@ class VisualMatchActivity(activity.Activity):
             self.product_button = ToolButton('product')
             self.product_button.connect('clicked', self._number_card_O_cb,
                                         self, PRODUCT)
+            self.product_button.set_tooltip(_('product'))
             tools_toolbar.insert(self.product_button,-1)
             self.product_button.show()
 
             self.roman_button = ToolButton('roman')
             self.roman_button.connect('clicked', self._number_card_O_cb,
                                         self, ROMAN)
+            self.roman_button.set_tooltip(_('Roman numerals'))
             tools_toolbar.insert(self.roman_button,-1)
             self.roman_button.show()
 
             self.word_button = ToolButton('word')
             self.word_button.connect('clicked', self._number_card_O_cb,
                                         self, WORD)
+            self.word_button.set_tooltip(_('word'))
             tools_toolbar.insert(self.word_button,-1)
             self.word_button.show()
 
             self.chinese_button = ToolButton('chinese')
             self.chinese_button.connect('clicked', self._number_card_O_cb,
                                         self, CHINESE)
+            self.chinese_button.set_tooltip(_('Chinese'))
             tools_toolbar.insert(self.chinese_button,-1)
             self.chinese_button.show()
 
@@ -191,30 +206,35 @@ class VisualMatchActivity(activity.Activity):
             self.hash_button = ToolButton('hash')
             self.hash_button.connect('clicked', self._number_card_C_cb,
                                         self, HASH)
+            self.hash_button.set_tooltip(_('hash marks'))
             tools_toolbar.insert(self.hash_button,-1)
             self.hash_button.show()
 
             self.dots_button = ToolButton('dots')
             self.dots_button.connect('clicked', self._number_card_C_cb,
                                         self, DOTS)
+            self.dots_button.set_tooltip(_('dots in a circle'))
             tools_toolbar.insert(self.dots_button,-1)
             self.dots_button.show()
 
             self.star_button = ToolButton('star')
             self.star_button.connect('clicked', self._number_card_C_cb,
                                         self, STAR)
+            self.star_button.set_tooltip(_('points on a star'))
             tools_toolbar.insert(self.star_button,-1)
             self.star_button.show()
 
             self.dice_button = ToolButton('dice')
             self.dice_button.connect('clicked', self._number_card_C_cb,
                                         self, DICE)
+            self.dice_button.set_tooltip(_('dice'))
             tools_toolbar.insert(self.dice_button,-1)
             self.dice_button.show()
 
             self.lines_button = ToolButton('lines')
             self.lines_button.connect('clicked', self._number_card_C_cb,
                                         self, LINES)
+            self.lines_button.set_tooltip(_('dots in a line'))
             tools_toolbar.insert(self.lines_button,-1)
             self.lines_button.show()
 
@@ -230,8 +250,12 @@ class VisualMatchActivity(activity.Activity):
             toolbar_box.toolbar.insert(separator, -1)
 
             # Label for showing deck status
-            self.deck_label = gtk.Label("%d %s" % (DECKSIZE-DEAL,
-                                        _("cards")))
+            if play_level == 2:
+                self.deck_label = gtk.Label("%d %s" % (DECKSIZE-DEAL,
+                                            _('cards')))
+            else:
+                self.deck_label = gtk.Label("%d %s" % ((DECKSIZE-DEAL)/3,
+                                            _('cards')))
             self.deck_label.show()
             deck_toolitem = gtk.ToolItem()
             deck_toolitem.add(self.deck_label)
@@ -242,7 +266,7 @@ class VisualMatchActivity(activity.Activity):
             toolbar_box.toolbar.insert(separator, -1)
 
             # Label for showing match status
-            self.match_label = gtk.Label("%d %s" % (0,_("matches")))
+            self.match_label = gtk.Label("%d %s" % (0,_('matches')))
             self.match_label.show()
             match_toolitem = gtk.ToolItem()
             match_toolitem.add(self.match_label)
@@ -253,7 +277,7 @@ class VisualMatchActivity(activity.Activity):
             toolbar_box.toolbar.insert(separator, -1)
 
             # Label for showing counter
-            self.clock_label = gtk.Label("-")
+            self.clock_label = gtk.Label('-')
             self.clock_label.show()
             clock_toolitem = gtk.ToolItem()
             clock_toolitem.add(self.clock_label)
@@ -264,7 +288,7 @@ class VisualMatchActivity(activity.Activity):
             toolbar_box.toolbar.insert(separator, -1)
 
             # Label for showing play status
-            self.status_label = gtk.Label(_("Find a match."))
+            self.status_label = gtk.Label(_('Find a match.'))
             self.status_label.show()
             status_toolitem = gtk.ToolItem()
             status_toolitem.add(self.status_label)
@@ -308,6 +332,7 @@ class VisualMatchActivity(activity.Activity):
 
         # Initialize the canvas
         self.vmw = window.new_window(canvas, datapath, 'pattern', self)
+        self.vmw.level = play_level
         self.vmw.robot = False
         self.vmw.robot_time = robot_time
         self.vmw.low_score = low_score
@@ -318,6 +343,7 @@ class VisualMatchActivity(activity.Activity):
     # Write misc. data to the Journal
     #
     def write_file(self, file_path):
+        self.metadata['play_level'] = self.vmw.level
         self.metadata['low_score'] = self.vmw.low_score
         self.metadata['robot_time'] = self.vmw.robot_time
         self.metadata['numberO'] = self.vmw.numberO
@@ -332,20 +358,28 @@ class VisualMatchActivity(activity.Activity):
     def _robot_cb(self, button, activity):
         if activity.vmw.robot is True:
             activity.vmw.robot = False
-            self.robot_button.set_tooltip(_("Play with the computer."))
+            self.robot_button.set_tooltip(_('Play with the computer.'))
             self.robot_button.set_icon('robot-off')
         else:
             activity.vmw.robot = True
             self.robot_button.set_tooltip(
-                _("Stop playing with the computer."))
+                _('Stop playing with the computer.'))
             self.robot_button.set_icon('robot-on')
+
+    def _level_cb(self, button, activity):
+        activity.vmw.level = 1-activity.vmw.level
+        print "setting level to %d" % (activity.vmw.level)
+        self.level_button.set_icon(level_icons[activity.vmw.level])
+        cardtype = activity.vmw.cardtype
+        activity.vmw.cardtype = '' # force generation of new deck 
+        window.new_game(activity.vmw, cardtype)
 
     def _number_card_O_cb(self, button, activity, numberO):
         activity.vmw.numberO = numberO
         gencards.generate_number_cards(activity.vmw.path,
                                        activity.vmw.numberO,
                                        activity.vmw.numberC)
-        activity.vmw.cardtype = ''
+        activity.vmw.cardtype = '' # force generation of new deck 
         window.new_game(activity.vmw, 'number')
 
     def _number_card_C_cb(self, button, activity, numberC):
@@ -353,7 +387,7 @@ class VisualMatchActivity(activity.Activity):
         gencards.generate_number_cards(activity.vmw.path,
                                        activity.vmw.numberO,
                                        activity.vmw.numberC)
-        activity.vmw.cardtype = ''
+        activity.vmw.cardtype = '' # force generation of new deck 
         window.new_game(activity.vmw, 'number')
 
     def _robot_time_spin_cb(self, button):
@@ -376,7 +410,14 @@ class ToolsToolbar(gtk.Toolbar):
         gtk.Toolbar.__init__(self)
         self.activity = activity
 
-        # Robot
+        self.activity.level_button = ToolButton(level_icons[0])
+        self.activity.level_button.set_tooltip(_('Set difficulty level.'))
+        self.activity.level_button.props.sensitive = True
+        self.activity.level_button.connect('clicked', self.activity._level_cb, 
+                                           self.activity)
+        self.insert(self.activity.level_button, -1)
+        self.activity.level_button.show()
+
         self.activity.robot_button = ToolButton( "robot-off" )
         self.activity.robot_button.set_tooltip(_('Play with the computer.'))
         self.activity.robot_button.props.sensitive = True
@@ -511,7 +552,7 @@ class ProjectToolbar(gtk.Toolbar):
 
         # Label for showing deck status
         self.activity.deck_label = gtk.Label("%d %s" % (DECKSIZE-DEAL,
-                                              _("cards")))
+                                              _('cards')))
         self.activity.deck_label.show()
         self.activity.deck_toolitem = gtk.ToolItem()
         self.activity.deck_toolitem.add(self.activity.deck_label)
@@ -524,7 +565,7 @@ class ProjectToolbar(gtk.Toolbar):
         separator.show()
 
         # Label for showing match status
-        self.activity.match_label = gtk.Label("%d %s" % (0,_("matches")))
+        self.activity.match_label = gtk.Label("%d %s" % (0,_('matches')))
         self.activity.match_label.show()
         self.activity.match_toolitem = gtk.ToolItem()
         self.activity.match_toolitem.add(self.activity.match_label)
@@ -537,7 +578,7 @@ class ProjectToolbar(gtk.Toolbar):
         separator.show()
 
         # Label for showing counter
-        self.activity.clock_label = gtk.Label("-")
+        self.activity.clock_label = gtk.Label('-')
         self.activity.clock_label.show()
         self.activity.clock_toolitem = gtk.ToolItem()
         self.activity.clock_toolitem.add(self.activity.clock_label)
@@ -550,7 +591,7 @@ class ProjectToolbar(gtk.Toolbar):
         separator.show()
 
         # Label for showing play status
-        self.activity.status_label = gtk.Label(_("Find a match."))
+        self.activity.status_label = gtk.Label(_('Find a match.'))
         self.activity.status_label.show()
         self.activity.status_toolitem = gtk.ToolItem()
         self.activity.status_toolitem.add(self.activity.status_label)
