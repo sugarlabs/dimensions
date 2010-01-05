@@ -98,10 +98,8 @@ class VisualMatchActivity(activity.Activity):
             # Use 0.86 toolbar design
             toolbar_box = ToolbarBox()
 
-            # Buttons added to the Activity toolbar
+            # Activity toolbar
             activity_button = ActivityToolbarButton(self)
-
-            # Write in the Journal
             journal_button = ToolButton( "journal-write" )
             journal_button.set_tooltip(_('Write in Journal'))
             journal_button.props.accelerator = '<Ctrl>j'
@@ -109,7 +107,6 @@ class VisualMatchActivity(activity.Activity):
                                    activity.get_bundle_path())
             activity_button.props.page.insert(journal_button, -1)
             journal_button.show()
-
             toolbar_box.toolbar.insert(activity_button, 0)
             activity_button.show()
 
@@ -150,8 +147,6 @@ class VisualMatchActivity(activity.Activity):
             self.level_button.connect('clicked', self._level_cb, self)
             tools_toolbar.insert(self.level_button,-1)
             self.level_button.show()
-
-            # Label for showing match status
             if self.play_level == 0:
                 self.level_label = gtk.Label(_('beginner'))
             else:
