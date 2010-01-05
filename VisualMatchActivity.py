@@ -25,15 +25,16 @@ import gobject
 
 import sugar
 from sugar.activity import activity
-try: # 0.86+ toolbar widgets
+try:
     from sugar.bundle.activitybundle import ActivityBundle
     from sugar.activity.widgets import ActivityToolbarButton
     from sugar.activity.widgets import StopButton
     from sugar.graphics.toolbarbox import ToolbarBox
     from sugar.graphics.toolbarbox import ToolbarButton
     from namingalert import NamingAlert
+    sugar86 = True
 except ImportError:
-    pass
+    sugar86 = False
 from sugar.graphics.toolbutton import ToolButton
 from sugar.graphics.menuitem import MenuItem
 from sugar.graphics.icon import Icon
@@ -42,12 +43,18 @@ from sugar.datastore import datastore
 from gettext import gettext as _
 import locale
 import os.path
+import logging
+_logger = logging.getLogger('visualmatch-activity')
+import json
+from StringIO import StringIO
 
 from constants import *
 from sprites import *
 import window
-
 import gencards
+import grid
+import deck
+import card
 
 level_icons = ['level1','level2']
 
@@ -64,10 +71,12 @@ class VisualMatchActivity(activity.Activity):
     def __init__(self, handle):
         super(VisualMatchActivity,self).__init__(handle)
 
+        # Turn sharing off
+        # self.share(private=True)
+
         # Read settings from the Journal
         try:
             self.play_level = int(self.metadata['play_level'])
-            print "saved play level was %d" % (self.play_level)
         except:
             self.play_level = 0
         try:
@@ -78,6 +87,10 @@ class VisualMatchActivity(activity.Activity):
             self.robot_time = int(self.metadata['robot_time'])
         except:
             self.robot_time = 60
+        try:
+            self.cardtype = self.metadata['cardtype']
+        except:
+            self.cardtype = 'pattern'
         try:
             numberO = int(self.metadata['numberO'])
             numberC = int(self.metadata['numberC'])
@@ -93,9 +106,7 @@ class VisualMatchActivity(activity.Activity):
         gencards.generator(datapath,numberO,numberC)
 
         # Create the toolbars
-        try:
-            raise NameError
-            # Use 0.86 toolbar design
+        if sugar86 is True:
             toolbar_box = ToolbarBox()
 
             # Activity toolbar
@@ -317,8 +328,7 @@ class VisualMatchActivity(activity.Activity):
             self.set_toolbar_box(toolbar_box)
             toolbar_box.show()
 
-        except NameError:
-            # Use pre-0.86 toolbar design
+        else:
             self.toolbox = activity.ActivityToolbox(self)
             self.set_toolbox(self.toolbox)
             self.projectToolbar = ProjectToolbar(self)
@@ -341,25 +351,82 @@ class VisualMatchActivity(activity.Activity):
         # Initialize the canvas et al.
         self.vmw = window.new_window(canvas, datapath, self)
         self.vmw.level = self.play_level
-        self.vmw.cardtype = 'pattern'
+        self.vmw.cardtype = self.cardtype
         self.vmw.robot = False
         self.vmw.robot_time = self.robot_time
         self.vmw.low_score = low_score
         self.vmw.numberO = numberO
         self.vmw.numberC = numberC
 
+        '''
+        if self._jobject and self._jobject.file_path:
+            self.read_file(self._jobject.file_path)
+        '''
+
         # Start playing the game
+        if hasattr(self.vmw,'saved_state'):
+            print "restoring saved state"
+        else:
+            print "fresh start"
         window.new_game(self.vmw, self.vmw.cardtype)
 
     #
-    # Write misc. data to the Journal
+    # Write data to the Journal
     #
     def write_file(self, file_path):
-        self.metadata['play_level'] = self.vmw.level
-        self.metadata['low_score'] = self.vmw.low_score
-        self.metadata['robot_time'] = self.vmw.robot_time
-        self.metadata['numberO'] = self.vmw.numberO
-        self.metadata['numberC'] = self.vmw.numberC
+        _logger.debug("Write file: %s" % file_path)
+        if hasattr(self, 'vmw'):
+            self.metadata['play_level'] = self.vmw.level
+            self.metadata['low_score'] = self.vmw.low_score
+            self.metadata['robot_time'] = self.vmw.robot_time
+            self.metadata['numberO'] = self.vmw.numberO
+            self.metadata['numberC'] = self.vmw.numberC
+            self.metadata['cardtype'] = self.vmw.cardtype
+            self.metadata['mime_type'] = 'application/x-visualmatch'
+            # save grid and deck arrangements
+            f = file(file_path, 'w')
+            data = []
+            for i in range(15):
+                if self.vmw.grid.grid[i] is None:
+                    data.append(None)
+                else:
+                    data.append(self.vmw.grid.grid[i].index)
+            data.append(self.vmw.deck.count)
+            data.append(self.vmw.deck.index)
+            for i in range(self.vmw.deck.count):
+                data.append(self.vmw.deck.cards[i].index)
+            data.append(self.vmw.matches)
+            data.append(self.vmw.total_time)
+            io = StringIO()
+            json.dump(data,io)
+            print ">>>"
+            print io.getvalue()
+            print "<<<"
+            f.write(io.getvalue())
+            f.close()
+        else:
+            _logger.debug("Deferring writing file %s" % file_path)
+
+    #
+    # Read data from the Journal
+    #
+    def read_file(self, file_path):
+        import os,tempfile,shutil
+
+        _logger.debug("Read file: %s" %  file_path)
+        f = open(file_path, "r")
+        try:
+            io = StringIO(f.read())
+            self.saved_state = json.load(io)
+            # restore grid and deck arrangements
+            print self.saved_state
+        except:
+            _logger.debug("Reading state from %s failed" %  file_path)
+        f.close()
+        if hasattr(self, 'vmw'):
+            print "restoring data now"
+        else:
+            _logger.debug("Deferring restoring of state from %s" %  file_path)
 
     #
     # Button callbacks
