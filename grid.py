@@ -82,6 +82,18 @@ class Grid:
                 self.place_a_card(self.grid[i], x, y)
                 self.cards += 1
 
+    # restore cards to grid upon resume
+    def restore(self, deck, saved_card_index):
+        self.hide()
+        j = 0
+        for i in saved_card_index:
+            if i is None:
+                self.grid[j] = None
+            else:
+                self.grid[j] = deck.index_to_card(i)
+            j += 1
+        self.show()
+
     # remove a match from the grid and deal new cards from the deck
     def remove_and_replace(self, clicked_set, deck):
         for a in clicked_set:
@@ -99,10 +111,13 @@ class Grid:
                 self.cards -= 1
                 # mark grid positions of cards we are not replacing
                 self.grid[i] = None
-            # move clicked card to the match area
-            a.x = 10
-            a.y = self.top + clicked_set.index(a)*self.yinc
-            deck.spr_to_card(a).show_card()
+            self.display_match(deck, a, clicked_set.index(a))
+
+    # move clicked card to the match area
+    def display_match(self, deck, spr, i):
+            spr.x = MATCH_POSITION
+            spr.y = self.top + i*self.yinc
+            deck.spr_to_card(spr).show_card()
 
     # if we have removed cards from a grid of 15, we may need to consolidate
     def consolidate(self):
@@ -133,5 +148,24 @@ class Grid:
 
     # return sprite in grid element i
     def grid_to_spr(self, i):
-        print self.grid[i].spr
         return self.grid[i].spr
+
+    # return index of sprite in grid
+    def spr_to_grid(self, spr):
+        for i in range(ROW*COL):
+            if self.grid[i] is not None and self.grid[i].spr == spr:
+                return(i)
+        return None
+
+    # hide all of the cards on the gird
+    def hide(self):
+        for i in range(ROW*COL):
+            if self.grid[i] is not None:
+                self.grid[i].hide_card()
+
+    # restore all card on the grid to their x,y positions
+    def show(self):
+        for i in range(ROW*COL):
+            self.place_a_card(self.grid[i],self.grid_to_xy(i)[0],
+                              self.grid_to_xy(i)[1])
+  

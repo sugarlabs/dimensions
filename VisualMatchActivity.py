@@ -76,34 +76,32 @@ class VisualMatchActivity(activity.Activity):
 
         # Read settings from the Journal
         try:
-            self.play_level = int(self.metadata['play_level'])
+            self._play_level = int(self.metadata['play_level'])
+            self._robot_time = int(self.metadata['robot_time'])
+            self._cardtype = self.metadata['cardtype']
+            _numberO = int(self.metadata['numberO'])
+            _numberC = int(self.metadata['numberC'])
+            _matches = int(self.metadata['matches'])
+            _total_time = int(self.metadata['total_time'])
+            _deck_index = int(self.metadata['deck_index'])
+            _low_score = int(self.metadata['low_score'])
         except:
-            self.play_level = 0
-        try:
-            low_score = int(self.metadata['low_score'])
-        except:
-            low_score = -1
-        try:
-            self.robot_time = int(self.metadata['robot_time'])
-        except:
-            self.robot_time = 60
-        try:
-            self.cardtype = self.metadata['cardtype']
-        except:
-            self.cardtype = 'pattern'
-        try:
-            numberO = int(self.metadata['numberO'])
-            numberC = int(self.metadata['numberC'])
-        except:
-            numberO = PRODUCT
-            numberC = HASH
+            self._play_level = 0
+            self._robot_time = 60
+            self._cardtype = 'pattern'
+            _numberO = PRODUCT
+            _numberC = HASH
+            _matches = 0
+            _total_time = 0
+            _deck_index = 0
+            _low_score = -1
 
         # Find a path to write card files
         try:
             datapath = os.path.join(activity.get_activity_root(), 'data')
         except:
             datapath = os.path.join(os.environ['HOME'], SERVICE, 'data')
-        gencards.generator(datapath,numberO,numberC)
+        gencards.generator(datapath, _numberO, _numberC)
 
         # Create the toolbars
         if sugar86 is True:
@@ -153,12 +151,12 @@ class VisualMatchActivity(activity.Activity):
 
             # The tools toolbar
             tools_toolbar = gtk.Toolbar()
-            self.level_button = ToolButton(level_icons[self.play_level])
+            self.level_button = ToolButton(level_icons[self._play_level])
             self.level_button.set_tooltip(_('Set difficulty level.'))
             self.level_button.connect('clicked', self._level_cb, self)
             tools_toolbar.insert(self.level_button,-1)
             self.level_button.show()
-            if self.play_level == 0:
+            if self._play_level == 0:
                 self.level_label = gtk.Label(_('beginner'))
             else:
                 self.level_label = gtk.Label(_('expert'))
@@ -179,7 +177,7 @@ class VisualMatchActivity(activity.Activity):
             tools_toolbar.insert(self.robot_button,-1)
             self.robot_button.show()
 
-            self._robot_time_spin_adj = gtk.Adjustment(self.robot_time,
+            self._robot_time_spin_adj = gtk.Adjustment(self._robot_time,
                                                        15, 180, 5, 15, 0)
             self._robot_time_spin = gtk.SpinButton(self._robot_time_spin_adj,
                                                    0, 0)
@@ -273,7 +271,7 @@ class VisualMatchActivity(activity.Activity):
             separator.show()
             toolbar_box.toolbar.insert(separator, -1)
 
-            if self.play_level == 1:
+            if self._play_level == 1:
                 self.deck_label = gtk.Label("%d %s" % (DECKSIZE-DEAL,
                                             _('cards')))
             else:
@@ -350,25 +348,19 @@ class VisualMatchActivity(activity.Activity):
 
         # Initialize the canvas et al.
         self.vmw = window.new_window(canvas, datapath, self)
-        self.vmw.level = self.play_level
-        self.vmw.cardtype = self.cardtype
+        self.vmw.level = self._play_level
+        self.vmw.cardtype = self._cardtype
         self.vmw.robot = False
-        self.vmw.robot_time = self.robot_time
-        self.vmw.low_score = low_score
-        self.vmw.numberO = numberO
-        self.vmw.numberC = numberC
-
-        '''
-        if self._jobject and self._jobject.file_path:
-            self.read_file(self._jobject.file_path)
-        '''
+        self.vmw.robot_time = self._robot_time
+        self.vmw.low_score = _low_score
+        self.vmw.numberO = _numberO
+        self.vmw.numberC = _numberC
+        self.vmw.matches = _matches
+        self.vmw.total_time = _total_time
 
         # Start playing the game
-        if hasattr(self.vmw,'saved_state'):
-            print "restoring saved state"
-        else:
-            print "fresh start"
-        window.new_game(self.vmw, self.vmw.cardtype)
+        window.new_game(self.vmw, self.vmw.cardtype, 
+                        self._saved_state, _deck_index)
 
     #
     # Write data to the Journal
@@ -382,26 +374,28 @@ class VisualMatchActivity(activity.Activity):
             self.metadata['numberO'] = self.vmw.numberO
             self.metadata['numberC'] = self.vmw.numberC
             self.metadata['cardtype'] = self.vmw.cardtype
+            self.metadata['matches'] = self.vmw.matches
+            self.metadata['total_time'] = self.vmw.total_time
+            self.metadata['deck_index'] = self.vmw.deck.index
             self.metadata['mime_type'] = 'application/x-visualmatch'
-            # save grid and deck arrangements
             f = file(file_path, 'w')
             data = []
-            for i in range(15):
-                if self.vmw.grid.grid[i] is None:
+            for i in self.vmw.grid.grid:
+                if i is None:
                     data.append(None)
                 else:
-                    data.append(self.vmw.grid.grid[i].index)
-            data.append(self.vmw.deck.count)
-            data.append(self.vmw.deck.index)
-            for i in range(self.vmw.deck.count):
-                data.append(self.vmw.deck.cards[i].index)
-            data.append(self.vmw.matches)
-            data.append(self.vmw.total_time)
+                    data.append(i.index)
+            for i in self.vmw.clicked:
+                if i is None:
+                    data.append(None)
+                else:
+                    data.append(self.vmw.deck.spr_to_card(i).index)
+            for i in self.vmw.deck.cards:
+                data.append(i.index)
+            for i in self.vmw.match_list:
+                data.append(self.vmw.deck.spr_to_card(i).index)
             io = StringIO()
             json.dump(data,io)
-            print ">>>"
-            print io.getvalue()
-            print "<<<"
             f.write(io.getvalue())
             f.close()
         else:
@@ -411,22 +405,13 @@ class VisualMatchActivity(activity.Activity):
     # Read data from the Journal
     #
     def read_file(self, file_path):
-        import os,tempfile,shutil
-
         _logger.debug("Read file: %s" %  file_path)
-        f = open(file_path, "r")
-        try:
-            io = StringIO(f.read())
-            self.saved_state = json.load(io)
-            # restore grid and deck arrangements
-            print self.saved_state
-        except:
-            _logger.debug("Reading state from %s failed" %  file_path)
+        f = open(file_path, 'r')
+        io = StringIO(f.read())
+        saved_state = json.load(io)
+        if len(saved_state) > 0:
+            self._saved_state = saved_state
         f.close()
-        if hasattr(self, 'vmw'):
-            print "restoring data now"
-        else:
-            _logger.debug("Deferring restoring of state from %s" %  file_path)
 
     #
     # Button callbacks
@@ -493,14 +478,14 @@ class ToolsToolbar(gtk.Toolbar):
         self.activity = activity
 
         self.activity.level_button = ToolButton(
-            level_icons[self.activity.play_level])
+            level_icons[self.activity._play_level])
         self.activity.level_button.set_tooltip(_('Set difficulty level.'))
         self.activity.level_button.props.sensitive = True
         self.activity.level_button.connect('clicked', self.activity._level_cb, 
                                            self.activity)
         self.insert(self.activity.level_button, -1)
         self.activity.level_button.show()
-        if self.activity.play_level == 0:
+        if self.activity._play_level == 0:
             self.activity.level_label = gtk.Label(_('beginner'))
         else:
             self.activity.level_label = gtk.Label(_('expert'))
@@ -523,7 +508,7 @@ class ToolsToolbar(gtk.Toolbar):
         self.insert(self.activity.robot_button, -1)
         self.activity.robot_button.show()
         self.activity._robot_time_spin_adj = gtk.Adjustment(
-            self.activity.robot_time,15,180,5,15,0)
+            self.activity._robot_time,15,180,5,15,0)
         self.activity._robot_time_spin = gtk.SpinButton(
             self.activity._robot_time_spin_adj, 0, 0)
         self.activity._robot_time_spin_id = \

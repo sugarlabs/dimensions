@@ -34,11 +34,7 @@ from card import *
 class Deck:
     def __init__(self, sprites, path, cardtype, width, height, level=HIGH):
         # Create the deck of cards.
-        self.cards = {}
-        # Remember the position in the deck.
-        self.index = 0
-        # Track how many cards are in the deck.
-        self.count = 0
+        self.cards = []
         # If level is 'simple', only generate one fill type
         if level == HIGH:
             fill_range = FILLS
@@ -49,25 +45,37 @@ class Deck:
             for color in range(0, COLORS):
                 for num in range(0, NUMBER):
                     for fill in range(0, fill_range):
-                        self.cards[self.count] = Card(sprites, path, cardtype, 
-                                                     width, height,
-                                                     [shape,color,num,fill])
-                        self.count += 1
+                        self.cards.append(Card(sprites, path, cardtype, 
+                                               width, height,
+                                               [shape,color,num,fill]))
+        # Track how many cards are in the deck.
+        self.count = len(self.cards)
+        # Remember the position in the deck.
+        self.index = 0
 
     # shuffle the deck
     def shuffle(self):
         decksize = self.count
         # hide all the cards
         for c in self.cards:
-            self.cards[c].hide_card()
+            c.hide_card()
         # randomize the deck
-        for n in range(0, decksize*4):
+        for n in range(decksize*4):
             i = random.randrange(decksize)
             j = random.randrange(decksize)
             self.swap_cards(i,j)            
         # reset the index to the beginning of the deck after a shuffle
         self.index = 0
         return
+
+    # restore deck upon resume
+    def restore(self, saved_deck_indices):
+        self.count = len(saved_deck_indices)
+        _deck = []
+        for i in saved_deck_indices:
+             _deck.append(self.index_to_card(i))
+        for i in range(self.count):
+             self.cards[i] = _deck[i]
 
     # swap the position of two cards in the deck
     def swap_cards(self,i,j):
@@ -79,8 +87,15 @@ class Deck:
     # given a sprite, find the corresponding card in the deck
     def spr_to_card(self, spr):
         for c in self.cards:
-            if self.cards[c].spr == spr:
-                return self.cards[c]
+            if c.spr == spr:
+                return c
+        return None
+
+    # given a card index, find the corresponding card in the deck
+    def index_to_card(self, i):
+        for c in self.cards:
+            if c.index == i:
+                return c
         return None
 
     # deal the next card from the deck
@@ -105,7 +120,7 @@ class Deck:
     # hide the deck
     def hide(self):
         for c in self.cards:
-            self.cards[c].hide_card()
+            c.hide_card()
 
 
 
