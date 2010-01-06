@@ -86,6 +86,7 @@ class VisualMatchActivity(activity.Activity):
             _deck_index = int(self.metadata['deck_index'])
             _low_score = int(self.metadata['low_score'])
         except:
+            print "caught exception in journal restore"
             self._play_level = 0
             self._robot_time = 60
             self._cardtype = 'pattern'
@@ -346,7 +347,7 @@ class VisualMatchActivity(activity.Activity):
         canvas.show()
         self.show_all()
 
-        # Initialize the canvas et al.
+        # Initialize the canvas, game state, et al.
         self.vmw = window.new_window(canvas, datapath, self)
         self.vmw.level = self._play_level
         self.vmw.cardtype = self._cardtype
@@ -357,6 +358,8 @@ class VisualMatchActivity(activity.Activity):
         self.vmw.numberC = _numberC
         self.vmw.matches = _matches
         self.vmw.total_time = _total_time
+        if not hasattr(self,'_saved_state'):
+            self._saved_state = None
 
         # Start playing the game
         window.new_game(self.vmw, self.vmw.cardtype, 
@@ -366,16 +369,16 @@ class VisualMatchActivity(activity.Activity):
     # Write data to the Journal
     #
     def write_file(self, file_path):
-        _logger.debug("Write file: %s" % file_path)
+        _logger.debug("Saving to: %s" % file_path)
         if hasattr(self, 'vmw'):
             self.metadata['play_level'] = self.vmw.level
-            self.metadata['low_score'] = self.vmw.low_score
+            self.metadata['low_score'] = int(self.vmw.low_score)
             self.metadata['robot_time'] = self.vmw.robot_time
             self.metadata['numberO'] = self.vmw.numberO
             self.metadata['numberC'] = self.vmw.numberC
             self.metadata['cardtype'] = self.vmw.cardtype
             self.metadata['matches'] = self.vmw.matches
-            self.metadata['total_time'] = self.vmw.total_time
+            self.metadata['total_time'] = int(self.vmw.total_time)
             self.metadata['deck_index'] = self.vmw.deck.index
             self.metadata['mime_type'] = 'application/x-visualmatch'
             f = file(file_path, 'w')
@@ -399,13 +402,13 @@ class VisualMatchActivity(activity.Activity):
             f.write(io.getvalue())
             f.close()
         else:
-            _logger.debug("Deferring writing file %s" % file_path)
+            _logger.debug("Deferring saving to %s" % file_path)
 
     #
     # Read data from the Journal
     #
     def read_file(self, file_path):
-        _logger.debug("Read file: %s" %  file_path)
+        _logger.debug("Resuming from: %s" %  file_path)
         f = open(file_path, 'r')
         io = StringIO(f.read())
         saved_state = json.load(io)

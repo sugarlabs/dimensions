@@ -93,23 +93,19 @@ def new_window(canvas, path, parent=None):
 #
 def new_game(vmw, cardtype, saved_state=None, deck_index=0):
     if not hasattr(vmw, 'deck'):
-        # first time through, initialize the deck and grid
+        # first time through, initialize the deck, grid, and overlays
         vmw.deck = Deck(vmw.sprites, vmw.path, cardtype, vmw.card_width, 
                     vmw.card_height, difficulty_level[vmw.level])
         vmw.grid = Grid(vmw.width, vmw.height, vmw.card_width, vmw.card_height)
-
-        # initialize three card-selected overlays and a place for the matches
         for i in range(0,3):
             vmw.selected.append(Card(vmw.sprites, vmw.path, "", vmw.card_width,
                             vmw.card_height, [SELECTMASK,0,0,0]))
             vmw.match_display_area.append(Card(vmw.sprites, vmw.path, "",
                             vmw.card_width,
                             vmw.card_height, [MATCHMASK,0,0,0]))
-            vmw.match_display_area[i].spr.x = MATCH_POSITION
-            vmw.match_display_area[i].spr.y = vmw.grid.top+i*vmw.grid.yinc
-            vmw.match_display_area[i].show_card()
+            vmw.grid.display_match(vmw.match_display_area[i].spr, i) 
 
-    vmw.deck.hide()
+    vmw.deck.hide() # start by hiding everything
     if vmw.cardtype is not cardtype:
         vmw.cardtype = cardtype
         vmw.deck = Deck(vmw.sprites, vmw.path, vmw.cardtype, 
@@ -125,11 +121,11 @@ def new_game(vmw, cardtype, saved_state=None, deck_index=0):
     if saved_state is not None:
         _logger.debug("Restoring state: %s" % (str(saved_state)))
         vmw.deck.index = deck_index
-        deck_start = 18
+        deck_start = ROW*COL+3
         deck_stop = deck_start+vmw.deck.count
         vmw.deck.restore(saved_state[deck_start:deck_stop])
-        vmw.grid.restore(vmw.deck, saved_state[0:15])
-        restore_selected(vmw, saved_state[15:18])
+        vmw.grid.restore(vmw.deck, saved_state[0:ROW*COL])
+        restore_selected(vmw, saved_state[ROW*COL:ROW*COL+3])
         restore_matches(vmw, saved_state[deck_stop:deck_stop+3*vmw.matches])
     else:
         vmw.matches = 0
@@ -139,9 +135,15 @@ def new_game(vmw, cardtype, saved_state=None, deck_index=0):
     set_label(vmw, "deck", "%d %s" % 
         (vmw.deck.cards_remaining(), _("cards")))
     set_label(vmw,"match","%d %s" % (vmw.matches,_("matches")))
-    vmw.start_time = gobject.get_current_time()
-    vmw.timeout_id = None
-    _counter(vmw)
+    set_label(vmw,"status",_('Find a match.'))
+    if game_over(vmw):
+        if hasattr(vmw,'timeout_id') and vmw.timeout_id is not None:
+            gobject.source_remove(vmw.timeout_id)
+    else:
+        vmw.start_time = gobject.get_current_time()
+        vmw.timeout_id = None
+        _counter(vmw)
+    
 
 #
 # Button press
@@ -193,6 +195,15 @@ def _process_selection(vmw, spr):
         process_a_match(vmw)
     return True
 
+def game_over(vmw):
+    if vmw.deck.empty() and find_a_match(vmw) is False:
+        set_label(vmw,"deck","")
+        set_label(vmw,"clock","")
+        set_label(vmw,"status","%s (%d:%02d)" % 
+            (_("Game over"),int(vmw.total_time/60),int(vmw.total_time%60)))
+        return True
+    return False
+
 def process_a_match(vmw):
     if match_check([vmw.deck.spr_to_card(vmw.clicked[0]),
                     vmw.deck.spr_to_card(vmw.clicked[1]),
@@ -212,12 +223,7 @@ def process_a_match(vmw):
         set_label(vmw, "deck", "%d %s" % 
                 (vmw.deck.cards_remaining(), _("cards")))
         # test to see if the game is over
-        if vmw.deck.empty() and find_a_match(vmw) is False:
-            set_label(vmw,"deck","")
-            set_label(vmw,"clock","")
-            set_label(vmw,"status","%s (%d:%02d)" % 
-                (_("Game over"),int(vmw.total_time/60),
-                 int(vmw.total_time%60)))
+        if game_over(vmw):
             gobject.source_remove(vmw.timeout_id)
             unselect(vmw)
             if vmw.low_score == -1:
@@ -306,13 +312,9 @@ def restore_selected(vmw, saved_selected_indices):
         else:
             vmw.clicked[j] = vmw.deck.index_to_card(i).spr
             k = vmw.grid.spr_to_grid(vmw.clicked[j])
-            if k is None:
-                print "couldn't find selected sprite in grid"
-            else:
-                print "clicked[%d]: %d %s %d" % (j, i, str(vmw.clicked[j]),k)
-                vmw.selected[j].spr.x = vmw.grid.grid_to_xy(k)[0]
-                vmw.selected[j].spr.y = vmw.grid.grid_to_xy(k)[1]
-                vmw.selected[j].show_card()
+            vmw.selected[j].spr.x = vmw.grid.grid_to_xy(k)[0]
+            vmw.selected[j].spr.y = vmw.grid.grid_to_xy(k)[1]
+            vmw.selected[j].show_card()
         j += 1
 
 #
@@ -327,7 +329,7 @@ def restore_matches(vmw, saved_match_list_indices):
     if vmw.matches > 0:
         l = len(vmw.match_list)
         for j in range(3):
-            vmw.grid.display_match(vmw.deck, vmw.match_list[l-3+j], j) 
+            vmw.grid.display_match(vmw.match_list[l-3+j], j) 
 
 #
 # Display of seconds since start_time or find a match

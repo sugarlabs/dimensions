@@ -30,9 +30,6 @@ from deck import *
 
 from constants import *
 
-ROW = 5
-COL = 3
-
 #
 # class for managing 3x5 matrix of cards
 #
@@ -40,6 +37,8 @@ class Grid:
     def __init__(self, width, height, card_width, card_height):
         # the playing surface is a 3x5 grid
         self.grid = []
+        for i in range(ROW*COL):
+            self.grid.append(None)
         # how many cards are on the playing field
         self.cards = 0
         # card spacing
@@ -51,23 +50,15 @@ class Grid:
 
     # deal the initial deck of cards
     def deal(self, deck):
-        # find upper left corner of grid
         self.cards = 0
-        self.grid = []
-        x = self.left
-        y = self.top
-        for r in range(0, ROW-1):
-            for c in range(0, COL):
-                a = deck.deal_next_card()
-                self.grid.append(a)
-                self.place_a_card(a, x, y)
-                x += self.xinc
+        for i in range(ROW*COL):
+            if i < (ROW-1)*COL:
+                self.grid[i] = deck.deal_next_card()
+                self.place_a_card(self.grid[i], self.grid_to_xy(i)[0],
+                                  self.grid_to_xy(i)[1])
                 self.cards += 1
-            x = self.left
-            y += self.yinc
-        for c in range(0,COL):
-            # leave a blank row for extra cards
-            self.grid.append(None)
+            else:         # leave a blank row for extra cards
+                self.grid[i] = None
 
     # add cards when there is no match
     def deal_extra_cards(self, deck):
@@ -77,9 +68,8 @@ class Grid:
             for c in range(0,COL):
                 i = self.grid.index(None)
                 self.grid[i] = deck.deal_next_card()
-                x = self.left+self.xinc*(i%COL)
-                y = self.top+self.yinc*int(i/COL)
-                self.place_a_card(self.grid[i], x, y)
+                self.place_a_card(self.grid[i], self.grid_to_xy(i)[0],
+                                  self.grid_to_xy(i)[1])
                 self.cards += 1
 
     # restore cards to grid upon resume
@@ -111,17 +101,18 @@ class Grid:
                 self.cards -= 1
                 # mark grid positions of cards we are not replacing
                 self.grid[i] = None
-            self.display_match(deck, a, clicked_set.index(a))
+            self.display_match(a, clicked_set.index(a))
 
     # move clicked card to the match area
-    def display_match(self, deck, spr, i):
+    def display_match(self, spr, i):
             spr.x = MATCH_POSITION
             spr.y = self.top + i*self.yinc
-            deck.spr_to_card(spr).show_card()
+            spr.set_layer(2000)
+            spr.draw()
 
-    # if we have removed cards from a grid of 15, we may need to consolidate
+    # if we have removed cards from an expanded grid, we may need to consolidate
     def consolidate(self):
-        for j in range(12,15):
+        for j in range((ROW-1)*COL,ROW*COL):
             i = 0
             while(self.grid[j] is not None):
                 if self.grid[i] is None:
