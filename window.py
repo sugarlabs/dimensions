@@ -143,7 +143,6 @@ def new_game(vmw, cardtype, saved_state=None, deck_index=0):
         vmw.start_time = gobject.get_current_time()
         vmw.timeout_id = None
         _counter(vmw)
-    
 
 #
 # Button press
@@ -195,6 +194,9 @@ def _process_selection(vmw, spr):
         process_a_match(vmw)
     return True
 
+#
+# Game is over when the deck is empty and there are no more matches
+#
 def game_over(vmw):
     if vmw.deck.empty() and find_a_match(vmw) is False:
         set_label(vmw,"deck","")
@@ -204,6 +206,9 @@ def game_over(vmw):
         return True
     return False
 
+#
+# Lots of work to do if we have a match
+#
 def process_a_match(vmw):
     if match_check([vmw.deck.spr_to_card(vmw.clicked[0]),
                     vmw.deck.spr_to_card(vmw.clicked[1]),
@@ -255,7 +260,7 @@ def process_a_match(vmw):
     unselect(vmw)
 
 #
-# unselect the cards
+# Unselect the cards
 #
 def unselect(vmw):
      vmw.clicked = [None, None, None]
@@ -263,7 +268,7 @@ def unselect(vmw):
          a.hide_card()
 
 #
-# Keypress
+# Callbacks
 #
 def _keypress_cb(area, event, vmw):
     k = gtk.gdk.keyval_name(event.keyval)
@@ -271,21 +276,15 @@ def _keypress_cb(area, event, vmw):
         return _process_selection(vmw, vmw.grid.grid_to_spr(KEYMAP.index(k)))
     return True
 
-#
-# Repaint
-#
 def _expose_cb(win, event, vmw):
     vmw.sprites.redraw_sprites()
     return True
 
-#
-# callbacks
-#
 def _destroy_cb(win, event, vmw):
     gtk.main_quit()
 
 #
-# write a string to a label in the toolbar
+# Write a string to a label in the toolbar
 #
 def set_label(vmw, label, s):
     if vmw.sugar is True:
@@ -302,7 +301,7 @@ def set_label(vmw, label, s):
             vmw.win.set_title("%s: %s" % (_("Visual Match"),s))
 
 #
-# restore selected cards upon resume
+# Restore selected cards upon resume
 #
 def restore_selected(vmw, saved_selected_indices):
     j = 0
@@ -318,7 +317,7 @@ def restore_selected(vmw, saved_selected_indices):
         j += 1
 
 #
-# restore match list upon resume
+# Restore match list upon resume
 #
 def restore_matches(vmw, saved_match_list_indices):
     j = 0
@@ -355,7 +354,6 @@ def find_a_match(vmw, robot_match=False):
                       vmw.grid.grid[i[2]]]
          if match_check(cardarray, vmw.cardtype) is True:
              if robot_match is True:
-                 print "processing robot match"
                  for j in range(3):
                      vmw.clicked[j]=vmw.grid.grid[i[j]].spr
                  process_a_match(vmw)
@@ -363,9 +361,7 @@ def find_a_match(vmw, robot_match=False):
      return False
 
 #
-# Check whether three cards are a match based on the criteria that
-# in all characteristics:
-# either all cards are the same of all cards are different
+# For each attribute, either it is the same or different on every card
 #
 def match_check(cardarray, cardtype):
     for a in cardarray:
