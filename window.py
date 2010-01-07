@@ -106,7 +106,7 @@ def new_game(vmw, cardtype, saved_state=None, deck_index=0):
                         difficulty_level[vmw.level])
     vmw.deck.shuffle()
     vmw.grid.deal(vmw.deck)
-    if find_a_match(vmw) is False:
+    if _find_a_match(vmw) is False:
         vmw.grid.deal_extra_cards(vmw.deck)
     _unselect(vmw)
 
@@ -187,7 +187,7 @@ def _process_selection(vmw, spr):
 # Game is over when the deck is empty and there are no more matches
 #
 def _game_over(vmw):
-    if vmw.deck.empty() and find_a_match(vmw) is False:
+    if vmw.deck.empty() and _find_a_match(vmw) is False:
         set_label(vmw,"deck","")
         set_label(vmw,"clock","")
         set_label(vmw,"status","%s (%d:%02d)" % 
@@ -233,7 +233,7 @@ def _test_for_a_match(vmw):
         # consolidate the grid
         vmw.grid.consolidate()
         # test to see if we need to deal extra cards
-        if find_a_match(vmw) is False:
+        if _find_a_match(vmw) is False:
             vmw.grid.deal_extra_cards(vmw.deck)
         _update_labels(vmw)
         _timer_reset(vmw)
@@ -335,7 +335,7 @@ def _counter(vmw):
      seconds = int(gobject.get_current_time()-vmw.start_time)
      set_label(vmw,"clock",str(seconds))
      if vmw.robot is True and vmw.robot_time < seconds:
-         find_a_match(vmw, True)
+         _find_a_match(vmw, True)
      else:
          vmw.timeout_id = gobject.timeout_add(1000,_counter,vmw)
 
@@ -347,7 +347,7 @@ def _timer_reset(vmw):
 #
 # Check to see whether there are any matches on the board
 #
-def find_a_match(vmw, robot_match=False):
+def _find_a_match(vmw, robot_match=False):
      a = [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14]
      for i in Permutation(a): # really should be Combination
          cardarray = [vmw.grid.grid[i[0]],\
