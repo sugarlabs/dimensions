@@ -204,19 +204,22 @@ def _test_for_a_match(vmw):
                     vmw.deck.spr_to_card(vmw.clicked[1]),
                     vmw.deck.spr_to_card(vmw.clicked[2])],
                    vmw.cardtype):
+
         # stop the timer
         if vmw.timeout_id is not None:
             gobject.source_remove(vmw.timeout_id)
         vmw.total_time += gobject.get_current_time()-vmw.start_time
-        # increment the match counter
+
+        # increment the match counter and add the match to the match list
         vmw.matches += 1
-        # add the match to the match list
         for i in vmw.clicked:
             vmw.match_list.append(i)
-        # out with the old and in with the new
+
+        # remove the match and deal 3 new cards
         vmw.grid.remove_and_replace(vmw.clicked, vmw.deck)
         set_label(vmw, "deck", "%d %s" % 
                 (vmw.deck.cards_remaining(), _("cards")))
+
         # test to see if the game is over
         if _game_over(vmw):
             gobject.source_remove(vmw.timeout_id)
@@ -231,15 +234,21 @@ def _test_for_a_match(vmw):
             if vmw.sugar is False:
                  vmw.activity.save_score()
             return True
+
         # consolidate the grid
         vmw.grid.consolidate()
+
         # test to see if we need to deal extra cards
         if _find_a_match(vmw) is False:
             vmw.grid.deal_extra_cards(vmw.deck)
+
+        # keep playing
         _update_labels(vmw)
         _timer_reset(vmw)
-        vmw.sprites.redraw_sprites()
+
+    # whether or not there was a match, unselect all cards and refresh display
     _unselect(vmw)
+    vmw.sprites.redraw_sprites()
 
 #
 # Unselect the cards

@@ -176,6 +176,8 @@ class VisualMatchMain:
         self.vmw.robot_time = 60
         self.vmw.numberO = PRODUCT
         self.vmw.numberC = HASH
+        self.vmw.matches = 0
+        self.vmw.robot_matches = 0
         self.load_score()
 
         window.new_game(self.vmw, self.vmw.cardtype)
@@ -184,17 +186,17 @@ class VisualMatchMain:
          try:
              f = file(os.path.join(os.path.abspath('.'),
                                    'visualmatch.score'),"r")
-             s = f.read().split(":")
+             s = [f.read().split(":"),f.read().split(":")]
              f.close
-             self.vmw.low_score = int(s[1])
+             self.vmw.low_score = (int(s[0]),int(s[1]))
              print "low score is: %d" % (self.vmw.low_score)
          except:
-             self.vmw.low_score = -1
+             self.vmw.low_score = [-1,-1]
 
     def save_score(self):
-         print "saving low score: %d" % (int(self.vmw.low_score))        
          f = file(os.path.join(os.path.abspath('.'),'visualmatch.score'),"w")
-         f.write("low_score:%s" % str(int(self.vmw.low_score)))
+         f.write("low_score_beginner:%s" % str(int(self.vmw.low_score[0])))
+         f.write("low_score_expert:%s" % str(int(self.vmw.low_score[1])))
          f.close
 
     def set_title(self, title):
