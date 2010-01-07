@@ -57,7 +57,7 @@ import deck
 import card
 
 level_icons = ['level1','level2']
-
+level_labels = [_('beginner'),_('expert')]
 
 SERVICE = 'org.sugarlabs.VisualMatchActivity'
 IFACE = SERVICE
@@ -85,8 +85,8 @@ class VisualMatchActivity(activity.Activity):
             _robot_matches = int(self.metadata['robot_matches'])
             _total_time = int(self.metadata['total_time'])
             _deck_index = int(self.metadata['deck_index'])
-            _low_score = [int(self.metadata['low_score_beginner']),\
-                          int(self.metadata['low_score_expert'])]
+            self._low_score = [int(self.metadata['low_score_beginner']),\
+                               int(self.metadata['low_score_expert'])]
         except:
             self._play_level = 0
             self._robot_time = 60
@@ -97,7 +97,7 @@ class VisualMatchActivity(activity.Activity):
             _robot_matches = 0
             _total_time = 0
             _deck_index = 0
-            _low_score = [-1,-1]
+            self._low_score = [-1,-1]
 
         # Find a path to write card files
         try:
@@ -159,10 +159,8 @@ class VisualMatchActivity(activity.Activity):
             self.level_button.connect('clicked', self._level_cb, self)
             tools_toolbar.insert(self.level_button,-1)
             self.level_button.show()
-            if self._play_level == 0:
-                self.level_label = gtk.Label(_('beginner'))
-            else:
-                self.level_label = gtk.Label(_('expert'))
+            self.level_label = gtk.Label(self.calc_level_label(self._low_score,
+                                                              self._play_level))
             self.level_label.show()
             level_toolitem = gtk.ToolItem()
             level_toolitem.add(self.level_label)
@@ -355,7 +353,7 @@ class VisualMatchActivity(activity.Activity):
         self.vmw.cardtype = self._cardtype
         self.vmw.robot = False
         self.vmw.robot_time = self._robot_time
-        self.vmw.low_score = _low_score
+        self.vmw.low_score = self._low_score
         self.vmw.numberO = _numberO
         self.vmw.numberC = _numberC
         self.vmw.matches = _matches
@@ -440,14 +438,21 @@ class VisualMatchActivity(activity.Activity):
 
     def _level_cb(self, button, activity):
         activity.vmw.level = 1-activity.vmw.level
-        if activity.vmw.level == 0:
-            self.level_label.set_text(_('beginner'))
-        else:
-            self.level_label.set_text(_('expert'))
+        self.level_label.set_text(self.calc_level_label(activity.vmw.low_score,
+                                                        activity.vmw.level))
         self.level_button.set_icon(level_icons[activity.vmw.level])
         cardtype = activity.vmw.cardtype
         activity.vmw.cardtype = '' # force generation of new deck 
         window.new_game(activity.vmw, cardtype)
+
+    def calc_level_label(self, low_score, play_level):
+        if low_score[play_level] == -1:
+            return level_labels[play_level]
+        else:
+            return "%s (%d:%02d)" % \
+                    (level_labels[play_level],
+                     int(low_score[play_level]/60),
+                     int(low_score[play_level]%60))
 
     def _number_card_O_cb(self, button, activity, numberO):
         activity.vmw.numberO = numberO
@@ -493,10 +498,9 @@ class ToolsToolbar(gtk.Toolbar):
                                            self.activity)
         self.insert(self.activity.level_button, -1)
         self.activity.level_button.show()
-        if self.activity._play_level == 0:
-            self.activity.level_label = gtk.Label(_('beginner'))
-        else:
-            self.activity.level_label = gtk.Label(_('expert'))
+        self.activity.level_label = gtk.Label(self.activity.calc_level_label(
+                                         self.activity._low_score,
+                                         self.activity._play_level))
         self.activity.level_label.show()
         self.activity.level_toolitem = gtk.ToolItem()
         self.activity.level_toolitem.add(self.activity.level_label)
