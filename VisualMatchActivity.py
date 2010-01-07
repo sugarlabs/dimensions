@@ -82,20 +82,22 @@ class VisualMatchActivity(activity.Activity):
             _numberO = int(self.metadata['numberO'])
             _numberC = int(self.metadata['numberC'])
             _matches = int(self.metadata['matches'])
+            _robot_matches = int(self.metadata['robot_matches'])
             _total_time = int(self.metadata['total_time'])
             _deck_index = int(self.metadata['deck_index'])
-            _low_score = int(self.metadata['low_score'])
+            _low_score = [int(self.metadata['low_score_beginner']),\
+                          int(self.metadata['low_score_expert'])]
         except:
-            print "caught exception in journal restore"
             self._play_level = 0
             self._robot_time = 60
             self._cardtype = 'pattern'
             _numberO = PRODUCT
             _numberC = HASH
             _matches = 0
+            _robot_matches = 0
             _total_time = 0
             _deck_index = 0
-            _low_score = -1
+            _low_score = [-1,-1]
 
         # Find a path to write card files
         try:
@@ -357,6 +359,7 @@ class VisualMatchActivity(activity.Activity):
         self.vmw.numberO = _numberO
         self.vmw.numberC = _numberC
         self.vmw.matches = _matches
+        self.vmw.robot_matches = _robot_matches
         self.vmw.total_time = _total_time
         if not hasattr(self,'_saved_state'):
             self._saved_state = None
@@ -372,12 +375,14 @@ class VisualMatchActivity(activity.Activity):
         _logger.debug("Saving to: %s" % file_path)
         if hasattr(self, 'vmw'):
             self.metadata['play_level'] = self.vmw.level
-            self.metadata['low_score'] = int(self.vmw.low_score)
+            self.metadata['low_score_beginner'] = int(self.vmw.low_score[0])
+            self.metadata['low_score_expert'] = int(self.vmw.low_score[1])
             self.metadata['robot_time'] = self.vmw.robot_time
             self.metadata['numberO'] = self.vmw.numberO
             self.metadata['numberC'] = self.vmw.numberC
             self.metadata['cardtype'] = self.vmw.cardtype
             self.metadata['matches'] = self.vmw.matches
+            self.metadata['robot_matches'] = self.vmw.robot_matches
             self.metadata['total_time'] = int(self.vmw.total_time)
             self.metadata['deck_index'] = self.vmw.deck.index
             self.metadata['mime_type'] = 'application/x-visualmatch'

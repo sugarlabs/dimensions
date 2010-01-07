@@ -45,20 +45,19 @@ difficulty_level = [LOW,HIGH]
 class vmWindow: pass
 
 #
-# handle launch from both within and without of Sugar environment
+# Handle launch from both within and without of Sugar environment
 #
 def new_window(canvas, path, parent=None):
     vmw = vmWindow()
     vmw.path = path
     vmw.activity = parent
 
-    # starting from command line
-    # we have to do all the work that was done in CardSortActivity.py
+    # Starting from command line
     if parent is None:
         vmw.sugar = False
         vmw.canvas = canvas
 
-    # starting from Sugar
+    # Starting from Sugar
     else:
         vmw.sugar = True
         vmw.canvas = canvas
@@ -79,13 +78,7 @@ def new_window(canvas, path, parent=None):
     vmw.sprites = Sprites(vmw.canvas)
     vmw.selected = []
     vmw.match_display_area = []
-    vmw.match_list = []
-
-    # make an array of three cards that are clicked
     vmw.clicked = [None, None, None]
-
-    # Start doing something
-    vmw.low_score = -1
     return vmw
 
 #
@@ -115,7 +108,7 @@ def new_game(vmw, cardtype, saved_state=None, deck_index=0):
     vmw.grid.deal(vmw.deck)
     if find_a_match(vmw) is False:
         vmw.grid.deal_extra_cards(vmw.deck)
-    unselect(vmw)
+    _unselect(vmw)
 
     # restore saved state on resume
     if saved_state is not None:
@@ -125,24 +118,20 @@ def new_game(vmw, cardtype, saved_state=None, deck_index=0):
         deck_stop = deck_start+vmw.deck.count
         vmw.deck.restore(saved_state[deck_start:deck_stop])
         vmw.grid.restore(vmw.deck, saved_state[0:ROW*COL])
-        restore_selected(vmw, saved_state[ROW*COL:ROW*COL+3])
-        restore_matches(vmw, saved_state[deck_stop:deck_stop+3*vmw.matches])
+        _restore_selected(vmw, saved_state[ROW*COL:ROW*COL+3])
+        _restore_matches(vmw, saved_state[deck_stop:deck_stop+3*vmw.matches])
     else:
         vmw.matches = 0
+        vmw.robot_matches = 0
         vmw.match_list = []
         vmw.total_time = 0
 
-    set_label(vmw, "deck", "%d %s" % 
-        (vmw.deck.cards_remaining(), _("cards")))
-    set_label(vmw,"match","%d %s" % (vmw.matches,_("matches")))
-    set_label(vmw,"status",_('Find a match.'))
-    if game_over(vmw):
+    _update_labels(vmw)
+    if _game_over(vmw):
         if hasattr(vmw,'timeout_id') and vmw.timeout_id is not None:
             gobject.source_remove(vmw.timeout_id)
     else:
-        vmw.start_time = gobject.get_current_time()
-        vmw.timeout_id = None
-        _counter(vmw)
+        _timer_reset(vmw)
 
 #
 # Button press
@@ -191,13 +180,13 @@ def _process_selection(vmw, spr):
     if None in vmw.clicked:
         pass
     else:
-        process_a_match(vmw)
+        _test_for_a_match(vmw)
     return True
 
 #
 # Game is over when the deck is empty and there are no more matches
 #
-def game_over(vmw):
+def _game_over(vmw):
     if vmw.deck.empty() and find_a_match(vmw) is False:
         set_label(vmw,"deck","")
         set_label(vmw,"clock","")
@@ -209,8 +198,8 @@ def game_over(vmw):
 #
 # Lots of work to do if we have a match
 #
-def process_a_match(vmw):
-    if match_check([vmw.deck.spr_to_card(vmw.clicked[0]),
+def _test_for_a_match(vmw):
+    if _match_check([vmw.deck.spr_to_card(vmw.clicked[0]),
                     vmw.deck.spr_to_card(vmw.clicked[1]),
                     vmw.deck.spr_to_card(vmw.clicked[2])],
                    vmw.cardtype):
@@ -228,13 +217,13 @@ def process_a_match(vmw):
         set_label(vmw, "deck", "%d %s" % 
                 (vmw.deck.cards_remaining(), _("cards")))
         # test to see if the game is over
-        if game_over(vmw):
+        if _game_over(vmw):
             gobject.source_remove(vmw.timeout_id)
-            unselect(vmw)
-            if vmw.low_score == -1:
-                vmw.low_score = vmw.total_time
-            elif vmw.total_time < vmw.low_score:
-                vmw.low_score = vmw.total_time
+            _unselect(vmw)
+            if vmw.low_score[vmw.level] == -1:
+                vmw.low_score[vmw.level] = vmw.total_time
+            elif vmw.total_time < vmw.low_score[vmw.level]:
+                vmw.low_score[vmw.level] = vmw.total_time
                 set_label(vmw,"status","%s (%d:%02d)" % 
                     (_("New record"),int(vmw.total_time/60),
                      int(vmw.total_time%60)))
@@ -246,23 +235,15 @@ def process_a_match(vmw):
         # test to see if we need to deal extra cards
         if find_a_match(vmw) is False:
             vmw.grid.deal_extra_cards(vmw.deck)
-        else:
-            set_label(vmw,"status",_("match"))
-        if vmw.matches == 1:
-            set_label(vmw,"match","%d %s" % (vmw.matches,_("match")))
-        else:
-            set_label(vmw,"match","%d %s" % (vmw.matches,_("matches")))
-        # reset the timer
-        vmw.start_time = gobject.get_current_time()
-        vmw.timeout_id = None
-        _counter(vmw)
+        _update_labels(vmw)
+        _timer_reset(vmw)
         vmw.sprites.redraw_sprites()
-    unselect(vmw)
+    _unselect(vmw)
 
 #
 # Unselect the cards
 #
-def unselect(vmw):
+def _unselect(vmw):
      vmw.clicked = [None, None, None]
      for a in vmw.selected:
          a.hide_card()
@@ -284,8 +265,25 @@ def _destroy_cb(win, event, vmw):
     gtk.main_quit()
 
 #
-# Write a string to a label in the toolbar
+# Write strings to a label in the toolbar
 #
+def _update_labels(vmw):
+    set_label(vmw, "deck", "%d %s" % 
+        (vmw.deck.cards_remaining(), _("cards")))
+    set_label(vmw, "status", "")
+    if vmw.matches == 1:
+        if vmw.robot_matches > 0:
+            set_label(vmw,"match","%d (%d) %s" % \
+                (vmw.matches-vmw.robot_matches,vmw.robot_matches,_("match")))
+        else:
+            set_label(vmw,"match","%d %s" % (vmw.matches,_("match")))
+    else:
+        if vmw.robot_matches > 0:
+            set_label(vmw,"match","%d (%d) %s" % \
+                (vmw.matches-vmw.robot_matches,vmw.robot_matches,_("matches")))
+        else:
+            set_label(vmw,"match","%d %s" % (vmw.matches,_("matches")))
+
 def set_label(vmw, label, s):
     if vmw.sugar is True:
         if label == "deck":
@@ -303,7 +301,7 @@ def set_label(vmw, label, s):
 #
 # Restore selected cards upon resume
 #
-def restore_selected(vmw, saved_selected_indices):
+def _restore_selected(vmw, saved_selected_indices):
     j = 0
     for i in saved_selected_indices:
         if i is None:
@@ -319,7 +317,7 @@ def restore_selected(vmw, saved_selected_indices):
 #
 # Restore match list upon resume
 #
-def restore_matches(vmw, saved_match_list_indices):
+def _restore_matches(vmw, saved_match_list_indices):
     j = 0
     vmw.match_list = []
     for i in saved_match_list_indices:
@@ -336,12 +334,15 @@ def restore_matches(vmw, saved_match_list_indices):
 def _counter(vmw):
      seconds = int(gobject.get_current_time()-vmw.start_time)
      set_label(vmw,"clock",str(seconds))
-     # vmw.total_time += 1
      if vmw.robot is True and vmw.robot_time < seconds:
-         print "robot time"
          find_a_match(vmw, True)
      else:
          vmw.timeout_id = gobject.timeout_add(1000,_counter,vmw)
+
+def _timer_reset(vmw):
+    vmw.start_time = gobject.get_current_time()
+    vmw.timeout_id = None
+    _counter(vmw)
 
 #
 # Check to see whether there are any matches on the board
@@ -352,18 +353,19 @@ def find_a_match(vmw, robot_match=False):
          cardarray = [vmw.grid.grid[i[0]],\
                       vmw.grid.grid[i[1]],\
                       vmw.grid.grid[i[2]]]
-         if match_check(cardarray, vmw.cardtype) is True:
+         if _match_check(cardarray, vmw.cardtype) is True:
              if robot_match is True:
                  for j in range(3):
                      vmw.clicked[j]=vmw.grid.grid[i[j]].spr
-                 process_a_match(vmw)
+                 vmw.robot_matches += 1
+                 _test_for_a_match(vmw)
              return True
      return False
 
 #
 # For each attribute, either it is the same or different on every card
 #
-def match_check(cardarray, cardtype):
+def _match_check(cardarray, cardtype):
     for a in cardarray:
         if a is None:
             return False
