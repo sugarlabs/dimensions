@@ -154,24 +154,6 @@ class VisualMatchActivity(activity.Activity):
 
             # The tools toolbar
             tools_toolbar = gtk.Toolbar()
-            self.level_button = ToolButton(level_icons[self._play_level])
-            self.level_button.set_tooltip(_('Set difficulty level.'))
-            self.level_button.connect('clicked', self._level_cb, self)
-            tools_toolbar.insert(self.level_button,-1)
-            self.level_button.show()
-            self.level_label = gtk.Label(self.calc_level_label(self._low_score,
-                                                              self._play_level))
-            self.level_label.show()
-            level_toolitem = gtk.ToolItem()
-            level_toolitem.add(self.level_label)
-            tools_toolbar.insert(level_toolitem,-1)
-            level_toolitem.show()
-
-            separator = gtk.SeparatorToolItem()
-            separator.props.draw = True
-            tools_toolbar.insert(separator, -1)
-            separator.show()
-
             self.robot_button = ToolButton('robot-off')
             self.robot_button.set_tooltip(_('Play with the computer.'))
             self.robot_button.connect('clicked', self._robot_cb, self)
@@ -190,6 +172,24 @@ class VisualMatchActivity(activity.Activity):
             self.tool_item_robot_time.add(self._robot_time_spin)
             tools_toolbar.insert(self.tool_item_robot_time, -1)
             self.tool_item_robot_time.show()
+
+            separator = gtk.SeparatorToolItem()
+            separator.props.draw = True
+            tools_toolbar.insert(separator, -1)
+            separator.show()
+
+            self.level_button = ToolButton(level_icons[self._play_level])
+            self.level_button.set_tooltip(_('Set difficulty level.'))
+            self.level_button.connect('clicked', self._level_cb, self)
+            tools_toolbar.insert(self.level_button,-1)
+            self.level_button.show()
+            self.level_label = gtk.Label(self.calc_level_label(self._low_score,
+                                                              self._play_level))
+            self.level_label.show()
+            level_toolitem = gtk.ToolItem()
+            level_toolitem.add(self.level_label)
+            tools_toolbar.insert(level_toolitem,-1)
+            level_toolitem.show()
 
             tools_toolbar_button = ToolbarButton(
                     page=tools_toolbar,
@@ -490,28 +490,6 @@ class ToolsToolbar(gtk.Toolbar):
         gtk.Toolbar.__init__(self)
         self.activity = activity
 
-        self.activity.level_button = ToolButton(
-            level_icons[self.activity._play_level])
-        self.activity.level_button.set_tooltip(_('Set difficulty level.'))
-        self.activity.level_button.props.sensitive = True
-        self.activity.level_button.connect('clicked', self.activity._level_cb, 
-                                           self.activity)
-        self.insert(self.activity.level_button, -1)
-        self.activity.level_button.show()
-        self.activity.level_label = gtk.Label(self.activity.calc_level_label(
-                                         self.activity._low_score,
-                                         self.activity._play_level))
-        self.activity.level_label.show()
-        self.activity.level_toolitem = gtk.ToolItem()
-        self.activity.level_toolitem.add(self.activity.level_label)
-        self.insert(self.activity.level_toolitem,-1)
-        self.activity.level_toolitem.show()
-
-        separator = gtk.SeparatorToolItem()
-        separator.set_draw(True)
-        self.insert(separator, -1)
-        separator.show()
-
         self.activity.robot_button = ToolButton( "robot-off" )
         self.activity.robot_button.set_tooltip(_('Play with the computer.'))
         self.activity.robot_button.props.sensitive = True
@@ -532,6 +510,28 @@ class ToolsToolbar(gtk.Toolbar):
         self.activity.tool_item_robot_time.add(self.activity._robot_time_spin)
         self.insert(self.activity.tool_item_robot_time, -1)
         self.activity.tool_item_robot_time.show()
+
+        separator = gtk.SeparatorToolItem()
+        separator.set_draw(True)
+        self.insert(separator, -1)
+        separator.show()
+
+        self.activity.level_button = ToolButton(
+            level_icons[self.activity._play_level])
+        self.activity.level_button.set_tooltip(_('Set difficulty level.'))
+        self.activity.level_button.props.sensitive = True
+        self.activity.level_button.connect('clicked', self.activity._level_cb, 
+                                           self.activity)
+        self.insert(self.activity.level_button, -1)
+        self.activity.level_button.show()
+        self.activity.level_label = gtk.Label(self.activity.calc_level_label(
+                                         self.activity._low_score,
+                                         self.activity._play_level))
+        self.activity.level_label.show()
+        self.activity.level_toolitem = gtk.ToolItem()
+        self.activity.level_toolitem.add(self.activity.level_label)
+        self.insert(self.activity.level_toolitem,-1)
+        self.activity.level_toolitem.show()
 
 class NumbersToolbar(gtk.Toolbar):
 

@@ -538,12 +538,12 @@ def generate_word_cards(datapath):
                     f = open_file(datapath, filename)
                     header(f,"#000000",c[1],"0.5")
                     if n == 0:
-                        word_card(f,t,s,[_("dog"),_("cat"),_("mouse")],c[0])
+                        word_card(f,t,s,[_("mouse"),_("cat"),_("dog")],c[0])
                     elif n == 1:
-                        word_card(f,t,s,[_("apple"),_("bread"),_("cheese")],
+                        word_card(f,t,s,[_("cheese"),_("bread"),_("apple")],
                                   c[0])
                     else:
-                        word_card(f,t,s,[_("sun"),_("moon"),_("earth")],c[0])
+                        word_card(f,t,s,[_("moon"),_("sun"),_("earth")],c[0])
                     footer(f)
                     close_file(f)
                     i += 1

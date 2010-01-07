@@ -192,6 +192,7 @@ def _game_over(vmw):
         set_label(vmw,"clock","")
         set_label(vmw,"status","%s (%d:%02d)" % 
             (_("Game over"),int(vmw.total_time/60),int(vmw.total_time%60)))
+        _show_matches(vmw, 0)
         return True
     return False
 
@@ -343,6 +344,15 @@ def _timer_reset(vmw):
     vmw.start_time = gobject.get_current_time()
     vmw.timeout_id = None
     _counter(vmw)
+
+#
+# Show all the matches
+#
+def _show_matches(vmw, i):
+    if i < vmw.matches:
+        for j in range(3):
+            vmw.grid.display_match(vmw.match_list[i*3+j], j) 
+        vmw.match_timeout_id = gobject.timeout_add(2000,_show_matches,vmw,i+1)
 
 #
 # Check to see whether there are any matches on the board
