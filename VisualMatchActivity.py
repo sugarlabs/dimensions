@@ -58,6 +58,7 @@ import card
 
 level_icons = ['level1','level2']
 level_labels = [_('beginner'),_('expert')]
+level_decksize = [(DECKSIZE-DEAL)/3, DECKSIZE-DEAL]
 
 SERVICE = 'org.sugarlabs.VisualMatchActivity'
 IFACE = SERVICE
@@ -272,12 +273,8 @@ class VisualMatchActivity(activity.Activity):
             separator.show()
             toolbar_box.toolbar.insert(separator, -1)
 
-            if self._play_level == 1:
-                self.deck_label = gtk.Label("%d %s" % (DECKSIZE-DEAL,
-                                            _('cards')))
-            else:
-                self.deck_label = gtk.Label("%d %s" % ((DECKSIZE-DEAL)/3,
-                                            _('cards')))
+            self.deck_label = gtk.Label("%d %s" % \
+                              (level_decksize[self._play_level], _('cards')))
             self.deck_label.show()
             deck_toolitem = gtk.ToolItem()
             deck_toolitem.add(self.deck_label)
@@ -632,8 +629,8 @@ class ProjectToolbar(gtk.Toolbar):
         self.insert(separator, -1)
         separator.show()
 
-        self.activity.deck_label = gtk.Label("%d %s" % (DECKSIZE-DEAL,
-                                              _('cards')))
+        self.activity.deck_label = gtk.Label("%d %s" % \
+                      (level_decksize[self.activity._play_level], _('cards')))
         self.activity.deck_label.show()
         self.activity.deck_toolitem = gtk.ToolItem()
         self.activity.deck_toolitem.add(self.activity.deck_label)
