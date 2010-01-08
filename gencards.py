@@ -30,29 +30,28 @@ BLUE_STROKE = "#0060C8"
 BLUE_FILL = "#ACC8E4"
 GREEN_STROKE = "#00B418"
 GREEN_FILL = "#AFE8A8"
-# PURPLE_STROKE = "#780078"
-# PURPLE_FILL = "#E4AAE4"
 
 color_pairs = ([RED_STROKE,RED_FILL],
                [GREEN_STROKE,GREEN_FILL],
                [BLUE_STROKE,BLUE_FILL])
-
-fill_styles = ("solid","none","gradient")
-card_types = ("X","O","C")
+fill_styles = ["solid","none","gradient"]
+card_types = ["X","O","C"]
 
 roman_numerals = {5:'V',7:'VII',10:'X',11:'XI',14:'XIV',15:'XV',\
                   21:'XXI',22:'XXII',33:'XXXIII'}
-
 number_names = {5:_('five'),7:_('seven'),11:_('eleven'),10:_('ten'),\
                 14:_('fourteen'),15:_('fifteen'),22:_('twenty two'),\
                 21:_('twenty one'),33:_('thirty three')}
-
 number_products = {5:'1×5',7:'1×7',11:'1×11',10:'2×5',\
                    14:'2×7',15:'3×5',22:'2×11',\
                    21:'3×7',33:'3×11'}
-
 chinese_numerals = {5:'五',7:'七',10:'十',11:'十一',14:'十四',15:'十五',\
                   21:'廿一',22:'廿二',33:'卅三'}
+
+word_lists = [[_('mouse'),_('cat'),_('dog')],\
+              [_('cheese'),_('apple'),_('bread')],\
+              [_('moon'),_('sun'),_('earth')]]
+word_styles = ["font-weight:bold;","","font-style:italic;"]
 
 #
 # SVG generators
@@ -91,7 +90,6 @@ def svg_text(f,x,y,size,stroke,font,style,string):
     f.write("       y=\""+str(y)+"\"\n")
     f.write("       style=\"font-size:"+str(size)+"px;\">"+string+"</tspan>\n")
     f.write("  </text>\n")
-
 
 def svg_check(f, x, style, stroke, fill):
     f.write("<path d=\"m 28.4,70.2 -5.9,5.9 -5.9,-5.9 -4.1,-4.1 c -0.7,-0.7" +\
@@ -331,7 +329,6 @@ def number_hash(f, t, n, stroke):
     for i in range(n):
         hash(f, nn, 5, y, stroke)
         y += 20
-    
 
 def dice(f, t, n, stroke):
     if n == 5:
@@ -470,14 +467,12 @@ def number_card(f, t, n, stroke, methodX, methodO, methodC):
     else:
         methodC(f, t, n, stroke)
 
-def word_card(f, t, s, string, stroke):
-    if t == 'X':
-        svg_text(f,63.5,45.5,30,stroke,"DejaVu","font-weight:bold;",string[s])
-    elif t == 'O':
-        svg_text(f,63.5,45.5,30,stroke,"DejaVu Serif","font-style:italic;",\
-                 string[s])
-    else:
-        svg_text(f,63.5,45.5,30,stroke,"DejaVu","",string[s])
+def word_card(f, t, c, n, s):
+    svg_text(f,63.5,45.5,30,c[0],"DejaVu",s,word_lists[card_types.index(t)][n])
+
+def pattern_card(f, t, c, n, s):
+    pattern_styles = [cross_card, circle_card, check_card]
+    pattern_styles[card_types.index(t)](f,n,s,c[0],c[1])
 
 def open_file(datapath, filename):
     return file(os.path.join(datapath, filename), "w")
@@ -499,12 +494,7 @@ def generate_pattern_cards(datapath):
                     filename = "pattern-%d.svg" % (i)
                     f = open_file(datapath, filename)
                     header(f,"#000000",c[1],"0.5")
-                    if t == "O":
-                        circle_card(f,n,s,c[0],c[1])
-                    elif t == "C":
-                        check_card(f,n,s,c[0],c[1])
-                    else:
-                        cross_card(f,n,s,c[0],c[1])
+                    pattern_card(f,t,c,n,s)
                     footer(f)
                     close_file(f)
                     i += 1
@@ -533,17 +523,11 @@ def generate_word_cards(datapath):
     for t in card_types:
         for c in color_pairs:
             for n in range(0,3):
-                for s in range(0,3):
+                for s in word_styles:
                     filename = "word-%d.svg" % (i)
                     f = open_file(datapath, filename)
                     header(f,"#000000",c[1],"0.5")
-                    if n == 0:
-                        word_card(f,t,s,[_("mouse"),_("cat"),_("dog")],c[0])
-                    elif n == 1:
-                        word_card(f,t,s,[_("cheese"),_("bread"),_("apple")],
-                                  c[0])
-                    else:
-                        word_card(f,t,s,[_("moon"),_("sun"),_("earth")],c[0])
+                    word_card(f,t,c,n,s)
                     footer(f)
                     close_file(f)
                     i += 1

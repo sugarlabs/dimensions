@@ -40,12 +40,32 @@ from sugar.graphics.menuitem import MenuItem
 from sugar.graphics.icon import Icon
 from sugar.datastore import datastore
 
+import telepathy
+from dbus.service import method, signal
+from dbus.gobject_service import ExportedGObject
+from sugar.presence import presenceservice
+from sugar.presence.tubeconn import TubeConnection
+from sugar import profile
+
 from gettext import gettext as _
 import locale
 import os.path
 import logging
 _logger = logging.getLogger('visualmatch-activity')
-import json
+try:
+    _old_Sugar_system = False
+    import json
+    json.dumps
+    from json import load as jload
+    from json import dump as jdump
+except (ImportError, AttributeError):
+    try:
+        import simplejson as json
+        from simplejson import load as jload
+        from simplejson import dump as jdump
+    except:
+        _old_Sugar_system = True
+
 from StringIO import StringIO
 
 from constants import *
@@ -104,7 +124,8 @@ class VisualMatchActivity(activity.Activity):
         try:
             datapath = os.path.join(activity.get_activity_root(), 'data')
         except:
-            datapath = os.path.join(os.environ['HOME'], SERVICE, 'data')
+            datapath = os.path.join(os.environ['HOME'], ".sugar", "default", 
+                                    SERVICE, 'data')
         gencards.generator(datapath, _numberO, _numberC)
 
         # Create the toolbars
@@ -113,6 +134,8 @@ class VisualMatchActivity(activity.Activity):
 
             # Activity toolbar
             activity_button = ActivityToolbarButton(self)
+
+            '''
             journal_button = ToolButton( "journal-write" )
             journal_button.set_tooltip(_('Write in Journal'))
             journal_button.props.accelerator = '<Ctrl>j'
@@ -120,6 +143,8 @@ class VisualMatchActivity(activity.Activity):
                                    activity.get_bundle_path())
             activity_button.props.page.insert(journal_button, -1)
             journal_button.show()
+            '''
+
             toolbar_box.toolbar.insert(activity_button, 0)
             activity_button.show()
 
@@ -356,12 +381,29 @@ class VisualMatchActivity(activity.Activity):
         self.vmw.matches = _matches
         self.vmw.robot_matches = _robot_matches
         self.vmw.total_time = _total_time
+        self.vmw.buddies = []
         if not hasattr(self,'_saved_state'):
             self._saved_state = None
 
         # Start playing the game
-        window.new_game(self.vmw, self.vmw.cardtype, 
+        window.new_game(self.vmw, self.vmw.cardtype, False,
                         self._saved_state, _deck_index)
+
+        #
+        # A simplistic sharing model: the sharer is the master
+        #
+
+        # Get the Presence Service
+        self.pservice = presenceservice.get_instance()
+        self.initiating = None # sharing (True) or joining (False)
+
+        # Add my buddy object to the list
+        owner = self.pservice.get_owner()
+        self.owner = owner
+        self.vmw.buddies.append(self.owner)
+        self._share = ""
+        self.connect('shared', self._shared_cb)
+        self.connect('joined', self._joined_cb)
 
     #
     # Write data to the Journal
@@ -382,27 +424,34 @@ class VisualMatchActivity(activity.Activity):
             self.metadata['deck_index'] = self.vmw.deck.index
             self.metadata['mime_type'] = 'application/x-visualmatch'
             f = file(file_path, 'w')
-            data = []
-            for i in self.vmw.grid.grid:
-                if i is None:
-                    data.append(None)
-                else:
-                    data.append(i.index)
-            for i in self.vmw.clicked:
-                if i is None:
-                    data.append(None)
-                else:
-                    data.append(self.vmw.deck.spr_to_card(i).index)
-            for i in self.vmw.deck.cards:
-                data.append(i.index)
-            for i in self.vmw.match_list:
-                data.append(self.vmw.deck.spr_to_card(i).index)
-            io = StringIO()
-            json.dump(data,io)
-            f.write(io.getvalue())
+            f.write(self._dump())
             f.close()
         else:
             _logger.debug("Deferring saving to %s" % file_path)
+
+    def _dump(self):
+        data = []
+        for i in self.vmw.grid.grid:
+            if i is None:
+                data.append(None)
+            else:
+                data.append(i.index)
+        for i in self.vmw.clicked:
+            if i is None:
+                data.append(None)
+            else:
+                data.append(self.vmw.deck.spr_to_card(i).index)
+        for i in self.vmw.deck.cards:
+            data.append(i.index)
+        for i in self.vmw.match_list:
+            data.append(self.vmw.deck.spr_to_card(i).index)
+
+        if _old_Sugar_system is True:
+            return json.write(data)
+        else:
+            io = StringIO()
+            jdump(data, io)
+            return io.getvalue()
 
     #
     # Read data from the Journal
@@ -410,16 +459,24 @@ class VisualMatchActivity(activity.Activity):
     def read_file(self, file_path):
         _logger.debug("Resuming from: %s" %  file_path)
         f = open(file_path, 'r')
-        io = StringIO(f.read())
-        saved_state = json.load(io)
+        self._load(f.read())
+        f.close()
+
+    def _load(self, data):
+        if _old_Sugar_system is True:
+            saved_state = json.read(data)
+        else:
+            io = StringIO(data)
+            saved_state = jload(io)
         if len(saved_state) > 0:
             self._saved_state = saved_state
-        f.close()
 
     #
     # Button callbacks
     #
     def _select_game_cb(self, button, activity, cardtype):
+        if window._joiner(self.vmw): # joiner cannot change level
+            return
         window.new_game(activity.vmw, cardtype)
 
     def _robot_cb(self, button, activity):
@@ -434,6 +491,8 @@ class VisualMatchActivity(activity.Activity):
             self.robot_button.set_icon('robot-on')
 
     def _level_cb(self, button, activity):
+        if window._joiner(self.vmw): # joiner cannot change level
+            return
         activity.vmw.level = 1-activity.vmw.level
         self.level_label.set_text(self.calc_level_label(activity.vmw.low_score,
                                                         activity.vmw.level))
@@ -452,6 +511,8 @@ class VisualMatchActivity(activity.Activity):
                      int(low_score[play_level]%60))
 
     def _number_card_O_cb(self, button, activity, numberO):
+        if window._joiner(self.vmw): # joiner cannot change level
+            return
         activity.vmw.numberO = numberO
         gencards.generate_number_cards(activity.vmw.path,
                                        activity.vmw.numberO,
@@ -460,6 +521,8 @@ class VisualMatchActivity(activity.Activity):
         window.new_game(activity.vmw, 'number')
 
     def _number_card_C_cb(self, button, activity, numberC):
+        if window._joiner(self.vmw): # joiner cannot change level
+            return
         activity.vmw.numberC = numberC
         gencards.generate_number_cards(activity.vmw.path,
                                        activity.vmw.numberO,
@@ -477,6 +540,161 @@ class VisualMatchActivity(activity.Activity):
         title_alert.show()
         self.reveal()
         return True
+
+    #
+    # Sharing-related callbacks
+    #
+
+    # Either set up initial share...
+    def _shared_cb(self, activity):
+        if self._shared_activity is None:
+            _logger.error("Failed to share or join activity ... \
+                _shared_activity is null in _shared_cb()")
+            return
+
+        self.initiating = True
+        self.waiting_for_deck = False
+        _logger.debug('I am sharing...')
+
+        self.conn = self._shared_activity.telepathy_conn
+        self.tubes_chan = self._shared_activity.telepathy_tubes_chan
+        self.text_chan = self._shared_activity.telepathy_text_chan
+        
+        # call back for "NewTube" signal
+        self.tubes_chan[telepathy.CHANNEL_TYPE_TUBES].connect_to_signal \
+            ('NewTube', self._new_tube_cb)
+
+        _logger.debug('This is my activity: making a tube...')
+        id = self.tubes_chan[telepathy.CHANNEL_TYPE_TUBES].OfferDBusTube(
+            SERVICE, {})
+
+    # ...or join an exisiting share.
+    def _joined_cb(self, activity):
+        if self._shared_activity is None:
+            _logger.error("Failed to share or join activity ... \
+                _shared_activity is null in _shared_cb()")
+            return
+
+        self.initiating = False
+        _logger.debug('I joined a shared activity.')
+
+        self.conn = self._shared_activity.telepathy_conn
+        self.tubes_chan = self._shared_activity.telepathy_tubes_chan
+        self.text_chan = self._shared_activity.telepathy_text_chan
+        
+        # call back for "NewTube" signal
+        self.tubes_chan[telepathy.CHANNEL_TYPE_TUBES].connect_to_signal( \
+            'NewTube', self._new_tube_cb)
+
+        _logger.debug('I am joining an activity: waiting for a tube...')
+        self.tubes_chan[telepathy.CHANNEL_TYPE_TUBES].ListTubes(
+            reply_handler=self._list_tubes_reply_cb, 
+            error_handler=self._list_tubes_error_cb)
+
+        self.waiting_for_deck = True
+
+    def _list_tubes_reply_cb(self, tubes):
+        for tube_info in tubes:
+            self._new_tube_cb(*tube_info)
+
+    def _list_tubes_error_cb(self, e):
+        _logger.error('ListTubes() failed: %s', e)
+
+    def _new_tube_cb(self, id, initiator, type, service, params, state):
+        _logger.debug('New tube: ID=%d initator=%d type=%d service=%s '
+                     'params=%r state=%d', id, initiator, type, service, 
+                     params, state)
+
+        if (type == telepathy.TUBE_TYPE_DBUS and service == SERVICE):
+            if state == telepathy.TUBE_STATE_LOCAL_PENDING:
+                self.tubes_chan[ \
+                              telepathy.CHANNEL_TYPE_TUBES].AcceptDBusTube(id)
+
+            tube_conn = TubeConnection(self.conn, 
+                self.tubes_chan[telepathy.CHANNEL_TYPE_TUBES], id, \
+                group_iface=self.text_chan[telepathy.CHANNEL_INTERFACE_GROUP])
+
+            # We'll use a chattube to send serialized data back and forth.
+            self.chattube = ChatTube(tube_conn, self.initiating, \
+                self.event_received_cb)
+
+            # Now that we have the tube, we can ask for the deck of cards.
+            if self.waiting_for_deck is True:
+                self._send_event("j")
+
+    # Data is passed as tuples: cmd:text.
+    def event_received_cb(self, text):
+        if text[0] == 'B':
+            e,card_index = text.split(':')
+            _logger.debug("receiving card index: " + card_index)
+            window._process_selection(self.vmw,
+                self.vmw.deck.index_to_card(int(card_index)).spr)
+        elif text[0] == 'S':
+            e,card_index = text.split(':')
+            _logger.debug("receiving selection index: " + card_index)
+            window._process_selection(self.vmw,
+                self.vmw.selected[int(card_index)].spr)
+        elif text[0] == 'j': # request for current state from joiner
+            if self.initiating is True:
+                _logger.debug("serialize the project and send to joiner")
+                self._send_event("P:" + str(self.vmw.level))
+                self._send_event("X:" + str(self.vmw.deck.index))
+                self._send_event("M:" + str(self.vmw.matches))
+                self._send_event("D:" + str(self._dump()))
+        elif text[0] == 'J': # new game, so make a request for current state
+            self._send_event("j")
+            self.waiting_for_deck = True
+        elif text[0] == 'P':
+            e,text = text.split(':')
+            _logger.debug("receiving play level from sharer " + text)
+            self.vmw.level = int(text)
+        elif text[0] == 'X':
+            e,text = text.split(':')
+            _logger.debug("receiving deck index from sharer " + text)
+            self.vmw.deck.index = int(text)
+        elif text[0] == 'M':
+            e,text = text.split(':')
+            _logger.debug("receiving matches from sharer " + text)
+            self.vmw.matches = int(text)
+        elif text[0] == 'D':
+            if self.waiting_for_deck:
+                e,text = text.split(':')
+                _logger.debug("receiving deck data from sharer")
+                self._load(text)
+                self.waiting_for_deck = False
+            window.new_game(self.vmw, self.vmw.cardtype, False,
+                            self._saved_state, self.vmw.deck.index)
+
+    # Send event through the tube
+    def _send_event(self, entry):
+        if hasattr(self, 'chattube') and self.chattube is not None:
+            self.chattube.SendText(entry)
+
+#
+# Class for setting up tube for sharing
+#
+class ChatTube(ExportedGObject):
+ 
+    def __init__(self, tube, is_initiator, stack_received_cb):
+        super(ChatTube, self).__init__(tube, PATH)
+        self.tube = tube
+        self.is_initiator = is_initiator # Are we sharing or joining activity?
+        self.stack_received_cb = stack_received_cb
+        self.stack = ''
+
+        self.tube.add_signal_receiver(self.send_stack_cb, 'SendText', IFACE, \
+            path=PATH, sender_keyword='sender')
+
+    def send_stack_cb(self, text, sender=None):
+        if sender == self.tube.get_unique_name():
+            return
+        # _logger.debug("This connection has no unique name yet.")
+        self.stack = text
+        self.stack_received_cb(text)
+
+    @signal(dbus_interface=IFACE, signature='s')
+    def SendText(self, text):
+        self.stack = text
 
 #
 # Toolbars for pre-0.86 Sugar

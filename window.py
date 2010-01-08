@@ -45,7 +45,7 @@ difficulty_level = [LOW,HIGH]
 class vmWindow: pass
 
 #
-# Handle launch from both within and without of Sugar environment
+# Handle launch from both within and without of Sugar environment.
 #
 def new_window(canvas, path, parent=None):
     vmw = vmWindow()
@@ -82,11 +82,11 @@ def new_window(canvas, path, parent=None):
     return vmw
 
 #
-# Initialize for a new game
+# Start a new game.
 #
-def new_game(vmw, cardtype, saved_state=None, deck_index=0):
+def new_game(vmw, cardtype, button_push=True, saved_state=None, deck_index=0):
     if not hasattr(vmw, 'deck'):
-        # first time through, initialize the deck, grid, and overlays
+        # The first time through, initialize the deck, grid, and overlays.
         vmw.deck = Deck(vmw.sprites, vmw.path, cardtype, vmw.card_width, 
                     vmw.card_height, difficulty_level[vmw.level])
         vmw.grid = Grid(vmw.width, vmw.height, vmw.card_width, vmw.card_height)
@@ -98,19 +98,21 @@ def new_game(vmw, cardtype, saved_state=None, deck_index=0):
                             vmw.card_height, [MATCHMASK,0,0,0]))
             vmw.grid.display_match(vmw.match_display_area[i].spr, i) 
 
-    vmw.deck.hide() # start by hiding everything
+    # Joiners in share cannot initiate new games.
+    if button_push and _joiner(vmw):
+        return
+
+    vmw.deck.hide()
+    _unselect(vmw)
+
+    # If cardtype has changed, we need to generate a new deck.
     if vmw.cardtype is not cardtype:
         vmw.cardtype = cardtype
         vmw.deck = Deck(vmw.sprites, vmw.path, vmw.cardtype, 
                         vmw.card_width, vmw.card_height, 
                         difficulty_level[vmw.level])
-    vmw.deck.shuffle()
-    vmw.grid.deal(vmw.deck)
-    if _find_a_match(vmw) is False:
-        vmw.grid.deal_extra_cards(vmw.deck)
-    _unselect(vmw)
 
-    # restore saved state on resume
+    # Restore saved state on resume or share.
     if saved_state is not None:
         _logger.debug("Restoring state: %s" % (str(saved_state)))
         vmw.deck.index = deck_index
@@ -121,17 +123,43 @@ def new_game(vmw, cardtype, saved_state=None, deck_index=0):
         _restore_selected(vmw, saved_state[ROW*COL:ROW*COL+3])
         _restore_matches(vmw, saved_state[deck_stop:deck_stop+3*vmw.matches])
     else:
+        vmw.deck.shuffle()
+        vmw.grid.deal(vmw.deck)
+        if _find_a_match(vmw) is False:
+            vmw.grid.deal_extra_cards(vmw.deck)
         vmw.matches = 0
         vmw.robot_matches = 0
         vmw.match_list = []
         vmw.total_time = 0
+
+    # If sharer starts a new game, ask joiners to request new deck.
+    if button_push and _sharer(vmw):
+        vmw.activity._send_event("J")
 
     _update_labels(vmw)
     if _game_over(vmw):
         if hasattr(vmw,'timeout_id') and vmw.timeout_id is not None:
             gobject.source_remove(vmw.timeout_id)
     else:
+        if hasattr(vmw,'match_timeout_id') and vmw.match_timeout_id is not None:
+            gobject.source_remove(vmw.match_timeout_id)
         _timer_reset(vmw)
+
+def _joiner(vmw):
+    if vmw.sugar is True and \
+        hasattr(vmw.activity, 'chattube') and \
+        vmw.activity.chattube is not None and \
+        vmw.activity.initiating is False:
+        return True
+    return False
+
+def _sharer(vmw):
+    if vmw.sugar is True and \
+        hasattr(vmw.activity, 'chattube') and \
+        vmw.activity.chattube is not None and \
+        vmw.activity.initiating is True:
+        return True
+    return False
 
 #
 # Button press
@@ -149,24 +177,36 @@ def _button_release_cb(win, event, vmw):
     spr = vmw.sprites.find_sprite((x, y))
     if spr is None:
         return True
+    if vmw.sugar is True and \
+        hasattr(vmw.activity, 'chattube') and \
+        vmw.activity.chattube is not None:
+        if vmw.deck.spr_to_card(spr) is not None:
+            vmw.activity._send_event("B:"+str(vmw.deck.spr_to_card(spr).index))
+        i =  _selected(vmw, spr)
+        if i is not -1:
+            vmw.activity._send_event("S:"+str(i))
     return _process_selection(vmw, spr)
 
+def _selected(vmw, spr):
+    for i in range(3):
+        if vmw.selected[i].spr == spr:
+            return i
+    return -1
+
 def _process_selection(vmw, spr):
-    # check to make sure a card in the matched pile isn't selected
+    # Make sure a card in the matched pile isn't selected.
     if spr.x == MATCH_POSITION:
        return True
 
-    # check to make sure that the current card isn't already selected
-    for a in vmw.clicked:
-        if a is spr:
-            # on second click, unselect
-            i = vmw.clicked.index(a)
-            vmw.clicked[i] = None
-            vmw.selected[i].hide_card()
-            return True
+    # Make sure that the current card isn't already selected.
+    i = _selected(vmw, spr)
+    if i is not -1:
+        # On a second click, unselect it.
+        vmw.clicked[i] = None
+        vmw.selected[i].hide_card()
+        return True
 
-    # add the selected card to the list
-    # and highlight it with the selection mask
+    # Otherwise highlight the card with a selection mask.
     for a in vmw.clicked:
         if a is None:
             i = vmw.clicked.index(a)
@@ -174,17 +214,15 @@ def _process_selection(vmw, spr):
             vmw.selected[i].spr.x = spr.x
             vmw.selected[i].spr.y = spr.y
             vmw.selected[i].show_card()
-            break # we only want to add the card to the list once
+            break
 
-    # if we have three cards selected, test for a match
-    if None in vmw.clicked:
-        pass
-    else:
+    # If we have three cards selected, test for a match.
+    if None not in vmw.clicked:
         _test_for_a_match(vmw)
     return True
 
 #
-# Game is over when the deck is empty and there are no more matches
+# Game is over when the deck is empty and there are no more matches.
 #
 def _game_over(vmw):
     if vmw.deck.empty() and _find_a_match(vmw) is False:
@@ -192,7 +230,7 @@ def _game_over(vmw):
         set_label(vmw,"clock","")
         set_label(vmw,"status","%s (%d:%02d)" % 
             (_("Game over"),int(vmw.total_time/60),int(vmw.total_time%60)))
-        _show_matches(vmw, 0)
+        vmw.match_timeout_id = gobject.timeout_add(2000,_show_matches,vmw,0)
         return True
     return False
 
@@ -205,22 +243,22 @@ def _test_for_a_match(vmw):
                     vmw.deck.spr_to_card(vmw.clicked[2])],
                    vmw.cardtype):
 
-        # stop the timer
+        # Stop the timer.
         if vmw.timeout_id is not None:
             gobject.source_remove(vmw.timeout_id)
         vmw.total_time += gobject.get_current_time()-vmw.start_time
 
-        # increment the match counter and add the match to the match list
+        # Increment the match counter and add the match to the match list.
         vmw.matches += 1
         for i in vmw.clicked:
             vmw.match_list.append(i)
 
-        # remove the match and deal 3 new cards
+        # Remove the match and deal three new cards.
         vmw.grid.remove_and_replace(vmw.clicked, vmw.deck)
         set_label(vmw, "deck", "%d %s" % 
                 (vmw.deck.cards_remaining(), _("cards")))
 
-        # test to see if the game is over
+        # Test to see if the game is over.
         if _game_over(vmw):
             gobject.source_remove(vmw.timeout_id)
             _unselect(vmw)
@@ -235,20 +273,19 @@ def _test_for_a_match(vmw):
                  vmw.activity.save_score()
             return True
 
-        # consolidate the grid
+        # Consolidate the grid.
         vmw.grid.consolidate()
 
-        # test to see if we need to deal extra cards
+        # Test to see if we need to deal extra cards.
         if _find_a_match(vmw) is False:
             vmw.grid.deal_extra_cards(vmw.deck)
 
-        # keep playing
+        # Keep playing.
         _update_labels(vmw)
         _timer_reset(vmw)
 
-    # whether or not there was a match, unselect all cards and refresh display
+    # Whether or not there was a match, unselect all cards.
     _unselect(vmw)
-    vmw.sprites.redraw_sprites()
 
 #
 # Unselect the cards
@@ -275,7 +312,7 @@ def _destroy_cb(win, event, vmw):
     gtk.main_quit()
 
 #
-# Write strings to a label in the toolbar
+# Write strings to a label in the toolbar.
 #
 def _update_labels(vmw):
     set_label(vmw, "deck", "%d %s" % 
@@ -309,7 +346,7 @@ def set_label(vmw, label, s):
             vmw.win.set_title("%s: %s" % (_("Visual Match"),s))
 
 #
-# Restore selected cards upon resume
+# Restore the selected cards upon resume or share.
 #
 def _restore_selected(vmw, saved_selected_indices):
     j = 0
@@ -325,7 +362,7 @@ def _restore_selected(vmw, saved_selected_indices):
         j += 1
 
 #
-# Restore match list upon resume
+# Restore the match list upon resume or share.
 #
 def _restore_matches(vmw, saved_match_list_indices):
     j = 0
@@ -339,7 +376,7 @@ def _restore_matches(vmw, saved_match_list_indices):
             vmw.grid.display_match(vmw.match_list[l-3+j], j) 
 
 #
-# Display of seconds since start_time or find a match
+# Display of seconds since start_time.
 #
 def _counter(vmw):
      seconds = int(gobject.get_current_time()-vmw.start_time)
@@ -355,7 +392,7 @@ def _timer_reset(vmw):
     _counter(vmw)
 
 #
-# Show all the matches
+# Show all the matches as a simple animation.
 #
 def _show_matches(vmw, i):
     if i < vmw.matches:
@@ -364,11 +401,11 @@ def _show_matches(vmw, i):
         vmw.match_timeout_id = gobject.timeout_add(2000,_show_matches,vmw,i+1)
 
 #
-# Check to see whether there are any matches on the board
+# Check to see whether there are any matches on the board.
 #
 def _find_a_match(vmw, robot_match=False):
      a = [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14]
-     for i in Permutation(a): # really should be Combination
+     for i in Permutation(a): # TODO: really should be combination
          cardarray = [vmw.grid.grid[i[0]],\
                       vmw.grid.grid[i[1]],\
                       vmw.grid.grid[i[2]]]
@@ -382,28 +419,27 @@ def _find_a_match(vmw, robot_match=False):
      return False
 
 #
-# For each attribute, either it is the same or different on every card
+# For each attribute, either it is the same or different on every card.
 #
 def _match_check(cardarray, cardtype):
     for a in cardarray:
         if a is None:
             return False
 
-    if (cardarray[0].num + cardarray[1].num + cardarray[2].num)%3 != 0:
+    if (cardarray[0].shape + cardarray[1].shape + cardarray[2].shape)%3 != 0:
         return False
     if (cardarray[0].color + cardarray[1].color + cardarray[2].color)%3 != 0:
         return False
-    if (cardarray[0].shape + cardarray[1].shape + cardarray[2].shape)%3 != 0:
+    if (cardarray[0].fill + cardarray[1].fill + cardarray[2].fill)%3 != 0:
        return False
-    # special case for the word game:
-    # only check fill when numbers are the same
+    # Special case: only check number when shapes are the same
     if cardtype == 'word':
-        if cardarray[0].num == cardarray[1].num and \
-           cardarray[0].num == cardarray[2].num and \
-           (cardarray[0].fill + cardarray[1].fill + cardarray[2].fill)%3 != 0:
+        if cardarray[0].shape == cardarray[1].shape and \
+           cardarray[0].shape == cardarray[2].shape and \
+           (cardarray[0].num + cardarray[1].num + cardarray[2].num)%3 != 0:
             return False
     else:
-        if (cardarray[0].fill + cardarray[1].fill + cardarray[2].fill)%3 != 0:
+        if (cardarray[0].num + cardarray[1].num + cardarray[2].num)%3 != 0:
             return False
     return True
 
