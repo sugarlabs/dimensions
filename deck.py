@@ -29,7 +29,7 @@ from constants import *
 from card import *
 
 #
-# class for defining deck of cards
+# Class for defining deck of cards
 #
 class Deck:
     def __init__(self, sprites, path, cardtype, width, height, level=HIGH):
@@ -48,57 +48,59 @@ class Deck:
                         self.cards.append(Card(sprites, path, cardtype, 
                                                width, height,
                                                [shape,color,num,fill]))
-        # Track how many cards are in the deck.
-        self.count = len(self.cards)
-        # Remember the position in the deck.
+        # Remember the current position in the deck.
         self.index = 0
 
-    # shuffle the deck
+    # Shuffle the deck.
     def shuffle(self):
-        decksize = self.count
-        # hide all the cards
+        decksize = self.count()
+        # Hide all the cards.
         for c in self.cards:
             c.hide_card()
-        # randomize the deck
+        # Randomize the card order.
         for n in range(decksize*4):
             i = random.randrange(decksize)
             j = random.randrange(decksize)
             self.swap_cards(i,j)            
-        # reset the index to the beginning of the deck after a shuffle
+        # Reset the index to the beginning of the deck after a shuffle,
         self.index = 0
         return
 
-    # restore deck upon resume
+    # Restore the deck upon resume.
     def restore(self, saved_deck_indices):
-        self.count = len(saved_deck_indices)
+        decksize = len(saved_deck_indices)
+        # If we have a short deck, then we need to abort.
+        if self.count() < decksize:
+            return False
         _deck = []
         for i in saved_deck_indices:
              _deck.append(self.index_to_card(i))
-        for i in range(self.count):
+        for i in range(decksize):
              self.cards[i] = _deck[i]
+        return True
 
-    # swap the position of two cards in the deck
+    # Swap the position of two cards in the deck.
     def swap_cards(self,i,j):
         tmp = self.cards[j]
         self.cards[j] = self.cards[i]
         self.cards[i] = tmp
         return
 
-    # given a sprite, find the corresponding card in the deck
+    # Given a sprite, find the corresponding card in the deck.
     def spr_to_card(self, spr):
         for c in self.cards:
             if c.spr == spr:
                 return c
         return None
 
-    # given a card index, find the corresponding card in the deck
+    # Given a card index, find the corresponding card in the deck.
     def index_to_card(self, i):
         for c in self.cards:
             if c.index == i:
                 return c
         return None
 
-    # deal the next card from the deck
+    # Return the next card from the deck.
     def deal_next_card(self):
         if self.empty():
             return None
@@ -106,21 +108,25 @@ class Deck:
         self.index += 1
         return next_card
  
-    # is the deck empty?
+    # Is the deck empty?
     def empty(self):
         if self.cards_remaining() > 0:
             return False
         else:
             return True
 
-    # cards remaining in the deck
+    # Return how many cards are remaining in the deck.
     def cards_remaining(self):
-       return(self.count-self.index)
+       return(self.count()-self.index)
 
-    # hide the deck
+    # Hide the deck.
     def hide(self):
         for c in self.cards:
             c.hide_card()
+
+    # Return the length of the deck.
+    def count(self):
+        return len(self.cards)
 
 
 

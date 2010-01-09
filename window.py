@@ -84,45 +84,45 @@ def new_window(canvas, path, parent=None):
 #
 # Start a new game.
 #
-def new_game(vmw, cardtype, button_push=True, saved_state=None, deck_index=0):
-    if not hasattr(vmw, 'deck'):
-        # The first time through, initialize the deck, grid, and overlays.
-        vmw.deck = Deck(vmw.sprites, vmw.path, cardtype, vmw.card_width, 
-                    vmw.card_height, difficulty_level[vmw.level])
+def new_game(vmw, saved_state=None, deck_index=0):
+
+    # If there is already a deck, hide it.
+    if hasattr(vmw, 'deck'):
+        vmw.deck.hide()
+
+    # The first time through, initialize the deck, grid, and overlays.
+    if not hasattr(vmw, 'grid'):
         vmw.grid = Grid(vmw.width, vmw.height, vmw.card_width, vmw.card_height)
         for i in range(0,3):
             vmw.selected.append(Card(vmw.sprites, vmw.path, "", vmw.card_width,
-                            vmw.card_height, [SELECTMASK,0,0,0]))
+                                     vmw.card_height, [SELECTMASK,0,0,0]))
             vmw.match_display_area.append(Card(vmw.sprites, vmw.path, "",
-                            vmw.card_width,
-                            vmw.card_height, [MATCHMASK,0,0,0]))
+                                               vmw.card_width,
+                                               vmw.card_height,
+                                               [MATCHMASK,0,0,0]))
             vmw.grid.display_match(vmw.match_display_area[i].spr, i) 
 
-    # Joiners in share cannot initiate new games.
-    if button_push and _joiner(vmw):
-        return
-
-    vmw.deck.hide()
     _unselect(vmw)
-
-    # If cardtype has changed, we need to generate a new deck.
-    if vmw.cardtype is not cardtype:
-        vmw.cardtype = cardtype
-        vmw.deck = Deck(vmw.sprites, vmw.path, vmw.cardtype, 
-                        vmw.card_width, vmw.card_height, 
-                        difficulty_level[vmw.level])
 
     # Restore saved state on resume or share.
     if saved_state is not None:
         _logger.debug("Restoring state: %s" % (str(saved_state)))
+        vmw.deck = Deck(vmw.sprites, vmw.path, vmw.cardtype, vmw.card_width, 
+                        vmw.card_height, difficulty_level[vmw.level])
+        vmw.deck.hide()
         vmw.deck.index = deck_index
         deck_start = ROW*COL+3
-        deck_stop = deck_start+vmw.deck.count
+        deck_stop = deck_start+vmw.deck.count()
         vmw.deck.restore(saved_state[deck_start:deck_stop])
         vmw.grid.restore(vmw.deck, saved_state[0:ROW*COL])
         _restore_selected(vmw, saved_state[ROW*COL:ROW*COL+3])
         _restore_matches(vmw, saved_state[deck_stop:deck_stop+3*vmw.matches])
-    else:
+    elif not joiner(vmw):
+        _logger.debug("Starting new game.")
+        vmw.deck = Deck(vmw.sprites, vmw.path, vmw.cardtype, 
+                        vmw.card_width, vmw.card_height, 
+                        difficulty_level[vmw.level])
+        vmw.deck.hide()
         vmw.deck.shuffle()
         vmw.grid.deal(vmw.deck)
         if _find_a_match(vmw) is False:
@@ -132,8 +132,8 @@ def new_game(vmw, cardtype, button_push=True, saved_state=None, deck_index=0):
         vmw.match_list = []
         vmw.total_time = 0
 
-    # If sharer starts a new game, ask joiners to request new deck.
-    if button_push and _sharer(vmw):
+    # When sharer starts a new game, joiners should be notified.
+    if sharer(vmw):
         vmw.activity._send_event("J")
 
     _update_labels(vmw)
@@ -145,7 +145,7 @@ def new_game(vmw, cardtype, button_push=True, saved_state=None, deck_index=0):
             gobject.source_remove(vmw.match_timeout_id)
         _timer_reset(vmw)
 
-def _joiner(vmw):
+def joiner(vmw):
     if vmw.sugar is True and \
         hasattr(vmw.activity, 'chattube') and \
         vmw.activity.chattube is not None and \
@@ -153,7 +153,7 @@ def _joiner(vmw):
         return True
     return False
 
-def _sharer(vmw):
+def sharer(vmw):
     if vmw.sugar is True and \
         hasattr(vmw.activity, 'chattube') and \
         vmw.activity.chattube is not None and \
@@ -169,7 +169,7 @@ def _button_press_cb(win, event, vmw):
     return True
 
 #
-# Button release, where all the work is done
+# Button release
 #
 def _button_release_cb(win, event, vmw):
     win.grab_focus()

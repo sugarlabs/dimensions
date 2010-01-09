@@ -85,7 +85,9 @@ class Grid:
     # Remove a match from the grid and replace it with new cards from the deck.
     def remove_and_replace(self, clicked_set, deck):
         for a in clicked_set:
-            # Find the index into the grid of the clicked card
+            # Move the match to the match display area
+            self.display_match(a, clicked_set.index(a))
+            # Find the index into the grid of the match card
             i = self.spr_to_grid(a)
             # Don't add new cards if bottom row is occupied
             if self.cards_in_grid() == DEAL:
@@ -100,9 +102,8 @@ class Grid:
             else:
                 # Mark as empty the grid positions we are not refilling
                 self.grid[i] = None
-            self.display_match(a, clicked_set.index(a))
 
-    # Move clicked card to the match area
+    # Move card to the match area.
     def display_match(self, spr, i):
         spr.move((MATCH_POSITION, self.top + i*self.yinc))
         spr.set_layer(2000)

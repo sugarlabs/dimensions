@@ -53,7 +53,7 @@ import os.path
 import logging
 _logger = logging.getLogger('visualmatch-activity')
 try:
-    _old_Sugar_system = False
+    _old_sugar_system = False
     import json
     json.dumps
     from json import load as jload
@@ -64,7 +64,7 @@ except (ImportError, AttributeError):
         from simplejson import load as jload
         from simplejson import dump as jdump
     except:
-        _old_Sugar_system = True
+        _old_sugar_system = True
 
 from StringIO import StringIO
 
@@ -78,7 +78,7 @@ import card
 
 level_icons = ['level1','level2']
 level_labels = [_('beginner'),_('expert')]
-level_decksize = [(DECKSIZE-DEAL)/3, DECKSIZE-DEAL]
+level_decksize = [DECKSIZE/3, DECKSIZE]
 
 SERVICE = 'org.sugarlabs.VisualMatchActivity'
 IFACE = SERVICE
@@ -92,43 +92,137 @@ class VisualMatchActivity(activity.Activity):
     def __init__(self, handle):
         super(VisualMatchActivity,self).__init__(handle)
 
-        # Turn sharing off
-        # self.share(private=True)
+        # Set things up.
+        self._read_journal_data()
+        datapath = self._find_datapath(_old_sugar_system)
+        gencards.generator(datapath, self._numberO, self._numberC)
+        sugar86 = False
+        self._setup_toolbars(sugar86)
+        canvas = self._setup_canvas(datapath)
+        self._setup_presence_service()
 
-        # Read settings from the Journal
-        try:
+        # Then start playing the game.
+        if not hasattr(self,'_saved_state'):
+            self._saved_state = None
+        print "calling new game for the first time"
+        window.new_game(self.vmw, self._saved_state, self._deck_index)
+
+    #
+    # Button callbacks
+    #
+    def _select_game_cb(self, button, activity, cardtype):
+        if window.joiner(self.vmw): # joiner cannot change level
+            return
+        activity.vmw.cardtype = cardtype
+        window.new_game(activity.vmw)
+
+    def _robot_cb(self, button, activity):
+        if activity.vmw.robot is True:
+            activity.vmw.robot = False
+            self.robot_button.set_tooltip(_('Play with the computer.'))
+            self.robot_button.set_icon('robot-off')
+        else:
+            activity.vmw.robot = True
+            self.robot_button.set_tooltip(
+                _('Stop playing with the computer.'))
+            self.robot_button.set_icon('robot-on')
+
+    def _level_cb(self, button, activity):
+        if window.joiner(self.vmw): # joiner cannot change level
+            return
+        activity.vmw.level = 1-activity.vmw.level
+        self.level_label.set_text(self.calc_level_label(activity.vmw.low_score,
+                                                        activity.vmw.level))
+        self.level_button.set_icon(level_icons[activity.vmw.level])
+        window.new_game(activity.vmw)
+
+    def calc_level_label(self, low_score, play_level):
+        if low_score[play_level] == -1:
+            return level_labels[play_level]
+        else:
+            return "%s (%d:%02d)" % \
+                    (level_labels[play_level],
+                     int(low_score[play_level]/60),
+                     int(low_score[play_level]%60))
+
+    def _number_card_O_cb(self, button, activity, numberO):
+        if window.joiner(self.vmw): # joiner cannot change decks
+            return
+        activity.vmw.numberO = numberO
+        gencards.generate_number_cards(activity.vmw.path,
+                                       activity.vmw.numberO,
+                                       activity.vmw.numberC)
+        activity.vmw.cardtype = 'number'
+        window.new_game(activity.vmw)
+
+    def _number_card_C_cb(self, button, activity, numberC):
+        if window.joiner(self.vmw): # joiner cannot change decks
+            return
+        activity.vmw.numberC = numberC
+        gencards.generate_number_cards(activity.vmw.path,
+                                       activity.vmw.numberO,
+                                       activity.vmw.numberC)
+        activity.vmw.cardtype = 'number'
+        window.new_game(activity.vmw)
+
+    def _robot_time_spin_cb(self, button):
+        self.vmw.robot_time = self._robot_time_spin.get_value_as_int()
+        return
+
+    '''
+    def _journal_cb(self, button, path):
+        title_alert = NamingAlert(self, path)
+        title_alert.set_transient_for(self.get_toplevel())
+        title_alert.show()
+        self.reveal()
+        return True
+    '''
+
+    #
+    # There may be data from a previous instance.
+    #
+    def _read_journal_data(self):
+        try: # Try reading restored settings from the Journal.
             self._play_level = int(self.metadata['play_level'])
             self._robot_time = int(self.metadata['robot_time'])
             self._cardtype = self.metadata['cardtype']
-            _numberO = int(self.metadata['numberO'])
-            _numberC = int(self.metadata['numberC'])
-            _matches = int(self.metadata['matches'])
-            _robot_matches = int(self.metadata['robot_matches'])
-            _total_time = int(self.metadata['total_time'])
-            _deck_index = int(self.metadata['deck_index'])
             self._low_score = [int(self.metadata['low_score_beginner']),\
                                int(self.metadata['low_score_expert'])]
-        except:
+            self._numberO = int(self.metadata['numberO'])
+            self._numberC = int(self.metadata['numberC'])
+            self._matches = int(self.metadata['matches'])
+            self._robot_matches = int(self.metadata['robot_matches'])
+            self._total_time = int(self.metadata['total_time'])
+            self._deck_index = int(self.metadata['deck_index'])
+        except: # Otherwise, use default values.
             self._play_level = 0
             self._robot_time = 60
             self._cardtype = 'pattern'
-            _numberO = PRODUCT
-            _numberC = HASH
-            _matches = 0
-            _robot_matches = 0
-            _total_time = 0
-            _deck_index = 0
             self._low_score = [-1,-1]
+            self._numberO = PRODUCT
+            self._numberC = HASH
+            self._matches = 0
+            self._robot_matches = 0
+            self._total_time = 0
+            self._deck_index = 0
 
-        # Find a path to write card files
-        try:
-            datapath = os.path.join(activity.get_activity_root(), 'data')
-        except:
-            datapath = os.path.join(os.environ['HOME'], ".sugar", "default", 
-                                    SERVICE, 'data')
-        gencards.generator(datapath, _numberO, _numberC)
+    #
+    # Find the datapath for saving card files
+    #
+    def _find_datapath(self, _old_sugar_system):
+        # Create the card files.
+        self._old_sugar_system = _old_sugar_system
+        if self._old_sugar_system:
+            return os.path.join(os.environ['HOME'], ".sugar", "default", 
+                                SERVICE, 'data')
+        else:
+            return os.path.join(activity.get_activity_root(), 'data')
 
-        # Create the toolbars
+    #
+    # Setup the toolbars.
+    #
+    def _setup_toolbars(self, sugar86):
+        # Create the toolbars.
         if sugar86 is True:
             toolbar_box = ToolbarBox()
 
@@ -299,7 +393,7 @@ class VisualMatchActivity(activity.Activity):
             toolbar_box.toolbar.insert(separator, -1)
 
             self.deck_label = gtk.Label("%d %s" % \
-                              (level_decksize[self._play_level], _('cards')))
+                (level_decksize[self._play_level]-DEAL, _('cards')))
             self.deck_label.show()
             deck_toolitem = gtk.ToolItem()
             deck_toolitem.add(self.deck_label)
@@ -361,7 +455,10 @@ class VisualMatchActivity(activity.Activity):
             self.toolbox.show()
             self.toolbox.set_current_toolbar(1)
 
-        # Create a canvas
+    #
+    # Create a canvas.
+    #
+    def _setup_canvas(self, datapath):
         canvas = gtk.DrawingArea()
         canvas.set_size_request(gtk.gdk.screen_width(),
                                 gtk.gdk.screen_height())
@@ -369,41 +466,19 @@ class VisualMatchActivity(activity.Activity):
         canvas.show()
         self.show_all()
 
-        # Initialize the canvas, game state, et al.
         self.vmw = window.new_window(canvas, datapath, self)
         self.vmw.level = self._play_level
         self.vmw.cardtype = self._cardtype
         self.vmw.robot = False
         self.vmw.robot_time = self._robot_time
         self.vmw.low_score = self._low_score
-        self.vmw.numberO = _numberO
-        self.vmw.numberC = _numberC
-        self.vmw.matches = _matches
-        self.vmw.robot_matches = _robot_matches
-        self.vmw.total_time = _total_time
+        self.vmw.numberO = self._numberO
+        self.vmw.numberC = self._numberC
+        self.vmw.matches = self._matches
+        self.vmw.robot_matches = self._robot_matches
+        self.vmw.total_time = self._total_time
         self.vmw.buddies = []
-        if not hasattr(self,'_saved_state'):
-            self._saved_state = None
-
-        # Start playing the game
-        window.new_game(self.vmw, self.vmw.cardtype, False,
-                        self._saved_state, _deck_index)
-
-        #
-        # A simplistic sharing model: the sharer is the master
-        #
-
-        # Get the Presence Service
-        self.pservice = presenceservice.get_instance()
-        self.initiating = None # sharing (True) or joining (False)
-
-        # Add my buddy object to the list
-        owner = self.pservice.get_owner()
-        self.owner = owner
-        self.vmw.buddies.append(self.owner)
-        self._share = ""
-        self.connect('shared', self._shared_cb)
-        self.connect('joined', self._joined_cb)
+        return canvas
 
     #
     # Write data to the Journal
@@ -446,7 +521,8 @@ class VisualMatchActivity(activity.Activity):
         for i in self.vmw.match_list:
             data.append(self.vmw.deck.spr_to_card(i).index)
 
-        if _old_Sugar_system is True:
+        if self._old_sugar_system is True:
+            print "old-style Sugar"
             return json.write(data)
         else:
             io = StringIO()
@@ -463,7 +539,8 @@ class VisualMatchActivity(activity.Activity):
         f.close()
 
     def _load(self, data):
-        if _old_Sugar_system is True:
+        if self._old_sugar_system is True:
+            print "old-style Sugar"
             saved_state = json.read(data)
         else:
             io = StringIO(data)
@@ -472,74 +549,19 @@ class VisualMatchActivity(activity.Activity):
             self._saved_state = saved_state
 
     #
-    # Button callbacks
+    # Setup the Presence Service
     #
-    def _select_game_cb(self, button, activity, cardtype):
-        if window._joiner(self.vmw): # joiner cannot change level
-            return
-        window.new_game(activity.vmw, cardtype)
+    def _setup_presence_service(self):
+        self.pservice = presenceservice.get_instance()
+        self.initiating = None # sharing (True) or joining (False)
 
-    def _robot_cb(self, button, activity):
-        if activity.vmw.robot is True:
-            activity.vmw.robot = False
-            self.robot_button.set_tooltip(_('Play with the computer.'))
-            self.robot_button.set_icon('robot-off')
-        else:
-            activity.vmw.robot = True
-            self.robot_button.set_tooltip(
-                _('Stop playing with the computer.'))
-            self.robot_button.set_icon('robot-on')
-
-    def _level_cb(self, button, activity):
-        if window._joiner(self.vmw): # joiner cannot change level
-            return
-        activity.vmw.level = 1-activity.vmw.level
-        self.level_label.set_text(self.calc_level_label(activity.vmw.low_score,
-                                                        activity.vmw.level))
-        self.level_button.set_icon(level_icons[activity.vmw.level])
-        cardtype = activity.vmw.cardtype
-        activity.vmw.cardtype = '' # force generation of new deck 
-        window.new_game(activity.vmw, cardtype)
-
-    def calc_level_label(self, low_score, play_level):
-        if low_score[play_level] == -1:
-            return level_labels[play_level]
-        else:
-            return "%s (%d:%02d)" % \
-                    (level_labels[play_level],
-                     int(low_score[play_level]/60),
-                     int(low_score[play_level]%60))
-
-    def _number_card_O_cb(self, button, activity, numberO):
-        if window._joiner(self.vmw): # joiner cannot change level
-            return
-        activity.vmw.numberO = numberO
-        gencards.generate_number_cards(activity.vmw.path,
-                                       activity.vmw.numberO,
-                                       activity.vmw.numberC)
-        activity.vmw.cardtype = '' # force generation of new deck 
-        window.new_game(activity.vmw, 'number')
-
-    def _number_card_C_cb(self, button, activity, numberC):
-        if window._joiner(self.vmw): # joiner cannot change level
-            return
-        activity.vmw.numberC = numberC
-        gencards.generate_number_cards(activity.vmw.path,
-                                       activity.vmw.numberO,
-                                       activity.vmw.numberC)
-        activity.vmw.cardtype = '' # force generation of new deck 
-        window.new_game(activity.vmw, 'number')
-
-    def _robot_time_spin_cb(self, button):
-        self.vmw.robot_time = self._robot_time_spin.get_value_as_int()
-        return
-
-    def _journal_cb(self, button, path):
-        title_alert = NamingAlert(self, path)
-        title_alert.set_transient_for(self.get_toplevel())
-        title_alert.show()
-        self.reveal()
-        return True
+        # Add my buddy object to the list
+        owner = self.pservice.get_owner()
+        self.owner = owner
+        self.vmw.buddies.append(self.owner)
+        self._share = ""
+        self.connect('shared', self._shared_cb)
+        self.connect('joined', self._joined_cb)
 
     #
     # Sharing-related callbacks
@@ -577,6 +599,7 @@ class VisualMatchActivity(activity.Activity):
 
         self.initiating = False
         _logger.debug('I joined a shared activity.')
+        print('I joined a shared activity.')
 
         self.conn = self._shared_activity.telepathy_conn
         self.tubes_chan = self._shared_activity.telepathy_tubes_chan
@@ -622,7 +645,7 @@ class VisualMatchActivity(activity.Activity):
             if self.waiting_for_deck is True:
                 self._send_event("j")
 
-    # Data is passed as tuples: cmd:text.
+    # Data is passed as tuples: cmd:text
     def event_received_cb(self, text):
         if text[0] == 'B':
             e,card_index = text.split(':')
@@ -634,20 +657,28 @@ class VisualMatchActivity(activity.Activity):
             _logger.debug("receiving selection index: " + card_index)
             window._process_selection(self.vmw,
                 self.vmw.selected[int(card_index)].spr)
-        elif text[0] == 'j': # request for current state from joiner
-            if self.initiating is True:
+        elif text[0] == 'j':
+            if self.initiating is True:  # Only the sharer "shares".
                 _logger.debug("serialize the project and send to joiner")
                 self._send_event("P:" + str(self.vmw.level))
                 self._send_event("X:" + str(self.vmw.deck.index))
                 self._send_event("M:" + str(self.vmw.matches))
+                self._send_event("C:" + self.vmw.cardtype)
                 self._send_event("D:" + str(self._dump()))
-        elif text[0] == 'J': # new game, so make a request for current state
+        elif text[0] == 'J': # Force a request for current state.
             self._send_event("j")
             self.waiting_for_deck = True
+        elif text[0] == 'C':
+            e,text = text.split(':')
+            _logger.debug("receiving cardtype from sharer " + text)
+            self.vmw.cardtype = text
         elif text[0] == 'P':
             e,text = text.split(':')
             _logger.debug("receiving play level from sharer " + text)
             self.vmw.level = int(text)
+            self.level_label.set_text(self.calc_level_label(
+                self.vmw.low_score, self.vmw.level))
+            self.level_button.set_icon(level_icons[self.vmw.level])
         elif text[0] == 'X':
             e,text = text.split(':')
             _logger.debug("receiving deck index from sharer " + text)
@@ -662,8 +693,8 @@ class VisualMatchActivity(activity.Activity):
                 _logger.debug("receiving deck data from sharer")
                 self._load(text)
                 self.waiting_for_deck = False
-            window.new_game(self.vmw, self.vmw.cardtype, False,
-                            self._saved_state, self.vmw.deck.index)
+            window.new_game(self.vmw, self._saved_state,
+                            self.vmw.deck.index)
 
     # Send event through the tube
     def _send_event(self, entry):
@@ -682,8 +713,8 @@ class ChatTube(ExportedGObject):
         self.stack_received_cb = stack_received_cb
         self.stack = ''
 
-        self.tube.add_signal_receiver(self.send_stack_cb, 'SendText', IFACE, \
-            path=PATH, sender_keyword='sender')
+        self.tube.add_signal_receiver(self.send_stack_cb, 'SendText', IFACE,
+                                      path=PATH, sender_keyword='sender')
 
     def send_stack_cb(self, text, sender=None):
         if sender == self.tube.get_unique_name():
@@ -848,7 +879,7 @@ class ProjectToolbar(gtk.Toolbar):
         separator.show()
 
         self.activity.deck_label = gtk.Label("%d %s" % \
-                      (level_decksize[self.activity._play_level], _('cards')))
+            (level_decksize[self.activity._play_level]-DEAL, _('cards')))
         self.activity.deck_label.show()
         self.activity.deck_toolitem = gtk.ToolItem()
         self.activity.deck_toolitem.add(self.activity.deck_label)
