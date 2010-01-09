@@ -103,7 +103,6 @@ class VisualMatchActivity(activity.Activity):
         # Then start playing the game.
         if not hasattr(self,'_saved_state'):
             self._saved_state = None
-        print "calling new game for the first time"
         self.vmw.new_game(self._saved_state, self._deck_index)
 
     #
@@ -521,7 +520,6 @@ class VisualMatchActivity(activity.Activity):
             data.append(self.vmw.deck.spr_to_card(i).index)
 
         if self._old_sugar_system is True:
-            print "old-style Sugar"
             return json.write(data)
         else:
             io = StringIO()
@@ -539,7 +537,6 @@ class VisualMatchActivity(activity.Activity):
 
     def _load(self, data):
         if self._old_sugar_system is True:
-            print "old-style Sugar"
             saved_state = json.read(data)
         else:
             io = StringIO(data)
@@ -598,7 +595,6 @@ class VisualMatchActivity(activity.Activity):
 
         self.initiating = False
         _logger.debug('I joined a shared activity.')
-        print('I joined a shared activity.')
 
         self.conn = self._shared_activity.telepathy_conn
         self.tubes_chan = self._shared_activity.telepathy_tubes_chan
