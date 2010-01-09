@@ -1,3 +1,8 @@
+17
+
+* fixed Class problem with command-line version
+* cleaned up license language (GPL v3)
+
 16
 
 * fixed bug preventing play on old Sugar instances
