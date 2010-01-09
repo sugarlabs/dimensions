@@ -96,7 +96,6 @@ class VisualMatchActivity(activity.Activity):
         self._read_journal_data()
         datapath = self._find_datapath(_old_sugar_system)
         gencards.generator(datapath, self._numberO, self._numberC)
-        sugar86 = False
         self._setup_toolbars(sugar86)
         canvas = self._setup_canvas(datapath)
         self._setup_presence_service()
@@ -105,16 +104,16 @@ class VisualMatchActivity(activity.Activity):
         if not hasattr(self,'_saved_state'):
             self._saved_state = None
         print "calling new game for the first time"
-        window.new_game(self.vmw, self._saved_state, self._deck_index)
+        self.vmw.new_game(self._saved_state, self._deck_index)
 
     #
     # Button callbacks
     #
     def _select_game_cb(self, button, activity, cardtype):
-        if window.joiner(self.vmw): # joiner cannot change level
+        if self.vmw.joiner(): # joiner cannot change level
             return
         activity.vmw.cardtype = cardtype
-        window.new_game(activity.vmw)
+        activity.vmw.new_game()
 
     def _robot_cb(self, button, activity):
         if activity.vmw.robot is True:
@@ -128,13 +127,13 @@ class VisualMatchActivity(activity.Activity):
             self.robot_button.set_icon('robot-on')
 
     def _level_cb(self, button, activity):
-        if window.joiner(self.vmw): # joiner cannot change level
+        if activity.vmw.joiner(): # joiner cannot change level
             return
         activity.vmw.level = 1-activity.vmw.level
         self.level_label.set_text(self.calc_level_label(activity.vmw.low_score,
                                                         activity.vmw.level))
         self.level_button.set_icon(level_icons[activity.vmw.level])
-        window.new_game(activity.vmw)
+        activity.vmw.new_game()
 
     def calc_level_label(self, low_score, play_level):
         if low_score[play_level] == -1:
@@ -146,24 +145,24 @@ class VisualMatchActivity(activity.Activity):
                      int(low_score[play_level]%60))
 
     def _number_card_O_cb(self, button, activity, numberO):
-        if window.joiner(self.vmw): # joiner cannot change decks
+        if activity.vmw.joiner(): # joiner cannot change decks
             return
         activity.vmw.numberO = numberO
         gencards.generate_number_cards(activity.vmw.path,
                                        activity.vmw.numberO,
                                        activity.vmw.numberC)
         activity.vmw.cardtype = 'number'
-        window.new_game(activity.vmw)
+        activity.vmw.new_game()
 
     def _number_card_C_cb(self, button, activity, numberC):
-        if window.joiner(self.vmw): # joiner cannot change decks
+        if activity.vmw.joiner(): # joiner cannot change decks
             return
         activity.vmw.numberC = numberC
         gencards.generate_number_cards(activity.vmw.path,
                                        activity.vmw.numberO,
                                        activity.vmw.numberC)
         activity.vmw.cardtype = 'number'
-        window.new_game(activity.vmw)
+        activity.vmw.new_game()
 
     def _robot_time_spin_cb(self, button):
         self.vmw.robot_time = self._robot_time_spin.get_value_as_int()
@@ -466,7 +465,7 @@ class VisualMatchActivity(activity.Activity):
         canvas.show()
         self.show_all()
 
-        self.vmw = window.new_window(canvas, datapath, self)
+        self.vmw = window.VisualMatchWindow(canvas, datapath, self)
         self.vmw.level = self._play_level
         self.vmw.cardtype = self._cardtype
         self.vmw.robot = False
@@ -650,12 +649,12 @@ class VisualMatchActivity(activity.Activity):
         if text[0] == 'B':
             e,card_index = text.split(':')
             _logger.debug("receiving card index: " + card_index)
-            window._process_selection(self.vmw,
+            self.vmw._process_selection(
                 self.vmw.deck.index_to_card(int(card_index)).spr)
         elif text[0] == 'S':
             e,card_index = text.split(':')
             _logger.debug("receiving selection index: " + card_index)
-            window._process_selection(self.vmw,
+            self.vmw._process_selection(
                 self.vmw.selected[int(card_index)].spr)
         elif text[0] == 'j':
             if self.initiating is True:  # Only the sharer "shares".
@@ -693,8 +692,7 @@ class VisualMatchActivity(activity.Activity):
                 _logger.debug("receiving deck data from sharer")
                 self._load(text)
                 self.waiting_for_deck = False
-            window.new_game(self.vmw, self._saved_state,
-                            self.vmw.deck.index)
+            self.vmw.new_game(self._saved_state, self.vmw.deck.index)
 
     # Send event through the tube
     def _send_event(self, entry):
