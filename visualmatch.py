@@ -165,7 +165,7 @@ class VisualMatchMain:
         self.win.show_all()
 
         # Join the activity
-        self.vmw = window.new_window(canvas, \
+        self.vmw = window.VisualMatchWindow(canvas, \
                                os.path.join(os.path.abspath('.'), \
                                             'images/'))
         self.vmw.win = self.win
@@ -180,7 +180,7 @@ class VisualMatchMain:
         self.vmw.robot_matches = 0
         self.load_score()
 
-        window.new_game(self.vmw, self.vmw.cardtype)
+        self.vmw.new_game()
 
     def load_score(self):
          try:
@@ -203,14 +203,13 @@ class VisualMatchMain:
         self.win.set_title(title)
 
     def _new_game_cb(self, widget, game):
-        window.new_game(self.vmw, game)
+        self.vmw.cardtype = game
+        self.vmw.new_game()
         return True
 
     def _level_cb(self, widget):
-        cardtype = self.vmw.cardtype
-        self.vmw.cardtype = ''
         self.vmw.level = 1-self.vmw.level
-        window.new_game(self.vmw, cardtype)
+        self.vmw.new_game()
 
     def _robot_cb(self, widget):
         if self.vmw.robot is True:
@@ -226,16 +225,16 @@ class VisualMatchMain:
         gencards.generate_number_cards(self.vmw.path,
                                        self.vmw.numberO,
                                        self.vmw.numberC)
-        self.vmw.cardtype = ''
-        window.new_game(self.vmw, 'number')
+        self.vmw.cardtype = 'number'
+        self.vmw.new_game()
 
     def _number_card_C_cb(self, widget, numberC):
         self.vmw.numberC = numberC
         gencards.generate_number_cards(self.vmw.path,
                                        self.vmw.numberO,
                                        self.vmw.numberC)
-        self.vmw.cardtype = ''
-        window.new_game(self.vmw, 'number')
+        self.vmw.cardtype = 'number'
+        self.vmw.new_game()
 
 def main():
     gtk.main()
