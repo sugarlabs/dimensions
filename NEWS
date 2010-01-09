@@ -1,3 +1,11 @@
+16
+
+* fixed bug preventing play on old Sugar instances
+* simple sharing/collaborating
+* save/resume from Journal 
+* new (improved?) toolbar layout
+* match-history animation at end game
+
 15
 
 * added low/high levels for game play
