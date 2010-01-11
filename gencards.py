@@ -193,7 +193,7 @@ def svg_die(n, x, y, stroke):
     svg_string += "</g>\n"
     return svg_string
 
-def svg_star( n, x, y, stroke, fill):
+def svg_star(n, x, y, stroke, fill):
     turntable = {5:3,7:3,11:5}
     turns = turntable[n]
     x1 = 0
@@ -235,7 +235,7 @@ def footer():
 #
 # Card pattern generators
 #
-def dots_in_a_line(t, n, stroke):
+def dots_in_a_line(n, stroke):
     if n%3 == 0:
         y = 12.5
         nn = n/3
@@ -253,11 +253,11 @@ def dots_in_a_line(t, n, stroke):
         n/=11
     svg_string = ""
     for i in range(n):
-        svg_string += svg_line_of_dots( nn, 5, y, stroke)
+        svg_string += svg_line_of_dots(nn, 5, y, stroke)
         y += 20
     return svg_string
 
-def points_in_a_star(t, n, stroke):
+def points_in_a_star(n, stroke):
     svg_string = ""
     if n%3 == 0:
         x = 25
@@ -292,7 +292,7 @@ def points_in_a_star(t, n, stroke):
             x += 37.5
     return svg_string
 
-def dots_in_a_circle(t, n, stroke):
+def dots_in_a_circle(n, stroke):
     svg_string = ""
     if n%3 == 0:
         x = 25
@@ -327,7 +327,7 @@ def dots_in_a_circle(t, n, stroke):
             x += 37.5
     return svg_string
 
-def number_hash(t, n, stroke):
+def number_hash(n, stroke):
     svg_string = ""
     if n%3 == 0:
         y = 12.5
@@ -349,50 +349,50 @@ def number_hash(t, n, stroke):
         y += 20
     return svg_string
 
-def dice( t, n, stroke):
+def dice(n, stroke):
     svg_string = ""
     if n == 5:
-        svg_string += svg_die( 5, 50, 25, stroke)
+        svg_string += svg_die(5, 50, 25, stroke)
     elif n == 10:
-        svg_string += svg_die( 5, 30, 25, stroke)
-        svg_string += svg_die( 5, 70, 25, stroke)
+        svg_string += svg_die(5, 30, 25, stroke)
+        svg_string += svg_die(5, 70, 25, stroke)
     elif n == 15:
-        svg_string += svg_die( 5, 15, 25, stroke)
-        svg_string += svg_die( 5, 50, 25, stroke)
-        svg_string += svg_die( 5, 85, 25, stroke)
+        svg_string += svg_die(5, 15, 25, stroke)
+        svg_string += svg_die(5, 50, 25, stroke)
+        svg_string += svg_die(5, 85, 25, stroke)
     elif n == 7:
-        svg_string += svg_die( 3, 50, 10, stroke)
-        svg_string += svg_die( 4, 50, 40, stroke)
+        svg_string += svg_die(3, 50, 10, stroke)
+        svg_string += svg_die(4, 50, 40, stroke)
     elif n == 14:
-        svg_string += svg_die( 4, 30, 10, stroke)
-        svg_string += svg_die( 3, 70, 10, stroke)
-        svg_string += svg_die( 3, 30, 40, stroke)
-        svg_string += svg_die( 4, 70, 40, stroke)
+        svg_string += svg_die(4, 30, 10, stroke)
+        svg_string += svg_die(3, 70, 10, stroke)
+        svg_string += svg_die(3, 30, 40, stroke)
+        svg_string += svg_die(4, 70, 40, stroke)
     elif n == 21:
-        svg_string += svg_die( 3, 15, 10, stroke)
-        svg_string += svg_die( 4, 50, 10, stroke)
-        svg_string += svg_die( 3, 85, 10, stroke)
-        svg_string += svg_die( 4, 15, 40, stroke)
-        svg_string += svg_die( 3, 50, 40, stroke)
-        svg_string += svg_die( 4, 85, 40, stroke)
+        svg_string += svg_die(3, 15, 10, stroke)
+        svg_string += svg_die(4, 50, 10, stroke)
+        svg_string += svg_die(3, 85, 10, stroke)
+        svg_string += svg_die(4, 15, 40, stroke)
+        svg_string += svg_die(3, 50, 40, stroke)
+        svg_string += svg_die(4, 85, 40, stroke)
     elif n == 11:
-        svg_string += svg_die( 5, 50, 10, stroke)
-        svg_string += svg_die( 6, 50, 40, stroke)
+        svg_string += svg_die(5, 50, 10, stroke)
+        svg_string += svg_die(6, 50, 40, stroke)
     elif n == 22:
-        svg_string += svg_die( 6, 30, 10, stroke)
-        svg_string += svg_die( 5, 70, 10, stroke)
-        svg_string += svg_die( 5, 30, 40, stroke)
-        svg_string += svg_die( 6, 70, 40, stroke)
+        svg_string += svg_die(6, 30, 10, stroke)
+        svg_string += svg_die(5, 70, 10, stroke)
+        svg_string += svg_die(5, 30, 40, stroke)
+        svg_string += svg_die(6, 70, 40, stroke)
     elif n == 33:
-        svg_string += svg_die( 5, 15, 10, stroke)
-        svg_string += svg_die( 6, 50, 10, stroke)
-        svg_string += svg_die( 5, 85, 10, stroke)
-        svg_string += svg_die( 6, 15, 40, stroke)
-        svg_string += svg_die( 5, 50, 40, stroke)
-        svg_string += svg_die( 6, 85, 40, stroke)
+        svg_string += svg_die(5, 15, 10, stroke)
+        svg_string += svg_die(6, 50, 10, stroke)
+        svg_string += svg_die(5, 85, 10, stroke)
+        svg_string += svg_die(6, 15, 40, stroke)
+        svg_string += svg_die(5, 50, 40, stroke)
+        svg_string += svg_die(6, 85, 40, stroke)
     return svg_string
 
-def circle( x, style, stroke, fill):
+def circle(x, style, stroke, fill):
     svg_string = ""
     if style == "none":
         svg_string += svg_circle(x+17,38,16,stroke,"#FFFFFF",1.8)
@@ -403,59 +403,59 @@ def circle( x, style, stroke, fill):
     svg_string += svg_circle(x+17,38,8,stroke,fill,1.8)
     return svg_string
 
-def check_card( n, style, stroke, fill):
+def check_card(n, style, stroke, fill):
     svg_string = ""
     if n == 1:
-       svg_string += svg_check( 45.5, style, stroke, fill)
+       svg_string += svg_check(45.5, style, stroke, fill)
     elif n == 2:
-       svg_string += svg_check( 25.5, style, stroke, fill)
-       svg_string += svg_check( 65.5, style, stroke, fill)
+       svg_string += svg_check(25.5, style, stroke, fill)
+       svg_string += svg_check(65.5, style, stroke, fill)
     else:
-       svg_string += svg_check(  5.5, style, stroke, fill)
-       svg_string += svg_check( 45.5, style, stroke, fill)
-       svg_string += svg_check( 85.5, style, stroke, fill)
+       svg_string += svg_check( 5.5, style, stroke, fill)
+       svg_string += svg_check(45.5, style, stroke, fill)
+       svg_string += svg_check(85.5, style, stroke, fill)
     return svg_string
 
-def cross_card( n, style, stroke, fill):
+def cross_card(n, style, stroke, fill):
     svg_string = ""
     if n == 1:
-       svg_string += svg_cross( 45.5, style, stroke, fill)
+       svg_string += svg_cross(45.5, style, stroke, fill)
     elif n == 2:
-       svg_string += svg_cross( 25.5, style, stroke, fill)
-       svg_string += svg_cross( 65.5, style, stroke, fill)
+       svg_string += svg_cross(25.5, style, stroke, fill)
+       svg_string += svg_cross(65.5, style, stroke, fill)
     else:
-       svg_string += svg_cross(  5.5, style, stroke, fill)
-       svg_string += svg_cross( 45.5, style, stroke, fill)
-       svg_string += svg_cross( 85.5, style, stroke, fill)
+       svg_string += svg_cross( 5.5, style, stroke, fill)
+       svg_string += svg_cross(45.5, style, stroke, fill)
+       svg_string += svg_cross(85.5, style, stroke, fill)
     return svg_string
 
-def circle_card( n, style, stroke, fill):
+def circle_card(n, style, stroke, fill):
     svg_string = ""
     if n == 1:
-       svg_string += circle( 45.5, style, stroke, fill)
+       svg_string += circle(45.5, style, stroke, fill)
     elif n == 2:
-       svg_string += circle( 25.5, style, stroke, fill)
-       svg_string += circle( 65.5, style, stroke, fill)
+       svg_string += circle(25.5, style, stroke, fill)
+       svg_string += circle(65.5, style, stroke, fill)
     else:
-       svg_string += circle(  5.5, style, stroke, fill)
-       svg_string += circle( 45.5, style, stroke, fill)
-       svg_string += circle( 85.5, style, stroke, fill)
+       svg_string += circle( 5.5, style, stroke, fill)
+       svg_string += circle(45.5, style, stroke, fill)
+       svg_string += circle(85.5, style, stroke, fill)
     return svg_string
 
-def number_arabic( t, n, stroke):
+def number_arabic(n, stroke):
     return svg_text(63.5,55,48,stroke,"DejaVu","",str(n))
     return svg_string
 
-def number_roman( t, n, stroke):
+def number_roman(n, stroke):
     return svg_text(63.5,53,32,stroke,"DejaVu Serif","",roman_numerals[n])
 
-def number_chinese( t, n, stroke):
+def number_chinese(n, stroke):
     return svg_text(63.5,55,48,stroke,"DejaVu","",chinese_numerals[n])
 
-def number_product( t, n, stroke):
+def number_product(n, stroke):
     return svg_text(63.5,53,36,stroke,"DejaVu","",number_products[n])
 
-def number_word( t, n, stroke):
+def number_word(n, stroke):
     svg_string = ""
     x = 63.5
     strings = number_names[n].split(' ')
@@ -466,21 +466,57 @@ def number_word( t, n, stroke):
         svg_string += svg_text(x,63,26,stroke,"DejaVu Serif","",strings[1])
     return svg_string
 
-def number_card( t, n, stroke, methodX, methodO, methodC):
-    if t == 'X':
-        return (methodX( t, n, stroke))
-    elif t == 'O':
-        return (methodO( t, n, stroke))
+def number_card(t, n, stroke, methodX, methodO, methodC):
+    if t == 0:
+        return (methodX(n, stroke))
+    elif t == 1:
+        return (methodO(n, stroke))
     else:
-        return (methodC( t, n, stroke))
+        return (methodC(n, stroke))
 
-def word_card( t, c, n, s):
-    return svg_text(63.5,45.5,30,c[0],"DejaVu",s,
-                    word_lists[card_types.index(t)][n])
+def word_card(t, c, n, s):
+    return svg_text(63.5,45.5,30,c[0],"DejaVu",s,word_lists[t][n])
 
-def pattern_card( t, c, n, s):
+def pattern_card(t, c, n, s):
     pattern_styles = [cross_card, circle_card, check_card]
     return pattern_styles[card_types.index(t)](n,s,c[0],c[1])
+
+#
+# Card generators
+#
+def generate_pattern_card(t,c,n,s):
+    svg_string = header(BLACK,color_pairs[c][1],0.5)
+    svg_string += pattern_card(card_types[t],color_pairs[c],n+1,fill_styles[s])
+    svg_string += footer()
+    return svg_string
+
+def generate_number_card(t,c,n,s,mO,mC):
+    stab = {0:5,1:7,2:11}
+    methodO = [number_roman, number_product, number_chinese, number_word]
+    methodC = [dots_in_a_line, dots_in_a_circle, points_in_a_star,\
+                number_hash, dice]
+    methodX = number_arabic
+    svg_string = header(BLACK,color_pairs[c][1],0.5)
+    svg_string += number_card(t,(n+1)*stab[s],color_pairs[c][0],
+                              methodX,methodO[mO],methodC[mC])
+    svg_string += footer()
+    return svg_string
+
+def generate_word_card(t,c,n,s):
+    svg_string = header(BLACK,color_pairs[c][1],0.5)
+    svg_string += word_card(t,color_pairs[c],n,word_styles[s])
+    svg_string += footer()
+    return svg_string
+
+def generate_match_card():
+    svg_string = header("#A0A0A0","#F0F0F0",3.0)
+    svg_string += footer()
+    return svg_string
+
+def generate_selected_card():
+    svg_string = header(BLACK,"none",3.0)
+    svg_string += footer()
+    return svg_string
 
 def open_file(datapath, filename):
     return file(os.path.join(datapath, filename), "w")
@@ -488,76 +524,54 @@ def open_file(datapath, filename):
 def close_file(f):
     f.close()
 
-def generator(datapath,numberO=PRODUCT,numberC=HASH):
+def generator(datapath,mO=PRODUCT,mC=HASH):
     generate_pattern_cards(datapath)
-    generate_number_cards(datapath,numberO,numberC)
+    generate_number_cards(datapath,mO,mC)
     generate_word_cards(datapath)
+    generate_extras(datapath)
 
 def generate_pattern_cards(datapath):
     i = 0
-    for t in card_types:
-        for c in color_pairs:
-            for n in range(1,4):
-                for s in fill_styles:
+    for t in range(3):
+        for c in range(3):
+            for n in range(3):
+                for s in range(3):
                     filename = "pattern-%d.svg" % (i)
                     f = open_file(datapath, filename)
-                    svg_string = ""
-                    svg_string += header(BLACK,c[1],0.5)
-                    svg_string += pattern_card(t,c,n,s)
-                    svg_string += footer()
-                    f.write(svg_string)
+                    f.write(generate_pattern_card(t,c,n,s))
                     close_file(f)
                     i += 1
 
-def generate_number_cards(datapath,numberO,numberC):
-    methodO = [number_roman, number_product, number_chinese, number_word]
-    methodC = [dots_in_a_line, dots_in_a_circle, points_in_a_star,\
-                number_hash, dice]
-    methodX = number_arabic
+def generate_number_cards(datapath,mO,mC):
     i = 0
-    for t in card_types:
-        for c in color_pairs:
-            for n in range(1,4):
-                for s in [5,7,11]:
+    for t in range(3):
+        for c in range(3):
+            for n in range(3):
+                for s in range(3):
                     filename = "number-%d.svg" % (i)
                     f = open_file(datapath, filename)
-                    svg_string = ""
-                    svg_string += header(BLACK,c[1],0.5)
-                    svg_string += number_card(t,n*s,c[0],
-                                methodX,methodO[numberO],methodC[numberC])
-                    svg_string += footer()
-                    f.write(svg_string)
+                    f.write(generate_number_card(t,c,n,s,mO,mC))
                     close_file(f)
                     i += 1
 
 def generate_word_cards(datapath):
     i = 0
-    for t in card_types:
-        for c in color_pairs:
-            for n in range(0,3):
-                for s in word_styles:
+    for t in range(3):
+        for c in range(3):
+            for n in range(3):
+                for s in range(3):
                     filename = "word-%d.svg" % (i)
                     f = open_file(datapath, filename)
-                    svg_string = ""
-                    svg_string += header(BLACK,c[1],0.5)
-                    svg_string += word_card(t,c,n,s)
-                    svg_string += footer()
-                    f.write(svg_string)
+                    f.write(generate_word_card(t,c,n,s))
                     close_file(f)
                     i += 1
 
+def generate_extras(datapath):
     f = open_file(datapath, "match.svg")
-    svg_string = ""
-    svg_string += header("#A0A0A0","#F0F0F0",3.0)
-    svg_string += footer()
-    f.write(svg_string)
+    f.write(generate_match_card())
     close_file(f)
-
     f = open_file(datapath, "selected.svg")
-    svg_string = ""
-    svg_string += header(BLACK,"none",3.0)
-    svg_string += footer()
-    f.write(svg_string)
+    f.write(generate_selected_card())
     close_file(f)
 
 def main():
