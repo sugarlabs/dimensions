@@ -2,23 +2,15 @@
 
 #Copyright (c) 2009, Walter Bender
 
-#Permission is hereby granted, free of charge, to any person obtaining a copy
-#of this software and associated documentation files (the "Software"), to deal
-#in the Software without restriction, including without limitation the rights
-#to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-#copies of the Software, and to permit persons to whom the Software is
-#furnished to do so, subject to the following conditions:
-
-#The above copyright notice and this permission notice shall be included in
-#all copies or substantial portions of the Software.
-
-#THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-#IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-#FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-#AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-#LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-#OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-#THE SOFTWARE.
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 3 of the License, or
+# (at your option) any later version.
+#
+# You should have received a copy of the GNU Lesser General Public
+# License along with this library; if not, write to the
+# Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+# Boston, MA 02111-1307, USA.
 
 import pygtk
 pygtk.require('2.0')
@@ -45,9 +37,11 @@ class VisualMatchMain:
                            _("Click on cards to create sets of three.")))
         self.win.connect("delete_event", lambda w,e: gtk.main_quit())
 
+        '''
         if not os.path.exists(os.path.join(os.path.abspath('.'), 'images')):
             os.mkdir(os.path.join(os.path.abspath('.'), 'images'))
         gencards.generator(os.path.join(os.path.abspath('.'), 'images'))
+        '''
 
         menu0 = gtk.Menu()
         menu_items = gtk.MenuItem(_("Toggle level"))
@@ -170,7 +164,7 @@ class VisualMatchMain:
                                             'images/'))
         self.vmw.win = self.win
         self.vmw.activity = self
-        self.vmw.cardtype = 'pattern'
+        self.vmw.card_type = 'pattern'
         self.vmw.level = 1
         self.vmw.robot = False
         self.vmw.robot_time = 60
@@ -203,7 +197,7 @@ class VisualMatchMain:
         self.win.set_title(title)
 
     def _new_game_cb(self, widget, game):
-        self.vmw.cardtype = game
+        self.vmw.card_type = game
         self.vmw.new_game()
         return True
 
@@ -222,18 +216,12 @@ class VisualMatchMain:
 
     def _number_card_O_cb(self, widget, numberO):
         self.vmw.numberO = numberO
-        gencards.generate_number_cards(self.vmw.path,
-                                       self.vmw.numberO,
-                                       self.vmw.numberC)
-        self.vmw.cardtype = 'number'
+        self.vmw.card_type = 'number'
         self.vmw.new_game()
 
     def _number_card_C_cb(self, widget, numberC):
         self.vmw.numberC = numberC
-        gencards.generate_number_cards(self.vmw.path,
-                                       self.vmw.numberO,
-                                       self.vmw.numberC)
-        self.vmw.cardtype = 'number'
+        self.vmw.card_type = 'number'
         self.vmw.new_game()
 
 def main():

@@ -214,17 +214,18 @@ def svg_star(n, x, y, stroke, fill):
 def background(stroke,fill,width):
     return svg_rect(124.5,74.5,11,9,0.25,0.25,stroke,fill,width)
 
-def header(stroke,fill,width):
+def header(stroke,fill,width,scale):
     svg_string = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>\n"
     svg_string += "<!-- Created with Emacs -->\n"
     svg_string += "<svg\n"
     svg_string += "   xmlns:svg=\"http://www.w3.org/2000/svg\"\n"
     svg_string += "   xmlns=\"http://www.w3.org/2000/svg\"\n"
     svg_string += "   version=\"1.0\"\n"
-    svg_string += "   width=\"125\"\n"
-    svg_string += "   height=\"75\">\n"
+    svg_string += "%s%f%s" % ("   width=\"",125*scale,"\"\n")
+    svg_string += "%s%f%s" % ("   height=\"",75*scale,"\">\n")
+    svg_string += "%s%f%s%f%s" % ("<g\n       transform=\"matrix(",scale,
+                                  ",0,0,",scale,",0,0)\">\n")
     svg_string += background(stroke,fill,width)
-    svg_string += "<g>\n"
     return svg_string
 
 def footer():
@@ -484,37 +485,38 @@ def pattern_card(t, c, n, s):
 #
 # Card generators
 #
-def generate_pattern_card(t,c,n,s):
-    svg_string = header(BLACK,color_pairs[c][1],0.5)
+def generate_pattern_card(t,c,n,s,scale):
+    svg_string = header(BLACK,color_pairs[c][1],0.5,scale)
     svg_string += pattern_card(card_types[t],color_pairs[c],n+1,fill_styles[s])
     svg_string += footer()
     return svg_string
 
-def generate_number_card(t,c,n,s,mO,mC):
+def generate_number_card(t,c,n,s,number_types,scale):
     stab = {0:5,1:7,2:11}
     methodO = [number_roman, number_product, number_chinese, number_word]
     methodC = [dots_in_a_line, dots_in_a_circle, points_in_a_star,\
                 number_hash, dice]
     methodX = number_arabic
-    svg_string = header(BLACK,color_pairs[c][1],0.5)
+    svg_string = header(BLACK,color_pairs[c][1],0.5,scale)
     svg_string += number_card(t,(n+1)*stab[s],color_pairs[c][0],
-                              methodX,methodO[mO],methodC[mC])
+                              methodX,methodO[number_types[0]],
+                              methodC[number_types[1]])
     svg_string += footer()
     return svg_string
 
-def generate_word_card(t,c,n,s):
-    svg_string = header(BLACK,color_pairs[c][1],0.5)
+def generate_word_card(t,c,n,s,scale):
+    svg_string = header(BLACK,color_pairs[c][1],0.5,scale)
     svg_string += word_card(t,color_pairs[c],n,word_styles[s])
     svg_string += footer()
     return svg_string
 
-def generate_match_card():
-    svg_string = header("#A0A0A0","#F0F0F0",3.0)
+def generate_match_card(scale):
+    svg_string = header("#A0A0A0","#F0F0F0",3.0,scale)
     svg_string += footer()
     return svg_string
 
-def generate_selected_card():
-    svg_string = header(BLACK,"none",3.0)
+def generate_selected_card(scale):
+    svg_string = header(BLACK,"none",3.0,scale)
     svg_string += footer()
     return svg_string
 
@@ -526,7 +528,7 @@ def close_file(f):
 
 def generator(datapath,mO=PRODUCT,mC=HASH):
     generate_pattern_cards(datapath)
-    generate_number_cards(datapath,mO,mC)
+    generate_number_cards(datapath,[mO,mC])
     generate_word_cards(datapath)
     generate_extras(datapath)
 
@@ -538,11 +540,11 @@ def generate_pattern_cards(datapath):
                 for s in range(3):
                     filename = "pattern-%d.svg" % (i)
                     f = open_file(datapath, filename)
-                    f.write(generate_pattern_card(t,c,n,s))
+                    f.write(generate_pattern_card(t,c,n,s,1))
                     close_file(f)
                     i += 1
 
-def generate_number_cards(datapath,mO,mC):
+def generate_number_cards(datapath,number_types):
     i = 0
     for t in range(3):
         for c in range(3):
@@ -550,7 +552,7 @@ def generate_number_cards(datapath,mO,mC):
                 for s in range(3):
                     filename = "number-%d.svg" % (i)
                     f = open_file(datapath, filename)
-                    f.write(generate_number_card(t,c,n,s,mO,mC))
+                    f.write(generate_number_card(t,c,n,s,number_types,1))
                     close_file(f)
                     i += 1
 
@@ -562,16 +564,16 @@ def generate_word_cards(datapath):
                 for s in range(3):
                     filename = "word-%d.svg" % (i)
                     f = open_file(datapath, filename)
-                    f.write(generate_word_card(t,c,n,s))
+                    f.write(generate_word_card(t,c,n,s,1))
                     close_file(f)
                     i += 1
 
 def generate_extras(datapath):
     f = open_file(datapath, "match.svg")
-    f.write(generate_match_card())
+    f.write(generate_match_card(1))
     close_file(f)
     f = open_file(datapath, "selected.svg")
-    f.write(generate_selected_card())
+    f.write(generate_selected_card(1))
     close_file(f)
 
 def main():

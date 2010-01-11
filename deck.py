@@ -19,12 +19,14 @@ import random
 from sprites import *
 from constants import *
 from card import *
+from gencards import generate_pattern_card, generate_number_card, \
+                     generate_word_card
 
 #
-# Class for defining deck of cards
+# Class for defining deck of card
 #
 class Deck:
-    def __init__(self, sprites, path, cardtype, width, height, level=HIGH):
+    def __init__(self, sprites, card_type, numbers_type, scale, level=HIGH):
         # Create the deck of cards.
         self.cards = []
         # If level is 'simple', only generate one fill type
@@ -37,9 +39,23 @@ class Deck:
             for color in range(0, COLORS):
                 for num in range(0, NUMBER):
                     for fill in range(0, fill_range):
-                        self.cards.append(Card(sprites, path, cardtype, 
-                                               width, height,
-                                               [shape,color,num,fill]))
+                        if card_type == 'pattern':
+                            self.cards.append(Card(sprites,
+                                                   generate_pattern_card(
+                                                   shape,color,num,fill,scale),
+                                                   [shape,color,num,fill]))
+                        elif card_type == 'number':
+                            self.cards.append(Card(sprites,
+                                                   generate_number_card(
+                                                       shape,color,num,fill,
+                                                       numbers_type,scale),
+                                                   [shape,color,num,fill]))
+                        else:
+                            self.cards.append(Card(sprites,
+                                                   generate_word_card(
+                                                   shape,color,num,fill,scale),
+                                                   [shape,color,num,fill]))
+
         # Remember the current position in the deck.
         self.index = 0
 

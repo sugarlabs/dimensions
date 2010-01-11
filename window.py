@@ -31,6 +31,7 @@ from grid import *
 from deck import *
 from card import *
 from sprites import *
+from gencards import generate_selected_card, generate_match_card
 
 difficulty_level = [LOW,HIGH]
 
@@ -57,9 +58,9 @@ class VisualMatchWindow():
         self.canvas.connect("key_press_event", self._keypress_cb)
         self.width = gtk.gdk.screen_width()
         self.height = gtk.gdk.screen_height()-GRID_CELL_SIZE
-        _scale = 0.8 * self.height/(CARD_HEIGHT*5.5)
-        self.card_width = CARD_WIDTH*_scale
-        self.card_height = CARD_HEIGHT*_scale
+        self.scale = 0.8 * self.height/(CARD_HEIGHT*5.5)
+        self.card_width = CARD_WIDTH*self.scale
+        self.card_height = CARD_HEIGHT*self.scale
         self.sprites = Sprites(self.canvas)
         self.selected = []
         self.match_display_area = []
@@ -74,18 +75,17 @@ class VisualMatchWindow():
         if hasattr(self, 'deck'):
             self.deck.hide()
 
-        # The first time through, initialize the deck, grid, and overlays.
+        # The first time through, initialize the grid, and overlays.
         if not hasattr(self, 'grid'):
             self.grid = Grid(self.width, self.height, self.card_width,
                              self.card_height)
             for i in range(0,3):
-                self.selected.append(Card(self.sprites, self.path, '',
-                                          self.card_width, self.card_height,
+                self.selected.append(Card(self.sprites, 
+                                          generate_selected_card(self.scale),
                                           [SELECTMASK,0,0,0]))
-                self.match_display_area.append(Card(self.sprites, self.path, "",
-                                                   self.card_width,
-                                                   self.card_height,
-                                                   [MATCHMASK,0,0,0]))
+                self.match_display_area.append(Card(self.sprites,
+                                          generate_match_card(self.scale),
+                                          [MATCHMASK,0,0,0]))
                 self.grid.display_match(self.match_display_area[i].spr, i) 
 
         self._unselect()
@@ -93,8 +93,8 @@ class VisualMatchWindow():
         # Restore saved state on resume or share.
         if saved_state is not None:
             _logger.debug("Restoring state: %s" % (str(saved_state)))
-            self.deck = Deck(self.sprites, self.path, self.cardtype,
-                             self.card_width, self.card_height,
+            self.deck = Deck(self.sprites, self.card_type,
+                             [self.numberO, self.numberC], self.scale,
                              difficulty_level[self.level])
             self.deck.hide()
             self.deck.index = deck_index
@@ -107,9 +107,9 @@ class VisualMatchWindow():
                              saved_state[_deck_stop:_deck_stop+3*self.matches])
         elif not self.joiner():
             _logger.debug("Starting new game.")
-            self.deck = Deck(self.sprites, self.path, self.cardtype, 
-                            self.card_width, self.card_height, 
-                            difficulty_level[self.level])
+            self.deck = Deck(self.sprites, self.card_type,
+                             [self.numberO, self.numberC], self.scale,
+                             difficulty_level[self.level])
             self.deck.hide()
             self.deck.shuffle()
             self.grid.deal(self.deck)
@@ -233,7 +233,7 @@ class VisualMatchWindow():
         if self._match_check([self.deck.spr_to_card(self.clicked[0]),
                               self.deck.spr_to_card(self.clicked[1]),
                               self.deck.spr_to_card(self.clicked[2])], 
-                             self.cardtype):
+                             self.card_type):
 
             # Stop the timer.
             if self.timeout_id is not None:
@@ -405,7 +405,7 @@ class VisualMatchWindow():
              cardarray = [self.grid.grid[i[0]],\
                           self.grid.grid[i[1]],\
                           self.grid.grid[i[2]]]
-             if self._match_check(cardarray, self.cardtype) is True:
+             if self._match_check(cardarray, self.card_type) is True:
                  if robot_match is True:
                      for j in range(3):
                          self.clicked[j]=self.grid.grid[i[j]].spr
@@ -417,7 +417,7 @@ class VisualMatchWindow():
     #
     # For each attribute, either it is the same or different on every card.
     #
-    def _match_check(self, cardarray, cardtype):
+    def _match_check(self, cardarray, card_type):
         for a in cardarray:
             if a is None:
                 return False
@@ -431,7 +431,7 @@ class VisualMatchWindow():
         if (cardarray[0].fill + cardarray[1].fill + cardarray[2].fill)%3 != 0:
            return False
         # Special case: only check number when shapes are the same
-        if cardtype == 'word':
+        if card_type == 'word':
             if cardarray[0].shape == cardarray[1].shape and \
                cardarray[0].shape == cardarray[2].shape and \
                (cardarray[0].num + cardarray[1].num + cardarray[2].num)%3 != 0:

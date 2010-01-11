@@ -63,7 +63,6 @@ from StringIO import StringIO
 from constants import *
 from sprites import *
 import window
-import gencards
 import grid
 import deck
 import card
@@ -87,7 +86,6 @@ class VisualMatchActivity(activity.Activity):
         # Set things up.
         self._read_journal_data()
         datapath = self._find_datapath(_old_sugar_system)
-        gencards.generator(datapath, self._numberO, self._numberC)
         self._setup_toolbars(sugar86)
         canvas = self._setup_canvas(datapath)
         self._setup_presence_service()
@@ -100,10 +98,10 @@ class VisualMatchActivity(activity.Activity):
     #
     # Button callbacks
     #
-    def _select_game_cb(self, button, activity, cardtype):
+    def _select_game_cb(self, button, activity, card_type):
         if self.vmw.joiner(): # joiner cannot change level
             return
-        activity.vmw.cardtype = cardtype
+        activity.vmw.card_type = card_type
         activity.vmw.new_game()
 
     def _robot_cb(self, button, activity):
@@ -139,20 +137,14 @@ class VisualMatchActivity(activity.Activity):
         if activity.vmw.joiner(): # joiner cannot change decks
             return
         activity.vmw.numberO = numberO
-        gencards.generate_number_cards(activity.vmw.path,
-                                       activity.vmw.numberO,
-                                       activity.vmw.numberC)
-        activity.vmw.cardtype = 'number'
+        activity.vmw.card_type = 'number'
         activity.vmw.new_game()
 
     def _number_card_C_cb(self, button, activity, numberC):
         if activity.vmw.joiner(): # joiner cannot change decks
             return
         activity.vmw.numberC = numberC
-        gencards.generate_number_cards(activity.vmw.path,
-                                       activity.vmw.numberO,
-                                       activity.vmw.numberC)
-        activity.vmw.cardtype = 'number'
+        activity.vmw.card_type = 'number'
         activity.vmw.new_game()
 
     def _robot_time_spin_cb(self, button):
@@ -175,7 +167,7 @@ class VisualMatchActivity(activity.Activity):
         try: # Try reading restored settings from the Journal.
             self._play_level = int(self.metadata['play_level'])
             self._robot_time = int(self.metadata['robot_time'])
-            self._cardtype = self.metadata['cardtype']
+            self._card_type = self.metadata['cardtype']
             self._low_score = [int(self.metadata['low_score_beginner']),\
                                int(self.metadata['low_score_expert'])]
             self._numberO = int(self.metadata['numberO'])
@@ -187,7 +179,7 @@ class VisualMatchActivity(activity.Activity):
         except: # Otherwise, use default values.
             self._play_level = 0
             self._robot_time = 60
-            self._cardtype = 'pattern'
+            self._card_type = 'pattern'
             self._low_score = [-1,-1]
             self._numberO = PRODUCT
             self._numberC = HASH
@@ -458,7 +450,7 @@ class VisualMatchActivity(activity.Activity):
 
         self.vmw = window.VisualMatchWindow(canvas, datapath, self)
         self.vmw.level = self._play_level
-        self.vmw.cardtype = self._cardtype
+        self.vmw.card_type = self._card_type
         self.vmw.robot = False
         self.vmw.robot_time = self._robot_time
         self.vmw.low_score = self._low_score
@@ -482,7 +474,7 @@ class VisualMatchActivity(activity.Activity):
             self.metadata['robot_time'] = self.vmw.robot_time
             self.metadata['numberO'] = self.vmw.numberO
             self.metadata['numberC'] = self.vmw.numberC
-            self.metadata['cardtype'] = self.vmw.cardtype
+            self.metadata['cardtype'] = self.vmw.card_type
             self.metadata['matches'] = self.vmw.matches
             self.metadata['robot_matches'] = self.vmw.robot_matches
             self.metadata['total_time'] = int(self.vmw.total_time)
@@ -650,15 +642,15 @@ class VisualMatchActivity(activity.Activity):
                 self._send_event("P:" + str(self.vmw.level))
                 self._send_event("X:" + str(self.vmw.deck.index))
                 self._send_event("M:" + str(self.vmw.matches))
-                self._send_event("C:" + self.vmw.cardtype)
+                self._send_event("C:" + self.vmw.card_type)
                 self._send_event("D:" + str(self._dump()))
         elif text[0] == 'J': # Force a request for current state.
             self._send_event("j")
             self.waiting_for_deck = True
         elif text[0] == 'C':
             e,text = text.split(':')
-            _logger.debug("receiving cardtype from sharer " + text)
-            self.vmw.cardtype = text
+            _logger.debug("receiving card_type from sharer " + text)
+            self.vmw.card_type = text
         elif text[0] == 'P':
             e,text = text.split(':')
             _logger.debug("receiving play level from sharer " + text)

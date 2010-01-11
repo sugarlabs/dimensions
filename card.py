@@ -32,14 +32,12 @@ from sprites import *
 # if shape == SELECTMASK then generate special card-selected overlay
 #
 class Card:
-    def __init__(self, sprites, path, cardtype, width, height, attributes):
+    def __init__(self, sprites, svg_string, attributes):
         if attributes[0] == SELECTMASK:
-            self.spr = Sprite(sprites, 0, 0,
-                              self.load_image(path, "selected", width, height))
+            self.spr = Sprite(sprites, 0, 0, svg_str_to_pixbuf(svg_string))
             self.index = SELECTMASK
         elif attributes[0] == MATCHMASK:
-            self.spr = Sprite(sprites, 0, 0,
-                              self.load_image(path, "match", width, height))
+            self.spr = Sprite(sprites, 0, 0, svg_str_to_pixbuf(svg_string))
             self.index = MATCHMASK
         else:
             self.shape = attributes[0]
@@ -50,10 +48,7 @@ class Card:
                          self.color*NUMBER*FILLS+\
                          self.num*FILLS+\
                          self.fill
-            self.spr = Sprite(sprites, 0, 0,
-                              self.load_image(path, cardtype+"-"+\
-                                              str(self.index),
-                                              width, height))
+            self.spr = Sprite(sprites, 0, 0, svg_str_to_pixbuf(svg_string))
 
     def show_card(self):
         self.spr.set_layer(2000)
@@ -62,7 +57,12 @@ class Card:
     def hide_card(self):
         self.spr.hide()
 
-    def load_image(self, path, file, w, h):
-        return gtk.gdk.pixbuf_new_from_file_at_size(
-            os.path.join(path, file+".svg"), int(w), int(h))
-
+#
+# Load pixbuf from SVG string
+#
+def svg_str_to_pixbuf(svg_string):
+    pl = gtk.gdk.PixbufLoader('svg')
+    pl.write(svg_string)
+    pl.close()
+    pixbuf = pl.get_pixbuf()
+    return pixbuf
