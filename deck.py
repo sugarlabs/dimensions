@@ -72,17 +72,16 @@ class Deck:
         # Remember the current position in the deck.
         self.index = 0
 
-    # Shuffle the deck.
+    # Shuffle the deck (Knuth algorithm).
     def shuffle(self):
         decksize = self.count()
         # Hide all the cards.
         for c in self.cards:
             c.hide_card()
         # Randomize the card order.
-        for n in range(decksize*4):
-            i = random.randrange(decksize)
-            j = random.randrange(decksize)
-            self.swap_cards(i,j)            
+        for n in range(decksize):
+            i = random.randrange(decksize-n)
+            self.swap_cards(n,decksize-1-i)            
         # Reset the index to the beginning of the deck after a shuffle,
         self.index = 0
         return
