@@ -176,6 +176,15 @@ class VisualMatchActivity(activity.Activity):
             self._robot_matches = int(self.metadata['robot_matches'])
             self._total_time = int(self.metadata['total_time'])
             self._deck_index = int(self.metadata['deck_index'])
+            self._word_lists = [[self.metadata['mouse'],\
+                                 self.metadata['cat'],\
+                                 self.metadata['dog']],\
+                                [self.metadata['cheese'],\
+                                 self.metadata['apple'],\
+                                 self.metadata['bread']],\
+                                [self.metadata['moon'],\
+                                 self.metadata['sun'],\
+                                 self.metadata['earth']]]
         except: # Otherwise, use default values.
             self._play_level = 0
             self._robot_time = 60
@@ -187,9 +196,9 @@ class VisualMatchActivity(activity.Activity):
             self._robot_matches = 0
             self._total_time = 0
             self._deck_index = 0
-        self.vmw.word_lists = [[_('mouse'),_('cat'),_('dog')],\
-                           [_('cheese'),_('apple'),_('bread')],\
-                           [_('moon'),_('sun'),_('earth')]]
+            self._word_lists = [[_('mouse'),_('cat'),_('dog')],\
+                                [_('cheese'),_('apple'),_('bread')],\
+                                [_('moon'),_('sun'),_('earth')]]
 
     #
     # Find the datapath for saving card files
@@ -463,6 +472,7 @@ class VisualMatchActivity(activity.Activity):
         self.vmw.robot_matches = self._robot_matches
         self.vmw.total_time = self._total_time
         self.vmw.buddies = []
+        self.vmw.word_lists = self._word_lists
         return canvas
 
     #
@@ -482,6 +492,15 @@ class VisualMatchActivity(activity.Activity):
             self.metadata['robot_matches'] = self.vmw.robot_matches
             self.metadata['total_time'] = int(self.vmw.total_time)
             self.metadata['deck_index'] = self.vmw.deck.index
+            self.metadata['mouse'] = self.vmw.word_lists[0][0]
+            self.metadata['cat'] = self.vmw.word_lists[0][1]
+            self.metadata['dog'] = self.vmw.word_lists[0][2]
+            self.metadata['cheese'] = self.vmw.word_lists[1][0]
+            self.metadata['apple'] = self.vmw.word_lists[1][1]
+            self.metadata['bread'] = self.vmw.word_lists[1][2]
+            self.metadata['moon'] = self.vmw.word_lists[2][0]
+            self.metadata['sun'] = self.vmw.word_lists[2][1]
+            self.metadata['earth'] = self.vmw.word_lists[2][2]
             self.metadata['mime_type'] = 'application/x-visualmatch'
             f = file(file_path, 'w')
             f.write(self._dump())
