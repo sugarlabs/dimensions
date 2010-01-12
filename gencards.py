@@ -16,36 +16,9 @@ from gettext import gettext as _
 from constants import *
 from math import sin, cos, pi
 
-RED_STROKE = "#FF6040"
-RED_FILL = "#FFC4B8"
-BLUE_STROKE = "#0060C8"
-BLUE_FILL = "#ACC8E4"
-GREEN_STROKE = "#00B418"
-GREEN_FILL = "#AFE8A8"
-BLACK = "#000000"
-WHITE = "#FFFFFF"
-
-color_pairs = ([RED_STROKE,RED_FILL],
-               [GREEN_STROKE,GREEN_FILL],
-               [BLUE_STROKE,BLUE_FILL])
-fill_styles = ["solid","none","gradient"]
-card_types = ["X","O","C"]
-
-roman_numerals = {5:'V',7:'VII',10:'X',11:'XI',14:'XIV',15:'XV',\
-                  21:'XXI',22:'XXII',33:'XXXIII'}
-number_names = {5:_('five'),7:_('seven'),11:_('eleven'),10:_('ten'),\
-                14:_('fourteen'),15:_('fifteen'),22:_('twenty two'),\
-                21:_('twenty one'),33:_('thirty three')}
-number_products = {5:'1×5',7:'1×7',11:'1×11',10:'2×5',\
-                   14:'2×7',15:'3×5',22:'2×11',\
-                   21:'3×7',33:'3×11'}
-chinese_numerals = {5:'五',7:'七',10:'十',11:'十一',14:'十四',15:'十五',\
-                  21:'廿一',22:'廿二',33:'卅三'}
-
-word_lists = [[_('mouse'),_('cat'),_('dog')],\
+WORD_LISTS = [[_('mouse'),_('cat'),_('dog')],\
               [_('cheese'),_('apple'),_('bread')],\
               [_('moon'),_('sun'),_('earth')]]
-word_styles = ["font-weight:bold","","font-style:italic"]
 
 #
 # SVG generators
@@ -396,7 +369,7 @@ def dice(n, stroke):
 def circle(x, style, stroke, fill):
     svg_string = ""
     if style == "none":
-        svg_string += svg_circle(x+17,38,16,stroke,"#FFFFFF",1.8)
+        svg_string += svg_circle(x+17,38,16,stroke,WHITE,1.8)
     elif style == "gradient":
         svg_string += svg_circle(x+17,38,16,stroke,fill,1.8)
     else:
@@ -448,18 +421,18 @@ def number_arabic(n, stroke):
     return svg_string
 
 def number_roman(n, stroke):
-    return svg_text(63.5,53,32,stroke,"DejaVu Serif","",roman_numerals[n])
+    return svg_text(63.5,53,32,stroke,"DejaVu Serif","",ROMAN_NUMERALS[n])
 
 def number_chinese(n, stroke):
-    return svg_text(63.5,55,48,stroke,"DejaVu","",chinese_numerals[n])
+    return svg_text(63.5,55,48,stroke,"DejaVu","",CHINESE_NUMERALS[n])
 
 def number_product(n, stroke):
-    return svg_text(63.5,53,36,stroke,"DejaVu","",number_products[n])
+    return svg_text(63.5,53,36,stroke,"DejaVu","",NUMBER_PRODUCTS[n])
 
 def number_word(n, stroke):
-    svg_string = ""
     x = 63.5
-    strings = number_names[n].split(' ')
+    strings = NUMBER_NAMES[n].split(' ')
+    svg_string = ""
     if len(strings) == 1:
         svg_string += svg_text(x,48,26,stroke,"DejaVu Serif","",strings[0])
     else:
@@ -476,18 +449,19 @@ def number_card(t, n, stroke, methodX, methodO, methodC):
         return (methodC(n, stroke))
 
 def word_card(t, c, n, s):
-    return svg_text(63.5,45.5,30,c[0],"DejaVu",s,word_lists[t][n])
+    # return svg_text(63.5,45.5,30,c[0],"DejaVu",s,WORD_LISTS[t][n])
+    return svg_text(63.5,45.5,30,c[0],"DejaVu",s,"")
 
 def pattern_card(t, c, n, s):
     pattern_styles = [cross_card, circle_card, check_card]
-    return pattern_styles[card_types.index(t)](n,s,c[0],c[1])
+    return pattern_styles[CARD_TYPES.index(t)](n,s,c[0],c[1])
 
 #
 # Card generators
 #
 def generate_pattern_card(t,c,n,s,scale):
-    svg_string = header(BLACK,color_pairs[c][1],0.5,scale)
-    svg_string += pattern_card(card_types[t],color_pairs[c],n+1,fill_styles[s])
+    svg_string = header(BLACK,COLOR_PAIRS[c][1],0.5,scale)
+    svg_string += pattern_card(CARD_TYPES[t],COLOR_PAIRS[c],n+1,FILL_STYLES[s])
     svg_string += footer()
     return svg_string
 
@@ -497,16 +471,16 @@ def generate_number_card(t,c,n,s,number_types,scale):
     methodC = [dots_in_a_line, dots_in_a_circle, points_in_a_star,\
                 number_hash, dice]
     methodX = number_arabic
-    svg_string = header(BLACK,color_pairs[c][1],0.5,scale)
-    svg_string += number_card(t,(n+1)*stab[s],color_pairs[c][0],
+    svg_string = header(BLACK,COLOR_PAIRS[c][1],0.5,scale)
+    svg_string += number_card(t,(n+1)*stab[s],COLOR_PAIRS[c][0],
                               methodX,methodO[number_types[0]],
                               methodC[number_types[1]])
     svg_string += footer()
     return svg_string
 
 def generate_word_card(t,c,n,s,scale):
-    svg_string = header(BLACK,color_pairs[c][1],0.5,scale)
-    svg_string += word_card(t,color_pairs[c],n,word_styles[s])
+    svg_string = header(BLACK,COLOR_PAIRS[c][1],0.5,scale)
+    svg_string += word_card(t,COLOR_PAIRS[c],n,WORD_STYLES[s])
     svg_string += footer()
     return svg_string
 

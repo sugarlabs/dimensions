@@ -187,6 +187,9 @@ class VisualMatchActivity(activity.Activity):
             self._robot_matches = 0
             self._total_time = 0
             self._deck_index = 0
+        self.vmw.word_lists = [[_('mouse'),_('cat'),_('dog')],\
+                           [_('cheese'),_('apple'),_('bread')],\
+                           [_('moon'),_('sun'),_('earth')]]
 
     #
     # Find the datapath for saving card files

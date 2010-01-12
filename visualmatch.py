@@ -173,6 +173,9 @@ class VisualMatchMain:
         self.vmw.matches = 0
         self.vmw.robot_matches = 0
         self.load_score()
+        self.vmw.word_lists = [[_('mouse'),_('cat'),_('dog')],\
+                           [_('cheese'),_('apple'),_('bread')],\
+                           [_('moon'),_('sun'),_('earth')]]
 
         self.vmw.new_game()
 

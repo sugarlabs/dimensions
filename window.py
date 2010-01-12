@@ -94,8 +94,8 @@ class VisualMatchWindow():
         if saved_state is not None:
             _logger.debug("Restoring state: %s" % (str(saved_state)))
             self.deck = Deck(self.sprites, self.card_type,
-                             [self.numberO, self.numberC], self.scale,
-                             difficulty_level[self.level])
+                             [self.numberO, self.numberC], self.word_lists,
+                             self.scale, difficulty_level[self.level])
             self.deck.hide()
             self.deck.index = deck_index
             _deck_start = ROW*COL+3
@@ -108,8 +108,8 @@ class VisualMatchWindow():
         elif not self.joiner():
             _logger.debug("Starting new game.")
             self.deck = Deck(self.sprites, self.card_type,
-                             [self.numberO, self.numberC], self.scale,
-                             difficulty_level[self.level])
+                             [self.numberO, self.numberC], self.word_lists,
+                             self.scale, difficulty_level[self.level])
             self.deck.hide()
             self.deck.shuffle()
             self.grid.deal(self.deck)

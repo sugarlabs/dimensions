@@ -26,7 +26,8 @@ from gencards import generate_pattern_card, generate_number_card, \
 # Class for defining deck of card
 #
 class Deck:
-    def __init__(self, sprites, card_type, numbers_type, scale, level=HIGH):
+    def __init__(self, sprites, card_type, numbers_type, word_lists, scale,
+                 level=HIGH):
         # Create the deck of cards.
         self.cards = []
         # If level is 'simple', only generate one fill type
@@ -55,6 +56,18 @@ class Deck:
                                                    generate_word_card(
                                                    shape,color,num,fill,scale),
                                                    [shape,color,num,fill]))
+                            self.cards[len(self.cards)-1].spr.set_label(
+                                                   word_lists[shape][num])
+                            self.cards[len(self.cards)-1].spr.set_label_color(
+                                                   COLOR_PAIRS[color][0])
+                            self.cards[len(self.cards)-1\
+                                       ].spr.set_label_attributes(scale*24)
+                            if fill == 0:
+                                self.cards[len(self.cards)-1
+                                       ].spr.set_font('Sans Bold')
+                            elif fill == 2:
+                                self.cards[len(self.cards)-1
+                                       ].spr.set_font('Sans Italic')
 
         # Remember the current position in the deck.
         self.index = 0
