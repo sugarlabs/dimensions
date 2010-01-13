@@ -1,4 +1,4 @@
-#Copyright (c) 2009, Walter Bender
+#Copyright (c) 2009,10 Walter Bender
 
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -94,6 +94,9 @@ class VisualMatchActivity(activity.Activity):
         if not hasattr(self,'_saved_state'):
             self._saved_state = None
         self.vmw.new_game(self._saved_state, self._deck_index)
+        if self._editing_word_list is True:
+            self.vmw.editing_word_list = True
+            self.vmw.edit_word_list()
 
     #
     # Button callbacks
@@ -153,7 +156,7 @@ class VisualMatchActivity(activity.Activity):
 
     def _edit_words_cb(self, button, activity):
         activity.vmw.editing_word_list = True
-        activity.vmw.edit_word_list()        
+        activity.vmw.edit_word_list()
 
     '''
     def _journal_cb(self, button, path):
@@ -205,6 +208,11 @@ class VisualMatchActivity(activity.Activity):
             self._word_lists = [[_('mouse'),_('cat'),_('dog')],\
                                 [_('cheese'),_('apple'),_('bread')],\
                                 [_('moon'),_('sun'),_('earth')]]
+        try: # Were we editing the word list?
+            self._editing_word_list = bool(int(
+                self.metadata['editing_word_list']))
+        except:
+            self._editing_word_list = False
 
     #
     # Find the datapath for saving card files
@@ -497,6 +505,7 @@ class VisualMatchActivity(activity.Activity):
         self.vmw.total_time = self._total_time
         self.vmw.buddies = []
         self.vmw.word_lists = self._word_lists
+        self.vmw.editing_word_list = self._editing_word_list
         return canvas
 
     #
@@ -525,6 +534,8 @@ class VisualMatchActivity(activity.Activity):
             self.metadata['moon'] = self.vmw.word_lists[2][0]
             self.metadata['sun'] = self.vmw.word_lists[2][1]
             self.metadata['earth'] = self.vmw.word_lists[2][2]
+            self.metadata['editing_word_list'] = self.vmw.editing_word_list
+            print "saving editing_word_list %s" % (str(self.vmw.editing_word_list))
             self.metadata['mime_type'] = 'application/x-visualmatch'
             f = file(file_path, 'w')
             f.write(self._dump())
@@ -551,6 +562,9 @@ class VisualMatchActivity(activity.Activity):
                 data.append(i.index)
         for i in self.vmw.match_list:
             data.append(self.vmw.deck.spr_to_card(i).index)
+        for i in self.vmw.word_lists:
+            for j in i:
+                data.append(j)
 
         if self._old_sugar_system is True:
             return json.write(data)

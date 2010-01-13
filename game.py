@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
-#Copyright (c) 2009, Walter Bender
-#Copyright (c) 2009, Michele Pratusevich
-#Copyright (c) 2009, Vincent Le
+#Copyright (c) 2009,10 Walter Bender
+#Copyright (c) 2009 Michele Pratusevich
+#Copyright (c) 2009 Vincent Le
 
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -112,6 +112,8 @@ class Game():
             self._restore_selected(saved_state[ROW*COL:ROW*COL+3])
             self._restore_matches(
                              saved_state[_deck_stop:_deck_stop+3*self.matches])
+            self._restore_word_list(
+                             saved_state[_deck_stop+3*self.matches:])
         elif not self.joiner():
             _logger.debug("Starting new game.")
             self.deck = Deck(self.sprites, self.card_type,
@@ -243,7 +245,6 @@ class Game():
                     self.clicked[i] = None
                     self.selected[i].hide_card()
             # Edit card label
-            print "editing card %s" % (str(spr.labels))
             self.edit_card = self.deck.spr_to_card(spr)
         elif None not in self.clicked:
             # If we have three cards selected, test for a match.
@@ -430,6 +431,15 @@ class Game():
             l = len(self.match_list)
             for j in range(3):
                 self.grid.display_match(self.match_list[l-3+j], j) 
+
+    #
+    # Restore the word list upon resume or share.
+    #
+    def _restore_word_list(self, saved_word_list):
+        if len(saved_word_list) == 9:
+            for i in range(3):
+                for j in range(3):
+                    self.word_lists[i][j] = saved_word_list[i*3+j]
 
     #
     # Display of seconds since start_time.
