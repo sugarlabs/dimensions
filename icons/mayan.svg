@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   version="1.0"
+   width="55"
+   height="55"
+   id="svg2">
+  <defs
+     id="defs4" />
+  <rect
+     width="50.94099"
+     height="50.940994"
+     rx="8.1506357"
+     ry="7.0263433"
+     x="2.0295048"
+     y="2.0295029"
+     id="rect2817"
+     style="fill:#000000;fill-opacity:1;stroke:#808080;stroke-width:4.05900621;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none" />
+  <circle
+     cx="5.2900672"
+     cy="25.218847"
+     r="3"
+     transform="translate(28.610183,2.2811527)"
+     id="circle14"
+     style="fill:#ffffff;fill-opacity:1;stroke:#ffffff;stroke-width:2;stroke-opacity:1" />
+  <circle
+     cx="-5.2900672"
+     cy="25.218847"
+     r="3"
+     transform="translate(26.390317,2.2811527)"
+     id="circle16"
+     style="fill:#ffffff;fill-opacity:1;stroke:#ffffff;stroke-width:2;stroke-opacity:1" />
+  <rect
+     width="27.616289"
+     height="4.3112044"
+     rx="0"
+     ry="4.3112044"
+     x="13.691855"
+     y="37.812614"
+     id="rect2820"
+     style="fill:#ffffff;fill-opacity:1;fill-rule:evenodd;stroke:#ffffff;stroke-width:2.6506598;stroke-linecap:square;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none" />
+</svg>
