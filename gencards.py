@@ -16,10 +16,6 @@ from gettext import gettext as _
 from constants import *
 from math import sin, cos, pi
 
-WORD_LISTS = [[_('mouse'),_('cat'),_('dog')],\
-              [_('cheese'),_('apple'),_('bread')],\
-              [_('moon'),_('sun'),_('earth')]]
-
 #
 # SVG generators
 #
@@ -184,6 +180,15 @@ def svg_star(n, x, y, stroke, fill):
     svg_string += "</g>\n"
     return svg_string
 
+def svg_bar(x, y, stroke):
+    svg_string = "       <rect\n"
+    svg_string += "          width=\"%f\"\n" % (40)
+    svg_string += "          height=\"%f\"\n" % (5)
+    svg_string += "          x=\"%f\"\n" % (x)
+    svg_string += "          y=\"%f\"\n" % (y)
+    svg_string += svg_style(stroke,stroke,1.8)
+    return svg_string
+
 def background(stroke,fill,width):
     return svg_rect(124.5,74.5,11,9,0.25,0.25,stroke,fill,width)
 
@@ -209,6 +214,47 @@ def footer():
 #
 # Card pattern generators
 #
+def number_mayan(n, stroke):
+    x = 45
+    y = 60
+    if n == 5:
+        svg_string = svg_bar(x,y,stroke)
+    elif n == 7:
+        svg_string = svg_bar(x,y,stroke)
+        svg_string += svg_circle(x+15,y-10,3,stroke,stroke,2)
+        svg_string += svg_circle(x+25,y-10,3,stroke,stroke,2)
+    elif n == 10:
+        svg_string = svg_bar(x,y,stroke)
+        svg_string += svg_bar(x,y-10,stroke)
+    elif n == 11:
+        svg_string = svg_bar(x,y,stroke)
+        svg_string += svg_bar(x,y-10,stroke)
+        svg_string += svg_circle(x+20,y-20,3,stroke,stroke,2)
+    elif n == 14:
+        svg_string = svg_bar(x,y,stroke)
+        svg_string += svg_bar(x,y-10,stroke)
+        svg_string += svg_circle(x+5,y-20,3,stroke,stroke,2)
+        svg_string += svg_circle(x+15,y-20,3,stroke,stroke,2)
+        svg_string += svg_circle(x+25,y-20,3,stroke,stroke,2)
+        svg_string += svg_circle(x+35,y-20,3,stroke,stroke,2)
+    elif n == 15:
+        svg_string = svg_bar(x,y,stroke)
+        svg_string += svg_bar(x,y-10,stroke)
+        svg_string += svg_bar(x,y-20,stroke)
+    elif n == 21:
+        svg_string = svg_circle(x+20,y,3,stroke,stroke,2)
+        svg_string += svg_circle(x+20,y-40,3,stroke,stroke,2)
+    elif n == 22:
+        svg_string = svg_circle(x+15,y,3,stroke,stroke,2)
+        svg_string += svg_circle(x+25,y,3,stroke,stroke,2)
+        svg_string += svg_circle(x+20,y-40,3,stroke,stroke,2)
+    elif n == 33:
+        svg_string = svg_bar(x,y,stroke)
+        svg_string += svg_bar(x,y-10,stroke)
+        svg_string += svg_circle(x+20,y-20,3,stroke,stroke,2)
+        svg_string += svg_circle(x+20,y-40,3,stroke,stroke,2)
+    return svg_string
+
 def dots_in_a_line(n, stroke):
     if n%3 == 0:
         y = 12.5
@@ -449,7 +495,6 @@ def number_card(t, n, stroke, methodX, methodO, methodC):
         return (methodC(n, stroke))
 
 def word_card(t, c, n, s):
-    # return svg_text(63.5,45.5,30,c[0],"DejaVu",s,WORD_LISTS[t][n])
     return svg_text(63.5,45.5,30,c[0],"DejaVu",s,"")
 
 def pattern_card(t, c, n, s):
@@ -467,7 +512,8 @@ def generate_pattern_card(t,c,n,s,scale):
 
 def generate_number_card(t,c,n,s,number_types,scale):
     stab = {0:5,1:7,2:11}
-    methodO = [number_roman, number_product, number_chinese, number_word]
+    methodO = [number_roman, number_product, number_chinese, number_word,\
+               number_mayan]
     methodC = [dots_in_a_line, dots_in_a_circle, points_in_a_star,\
                 number_hash, dice]
     methodX = number_arabic
@@ -500,7 +546,7 @@ def open_file(datapath, filename):
 def close_file(f):
     f.close()
 
-def generator(datapath,mO=PRODUCT,mC=HASH):
+def generator(datapath,mO=MAYAN,mC=HASH):
     generate_pattern_cards(datapath)
     generate_number_cards(datapath,[mO,mC])
     generate_word_cards(datapath)

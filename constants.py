@@ -31,6 +31,7 @@ ROMAN = 0
 PRODUCT = 1
 CHINESE = 2
 WORD = 3
+MAYAN = 4
 LINES = 0
 DOTS = 1
 STAR = 2
@@ -65,7 +66,7 @@ WORD_STYLES = ["font-weight:bold","","font-style:italic"]
 WORD_CARD_INDICIES = [1,4,7,37,40,43,73,76,79,None,None,None,None,None,None]
 WORD_CARD_MAP = {1:(0,0),4:(0,1),7:(0,2),37:(1,0),40:(1,1),43:(1,2),73:(2,0),\
                  76:(2,1),79:(2,2)}
-# dead key dictionaries
+# 'dead key' Unicode dictionaries
 DEAD_KEYS = ['grave','acute','circumflex','tilde','diaeresis','abovering']
 DEAD_DICTS = [{'A':192,'E':200,'I':204,'O':210,'U':217,'a':224,'e':232,'i':236,\
                'o':242,'u':249},

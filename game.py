@@ -349,7 +349,6 @@ class Game():
                 if unichr(u) is not '\x00':
                     self.edit_card.spr.labels[0]+=unichr(u)
             self.edit_card.spr.draw()
-            # Update the word_list entry associated with this card
             (i,j) = WORD_CARD_MAP[self.edit_card.index]
             self.word_lists[i][j] = self.edit_card.spr.labels[0] 
             self.dead_key = None
@@ -507,15 +506,18 @@ class Game():
 # Permutaion class for checking for all possible matches on the grid
 #    
 class Permutation: 
-     def __init__(self, justalist): 
-         self._data = justalist[:] 
+
+     def __init__(self, elist): 
+         self._data = elist[:] 
          self._sofar = [] 
+
      def __iter__(self): 
          return self.next() 
+
      def next(self): 
-          for elem in self._data: 
-              if elem not in self._sofar: 
-                  self._sofar.append(elem) 
+          for e in self._data: 
+              if e not in self._sofar: 
+                  self._sofar.append(e) 
                   if len(self._sofar) == 3: 
                       yield self._sofar[:] 
                   else: 

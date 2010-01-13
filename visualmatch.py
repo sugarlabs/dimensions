@@ -159,7 +159,7 @@ class VisualMatchMain:
         self.win.show_all()
 
         # Join the activity
-        self.vmw = game.VisualMatchWindow(canvas, \
+        self.vmw = game.Game(canvas, \
                                os.path.join(os.path.abspath('.'), \
                                             'images/'))
         self.vmw.win = self.win

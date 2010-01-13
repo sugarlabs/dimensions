@@ -356,6 +356,12 @@ class VisualMatchActivity(activity.Activity):
             self.chinese_button.set_tooltip(_('Chinese'))
             numbers_toolbar.insert(self.chinese_button,-1)
             self.chinese_button.show()
+            self.mayan_button = ToolButton('mayan')
+            self.mayan_button.connect('clicked', self._number_card_O_cb,
+                                        self, MAYAN)
+            self.mayan_button.set_tooltip(_('Mayan'))
+            numbers_toolbar.insert(self.mayan_button,-1)
+            self.mayan_button.show()
 
             separator = gtk.SeparatorToolItem()
             separator.props.draw = True
@@ -478,7 +484,7 @@ class VisualMatchActivity(activity.Activity):
         canvas.show()
         self.show_all()
 
-        self.vmw = game.VisualMatchWindow(canvas, datapath, self)
+        self.vmw = game.Game(canvas, datapath, self)
         self.vmw.level = self._play_level
         self.vmw.card_type = self._card_type
         self.vmw.robot = False
@@ -842,6 +848,12 @@ class NumbersToolbar(gtk.Toolbar):
             self.activity._number_card_O_cb, self.activity, CHINESE)
         self.insert(self.activity.chinese_button, -1)
         self.activity.chinese_button.show()
+        self.activity.mayan_button = ToolButton( "mayan" )
+        self.activity.mayan_button.props.sensitive = True
+        self.activity.mayan_button.connect('clicked', 
+            self.activity._number_card_O_cb, self.activity, MAYAN)
+        self.insert(self.activity.mayan_button, -1)
+        self.activity.mayan_button.show()
 
         separator = gtk.SeparatorToolItem()
         separator.set_draw(True)
