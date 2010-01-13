@@ -19,7 +19,7 @@ import gtk
 from gettext import gettext as _
 import os
 
-import window
+import game
 import grid
 import card
 import sprites
@@ -159,7 +159,7 @@ class VisualMatchMain:
         self.win.show_all()
 
         # Join the activity
-        self.vmw = window.VisualMatchWindow(canvas, \
+        self.vmw = game.VisualMatchWindow(canvas, \
                                os.path.join(os.path.abspath('.'), \
                                             'images/'))
         self.vmw.win = self.win

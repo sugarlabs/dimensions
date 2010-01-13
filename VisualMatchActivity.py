@@ -62,7 +62,7 @@ from StringIO import StringIO
 
 from constants import *
 from sprites import *
-import window
+import game
 import grid
 import deck
 import card
@@ -478,7 +478,7 @@ class VisualMatchActivity(activity.Activity):
         canvas.show()
         self.show_all()
 
-        self.vmw = window.VisualMatchWindow(canvas, datapath, self)
+        self.vmw = game.VisualMatchWindow(canvas, datapath, self)
         self.vmw.level = self._play_level
         self.vmw.card_type = self._card_type
         self.vmw.robot = False
