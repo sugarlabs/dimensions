@@ -65,11 +65,16 @@ class VisualMatchWindow():
         self.selected = []
         self.match_display_area = []
         self.clicked = [None, None, None]
+        self.editing_word_list = False
+        self.edit_card = None
 
     #
     # Start a new game.
     #
     def new_game(self, saved_state=None, deck_index=0):
+        # If we were editing the word list, time to stop
+        self.editing_word_list = False
+        self.edit_card = None
 
         # If there is already a deck, hide it.
         if hasattr(self, 'deck'):
@@ -134,21 +139,45 @@ class VisualMatchWindow():
                 gobject.source_remove(self.match_timeout_id)
             self._timer_reset()
 
-    def joiner(self):
+    def _sharing(self):
         if self.sugar is True and \
             hasattr(self.activity, 'chattube') and \
-            self.activity.chattube is not None and \
-            self.activity.initiating is False:
+            self.activity.chattube is not None:
+            return True
+        return False
+
+    def joiner(self):
+        if self._sharing() is True and self.activity.initiating is False:
             return True
         return False
 
     def sharer(self):
-        if self.sugar is True and \
-            hasattr(self.activity, 'chattube') and \
-            self.activity.chattube is not None and \
-            self.activity.initiating is True:
+        if self._sharing() is True and self.activity.initiating is True:
             return True
         return False
+
+    def edit_word_list(self):
+        if self.editing_word_list == False:
+            return
+
+        # Set the card type to words, and generate a new deck.
+        self.deck.hide()
+        self.card_type = 'word'
+        self.deck = Deck(self.sprites, self.card_type,
+                         [self.numberO, self.numberC], self.word_lists,
+                         self.scale, difficulty_level[1])
+        self.deck.hide()
+        self._unselect()
+        self.matches = 0
+        self.robot_matches = 0
+        self.match_list = []
+        self.total_time = 0
+        self.edit_card = None
+        if hasattr(self,'timeout_id') and self.timeout_id is not None:
+            gobject.source_remove(self.timeout_id)
+        # Fill the grid with word cards.
+        self.grid.restore(self.deck, [1,4,7,37,40,43,73,76,79,None,None,None,\
+                                      None,None,None])
 
     #
     # Button press
@@ -166,13 +195,11 @@ class VisualMatchWindow():
         spr = self.sprites.find_sprite((x, y))
         if spr is None:
             return True
-        if self.sugar is True and \
-            hasattr(self.activity, 'chattube') and \
-            self.activity.chattube is not None:
+        if self._sharing() is True:
             if self.deck.spr_to_card(spr) is not None:
                 self.activity._send_event(
                     "B:"+str(self.deck.spr_to_card(spr).index))
-            i =  self._selected(spr)
+            i = self._selected(spr)
             if i is not -1:
                 self.activity._send_event("S:"+str(i))
         return self._process_selection(spr)
@@ -206,8 +233,18 @@ class VisualMatchWindow():
                 self.selected[i].show_card()
                 break
 
-        # If we have three cards selected, test for a match.
-        if None not in self.clicked:
+        if self.editing_word_list == True:
+            # Only edit one card at a time, so unselect other cards
+            for a in self.clicked:
+                if a is not None and a is not spr:
+                    i = self.clicked.index(a)
+                    self.clicked[i] = None
+                    self.selected[i].hide_card()
+            # Edit card label
+            print "editing card %s" % (str(spr.labels))
+            self.edit_card = self.deck.spr_to_card(spr)
+        elif None not in self.clicked:
+            # If we have three cards selected, test for a match.
             self._test_for_a_match()
         return True
 
@@ -226,10 +263,8 @@ class VisualMatchWindow():
             return True
         return False
 
-    #
-    # Lots of work to do if we have a match
-    #
     def _test_for_a_match(self):
+        # If we have a match, then we have work to do.
         if self._match_check([self.deck.spr_to_card(self.clicked[0]),
                               self.deck.spr_to_card(self.clicked[1]),
                               self.deck.spr_to_card(self.clicked[2])], 
@@ -292,9 +327,21 @@ class VisualMatchWindow():
     #
     def _keypress_cb(self,area, event):
         k = gtk.gdk.keyval_name(event.keyval)
-        if k in KEYMAP:
-            return self._process_selection(
-                       self.grid.grid_to_spr(KEYMAP.index(k)))
+        if self.editing_word_list == True and self.edit_card is not None:
+            if k == 'BackSpace':
+                self.edit_card.spr.labels[0] = \
+                self.edit_card.spr.labels[0]\
+                    [:len(self.edit_card.spr.labels[0])-1]
+            else:
+                print k
+                # TODO: add deadchars and filter out non-printables
+                self.edit_card.spr.labels[0]+=k
+            self.edit_card.spr.draw()
+            # TODO: modify word_list entry associated with this card
+        else:
+            if k in KEYMAP:
+                return self._process_selection(
+                           self.grid.grid_to_spr(KEYMAP.index(k)))
         return True
 
     def _expose_cb(self, win, event):

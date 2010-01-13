@@ -142,7 +142,8 @@ class Deck:
     # Hide the deck.
     def hide(self):
         for c in self.cards:
-            c.hide_card()
+            if c is not None:
+                c.hide_card()
 
     # Return the length of the deck.
     def count(self):

@@ -151,6 +151,10 @@ class VisualMatchActivity(activity.Activity):
         self.vmw.robot_time = self._robot_time_spin.get_value_as_int()
         return
 
+    def _edit_words_cb(self, button, activity):
+        activity.vmw.editing_word_list = True
+        activity.vmw.edit_word_list()        
+
     '''
     def _journal_cb(self, button, path):
         title_alert = NamingAlert(self, path)
@@ -176,15 +180,6 @@ class VisualMatchActivity(activity.Activity):
             self._robot_matches = int(self.metadata['robot_matches'])
             self._total_time = int(self.metadata['total_time'])
             self._deck_index = int(self.metadata['deck_index'])
-            self._word_lists = [[self.metadata['mouse'],\
-                                 self.metadata['cat'],\
-                                 self.metadata['dog']],\
-                                [self.metadata['cheese'],\
-                                 self.metadata['apple'],\
-                                 self.metadata['bread']],\
-                                [self.metadata['moon'],\
-                                 self.metadata['sun'],\
-                                 self.metadata['earth']]]
         except: # Otherwise, use default values.
             self._play_level = 0
             self._robot_time = 60
@@ -196,6 +191,17 @@ class VisualMatchActivity(activity.Activity):
             self._robot_matches = 0
             self._total_time = 0
             self._deck_index = 0
+        try: # Some saved games may not have the word list
+            self._word_lists = [[self.metadata['mouse'],\
+                                 self.metadata['cat'],\
+                                 self.metadata['dog']],\
+                                [self.metadata['cheese'],\
+                                 self.metadata['apple'],\
+                                 self.metadata['bread']],\
+                                [self.metadata['moon'],\
+                                 self.metadata['sun'],\
+                                 self.metadata['earth']]]
+        except:
             self._word_lists = [[_('mouse'),_('cat'),_('dog')],\
                                 [_('cheese'),_('apple'),_('bread')],\
                                 [_('moon'),_('sun'),_('earth')]]
@@ -304,6 +310,17 @@ class VisualMatchActivity(activity.Activity):
             level_toolitem.add(self.level_label)
             tools_toolbar.insert(level_toolitem,-1)
             level_toolitem.show()
+
+            separator = gtk.SeparatorToolItem()
+            separator.props.draw = True
+            tools_toolbar.insert(separator, -1)
+            separator.show()
+
+            self.words_tool_button = ToolButton('word-tools')
+            self.words_tool_button.set_tooltip(_('Edit word lists.'))
+            self.words_tool_button.connect('clicked', self._edit_words_cb, self)
+            tools_toolbar.insert(self.words_tool_button,-1)
+            self.words_tool_button.show()
 
             tools_toolbar_button = ToolbarButton(
                     page=tools_toolbar,
@@ -511,17 +528,20 @@ class VisualMatchActivity(activity.Activity):
     def _dump(self):
         data = []
         for i in self.vmw.grid.grid:
-            if i is None:
+            if i is None or self.vmw.editing_word_list == True:
                 data.append(None)
             else:
                 data.append(i.index)
         for i in self.vmw.clicked:
-            if i is None:
+            if i is None or self.vmw.editing_word_list == True:
                 data.append(None)
             else:
                 data.append(self.vmw.deck.spr_to_card(i).index)
         for i in self.vmw.deck.cards:
-            data.append(i.index)
+            if i is None or self.vmw.editing_word_list == True:
+                data.append(None)
+            else:
+                data.append(i.index)
         for i in self.vmw.match_list:
             data.append(self.vmw.deck.spr_to_card(i).index)
 
