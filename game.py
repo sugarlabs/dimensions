@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 #Copyright (c) 2009, Walter Bender
 #Copyright (c) 2009, Michele Pratusevich
 #Copyright (c) 2009, Vincent Le
@@ -35,7 +36,7 @@ from gencards import generate_selected_card, generate_match_card
 
 difficulty_level = [LOW,HIGH]
 
-class VisualMatchWindow():
+class Game():
 
     def __init__(self, canvas, path, parent=None):
         self.path = path
@@ -326,10 +327,10 @@ class VisualMatchWindow():
     #
     # Callbacks
     #
-    def _keypress_cb(self,area, event):
+    def _keypress_cb(self, area, event):
         k = gtk.gdk.keyval_name(event.keyval)
+        u = gtk.gdk.keyval_to_unicode(event.keyval)
         if self.editing_word_list == True and self.edit_card is not None:
-            print k
             if k in NOISE_KEYS:
                 self.dead_key = None
                 return True
@@ -337,28 +338,16 @@ class VisualMatchWindow():
                 self.dead_key = k
                 return True
             if k == 'BackSpace':
-                self.edit_card.spr.labels[0] = \
+                self.edit_card.spr.labels[0] =\
                 self.edit_card.spr.labels[0]\
                     [:len(self.edit_card.spr.labels[0])-1]
             else:
                 if self.dead_key is not None:
-                    if self.dead_key == 'dead_grave':
-                        k = DEAD_GRAVE[k]
-                    elif self.dead_key == 'dead_acute':
-                        k = DEAD_ACUTE[k]
-                    elif self.dead_key == 'dead_circumflex':
-                        k = DEAD_CIRCUMFLEX[k]
-                    elif self.dead_key == 'dead_tilde':
-                        k = DEAD_TILDE[k]
-                    elif self.dead_key == 'dead_diaeresis':
-                        k = DEAD_DIAERESIS[k]
-                    elif self.dead_key == 'dead_abovering':
-                        k = DEAD_ABOVERING[k]
+                    u = DEAD_DICTS[DEAD_KEYS.index(self.dead_key[5:])][k]
                 if k in WHITE_SPACE:
-                    k = ' '
-                if k in ['minus', 'period']: 
-                    k = {'minus': '-', 'period': '.'}[k]
-                self.edit_card.spr.labels[0]+=k
+                    u = 32
+                if unichr(u) is not '\x00':
+                    self.edit_card.spr.labels[0]+=unichr(u)
             self.edit_card.spr.draw()
             # Update the word_list entry associated with this card
             (i,j) = WORD_CARD_MAP[self.edit_card.index]
