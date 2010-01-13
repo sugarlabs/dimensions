@@ -24,9 +24,9 @@ try:
     from sugar.graphics.toolbarbox import ToolbarBox
     from sugar.graphics.toolbarbox import ToolbarButton
     from namingalert import NamingAlert
-    sugar86 = True
+    _new_sugar_system = True
 except ImportError:
-    sugar86 = False
+    _new_sugar_system = False
 from sugar.graphics.toolbutton import ToolButton
 from sugar.graphics.menuitem import MenuItem
 from sugar.graphics.icon import Icon
@@ -86,7 +86,7 @@ class VisualMatchActivity(activity.Activity):
         # Set things up.
         self._read_journal_data()
         datapath = self._find_datapath(_old_sugar_system)
-        self._setup_toolbars(sugar86)
+        self._setup_toolbars(_new_sugar_system)
         canvas = self._setup_canvas(datapath)
         self._setup_presence_service()
 
@@ -221,9 +221,10 @@ class VisualMatchActivity(activity.Activity):
     #
     # Setup the toolbars.
     #
-    def _setup_toolbars(self, sugar86):
+    def _setup_toolbars(self, new_sugar_system):
+
         # Create the toolbars.
-        if sugar86 is True:
+        if new_sugar_system is True:
             toolbar_box = ToolbarBox()
 
             # Activity toolbar
@@ -798,6 +799,18 @@ class ToolsToolbar(gtk.Toolbar):
         self.activity.level_toolitem.add(self.activity.level_label)
         self.insert(self.activity.level_toolitem,-1)
         self.activity.level_toolitem.show()
+
+        separator = gtk.SeparatorToolItem()
+        separator.set_draw(True)
+        self.insert(separator, -1)
+        separator.show()
+
+        self.activity.words_tool_button = ToolButton('word-tools')
+        self.activity.words_tool_button.set_tooltip(_('Edit word lists.'))
+        self.activity.words_tool_button.connect('clicked', 
+                                   self.activity._edit_words_cb, self.activity)
+        self.insert(self.activity.words_tool_button,-1)
+        self.activity.words_tool_button.show()
 
 class NumbersToolbar(gtk.Toolbar):
 
