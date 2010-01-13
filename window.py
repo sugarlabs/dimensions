@@ -176,8 +176,7 @@ class VisualMatchWindow():
         if hasattr(self,'timeout_id') and self.timeout_id is not None:
             gobject.source_remove(self.timeout_id)
         # Fill the grid with word cards.
-        self.grid.restore(self.deck, [1,4,7,37,40,43,73,76,79,None,None,None,\
-                                      None,None,None])
+        self.grid.restore(self.deck, WORD_CARD_INDICIES)
 
     #
     # Button press
@@ -337,7 +336,9 @@ class VisualMatchWindow():
                 # TODO: add deadchars and filter out non-printables
                 self.edit_card.spr.labels[0]+=k
             self.edit_card.spr.draw()
-            # TODO: modify word_list entry associated with this card
+            # Update the word_list entry associated with this card
+            (i,j) = WORD_CARD_MAP[self.edit_card.index]
+            self.word_lists[i][j] = self.edit_card.spr.labels[0] 
         else:
             if k in KEYMAP:
                 return self._process_selection(

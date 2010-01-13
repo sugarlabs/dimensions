@@ -62,3 +62,6 @@ NUMBER_PRODUCTS = {5:'1×5',7:'1×7',11:'1×11',10:'2×5',\
 CHINESE_NUMERALS = {5:'五',7:'七',10:'十',11:'十一',14:'十四',15:'十五',\
                   21:'廿一',22:'廿二',33:'卅三'}
 WORD_STYLES = ["font-weight:bold","","font-style:italic"]
+WORD_CARD_INDICIES = [1,4,7,37,40,43,73,76,79,None,None,None,None,None,None]
+WORD_CARD_MAP = {1:(0,0),4:(0,1),7:(0,2),37:(1,0),40:(1,1),43:(1,2),73:(2,0),\
+                 76:(2,1),79:(2,2)}
