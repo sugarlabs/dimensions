@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-01-14 17:07+0000\n"
+"POT-Creation-Date: 2010-01-14 17:16+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 
 #: activity/activity.info:2 /home/walter/Desktop/set/visualmatch.py:36
-#: /home/walter/Desktop/set/game.py:403
+#: /home/walter/Desktop/set/game.py:407
 msgid "Visual Match"
 msgstr ""
 
@@ -194,25 +194,29 @@ msgstr ""
 msgid "earth"
 msgstr ""
 
-#: /home/walter/Desktop/set/game.py:262
+#: /home/walter/Desktop/set/game.py:188
+msgid "Edit the word cards."
+msgstr ""
+
+#: /home/walter/Desktop/set/game.py:266
 msgid "Game over"
 msgstr ""
 
-#: /home/walter/Desktop/set/game.py:289 /home/walter/Desktop/set/game.py:374
+#: /home/walter/Desktop/set/game.py:293 /home/walter/Desktop/set/game.py:378
 #: /home/walter/Desktop/set/VisualMatchActivity.py:422
 #: /home/walter/Desktop/set/VisualMatchActivity.py:940
 msgid "cards"
 msgstr ""
 
-#: /home/walter/Desktop/set/game.py:300
+#: /home/walter/Desktop/set/game.py:304
 msgid "New record"
 msgstr ""
 
-#: /home/walter/Desktop/set/game.py:380 /home/walter/Desktop/set/game.py:382
+#: /home/walter/Desktop/set/game.py:384 /home/walter/Desktop/set/game.py:386
 msgid "match"
 msgstr ""
 
-#: /home/walter/Desktop/set/game.py:387 /home/walter/Desktop/set/game.py:389
+#: /home/walter/Desktop/set/game.py:391 /home/walter/Desktop/set/game.py:393
 #: /home/walter/Desktop/set/VisualMatchActivity.py:432
 #: /home/walter/Desktop/set/VisualMatchActivity.py:952
 msgid "matches"
