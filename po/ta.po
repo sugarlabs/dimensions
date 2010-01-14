@@ -1,0 +1,153 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2009-12-07 18:05+0000\n"
+"PO-Revision-Date: 2009-12-22 11:52-0400\n"
+"Last-Translator: Chris Leonard <cjl@laptop.org>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: ta\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Pootle 1.2.1\n"
+
+#: activity/activity.info:2 /home/walter/Desktop/set/window.py:265
+#: /home/walter/Desktop/set/visualmatch.py:42
+msgid "Visual Match"
+msgstr ""
+
+#: /home/walter/Desktop/set/window.py:124
+#: /home/walter/Desktop/set/window.py:185
+#: /home/walter/Desktop/set/VisualMatchActivity.py:112
+msgid "cards remaining"
+msgstr ""
+
+#: /home/walter/Desktop/set/window.py:125
+#: /home/walter/Desktop/set/window.py:212
+#: /home/walter/Desktop/set/VisualMatchActivity.py:123
+#: /home/walter/Desktop/set/VisualMatchActivity.py:293
+msgid "matches"
+msgstr ""
+
+#: /home/walter/Desktop/set/window.py:192
+msgid "Game over"
+msgstr ""
+
+#: /home/walter/Desktop/set/window.py:192
+#: /home/walter/Desktop/set/window.py:200
+msgid "seconds"
+msgstr ""
+
+#: /home/walter/Desktop/set/window.py:200
+msgid "New record"
+msgstr ""
+
+#: /home/walter/Desktop/set/window.py:208
+#: /home/walter/Desktop/set/window.py:210
+msgid "match"
+msgstr ""
+
+#: /home/walter/Desktop/set/window.py:218
+msgid "no match"
+msgstr ""
+
+#: /home/walter/Desktop/set/visualmatch.py:43
+msgid "Click on cards to create sets of three."
+msgstr ""
+
+#: /home/walter/Desktop/set/visualmatch.py:49
+#: /home/walter/Desktop/set/VisualMatchActivity.py:81
+#: /home/walter/Desktop/set/VisualMatchActivity.py:248
+msgid "New pattern game"
+msgstr ""
+
+#: /home/walter/Desktop/set/visualmatch.py:53
+#: /home/walter/Desktop/set/VisualMatchActivity.py:90
+#: /home/walter/Desktop/set/VisualMatchActivity.py:257
+msgid "New number game"
+msgstr ""
+
+#: /home/walter/Desktop/set/visualmatch.py:57
+#: /home/walter/Desktop/set/VisualMatchActivity.py:99
+#: /home/walter/Desktop/set/VisualMatchActivity.py:266
+msgid "New word game"
+msgstr ""
+
+#: /home/walter/Desktop/set/gencards.py:212
+msgid "dog"
+msgstr ""
+
+#: /home/walter/Desktop/set/gencards.py:212
+msgid "cat"
+msgstr ""
+
+#: /home/walter/Desktop/set/gencards.py:212
+msgid "mouse"
+msgstr ""
+
+#: /home/walter/Desktop/set/gencards.py:214
+msgid "apple"
+msgstr ""
+
+#: /home/walter/Desktop/set/gencards.py:214
+msgid "bread"
+msgstr ""
+
+#: /home/walter/Desktop/set/gencards.py:214
+msgid "cheese"
+msgstr ""
+
+#: /home/walter/Desktop/set/gencards.py:216
+msgid "sun"
+msgstr ""
+
+#: /home/walter/Desktop/set/gencards.py:216
+msgid "moon"
+msgstr ""
+
+#: /home/walter/Desktop/set/gencards.py:216
+msgid "earth"
+msgstr ""
+
+#: /home/walter/Desktop/set/VisualMatchActivity.py:145
+#: /home/walter/Desktop/set/VisualMatchActivity.py:319
+msgid "Find a match."
+msgstr ""
+
+#: /home/walter/Desktop/set/VisualMatchActivity.py:159
+msgid "Write in Journal"
+msgstr ""
+
+#: /home/walter/Desktop/set/VisualMatchActivity.py:181
+msgid "Project"
+msgstr ""
+
+#: /home/walter/Desktop/set/VisualMatchActivity.py:280
+msgid "cards remain in the deck"
+msgstr ""
+
+#: /home/walter/Desktop/set/namingalert.py:82
+msgid "Describe your activity"
+msgstr ""
+
+#: /home/walter/Desktop/set/namingalert.py:87
+msgid "Keep"
+msgstr "வைத்திரு"
+
+#: /home/walter/Desktop/set/namingalert.py:283
+msgid "Untitled"
+msgstr ""
+
+#: /home/walter/Desktop/set/namingalert.py:290
+msgid "Description:"
+msgstr ""
+
+#: /home/walter/Desktop/set/namingalert.py:314
+msgid "Tags:"
+msgstr ""
