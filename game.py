@@ -182,6 +182,10 @@ class Game():
             gobject.source_remove(self.timeout_id)
         # Fill the grid with word cards.
         self.grid.restore(self.deck, WORD_CARD_INDICIES)
+        self.set_label("deck", "")
+        self.set_label("match", "")
+        self.set_label("clock","")
+        self.set_label("status", _('Edit the word cards.'))
 
     #
     # Button press
