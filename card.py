@@ -1,5 +1,5 @@
-#Copyright (c) 2009, Walter Bender
-#Copyright (c) 2009, Michele Pratusevich
+#Copyright (c) 2009,10 Walter Bender
+#Copyright (c) 2009 Michele Pratusevich
 
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by

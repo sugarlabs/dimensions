@@ -107,13 +107,13 @@ class Game():
             self.deck.index = deck_index
             _deck_start = ROW*COL+3
             _deck_stop = _deck_start+self.deck.count()
+            self._restore_word_list(
+                             saved_state[_deck_stop+3*self.matches:])
             self.deck.restore(saved_state[_deck_start:_deck_stop])
             self.grid.restore(self.deck, saved_state[0:ROW*COL])
             self._restore_selected(saved_state[ROW*COL:ROW*COL+3])
             self._restore_matches(
                              saved_state[_deck_stop:_deck_stop+3*self.matches])
-            self._restore_word_list(
-                             saved_state[_deck_stop+3*self.matches:])
         elif not self.joiner():
             _logger.debug("Starting new game.")
             self.deck = Deck(self.sprites, self.card_type,

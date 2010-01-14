@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-#Copyright (c) 2009, Walter Bender
+#Copyright (c) 2009,10 Walter Bender
 
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -106,7 +106,6 @@ def svg_circle_of_dots(n, x, y, stroke, fill):
     ny = oy+cos(a)*r
     svg_string = "%s%f%s%f%s" % ("<g\n   transform=\"translate(",x,", ",y,
                                  ")\">\n")
-    print svg_string
     for i in range(n):
         svg_string += svg_circle(nx,ny,3,stroke,fill,2)
         a += da

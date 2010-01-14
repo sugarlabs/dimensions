@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 #Copyright (c) 2007-8, Playful Invention Company.
-#Copyright (c) 2008-9, Walter Bender
+#Copyright (c) 2008-10 Walter Bender
 
 #Permission is hereby granted, free of charge, to any person obtaining a copy
 #of this software and associated documentation files (the "Software"), to deal
@@ -228,7 +228,6 @@ class Sprite:
     def label_width(self):
         max = 0
         for i in range(len(self.labels)):
-            print "i %d" % (i)
             pl = self.sprites.canvas.create_pango_layout(self.labels[i])
             self.fd.set_size(int(self.scale[i]*pango.SCALE))
             pl.set_font_description(self.fd)

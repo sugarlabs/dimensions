@@ -535,7 +535,6 @@ class VisualMatchActivity(activity.Activity):
             self.metadata['sun'] = self.vmw.word_lists[2][1]
             self.metadata['earth'] = self.vmw.word_lists[2][2]
             self.metadata['editing_word_list'] = self.vmw.editing_word_list
-            print "saving editing_word_list %s" % (str(self.vmw.editing_word_list))
             self.metadata['mime_type'] = 'application/x-visualmatch'
             f = file(file_path, 'w')
             f.write(self._dump())
