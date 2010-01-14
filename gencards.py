@@ -214,44 +214,46 @@ def footer():
 # Card pattern generators
 #
 def number_mayan(n, stroke):
-    x = 45
+    x = 42.5
+    x1,x2,xc,x3,x4 = x+5,x+15,x+20,x+25,x+35
     y = 60
+    y1s,y5s,y10s,y20s = y,y-10,y-20,y-40
     if n == 5:
-        svg_string = svg_bar(x,y,stroke)
+        svg_string = svg_bar(x,y1s,stroke)
     elif n == 7:
-        svg_string = svg_bar(x,y,stroke)
-        svg_string += svg_circle(x+15,y-10,3,stroke,stroke,2)
-        svg_string += svg_circle(x+25,y-10,3,stroke,stroke,2)
+        svg_string = svg_bar(x,y1s,stroke)
+        svg_string += svg_circle(x2,y5s,3,stroke,stroke,2)
+        svg_string += svg_circle(x3,y5s,3,stroke,stroke,2)
     elif n == 10:
-        svg_string = svg_bar(x,y,stroke)
-        svg_string += svg_bar(x,y-10,stroke)
+        svg_string = svg_bar(x,y1s,stroke)
+        svg_string += svg_bar(x,y5s,stroke)
     elif n == 11:
-        svg_string = svg_bar(x,y,stroke)
-        svg_string += svg_bar(x,y-10,stroke)
-        svg_string += svg_circle(x+20,y-20,3,stroke,stroke,2)
+        svg_string = svg_bar(x,y1s,stroke)
+        svg_string += svg_bar(x,y5s,stroke)
+        svg_string += svg_circle(x+20,y10s,3,stroke,stroke,2)
     elif n == 14:
-        svg_string = svg_bar(x,y,stroke)
-        svg_string += svg_bar(x,y-10,stroke)
-        svg_string += svg_circle(x+5,y-20,3,stroke,stroke,2)
-        svg_string += svg_circle(x+15,y-20,3,stroke,stroke,2)
-        svg_string += svg_circle(x+25,y-20,3,stroke,stroke,2)
-        svg_string += svg_circle(x+35,y-20,3,stroke,stroke,2)
+        svg_string = svg_bar(x,y1s,stroke)
+        svg_string += svg_bar(x,y5s,stroke)
+        svg_string += svg_circle(x1,y10s,3,stroke,stroke,2)
+        svg_string += svg_circle(x2,y10s,3,stroke,stroke,2)
+        svg_string += svg_circle(x3,y10s,3,stroke,stroke,2)
+        svg_string += svg_circle(x4,y10s,3,stroke,stroke,2)
     elif n == 15:
-        svg_string = svg_bar(x,y,stroke)
-        svg_string += svg_bar(x,y-10,stroke)
-        svg_string += svg_bar(x,y-20,stroke)
+        svg_string = svg_bar(x,y1s,stroke)
+        svg_string += svg_bar(x,y5s,stroke)
+        svg_string += svg_bar(x,y10s,stroke)
     elif n == 21:
-        svg_string = svg_circle(x+20,y,3,stroke,stroke,2)
-        svg_string += svg_circle(x+20,y-40,3,stroke,stroke,2)
+        svg_string = svg_circle(xc,y1s,3,stroke,stroke,2)
+        svg_string += svg_circle(xc,y20s,3,stroke,stroke,2)
     elif n == 22:
-        svg_string = svg_circle(x+15,y,3,stroke,stroke,2)
-        svg_string += svg_circle(x+25,y,3,stroke,stroke,2)
-        svg_string += svg_circle(x+20,y-40,3,stroke,stroke,2)
+        svg_string = svg_circle(x2,y1s,3,stroke,stroke,2)
+        svg_string += svg_circle(x3,y1s,3,stroke,stroke,2)
+        svg_string += svg_circle(xc,y20s,3,stroke,stroke,2)
     elif n == 33:
-        svg_string = svg_bar(x,y,stroke)
-        svg_string += svg_bar(x,y-10,stroke)
-        svg_string += svg_circle(x+20,y-20,3,stroke,stroke,2)
-        svg_string += svg_circle(x+20,y-40,3,stroke,stroke,2)
+        svg_string = svg_bar(x,y1s,stroke)
+        svg_string += svg_bar(x,y5s,stroke)
+        svg_string += svg_circle(xc,y10s,3,stroke,stroke,2)
+        svg_string += svg_circle(xc,y20s,3,stroke,stroke,2)
     return svg_string
 
 def dots_in_a_line(n, stroke):
