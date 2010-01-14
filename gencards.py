@@ -1,4 +1,6 @@
+#!/usr/bin/env python
 # -*- coding: utf-8 -*-
+
 #Copyright (c) 2009,10 Walter Bender
 
 # This program is free software; you can redistribute it and/or modify
@@ -13,8 +15,8 @@
 
 import os
 from gettext import gettext as _
-from constants import *
 from math import sin, cos, pi
+from constants import *
 
 #
 # SVG generators
