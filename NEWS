@@ -1,3 +1,8 @@
+19
+
+* fixed bug with Mayan 33
+* cleaned up some icons that had SVG problems on old Sugar builds
+
 18
 
 * word game lists can be edited
