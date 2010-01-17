@@ -260,7 +260,9 @@ def number_mayan(n, stroke):
     elif n == 33:
         svg_string = svg_bar(x,y1s,stroke)
         svg_string += svg_bar(x,y5s,stroke)
+        svg_string += svg_circle(x1,y10s,3,stroke,stroke,2)
         svg_string += svg_circle(xc,y10s,3,stroke,stroke,2)
+        svg_string += svg_circle(x4,y10s,3,stroke,stroke,2)
         svg_string += svg_circle(xc,y20s,3,stroke,stroke,2)
     return svg_string
 
