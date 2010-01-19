@@ -118,7 +118,7 @@ class SVG:
         svg_string += "</g>\n"
         return svg_string
 
-    def _svg_line_of_dots(self, n, x, y, stroke):
+    def _svg_line_of_dots(self, n, x, y):
         cxtab = {5:37.5,7:27.5,11:7.5,10:37.5,14:27.5,22:7.5,15:37.5,21:27.5,\
                  33:7.5}
         svg_string = "%s%f%s%f%s" % ("<g\n   transform=\"translate(",x,", ",y,
@@ -532,7 +532,6 @@ class SVG:
         strings = NUMBER_NAMES[n].split(' ')
         svg_string = ""
         self.set_font("DejaVu Serif")
-        self.set_colors([stroke, stroke])
         if len(strings) == 1:
             svg_string += self._svg_text(x, 48, 26, "", strings[0])
         else:
