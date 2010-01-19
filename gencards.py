@@ -421,27 +421,31 @@ class SVG:
         if n == 5:
             svg_string += self._svg_die(5, 50, 25)
         elif n == 10:
-            svg_string += self._svg_die(5, 30, 25)
-            svg_string += self._svg_die(5, 70, 25)
+            svg_string += self._svg_die(4, 30, 10)
+            svg_string += self._svg_die(1, 30, 40)
+            svg_string += self._svg_die(2, 70, 10)
+            svg_string += self._svg_die(3, 70, 40)
         elif n == 15:
-            svg_string += self._svg_die(5, 15, 25)
+            svg_string += self._svg_die(3, 15, 10)
+            svg_string += self._svg_die(2, 15, 40)
             svg_string += self._svg_die(5, 50, 25)
-            svg_string += self._svg_die(5, 85, 25)
+            svg_string += self._svg_die(4, 85, 10)
+            svg_string += self._svg_die(1, 85, 40)
         elif n == 7:
             svg_string += self._svg_die(3, 50, 10)
             svg_string += self._svg_die(4, 50, 40)
         elif n == 14:
-            svg_string += self._svg_die(4, 30, 10)
-            svg_string += self._svg_die(3, 70, 10)
-            svg_string += self._svg_die(3, 30, 40)
-            svg_string += self._svg_die(4, 70, 40)
+            svg_string += self._svg_die(5, 30, 10)
+            svg_string += self._svg_die(2, 30, 40)
+            svg_string += self._svg_die(1, 70, 10)
+            svg_string += self._svg_die(6, 70, 40)
         elif n == 21:
             svg_string += self._svg_die(3, 15, 10)
-            svg_string += self._svg_die(4, 50, 10)
-            svg_string += self._svg_die(3, 85, 10)
             svg_string += self._svg_die(4, 15, 40)
-            svg_string += self._svg_die(3, 50, 40)
-            svg_string += self._svg_die(4, 85, 40)
+            svg_string += self._svg_die(6, 50, 10)
+            svg_string += self._svg_die(1, 50, 40)
+            svg_string += self._svg_die(5, 85, 10)
+            svg_string += self._svg_die(2, 85, 40)
         elif n == 11:
             svg_string += self._svg_die(5, 50, 10)
             svg_string += self._svg_die(6, 50, 40)
