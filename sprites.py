@@ -63,7 +63,7 @@ class Sprites:
             self.list.remove(spr)
 
     def find_sprite(self, pos):
-        list = self.list
+        list = self.list[:]
         list.reverse()
         for spr in list:
             if spr.hit(pos): return spr
@@ -235,3 +235,10 @@ class Sprite:
             if w > max:
                 max = w
         return max
+
+    def get_pixel(self, image, x, y):
+        array = image.get_pixels()
+        offset = (y*image.get_width()+x)*4
+        r,g,b,a = ord(array[offset]),ord(array[offset+1]),ord(array[offset+2]),\
+                  ord(array[offset+3])
+        return (a<<24)+(b<<16)+(g<<8)+r
