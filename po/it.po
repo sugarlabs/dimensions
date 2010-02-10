@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2010-01-14 17:16+0000\n"
-"PO-Revision-Date: 2010-01-24 00:11+0200\n"
+"PO-Revision-Date: 2010-02-11 01:30+0200\n"
 "Last-Translator: Carlo Falciola <cfalciola@yahoo.it>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: it\n"
@@ -64,7 +64,7 @@ msgstr "click sulle carte per creare gruppi di tre."
 
 #: /home/walter/Desktop/set/visualmatch.py:47
 msgid "Toggle level"
-msgstr ""
+msgstr "Cambia livello"
 
 #: /home/walter/Desktop/set/visualmatch.py:56
 #: /home/walter/Desktop/set/VisualMatchActivity.py:257
@@ -197,7 +197,7 @@ msgstr "terra"
 
 #: /home/walter/Desktop/set/game.py:188
 msgid "Edit the word cards."
-msgstr ""
+msgstr "Modifica le carte con parole"
 
 #: /home/walter/Desktop/set/game.py:266
 msgid "Game over"
@@ -244,36 +244,36 @@ msgstr "Smetti di giocare contro il computer"
 #: /home/walter/Desktop/set/VisualMatchActivity.py:311
 #: /home/walter/Desktop/set/VisualMatchActivity.py:807
 msgid "Set difficulty level."
-msgstr ""
+msgstr "Seleziona il livello di difficoltà"
 
 #: /home/walter/Desktop/set/VisualMatchActivity.py:329
 #: /home/walter/Desktop/set/VisualMatchActivity.py:828
 msgid "Edit word lists."
-msgstr ""
+msgstr "Modifica le liste di parole"
 
 #: /home/walter/Desktop/set/VisualMatchActivity.py:346
 msgid "product"
-msgstr ""
+msgstr "prodotto"
 
 #: /home/walter/Desktop/set/VisualMatchActivity.py:352
 msgid "Roman numerals"
-msgstr ""
+msgstr "numeri romani"
 
 #: /home/walter/Desktop/set/VisualMatchActivity.py:358
 msgid "word"
-msgstr ""
+msgstr "parola"
 
 #: /home/walter/Desktop/set/VisualMatchActivity.py:382
 msgid "hash marks"
-msgstr ""
+msgstr "cancelletti"
 
 #: /home/walter/Desktop/set/VisualMatchActivity.py:388
 msgid "dots in a circle"
-msgstr ""
+msgstr "punti in cerchio"
 
 #: /home/walter/Desktop/set/VisualMatchActivity.py:394
 msgid "points on a star"
-msgstr ""
+msgstr "punti a stella"
 
 #: /home/walter/Desktop/set/VisualMatchActivity.py:400
 msgid "dice"
