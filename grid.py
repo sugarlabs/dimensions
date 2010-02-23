@@ -116,8 +116,7 @@ class Grid:
     # Place a card at position x,y and display it.
     def place_a_card(self, c, x, y):
         if c is not None:
-            c.spr.x = x
-            c.spr.y = y
+            c.spr.move((x,y))
             c.show_card()
 
     # Convert from sprite x,y to grid index.

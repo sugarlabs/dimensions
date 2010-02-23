@@ -220,7 +220,8 @@ class Game():
 
     def _process_selection(self, spr):
         # Make sure a card in the matched pile isn't selected.
-        if spr.x == MATCH_POSITION:
+        x, y = spr.get_xy()
+        if x == MATCH_POSITION:
            return True
 
         # Make sure that the current card isn't already selected.
@@ -236,8 +237,8 @@ class Game():
             if a is None:
                 i = self.clicked.index(a)
                 self.clicked[i] = spr
-                self.selected[i].spr.x = spr.x
-                self.selected[i].spr.y = spr.y
+                x, y = spr.get_xy()
+                self.selected[i].spr.move((x,y))
                 self.selected[i].show_card()
                 break
 
@@ -417,8 +418,8 @@ class Game():
             else:
                 self.clicked[j] = self.deck.index_to_card(i).spr
                 k = self.grid.spr_to_grid(self.clicked[j])
-                self.selected[j].spr.x = self.grid.grid_to_xy(k)[0]
-                self.selected[j].spr.y = self.grid.grid_to_xy(k)[1]
+                self.selected[j].spr.move((self.grid.grid_to_xy(k)[0],
+                                           self.grid.grid_to_xy(k)[1]))
                 self.selected[j].show_card()
             j += 1
 
