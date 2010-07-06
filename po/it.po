@@ -2,20 +2,28 @@
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2010-01-14 17:16+0000\n"
-"PO-Revision-Date: 2010-02-11 01:30+0200\n"
-"Last-Translator: Carlo Falciola <cfalciola@yahoo.it>\n"
+"PO-Revision-Date: 2010-03-25 22:30+0200\n"
+"Last-Translator: Chris <cjl@laptop.org>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: it\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Pootle 2.0.1\n"
+"X-Generator: Pootle 2.0.3\n"
 
 #: activity/activity.info:2 /home/walter/Desktop/set/visualmatch.py:36
 #: /home/walter/Desktop/set/game.py:407
@@ -197,7 +205,7 @@ msgstr "terra"
 
 #: /home/walter/Desktop/set/game.py:188
 msgid "Edit the word cards."
-msgstr "Modifica le carte con parole"
+msgstr "Modifica le carte con parole."
 
 #: /home/walter/Desktop/set/game.py:266
 msgid "Game over"
@@ -235,21 +243,21 @@ msgstr "esperto"
 #: /home/walter/Desktop/set/VisualMatchActivity.py:287
 #: /home/walter/Desktop/set/VisualMatchActivity.py:780
 msgid "Play with the computer."
-msgstr "Gioca contro il computer"
+msgstr "Gioca contro il computer."
 
 #: /home/walter/Desktop/set/VisualMatchActivity.py:118
 msgid "Stop playing with the computer."
-msgstr "Smetti di giocare contro il computer"
+msgstr "Smetti di giocare contro il computer."
 
 #: /home/walter/Desktop/set/VisualMatchActivity.py:311
 #: /home/walter/Desktop/set/VisualMatchActivity.py:807
 msgid "Set difficulty level."
-msgstr "Seleziona il livello di difficoltà"
+msgstr "Seleziona il livello di difficoltà."
 
 #: /home/walter/Desktop/set/VisualMatchActivity.py:329
 #: /home/walter/Desktop/set/VisualMatchActivity.py:828
 msgid "Edit word lists."
-msgstr "Modifica le liste di parole"
+msgstr "Modifica le liste di parole."
 
 #: /home/walter/Desktop/set/VisualMatchActivity.py:346
 msgid "product"
@@ -286,7 +294,7 @@ msgstr "punti su una linea"
 #: /home/walter/Desktop/set/VisualMatchActivity.py:452
 #: /home/walter/Desktop/set/VisualMatchActivity.py:976
 msgid "Find a match."
-msgstr "Trova la corrispondenza"
+msgstr "Trova la corrispondenza."
 
 #: /home/walter/Desktop/set/VisualMatchActivity.py:476
 msgid "Game"
