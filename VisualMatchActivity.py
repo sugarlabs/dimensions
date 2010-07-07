@@ -63,6 +63,57 @@ SERVICE = 'org.sugarlabs.VisualMatchActivity'
 IFACE = SERVICE
 PATH = '/org/augarlabs/VisualMatchActivity'
 
+def _button_factory(icon_name, tooltip, callback, toolbar, cb_arg=None,
+                    accelerator=None):
+    """Factory for making toolbar buttons"""
+    my_button = ToolButton( icon_name )
+    my_button.set_tooltip(tooltip)
+    my_button.props.sensitive = True
+    if accelerator is not None:
+        my_button.props.accelerator = accelerator
+    if cb_arg is not None:
+        my_button.connect('clicked', callback, cb_arg)
+    else:
+        my_button.connect('clicked', callback)
+    if hasattr(toolbar, 'insert'): # the main toolbar
+        toolbar.insert(my_button, -1)
+    else:  # or a secondary toolbar
+        toolbar.props.page.insert(my_button, -1)
+    my_button.show()
+    return my_button
+
+def _label_factory(label, toolbar):
+    """ Factory for adding a label to a toolbar """
+    my_label = gtk.Label(label)
+    my_label.set_line_wrap(True)
+    my_label.show()
+    _toolitem = gtk.ToolItem()
+    _toolitem.add(my_label)
+    toolbar.insert(_toolitem, -1)
+    _toolitem.show()
+    return my_label
+
+def _spin_factory(default, min, max, callback, toolbar):
+    """ Factory for adding a spinner """
+    _spin_adj = gtk.Adjustment(default, min, max, 5, 15, 0)
+    my_spin = gtk.SpinButton(_spin_adj, 0, 0)
+    _spin_id = my_spin.connect('value-changed', callback)
+    my_spin.set_numeric(True)
+    my_spin.show()
+    _toolitem = gtk.ToolItem()
+    _toolitem.add(my_spin)
+    toolbar.insert(_toolitem, -1)
+    _toolitem.show()
+    return my_spin
+
+def _separator_factory(toolbar, visible=True, expand=False):
+    """ Factory for adding a separator to a toolbar """
+    _separator = gtk.SeparatorToolItem()
+    _separator.props.draw = visible
+    _separator.set_expand(expand)
+    toolbar.insert(_separator, -1)
+    _separator.show()
+
 
 class VisualMatchActivity(activity.Activity):
     """ Dimension matching game """
@@ -85,37 +136,34 @@ class VisualMatchActivity(activity.Activity):
             self.vmw.editing_word_list = True
             self.vmw.edit_word_list()
 
-    #
-    # Button callbacks
-    #
-    def _select_game_cb(self, button, activity, card_type):
+    def _select_game_cb(self, button, card_type):
         """ Choose which game we are playing. """
         if self.vmw.joiner():  # joiner cannot change level
             return
-        activity.vmw.card_type = card_type
-        activity.vmw.new_game()
+        self.vmw.card_type = card_type
+        self.vmw.new_game()
 
-    def _robot_cb(self, button, activity):
+    def _robot_cb(self, button):
         """ Toggle robot assist on/off """
-        if activity.vmw.robot:
-            activity.vmw.robot = False
+        if self.vmw.robot:
+            self.vmw.robot = False
             self.robot_button.set_tooltip(_('Play with the computer.'))
             self.robot_button.set_icon('robot-off')
         else:
-            activity.vmw.robot = True
+            self.vmw.robot = True
             self.robot_button.set_tooltip(
                 _('Stop playing with the computer.'))
             self.robot_button.set_icon('robot-on')
 
-    def _level_cb(self, button, activity):
+    def _level_cb(self, button):
         """ Switch between levels """
-        if activity.vmw.joiner():  # joiner cannot change level
+        if self.vmw.joiner():  # joiner cannot change level
             return
-        activity.vmw.level = 1 - activity.vmw.level
-        self.level_label.set_text(self.calc_level_label(activity.vmw.low_score,
-                                                        activity.vmw.level))
-        self.level_button.set_icon(level_icons[activity.vmw.level])
-        activity.vmw.new_game()
+        self.vmw.level = 1 - self.vmw.level
+        self.level_label.set_text(self.calc_level_label(self.vmw.low_score,
+                                                        self.vmw.level))
+        self.level_button.set_icon(level_icons[self.vmw.level])
+        self.vmw.new_game()
 
     def calc_level_label(self, low_score, play_level):
         """ Show the score. """
@@ -127,34 +175,34 @@ class VisualMatchActivity(activity.Activity):
                      int(low_score[play_level] / 60),
                      int(low_score[play_level] % 60))
 
-    def _number_card_O_cb(self, button, activity, numberO):
+    def _number_card_O_cb(self, button, numberO):
         """ Choose between O-card list for numbers game. """
-        if activity.vmw.joiner():  # joiner cannot change decks
+        if self.vmw.joiner():  # joiner cannot change decks
             return
-        activity.vmw.numberO = numberO
-        activity.vmw.card_type = 'number'
-        activity.vmw.new_game()
+        self.vmw.numberO = numberO
+        self.vmw.card_type = 'number'
+        self.vmw.new_game()
 
-    def _number_card_C_cb(self, button, activity, numberC):
+    def _number_card_C_cb(self, button, numberC):
         """ Choose between C-card list for numbers game. """
-        if activity.vmw.joiner():  # joiner cannot change decks
+        if self.vmw.joiner():  # joiner cannot change decks
             return
-        activity.vmw.numberC = numberC
-        activity.vmw.card_type = 'number'
-        activity.vmw.new_game()
+        self.vmw.numberC = numberC
+        self.vmw.card_type = 'number'
+        self.vmw.new_game()
 
     def _robot_time_spin_cb(self, button):
         """ Set delay for robot. """
         self.vmw.robot_time = self._robot_time_spin.get_value_as_int()
         return
 
-    def _edit_words_cb(self, button, activity):
+    def _edit_words_cb(self, button):
         """ Edit the word list. """
-        activity.vmw.editing_word_list = True
-        activity.vmw.edit_word_list()
+        self.vmw.editing_word_list = True
+        self.vmw.edit_word_list()
 
     '''
-    def _journal_cb(self, button, path):
+    def _write_to_journal_cb(self, button, path):
         title_alert = NamingAlert(self, path)
         title_alert.set_transient_for(self.get_toplevel())
         title_alert.show()
@@ -214,258 +262,159 @@ class VisualMatchActivity(activity.Activity):
             return os.path.join(os.environ['HOME'], ".sugar", "default",
                                 SERVICE, 'data')
         else:
-            return os.path.join(activity.get_activity_root(), 'data')
+            return os.path.join(self.get_activity_root(), 'data')
 
     def _setup_toolbars(self, new_sugar_system):
         """ Setup the toolbars.. """
+
+        games_toolbar = gtk.Toolbar()
+        tools_toolbar = gtk.Toolbar()
+        numbers_toolbar = gtk.Toolbar()
         if new_sugar_system:
-            toolbar_box = ToolbarBox()
+            toolbox = ToolbarBox()
 
             # Activity toolbar
             activity_button = ActivityToolbarButton(self)
 
-            '''
-            journal_button = ToolButton("journal-write")
-            journal_button.set_tooltip(_('Write in Journal'))
-            journal_button.props.accelerator = '<Ctrl>j'
-            journal_button.connect('clicked', self._journal_cb,
-                                   activity.get_bundle_path())
-            activity_button.props.page.insert(journal_button, -1)
-            journal_button.show()
-            '''
-
-            toolbar_box.toolbar.insert(activity_button, 0)
+            toolbox.toolbar.insert(activity_button, 0)
             activity_button.show()
 
-            # New games toolbar
-            games_toolbar = gtk.Toolbar()
-            self.button1 = ToolButton("new-pattern-game")
-            self.button1.set_tooltip(_('New pattern game'))
-            self.button1.props.sensitive = True
-            self.button1.connect('clicked', self._select_game_cb, self,
-                                 'pattern')
-            games_toolbar.insert(self.button1, -1)
-            self.button1.show()
-            self.button2 = ToolButton("new-number-game")
-            self.button2.set_tooltip(_('New number game'))
-            self.button2.props.sensitive = True
-            self.button2.connect('clicked', self._select_game_cb, self,
-                                 'number')
-            games_toolbar.insert(self.button2, -1)
-            self.button2.show()
-            self.button3 = ToolButton("new-word-game")
-            self.button3.set_tooltip(_('New word game'))
-            self.button3.props.sensitive = True
-            self.button3.connect('clicked', self._select_game_cb, self,
-                                 'word')
-            games_toolbar.insert(self.button3, -1)
-            self.button3.show()
+            '''
+            # Naming alert button
+            write_to_journal_button = _button_factoty("journal-write",
+                                                      _('Write in Journal'),
+                                                      self._write_to_journal_cb,
+                                                      toolbox.toolbar, None,
+                                                      '<Ctrl>j')
+            '''
+
             games_toolbar_button = ToolbarButton(
                     page=games_toolbar,
                     icon_name='new-game')
             games_toolbar.show()
-            toolbar_box.toolbar.insert(games_toolbar_button, -1)
+            toolbox.toolbar.insert(games_toolbar_button, -1)
             games_toolbar_button.show()
-
-            # The tools toolbar
-            tools_toolbar = gtk.Toolbar()
-            self.robot_button = ToolButton('robot-off')
-            self.robot_button.set_tooltip(_('Play with the computer.'))
-            self.robot_button.connect('clicked', self._robot_cb, self)
-            tools_toolbar.insert(self.robot_button, -1)
-            self.robot_button.show()
-
-            self._robot_time_spin_adj = gtk.Adjustment(self._robot_time,
-                                                       15, 180, 5, 15, 0)
-            self._robot_time_spin = gtk.SpinButton(self._robot_time_spin_adj,
-                                                   0, 0)
-            self._robot_time_spin_id = self._robot_time_spin.connect(
-                'value-changed', self._robot_time_spin_cb)
-            self._robot_time_spin.set_numeric(True)
-            self._robot_time_spin.show()
-            self.tool_item_robot_time = gtk.ToolItem()
-            self.tool_item_robot_time.add(self._robot_time_spin)
-            tools_toolbar.insert(self.tool_item_robot_time, -1)
-            self.tool_item_robot_time.show()
-
-            separator = gtk.SeparatorToolItem()
-            separator.props.draw = True
-            tools_toolbar.insert(separator, -1)
-            separator.show()
-
-            self.level_button = ToolButton(level_icons[self._play_level])
-            self.level_button.set_tooltip(_('Set difficulty level.'))
-            self.level_button.connect('clicked', self._level_cb, self)
-            tools_toolbar.insert(self.level_button, -1)
-            self.level_button.show()
-            self.level_label = gtk.Label(self.calc_level_label(self._low_score,
-                                                             self._play_level))
-            self.level_label.show()
-            level_toolitem = gtk.ToolItem()
-            level_toolitem.add(self.level_label)
-            tools_toolbar.insert(level_toolitem, -1)
-            level_toolitem.show()
-
-            separator = gtk.SeparatorToolItem()
-            separator.props.draw = True
-            tools_toolbar.insert(separator, -1)
-            separator.show()
-
-            self.words_tool_button = ToolButton('word-tools')
-            self.words_tool_button.set_tooltip(_('Edit word lists.'))
-            self.words_tool_button.connect('clicked', self._edit_words_cb, self)
-            tools_toolbar.insert(self.words_tool_button, -1)
-            self.words_tool_button.show()
 
             tools_toolbar_button = ToolbarButton(
                     page=tools_toolbar,
                     icon_name='view-source')
             tools_toolbar.show()
-            toolbar_box.toolbar.insert(tools_toolbar_button, -1)
+            toolbox.toolbar.insert(tools_toolbar_button, -1)
             tools_toolbar_button.show()
-
-            # Number games toolbar
-            numbers_toolbar = gtk.Toolbar()
-            self.product_button = ToolButton('product')
-            self.product_button.connect('clicked', self._number_card_O_cb,
-                                        self, PRODUCT)
-            self.product_button.set_tooltip(_('product'))
-            numbers_toolbar.insert(self.product_button, -1)
-            self.product_button.show()
-            self.roman_button = ToolButton('roman')
-            self.roman_button.connect('clicked', self._number_card_O_cb,
-                                        self, ROMAN)
-            self.roman_button.set_tooltip(_('Roman numerals'))
-            numbers_toolbar.insert(self.roman_button, -1)
-            self.roman_button.show()
-            self.word_button = ToolButton('word')
-            self.word_button.connect('clicked', self._number_card_O_cb,
-                                        self, WORD)
-            self.word_button.set_tooltip(_('word'))
-            numbers_toolbar.insert(self.word_button, -1)
-            self.word_button.show()
-            self.chinese_button = ToolButton('chinese')
-            self.chinese_button.connect('clicked', self._number_card_O_cb,
-                                        self, CHINESE)
-            self.chinese_button.set_tooltip(_('Chinese'))
-            numbers_toolbar.insert(self.chinese_button, -1)
-            self.chinese_button.show()
-            self.mayan_button = ToolButton('mayan')
-            self.mayan_button.connect('clicked', self._number_card_O_cb,
-                                        self, MAYAN)
-            self.mayan_button.set_tooltip(_('Mayan'))
-            numbers_toolbar.insert(self.mayan_button, -1)
-            self.mayan_button.show()
-
-            separator = gtk.SeparatorToolItem()
-            separator.props.draw = True
-            numbers_toolbar.insert(separator, -1)
-            separator.show()
-
-            self.hash_button = ToolButton('hash')
-            self.hash_button.connect('clicked', self._number_card_C_cb,
-                                        self, HASH)
-            self.hash_button.set_tooltip(_('hash marks'))
-            numbers_toolbar.insert(self.hash_button, -1)
-            self.hash_button.show()
-            self.dots_button = ToolButton('dots')
-            self.dots_button.connect('clicked', self._number_card_C_cb,
-                                        self, DOTS)
-            self.dots_button.set_tooltip(_('dots in a circle'))
-            numbers_toolbar.insert(self.dots_button, -1)
-            self.dots_button.show()
-            self.star_button = ToolButton('star')
-            self.star_button.connect('clicked', self._number_card_C_cb,
-                                        self, STAR)
-            self.star_button.set_tooltip(_('points on a star'))
-            numbers_toolbar.insert(self.star_button, -1)
-            self.star_button.show()
-            self.dice_button = ToolButton('dice')
-            self.dice_button.connect('clicked', self._number_card_C_cb,
-                                        self, DICE)
-            self.dice_button.set_tooltip(_('dice'))
-            numbers_toolbar.insert(self.dice_button, -1)
-            self.dice_button.show()
-            self.lines_button = ToolButton('lines')
-            self.lines_button.connect('clicked', self._number_card_C_cb,
-                                        self, LINES)
-            self.lines_button.set_tooltip(_('dots in a line'))
-            numbers_toolbar.insert(self.lines_button, -1)
-            self.lines_button.show()
 
             numbers_toolbar_button = ToolbarButton(
                     page=numbers_toolbar,
                     icon_name='number-tools')
             numbers_toolbar.show()
-            toolbar_box.toolbar.insert(numbers_toolbar_button, -1)
+            toolbox.toolbar.insert(numbers_toolbar_button, -1)
             numbers_toolbar_button.show()
 
-            separator = gtk.SeparatorToolItem()
-            separator.show()
-            toolbar_box.toolbar.insert(separator, -1)
-
-            self.deck_label = gtk.Label("%d %s" % \
-                (level_decksize[self._play_level] - DEAL, _('cards')))
-            self.deck_label.show()
-            deck_toolitem = gtk.ToolItem()
-            deck_toolitem.add(self.deck_label)
-            toolbar_box.toolbar.insert(deck_toolitem, -1)
-
-            separator = gtk.SeparatorToolItem()
-            separator.show()
-            toolbar_box.toolbar.insert(separator, -1)
-
-            self.match_label = gtk.Label("%d %s" % (0, _('matches')))
-            self.match_label.show()
-            match_toolitem = gtk.ToolItem()
-            match_toolitem.add(self.match_label)
-            toolbar_box.toolbar.insert(match_toolitem, -1)
-
-            separator = gtk.SeparatorToolItem()
-            separator.show()
-            toolbar_box.toolbar.insert(separator, -1)
-
-            self.clock_label = gtk.Label('-')
-            self.clock_label.show()
-            clock_toolitem = gtk.ToolItem()
-            clock_toolitem.add(self.clock_label)
-            toolbar_box.toolbar.insert(clock_toolitem, -1)
-
-            separator = gtk.SeparatorToolItem()
-            separator.show()
-            toolbar_box.toolbar.insert(separator, -1)
-
-            self.status_label = gtk.Label(_('Find a match.'))
-            self.status_label.show()
-            status_toolitem = gtk.ToolItem()
-            status_toolitem.add(self.status_label)
-            toolbar_box.toolbar.insert(status_toolitem, -1)
-
-            separator = gtk.SeparatorToolItem()
-            separator.props.draw = False
-            separator.set_expand(True)
-            separator.show()
-            toolbar_box.toolbar.insert(separator, -1)
+            self._set_labels(toolbox.toolbar)
+            _separator_factory(toolbox.toolbar, False, True)
 
             stop_button = StopButton(self)
             stop_button.props.accelerator = '<Ctrl>q'
-            toolbar_box.toolbar.insert(stop_button, -1)
+            toolbox.toolbar.insert(stop_button, -1)
             stop_button.show()
 
-            self.set_toolbar_box(toolbar_box)
-            toolbar_box.show()
+            self.set_toolbar_box(toolbox)
+            toolbox.show()
 
         else:
-            self.toolbox = activity.ActivityToolbox(self)
-            self.set_toolbox(self.toolbox)
-            self.projectToolbar = ProjectToolbar(self)
-            self.toolbox.add_toolbar(_('Game'), self.projectToolbar)
-            self.toolsToolbar = ToolsToolbar(self)
-            self.toolbox.add_toolbar(_('Tools'), self.toolsToolbar)
-            self.numbersToolbar = NumbersToolbar(self)
-            self.toolbox.add_toolbar(_('Numbers'), self.numbersToolbar)
-            self.toolbox.show()
-            self.toolbox.set_current_toolbar(1)
+            # Use pre-0.86 toolbar design
+            toolbox = activity.ActivityToolbox(self)
+            self.set_toolbox(toolbox)
+            toolbox.add_toolbar(_('Game'), games_toolbar)
+            toolbox.add_toolbar(_('Tools'), tools_toolbar)
+            toolbox.add_toolbar(_('Numbers'), numbers_toolbar)
+            toolbox.show()
+            toolbox.set_current_toolbar(1)
+
+        # Add the buttons and spinners to the toolbars
+        self.button1 = _button_factory("new-pattern-game",
+                                       _('New pattern game'),
+                                       self._select_game_cb, games_toolbar,
+                                       'pattern')
+        self.button2 = _button_factory("new-number-game",
+                                       _('New number game'),
+                                       self._select_game_cb, games_toolbar,
+                                       'number')
+        self.button3 = _button_factory("new-word-game",
+                                       _('New word game'),
+                                       self._select_game_cb, games_toolbar,
+                                       'word')
+        if not new_sugar_system:
+            self._set_labels(games_toolbar)
+        self.robot_button = _button_factory("robot-off",
+                                            _('Play with the computer'),
+                                            self._robot_cb, tools_toolbar)
+        self._robot_time_spin = _spin_factory(self._robot_time, 15, 180,
+                                              self._robot_time_spin_cb,
+                                              tools_toolbar)
+        _separator_factory(tools_toolbar, True, False)
+        self.level_button = _button_factory(level_icons[self._play_level],
+                                            _('Set difficulty level.'),
+                                            self._level_cb, tools_toolbar)
+        self.level_label = _label_factory(self.calc_level_label(
+                self._low_score, self._play_level), tools_toolbar)
+        _separator_factory(tools_toolbar, True, False)
+        self.words_tool_button = _button_factory('word-tools',
+                                                 _('Edit word lists.'),
+                                                 self._edit_words_cb,
+                                                 tools_toolbar)
+        self.product_button = _button_factory('product', _('product'),
+                                              self._number_card_O_cb,
+                                              numbers_toolbar,
+                                              PRODUCT)
+        self.roman_button = _button_factory('roman', _('Roman numerals'),
+                                            self._number_card_O_cb,
+                                            numbers_toolbar,
+                                            ROMAN)
+        self.word_button = _button_factory('word', _('word'),
+                                           self._number_card_O_cb,
+                                           numbers_toolbar,
+                                           WORD)
+        self.chinese_button = _button_factory('chinese', _('Chinese'),
+                                              self._number_card_O_cb,
+                                              numbers_toolbar,
+                                              CHINESE)
+        self.mayan_button = _button_factory('mayan', _('Mayan'),
+                                            self._number_card_O_cb,
+                                            numbers_toolbar,
+                                            MAYAN)
+        _separator_factory(numbers_toolbar, True, False)
+        self.hash_button = _button_factory('hash', _('hash marks'),
+                                           self._number_card_C_cb,
+                                           numbers_toolbar,
+                                           HASH)
+        self.dots_button = _button_factory('dots', _('dots in a circle'),
+                                           self._number_card_C_cb,
+                                           numbers_toolbar,
+                                           DOTS)
+        self.star_button = _button_factory('star', _('points on a star'),
+                                           self._number_card_C_cb,
+                                           numbers_toolbar,
+                                           STAR)
+        self.dice_button = _button_factory('dice', _('dice'),
+                                           self._number_card_C_cb,
+                                           numbers_toolbar,
+                                           DICE)
+        self.lines_button = _button_factory('lines', _('dots in a line'),
+                                            self._number_card_C_cb,
+                                            numbers_toolbar,
+                                            LINES)
+
+    def _set_labels(self, toolbar):
+        """ Add labels to toolbar toolbar """
+        self.status_label = _label_factory(_('Find a match.'), toolbar)
+        _separator_factory(toolbar, True, False)
+        self.deck_label = _label_factory("%d %s" % \
+                                             (level_decksize[self._play_level]\
+                                                  - DEAL, _('cards')), toolbar)
+        _separator_factory(toolbar, True, False)
+        self.match_label = _label_factory("%d %s" % (0, _('matches')), toolbar)
+        _separator_factory(toolbar, True, False)
+        self.clock_label = _label_factory("-", toolbar)
 
     def _setup_canvas(self, datapath):
         """ Create a canvas.. """
@@ -747,218 +696,3 @@ class ChatTube(ExportedGObject):
     def SendText(self, text):
         self.stack = text
 
-
-#
-# Toolbars for pre-0.86 Sugar
-#
-class ToolsToolbar(gtk.Toolbar):
-
-    def __init__(self, activity):
-        gtk.Toolbar.__init__(self)
-        self.activity = activity
-
-        self.activity.robot_button = ToolButton("robot-off")
-        self.activity.robot_button.set_tooltip(_('Play with the computer.'))
-        self.activity.robot_button.props.sensitive = True
-        self.activity.robot_button.connect('clicked', self.activity._robot_cb,
-                                           self.activity)
-        self.insert(self.activity.robot_button, -1)
-        self.activity.robot_button.show()
-        self.activity._robot_time_spin_adj = gtk.Adjustment(
-            self.activity._robot_time, 15, 180, 5, 15, 0)
-        self.activity._robot_time_spin = gtk.SpinButton(
-            self.activity._robot_time_spin_adj, 0, 0)
-        self.activity._robot_time_spin_id = \
-            self.activity._robot_time_spin.connect('value-changed',
-                self.activity._robot_time_spin_cb)
-        self.activity._robot_time_spin.set_numeric(True)
-        self.activity._robot_time_spin.show()
-        self.activity.tool_item_robot_time = gtk.ToolItem()
-        self.activity.tool_item_robot_time.add(self.activity._robot_time_spin)
-        self.insert(self.activity.tool_item_robot_time, -1)
-        self.activity.tool_item_robot_time.show()
-
-        separator = gtk.SeparatorToolItem()
-        separator.set_draw(True)
-        self.insert(separator, -1)
-        separator.show()
-
-        self.activity.level_button = ToolButton(
-            level_icons[self.activity._play_level])
-        self.activity.level_button.set_tooltip(_('Set difficulty level.'))
-        self.activity.level_button.props.sensitive = True
-        self.activity.level_button.connect('clicked', self.activity._level_cb,
-                                           self.activity)
-        self.insert(self.activity.level_button, -1)
-        self.activity.level_button.show()
-        self.activity.level_label = gtk.Label(self.activity.calc_level_label(
-                                         self.activity._low_score,
-                                         self.activity._play_level))
-        self.activity.level_label.show()
-        self.activity.level_toolitem = gtk.ToolItem()
-        self.activity.level_toolitem.add(self.activity.level_label)
-        self.insert(self.activity.level_toolitem, -1)
-        self.activity.level_toolitem.show()
-
-        separator = gtk.SeparatorToolItem()
-        separator.set_draw(True)
-        self.insert(separator, -1)
-        separator.show()
-
-        self.activity.words_tool_button = ToolButton('word-tools')
-        self.activity.words_tool_button.set_tooltip(_('Edit word lists.'))
-        self.activity.words_tool_button.connect('clicked',
-                                   self.activity._edit_words_cb, self.activity)
-        self.insert(self.activity.words_tool_button, -1)
-        self.activity.words_tool_button.show()
-
-
-class NumbersToolbar(gtk.Toolbar):
-
-    def __init__(self, activity):
-        gtk.Toolbar.__init__(self)
-        self.activity = activity
-
-        self.activity.product_button = ToolButton("product")
-        self.activity.product_button.props.sensitive = True
-        self.activity.product_button.connect('clicked',
-            self.activity._number_card_O_cb, self.activity, PRODUCT)
-        self.insert(self.activity.product_button, -1)
-        self.activity.product_button.show()
-        self.activity.roman_button = ToolButton("roman")
-        self.activity.roman_button.props.sensitive = True
-        self.activity.roman_button.connect('clicked',
-            self.activity._number_card_O_cb, self.activity, ROMAN)
-        self.insert(self.activity.roman_button, -1)
-        self.activity.roman_button.show()
-        self.activity.word_button = ToolButton("word")
-        self.activity.word_button.props.sensitive = True
-        self.activity.word_button.connect('clicked',
-            self.activity._number_card_O_cb, self.activity, WORD)
-        self.insert(self.activity.word_button, -1)
-        self.activity.word_button.show()
-        self.activity.chinese_button = ToolButton("chinese")
-        self.activity.chinese_button.props.sensitive = True
-        self.activity.chinese_button.connect('clicked',
-            self.activity._number_card_O_cb, self.activity, CHINESE)
-        self.insert(self.activity.chinese_button, -1)
-        self.activity.chinese_button.show()
-        self.activity.mayan_button = ToolButton("mayan")
-        self.activity.mayan_button.props.sensitive = True
-        self.activity.mayan_button.connect('clicked',
-            self.activity._number_card_O_cb, self.activity, MAYAN)
-        self.insert(self.activity.mayan_button, -1)
-        self.activity.mayan_button.show()
-
-        separator = gtk.SeparatorToolItem()
-        separator.set_draw(True)
-        self.insert(separator, -1)
-        separator.show()
-
-        self.activity.hash_button = ToolButton("hash")
-        self.activity.hash_button.props.sensitive = True
-        self.activity.hash_button.connect('clicked',
-            self.activity._number_card_C_cb, self.activity, HASH)
-        self.insert(self.activity.hash_button, -1)
-        self.activity.hash_button.show()
-        self.activity.dots_button = ToolButton("dots")
-        self.activity.dots_button.props.sensitive = True
-        self.activity.dots_button.connect('clicked',
-            self.activity._number_card_C_cb, self.activity, DOTS)
-        self.insert(self.activity.dots_button, -1)
-        self.activity.dots_button.show()
-        self.activity.star_button = ToolButton("star")
-        self.activity.star_button.props.sensitive = True
-        self.activity.star_button.connect('clicked',
-            self.activity._number_card_C_cb, self.activity, STAR)
-        self.insert(self.activity.star_button, -1)
-        self.activity.star_button.show()
-        self.activity.dice_button = ToolButton("dice")
-        self.activity.dice_button.props.sensitive = True
-        self.activity.dice_button.connect('clicked',
-            self.activity._number_card_C_cb, self.activity, DICE)
-        self.insert(self.activity.dice_button, -1)
-        self.activity.dice_button.show()
-        self.activity.lines_button = ToolButton("lines")
-        self.activity.lines_button.props.sensitive = True
-        self.activity.lines_button.connect('clicked',
-            self.activity._number_card_C_cb, self.activity, LINES)
-        self.insert(self.activity.lines_button, -1)
-        self.activity.lines_button.show()
-
-
-class ProjectToolbar(gtk.Toolbar):
-
-    def __init__(self, activity):
-        gtk.Toolbar.__init__(self)
-        self.activity = activity
-        self.activity.button1 = ToolButton("new-pattern-game")
-        self.activity.button1.set_tooltip(_('New pattern game'))
-        self.activity.button1.props.sensitive = True
-        self.activity.button1.connect('clicked', self.activity._select_game_cb,
-                                      self.activity, 'pattern')
-        self.insert(self.activity.button1, -1)
-        self.activity.button1.show()
-        self.activity.button2 = ToolButton("new-number-game")
-        self.activity.button2.set_tooltip(_('New number game'))
-        self.activity.button2.props.sensitive = True
-        self.activity.button2.connect('clicked', self.activity._select_game_cb,
-                                      self.activity, 'number')
-        self.insert(self.activity.button2, -1)
-        self.activity.button2.show()
-        self.activity.button3 = ToolButton("new-word-game")
-        self.activity.button3.set_tooltip(_('New word game'))
-        self.activity.button3.props.sensitive = True
-        self.activity.button3.connect('clicked', self.activity._select_game_cb,
-                                      self.activity, 'word')
-        self.insert(self.activity.button3, -1)
-        self.activity.button3.show()
-
-        separator = gtk.SeparatorToolItem()
-        separator.set_draw(True)
-        self.insert(separator, -1)
-        separator.show()
-
-        self.activity.deck_label = gtk.Label("%d %s" % \
-            (level_decksize[self.activity._play_level] - DEAL, _('cards')))
-        self.activity.deck_label.show()
-        self.activity.deck_toolitem = gtk.ToolItem()
-        self.activity.deck_toolitem.add(self.activity.deck_label)
-        self.insert(self.activity.deck_toolitem, -1)
-        self.activity.deck_toolitem.show()
-
-        separator = gtk.SeparatorToolItem()
-        separator.set_draw(True)
-        self.insert(separator, -1)
-        separator.show()
-
-        self.activity.match_label = gtk.Label("%d %s" % (0, _('matches')))
-        self.activity.match_label.show()
-        self.activity.match_toolitem = gtk.ToolItem()
-        self.activity.match_toolitem.add(self.activity.match_label)
-        self.insert(self.activity.match_toolitem, -1)
-        self.activity.match_toolitem.show()
-
-        separator = gtk.SeparatorToolItem()
-        separator.set_draw(True)
-        self.insert(separator, -1)
-        separator.show()
-
-        self.activity.clock_label = gtk.Label('-')
-        self.activity.clock_label.show()
-        self.activity.clock_toolitem = gtk.ToolItem()
-        self.activity.clock_toolitem.add(self.activity.clock_label)
-        self.insert(self.activity.clock_toolitem, -1)
-        self.activity.clock_toolitem.show()
-
-        separator = gtk.SeparatorToolItem()
-        separator.set_draw(True)
-        self.insert(separator, -1)
-        separator.show()
-
-        self.activity.status_label = gtk.Label(_('Find a match.'))
-        self.activity.status_label.show()
-        self.activity.status_toolitem = gtk.ToolItem()
-        self.activity.status_toolitem.add(self.activity.status_label)
-        self.insert(self.activity.status_toolitem, -1)
-        self.activity.status_toolitem.show()
