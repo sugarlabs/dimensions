@@ -63,10 +63,11 @@ SERVICE = 'org.sugarlabs.VisualMatchActivity'
 IFACE = SERVICE
 PATH = '/org/augarlabs/VisualMatchActivity'
 
+
 def _button_factory(icon_name, tooltip, callback, toolbar, cb_arg=None,
                     accelerator=None):
     """Factory for making toolbar buttons"""
-    my_button = ToolButton( icon_name )
+    my_button = ToolButton(icon_name)
     my_button.set_tooltip(tooltip)
     my_button.props.sensitive = True
     if accelerator is not None:
@@ -75,12 +76,13 @@ def _button_factory(icon_name, tooltip, callback, toolbar, cb_arg=None,
         my_button.connect('clicked', callback, cb_arg)
     else:
         my_button.connect('clicked', callback)
-    if hasattr(toolbar, 'insert'): # the main toolbar
+    if hasattr(toolbar, 'insert'):  # the main toolbar
         toolbar.insert(my_button, -1)
     else:  # or a secondary toolbar
         toolbar.props.page.insert(my_button, -1)
     my_button.show()
     return my_button
+
 
 def _label_factory(label, toolbar):
     """ Factory for adding a label to a toolbar """
@@ -92,6 +94,7 @@ def _label_factory(label, toolbar):
     toolbar.insert(_toolitem, -1)
     _toolitem.show()
     return my_label
+
 
 def _spin_factory(default, min, max, callback, toolbar):
     """ Factory for adding a spinner """
@@ -105,6 +108,7 @@ def _spin_factory(default, min, max, callback, toolbar):
     toolbar.insert(_toolitem, -1)
     _toolitem.show()
     return my_spin
+
 
 def _separator_factory(toolbar, visible=True, expand=False):
     """ Factory for adding a separator to a toolbar """
@@ -670,11 +674,8 @@ class VisualMatchActivity(activity.Activity):
             self.chattube.SendText(entry)
 
 
-#
-# Class for setting up tube for sharing
-#
 class ChatTube(ExportedGObject):
-
+    """ Class for setting up tube for sharing """
     def __init__(self, tube, is_initiator, stack_received_cb):
         super(ChatTube, self).__init__(tube, PATH)
         self.tube = tube
@@ -695,4 +696,3 @@ class ChatTube(ExportedGObject):
     @signal(dbus_interface=IFACE, signature='s')
     def SendText(self, text):
         self.stack = text
-
