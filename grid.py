@@ -15,7 +15,7 @@ pygtk.require('2.0')
 import gtk
 import random
 
-from constants import ROW, COL
+from constants import ROW, COL, MATCH_POSITION
 
 
 class Grid:
