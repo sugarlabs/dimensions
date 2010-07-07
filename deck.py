@@ -13,22 +13,20 @@
 import pygtk
 pygtk.require('2.0')
 import gtk
-import gobject
-import random
+from random import randrange
 
-from sprites import *
-from constants import *
-from card import *
+from constants import HIGH, FILLS, SHAPES, NUMBER, COLORS
+from card import Card
 from gencards import generate_pattern_card, generate_number_card, \
                      generate_word_card
 
-#
-# Class for defining deck of card
-#
+
 class Deck:
+    """ Class for defining deck of card """
+
     def __init__(self, sprites, card_type, numbers_type, word_lists, scale,
                  level=HIGH):
-        # Create the deck of cards.
+        """ Create the deck of cards. """
         self.cards = []
         # If level is 'simple', only generate one fill type
         if level == HIGH:
@@ -42,113 +40,110 @@ class Deck:
                     for fill in range(0, fill_range):
                         if card_type == 'pattern':
                             self.cards.append(Card(sprites,
-                                                   generate_pattern_card(
-                                                   shape,color,num,fill,scale),
-                                                   [shape,color,num,fill]))
+                                                   generate_pattern_card(shape,
+                                                   color, num, fill, scale),
+                                                   [shape, color, num, fill]))
                         elif card_type == 'number':
                             self.cards.append(Card(sprites,
-                                                   generate_number_card(
-                                                       shape,color,num,fill,
-                                                       numbers_type,scale),
-                                                   [shape,color,num,fill]))
+                                                   generate_number_card(shape,
+                                                       color, num, fill,
+                                                       numbers_type, scale),
+                                                   [shape, color, num, fill]))
                         else:
                             self.cards.append(Card(sprites,
-                                                   generate_word_card(
-                                                   shape,color,num,fill,scale),
-                                                   [shape,color,num,fill]))
-                            self.cards[len(self.cards)-1].spr.set_label(
+                                                   generate_word_card(shape,
+                                                   color, num, fill, scale),
+                                                   [shape, color, num, fill]))
+                            self.cards[len(self.cards) - 1].spr.set_label(
                                                    word_lists[shape][num])
-                            self.cards[len(self.cards)-1].spr.set_label_color(
+                            self.cards[len(self.cards)\
+                                      - 1].spr.set_label_color(
                                                    COLOR_PAIRS[color][0])
-                            self.cards[len(self.cards)-1\
-                                       ].spr.set_label_attributes(scale*24)
+                            self.cards[len(self.cards)\
+                                      - 1].spr.set_label_attributes(scale * 24)
                             if fill == 0:
-                                self.cards[len(self.cards)-1
-                                       ].spr.set_font('Sans Bold')
+                                self.cards[len(self.cards)\
+                                      - 1].spr.set_font('Sans Bold')
                             elif fill == 2:
-                                self.cards[len(self.cards)-1
-                                       ].spr.set_font('Sans Italic')
+                                self.cards[len(self.cards)\
+                                      - 1].spr.set_font('Sans Italic')
 
         # Remember the current position in the deck.
         self.index = 0
 
-    # Shuffle the deck (Knuth algorithm).
     def shuffle(self):
+        """ Shuffle the deck (Knuth algorithm). """
         decksize = self.count()
         # Hide all the cards.
         for c in self.cards:
             c.hide_card()
         # Randomize the card order.
         for n in range(decksize):
-            i = random.randrange(decksize-n)
-            self.swap_cards(n,decksize-1-i)            
+            i = randrange(decksize - n)
+            self.swap_cards(n, decksize - 1 - i)
         # Reset the index to the beginning of the deck after a shuffle,
         self.index = 0
         return
 
-    # Restore the deck upon resume.
     def restore(self, saved_deck_indices):
+        """ Restore the deck upon resume. """
         decksize = len(saved_deck_indices)
         # If we have a short deck, then we need to abort.
         if self.count() < decksize:
             return False
         _deck = []
         for i in saved_deck_indices:
-             _deck.append(self.index_to_card(i))
+            _deck.append(self.index_to_card(i))
         for i in range(decksize):
-             self.cards[i] = _deck[i]
+            self.cards[i] = _deck[i]
         return True
 
-    # Swap the position of two cards in the deck.
-    def swap_cards(self,i,j):
+    def swap_cards(self, i, j):
+        """ Swap the position of two cards in the deck. """
         tmp = self.cards[j]
         self.cards[j] = self.cards[i]
         self.cards[i] = tmp
         return
 
-    # Given a sprite, find the corresponding card in the deck.
     def spr_to_card(self, spr):
+        """ Given a sprite, find the corresponding card in the deck. """
         for c in self.cards:
             if c.spr == spr:
                 return c
         return None
 
-    # Given a card index, find the corresponding card in the deck.
     def index_to_card(self, i):
+        """ Given a card index, find the corresponding card in the deck. """
         for c in self.cards:
             if c.index == i:
                 return c
         return None
 
-    # Return the next card from the deck.
     def deal_next_card(self):
+        """ Return the next card from the deck. """
         if self.empty():
             return None
         next_card = self.cards[self.index]
         self.index += 1
         return next_card
- 
-    # Is the deck empty?
+
     def empty(self):
+        """ Is the deck empty? """
         if self.cards_remaining() > 0:
             return False
         else:
             return True
 
-    # Return how many cards are remaining in the deck.
     def cards_remaining(self):
-       return(self.count()-self.index)
+        """ Return how many cards are remaining in the deck. """
+        return(self.count() - self.index)
 
-    # Hide the deck.
     def hide(self):
+        """ Hide the deck. """
         for c in self.cards:
             if c is not None:
                 c.hide_card()
 
-    # Return the length of the deck.
     def count(self):
+        """ Return the length of the deck. """
         return len(self.cards)
-
-
-
-
