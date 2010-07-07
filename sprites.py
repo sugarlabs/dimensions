@@ -82,6 +82,7 @@ class Sprites:
     """ A class for the list of sprites and everything they share in common """
 
     def __init__(self, canvas, area=None, gc=None):
+        """ Initialize an empty array of sprites """
         self.canvas = canvas
         if area == None:
             self.area = self.canvas.window
@@ -93,18 +94,22 @@ class Sprites:
         self.list = []
 
     def get_sprite(self, i):
+        """ Return a sprint from the array """
         if i < 0 or i > len(self.list)-1:
             return(None)
         else:
             return(self.list[i])
 
     def length_of_list(self):
+        """ How many sprites are there? """
         return(len(self.list))
 
     def append_to_list(self, spr):
+        """ Append a new sprite to the end of the list. """
         self.list.append(spr)
 
     def insert_in_list(self, spr, i):
+        """ Insert a sprite at position i. """
         if i < 0:
             self.list.insert(0, spr)
         elif i > len(self.list) - 1:
@@ -113,10 +118,12 @@ class Sprites:
             self.list.insert(i, spr)
 
     def remove_from_list(self, spr):
+        """ Remove a sprite from the list. """
         if spr in self.list:
             self.list.remove(spr)
 
     def find_sprite(self, pos):
+        """ Search based on (x, y) position. Return the 'top/first' one. """
         list = self.list[:]
         list.reverse()
         for spr in list:
@@ -125,6 +132,7 @@ class Sprites:
         return None
 
     def redraw_sprites(self):
+        """ Redraw all of the sprites. """
         for spr in self.list:
             spr.draw()
 
@@ -133,6 +141,7 @@ class Sprite:
     """ A class for the individual sprites """
 
     def __init__(self, sprites, x, y, image):
+        """ Initialize an individual sprite """
         self._sprites = sprites
         self._x = int(x)
         self._y = int(y)
@@ -156,6 +165,7 @@ class Sprite:
         self._sprites.append_to_list(self)
 
     def set_image(self, image, i=0, dx=0, dy=0):
+        """ Add an image to the sprite. """
         while len(self.images) < i + 1:
             self.images.append(None)
             self._dx.append(0)
@@ -178,31 +188,38 @@ class Sprite:
                 self._height = _h + dy
 
     def move(self, pos):
+        """ Move to new (x, y) position """
         self.inval()
         self._x, self._y = int(pos[0]), int(pos[1])
         self.inval()
 
     def move_relative(self, pos):
+        """ Move to new (x+dx, y+dy) position """
         self.inval()
         self._x += int(pos[0])
         self._y += int(pos[1])
         self.inval()
 
     def get_xy(self):
+        """ Return current (x, y) position """
         return (self._x, self._y)
 
     def get_dimensions(self):
+        """ Return current size """
         return (self._width, self._height)
 
     def get_layer(self):
+        """ Return current layer """
         return self.layer
 
     def set_shape(self, image, i=0):
+        """ Set the current image associated with the sprite """
         self.inval()
         self.set_image(image, i)
         self.inval()
 
     def set_layer(self, layer):
+        """ Set the layer for a sprite """
         self._sprites.remove_from_list(self)
         self.layer = layer
         for i in range(self._sprites.length_of_list()):
@@ -214,6 +231,7 @@ class Sprite:
         self.inval()
 
     def set_label(self, new_label, i=0):
+        """ Set the label drawn on the sprite """
         self._extend_labels_array(i)
         if type(new_label) is str or type(new_label) is unicode:
             # pango doesn't like nulls
@@ -223,9 +241,11 @@ class Sprite:
         self.inval()
 
     def set_margins(self, l=0, t=0, r=0, b=0):
+        """ Set the margins for drawing the label """
         self._margins = [l, t, r, b]
 
     def _extend_labels_array(self, i):
+        """ Append to the labels attribute list """
         if self._fd is None:
             self.set_font('Sans')
         if self._color is None:
@@ -238,13 +258,16 @@ class Sprite:
             self._vert_align.append(self._vert_align[0])
 
     def set_font(self, font):
+        """ Set the font for a label """
         self._fd = pango.FontDescription(font)
 
     def set_label_color(self, rgb):
+        """ Set the font color for a label """
         self._color = self._sprites.cm.alloc_color(rgb)
 
     def set_label_attributes(self, scale, rescale=True, horiz_align="center",
                              vert_align="middle", i=0):
+        """ Set the various label attributes """
         self._extend_labels_array(i)
         self._scale[i] = scale
         self._rescale[i] = rescale
@@ -252,14 +275,17 @@ class Sprite:
         self._vert_align[i] = vert_align
 
     def hide(self):
+        """ Hide a sprite """
         self.inval()
         self._sprites.remove_from_list(self)
 
     def inval(self):
+        """ Force a region redraw by gtk """
         self._sprites.area.invalidate_rect(gtk.gdk.Rectangle(self._x, self._y,
                                              self._width, self._height), False)
 
     def draw(self):
+        """ Draw the sprite (and label) """
         for i, img in enumerate(self.images):
             if isinstance(img, gtk.gdk.Pixbuf):
                 self._sprites.area.draw_pixbuf(
@@ -273,6 +299,7 @@ class Sprite:
             self.draw_label()
 
     def hit(self, pos):
+        """ Is (x, y) on top of the sprite? """
         x, y = pos
         if x < self._x:
             return False
@@ -285,6 +312,7 @@ class Sprite:
         return True
 
     def draw_label(self):
+        """ Draw the label based on its attributes """
         my_width = self._width - self._margins[0] - self._margins[2]
         if my_width < 0:
             my_width = 0
@@ -326,6 +354,7 @@ class Sprite:
             self._sprites.area.draw_layout(self._sprites.gc, x, y, pl)
 
     def label_width(self):
+        """ Calculate the width of a label """
         max = 0
         for i in range(len(self.labels)):
             pl = self._sprites.canvas.create_pango_layout(self.labels[i])
@@ -337,15 +366,19 @@ class Sprite:
         return max
 
     def label_safe_width(self):
+        """ Return maximum width for a label """
         return self._width - self._margins[0] - self._margins[2]
 
     def label_safe_height(self):
+        """ Return maximum height for a label """
         return self._height - self._margins[1] - self._margins[3]
 
     def label_left_top(self):
+        """ Return the upper-left corner of the label safe zone """
         return(self._margins[0], self._margins[1])
 
     def get_pixel(self, pos, i=0):
+        """ Return the pixl at (x, y) """
         x, y = pos
         x = x - self._x
         y = y - self._y
