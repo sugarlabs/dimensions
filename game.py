@@ -126,7 +126,7 @@ class Game():
             self.deck.hide()
             self.deck.shuffle()
             self.grid.deal(self.deck)
-            if self._find_a_match() is False:
+            if not self._find_a_match():
                 self.grid.deal_extra_cards(self.deck)
             self.matches = 0
             self.robot_matches = 0
@@ -149,8 +149,7 @@ class Game():
 
     def _sharing(self):
         """ Are we sharing? """
-        if self.sugar is True and \
-            hasattr(self.activity, 'chattube') and \
+        if self.sugar and hasattr(self.activity, 'chattube') and \
             self.activity.chattube is not None:
             return True
         return False

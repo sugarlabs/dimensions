@@ -15,7 +15,7 @@ pygtk.require('2.0')
 import gtk
 from random import randrange
 
-from constants import HIGH, FILLS, SHAPES, NUMBER, COLORS
+from constants import HIGH, FILLS, SHAPES, NUMBER, COLORS, COLOR_PAIRS
 from card import Card
 from gencards import generate_pattern_card, generate_number_card, \
                      generate_word_card

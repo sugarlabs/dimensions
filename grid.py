@@ -47,7 +47,7 @@ class Grid:
             But only if there are still cards in the deck
             and only 12 cards in the grid
         """
-        if deck.empty() is False and self.cards_in_grid() == DEAL:
+        if not deck.empty() and self.cards_in_grid() == DEAL:
             for c in range(0, COL):
                 i = self.grid.index(None)
                 self.grid[i] = deck.deal_next_card()

@@ -136,7 +136,7 @@ class VisualMatchActivity(activity.Activity):
         if not hasattr(self, '_saved_state'):
             self._saved_state = None
         self.vmw.new_game(self._saved_state, self._deck_index)
-        if self._editing_word_list is True:
+        if self._editing_word_list:
             self.vmw.editing_word_list = True
             self.vmw.edit_word_list()
 
@@ -481,17 +481,17 @@ class VisualMatchActivity(activity.Activity):
         """ Dump game data to the journal."""
         data = []
         for i in self.vmw.grid.grid:
-            if i is None or self.vmw.editing_word_list == True:
+            if i is None or self.vmw.editing_word_list:
                 data.append(None)
             else:
                 data.append(i.index)
         for i in self.vmw.clicked:
-            if i is None or self.vmw.editing_word_list == True:
+            if i is None or self.vmw.editing_word_list:
                 data.append(None)
             else:
                 data.append(self.vmw.deck.spr_to_card(i).index)
         for i in self.vmw.deck.cards:
-            if i is None or self.vmw.editing_word_list == True:
+            if i is None or self.vmw.editing_word_list:
                 data.append(None)
             else:
                 data.append(i.index)
