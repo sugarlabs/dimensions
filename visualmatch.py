@@ -175,7 +175,7 @@ class VisualMatchMain:
         self.vmw.new_game()
 
     def load_score(self):
-        if 1==1:
+        try:
             f = file(os.path.join(os.path.abspath('.'),
                                   'visualmatch.score'), "r")
             s = f.readlines()
@@ -183,7 +183,7 @@ class VisualMatchMain:
             self.vmw.low_score = [int(s[0].split(':')[1].strip()),
                                   int(s[1].split(':')[1].strip())]
             print "low score is: %s" % (self.vmw.low_score)
-        else:
+        except:
             self.vmw.low_score = [-1, -1]
 
     def save_score(self):
