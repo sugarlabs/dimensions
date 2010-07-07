@@ -14,11 +14,9 @@
 import pygtk
 pygtk.require('2.0')
 import gtk
-import gobject
-import os.path
 
-from constants import *
-from sprites import *
+from constants import SELECTMASK, MATCHMASK, COLORS, NUMBER, FILLS
+from sprites import Sprite
 
 #
 # class for defining individual cards
@@ -31,8 +29,13 @@ from sprites import *
 #                    for fill in range(0,FILLS):
 # if shape == SELECTMASK then generate special card-selected overlay
 #
+
+
 class Card:
+    """ Individual cards """
+
     def __init__(self, sprites, svg_string, attributes):
+        """ Create the card and store its attributes """
         if attributes[0] == SELECTMASK:
             self.spr = Sprite(sprites, 0, 0, svg_str_to_pixbuf(svg_string))
             self.index = SELECTMASK
@@ -44,23 +47,23 @@ class Card:
             self.color = attributes[1]
             self.num = attributes[2]
             self.fill = attributes[3]
-            self.index = self.shape*COLORS*NUMBER*FILLS+\
-                         self.color*NUMBER*FILLS+\
-                         self.num*FILLS+\
+            self.index = self.shape * COLORS * NUMBER * FILLS+\
+                         self.color * NUMBER * FILLS +\
+                         self.num * FILLS +\
                          self.fill
             self.spr = Sprite(sprites, 0, 0, svg_str_to_pixbuf(svg_string))
 
     def show_card(self):
+        """ Show the care """
         self.spr.set_layer(2000)
         self.spr.draw()
 
     def hide_card(self):
         self.spr.hide()
 
-#
-# Load pixbuf from SVG string
-#
+
 def svg_str_to_pixbuf(svg_string):
+    """ Load pixbuf from SVG string """
     pl = gtk.gdk.PixbufLoader('svg')
     pl.write(svg_string)
     pl.close()
