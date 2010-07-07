@@ -19,12 +19,9 @@ import gtk
 from gettext import gettext as _
 import os
 
-import game
-import grid
-import card
-import sprites
-import gencards
-from constants import *
+from game import Game
+from constants import PRODUCT, HASH, ROMAN, WORD, CHINESE, MAYAN, DICE, DOTS, \
+                      STAR, LINES
 
 
 class VisualMatchMain:
@@ -38,12 +35,6 @@ class VisualMatchMain:
         self.win.set_title("%s: %s" % (_("Visual Match"),
                            _("Click on cards to create sets of three.")))
         self.win.connect("delete_event", lambda w, e: gtk.main_quit())
-
-        '''
-        if not os.path.exists(os.path.join(os.path.abspath('.'), 'images')):
-            os.mkdir(os.path.join(os.path.abspath('.'), 'images'))
-        gencards.generator(os.path.join(os.path.abspath('.'), 'images'))
-        '''
 
         menu0 = gtk.Menu()
         menu_items = gtk.MenuItem(_("Toggle level"))
@@ -165,9 +156,7 @@ class VisualMatchMain:
         self.win.show_all()
 
         # Join the activity
-        self.vmw = game.Game(canvas, \
-                               os.path.join(os.path.abspath('.'), \
-                                            'images/'))
+        self.vmw = Game(canvas, os.path.join(os.path.abspath('.'), 'images/'))
         self.vmw.win = self.win
         self.vmw.activity = self
         self.vmw.card_type = 'pattern'
@@ -186,20 +175,21 @@ class VisualMatchMain:
         self.vmw.new_game()
 
     def load_score(self):
-        try:
+        if 1==1:
             f = file(os.path.join(os.path.abspath('.'),
                                   'visualmatch.score'), "r")
-            s = [f.read().split(":"), f.read().split(":")]
+            s = f.readlines()
             f.close
-            self.vmw.low_score = (int(s[0]), int(s[1]))
-            print "low score is: %d" % (self.vmw.low_score)
-        except:
+            self.vmw.low_score = [int(s[0].split(':')[1].strip()),
+                                  int(s[1].split(':')[1].strip())]
+            print "low score is: %s" % (self.vmw.low_score)
+        else:
             self.vmw.low_score = [-1, -1]
 
     def save_score(self):
         f = file(os.path.join(os.path.abspath('.'), 'visualmatch.score'), "w")
-        f.write("low_score_beginner:%s" % str(int(self.vmw.low_score[0])))
-        f.write("low_score_expert:%s" % str(int(self.vmw.low_score[1])))
+        f.writelines(["low_score_beginner:%d\n" % int(self.vmw.low_score[0]),
+                      "low_score_expert:%d\n" % int(self.vmw.low_score[1])])
         f.close
 
     def set_title(self, title):
