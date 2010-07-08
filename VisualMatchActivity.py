@@ -153,7 +153,7 @@ class VisualMatchActivity(activity.Activity):
             self.vmw.robot = False
             self.robot_button.set_tooltip(_('Play with the computer.'))
             self.robot_button.set_icon('robot-off')
-        else:
+        elif not self.vmw.editing_word_list:
             self.vmw.robot = True
             self.robot_button.set_tooltip(
                 _('Stop playing with the computer.'))
@@ -204,6 +204,8 @@ class VisualMatchActivity(activity.Activity):
         """ Edit the word list. """
         self.vmw.editing_word_list = True
         self.vmw.edit_word_list()
+        if self.vmw.robot:
+            self._robot_cb(button)
 
     '''
     def _write_to_journal_cb(self, button, path):
