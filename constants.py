@@ -39,6 +39,7 @@ STAR = 2
 HASH = 3
 DICE = 4
 LOW = 'low'
+MEDIUM = 'medium'
 HIGH = 'high'
 RED_STROKE = "#FF6040"
 RED_FILL = "#FFC4B8"

@@ -55,9 +55,9 @@ from constants import DECKSIZE, PRODUCT, HASH, ROMAN, WORD, CHINESE, MAYAN, \
                       DOTS, STAR, DICE, LINES, DEAL
 from game import Game
 
-level_icons = ['level1', 'level2']
-level_labels = [_('beginner'), _('expert')]
-level_decksize = [DECKSIZE / 3, DECKSIZE]
+LEVEL_ICONS = ['level2', 'level3', 'level1']
+LEVEL_LABELS = [_('intermediate'), _('expert'), _('beginner')]
+LEVEL_DECKSIZE = [DECKSIZE / 3, DECKSIZE, DECKSIZE / 9]
 
 SERVICE = 'org.sugarlabs.VisualMatchActivity'
 IFACE = SERVICE
@@ -160,22 +160,24 @@ class VisualMatchActivity(activity.Activity):
             self.robot_button.set_icon('robot-on')
 
     def _level_cb(self, button):
-        """ Switch between levels """
+        """ Cycle between levels """
         if self.vmw.joiner():  # joiner cannot change level
             return
-        self.vmw.level = 1 - self.vmw.level
+        self.vmw.level += 1
+        if self.vmw.level == len(LEVEL_LABELS):
+            self.vmw.level = 0
         self.level_label.set_text(self.calc_level_label(self.vmw.low_score,
                                                         self.vmw.level))
-        self.level_button.set_icon(level_icons[self.vmw.level])
+        self.level_button.set_icon(LEVEL_ICONS[self.vmw.level])
         self.vmw.new_game()
 
     def calc_level_label(self, low_score, play_level):
         """ Show the score. """
         if low_score[play_level] == -1:
-            return level_labels[play_level]
+            return LEVEL_LABELS[play_level]
         else:
             return "%s (%d:%02d)" % \
-                    (level_labels[play_level],
+                    (LEVEL_LABELS[play_level],
                      int(low_score[play_level] / 60),
                      int(low_score[play_level] % 60))
 
@@ -222,8 +224,6 @@ class VisualMatchActivity(activity.Activity):
             self._play_level = int(self.metadata['play_level'])
             self._robot_time = int(self.metadata['robot_time'])
             self._card_type = self.metadata['cardtype']
-            self._low_score = [int(self.metadata['low_score_beginner']), \
-                               int(self.metadata['low_score_expert'])]
             self._numberO = int(self.metadata['numberO'])
             self._numberC = int(self.metadata['numberC'])
             self._matches = int(self.metadata['matches'])
@@ -231,17 +231,16 @@ class VisualMatchActivity(activity.Activity):
             self._total_time = int(self.metadata['total_time'])
             self._deck_index = int(self.metadata['deck_index'])
         except KeyError:  # Otherwise, use default values.
-            self._play_level = 0
+            self._play_level = 2
             self._robot_time = 60
             self._card_type = 'pattern'
-            self._low_score = [-1, -1]
             self._numberO = PRODUCT
             self._numberC = HASH
             self._matches = 0
             self._robot_matches = 0
             self._total_time = 0
             self._deck_index = 0
-        try:  # Some saved games may not have the word list
+        try:  # Some saved games may not have the word list.
             self._word_lists = [[self.metadata['mouse'], \
                                  self.metadata['cat'], \
                                  self.metadata['dog']], \
@@ -252,14 +251,25 @@ class VisualMatchActivity(activity.Activity):
                                  self.metadata['sun'], \
                                  self.metadata['earth']]]
         except KeyError:
-            self._word_lists = [[_('mouse'), _('cat'), _('dog')], \
-                                [_('cheese'), _('apple'), _('bread')], \
+            self._word_lists = [[_('mouse'), _('cat'), _('dog')],
+                                [_('cheese'), _('apple'), _('bread')],
                                 [_('moon'), _('sun'), _('earth')]]
         try:  # Were we editing the word list?
             self._editing_word_list = bool(int(
                 self.metadata['editing_word_list']))
         except KeyError:
             self._editing_word_list = False
+        try:  # We may have different combinations of low scores saved.
+            self._low_score = [int(self.metadata['low_score_intermediate']),
+                               int(self.metadata['low_score_expert']),
+                               int(self.metadata['low_score_beginner'])]
+        except KeyError:
+            try:
+                self._low_score = [-1,
+                                    int(self.metadata['low_score_expert']),
+                                    int(self.metadata['low_score_beginner'])]
+            except KeyError:
+                self._low_score = [-1, -1, -1]
 
     def _find_datapath(self, _old_sugar_system):
         """ Find the datapath for saving card files. """
@@ -358,7 +368,7 @@ class VisualMatchActivity(activity.Activity):
                                               self._robot_time_spin_cb,
                                               tools_toolbar)
         _separator_factory(tools_toolbar, True, False)
-        self.level_button = _button_factory(level_icons[self._play_level],
+        self.level_button = _button_factory(LEVEL_ICONS[self._play_level],
                                             _('Set difficulty level.'),
                                             self._level_cb, tools_toolbar)
         self.level_label = _label_factory(self.calc_level_label(
@@ -415,7 +425,7 @@ class VisualMatchActivity(activity.Activity):
         self.status_label = _label_factory(_('Find a match.'), toolbar)
         _separator_factory(toolbar, True, False)
         self.deck_label = _label_factory("%d %s" % \
-                                             (level_decksize[self._play_level]\
+                                             (LEVEL_DECKSIZE[self._play_level]\
                                                   - DEAL, _('cards')), toolbar)
         _separator_factory(toolbar, True, False)
         self.match_label = _label_factory("%d %s" % (0, _('matches')), toolbar)
@@ -453,7 +463,8 @@ class VisualMatchActivity(activity.Activity):
         if hasattr(self, 'vmw'):
             self.metadata['play_level'] = self.vmw.level
             self.metadata['low_score_beginner'] = int(self.vmw.low_score[0])
-            self.metadata['low_score_expert'] = int(self.vmw.low_score[1])
+            self.metadata['low_score_intermediate'] = int(self.vmw.low_score[1])
+            self.metadata['low_score_expert'] = int(self.vmw.low_score[2])
             self.metadata['robot_time'] = self.vmw.robot_time
             self.metadata['numberO'] = self.vmw.numberO
             self.metadata['numberC'] = self.vmw.numberC
@@ -653,7 +664,7 @@ class VisualMatchActivity(activity.Activity):
             self.vmw.level = int(text)
             self.level_label.set_text(self.calc_level_label(
                 self.vmw.low_score, self.vmw.level))
-            self.level_button.set_icon(level_icons[self.vmw.level])
+            self.level_button.set_icon(LEVEL_ICONS[self.vmw.level])
         elif text[0] == 'X':
             e, text = text.split(':')
             _logger.debug("receiving deck index from sharer " + text)

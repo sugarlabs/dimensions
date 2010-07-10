@@ -15,7 +15,8 @@ pygtk.require('2.0')
 import gtk
 from random import randrange
 
-from constants import HIGH, FILLS, SHAPES, NUMBER, COLORS, COLOR_PAIRS
+from constants import HIGH, MEDIUM, LOW, FILLS, SHAPES, NUMBER, COLORS, \
+                      COLOR_PAIRS
 from card import Card
 from gencards import generate_pattern_card, generate_number_card, \
                      generate_word_card
@@ -29,14 +30,19 @@ class Deck:
         """ Create the deck of cards. """
         self.cards = []
         # If level is 'simple', only generate one fill type
-        if level == HIGH:
-            fill_range = FILLS
-        else:
+        shape_range = SHAPES
+        color_range = COLORS
+        number_range = NUMBER
+        fill_range = FILLS
+        if level == MEDIUM:
+            fill_range = 1       
+        elif level == LOW:
             fill_range = 1
+            shape_range = 1
         # Initialize the deck of cards by looping through all the patterns
-        for shape in range(0, SHAPES):
-            for color in range(0, COLORS):
-                for num in range(0, NUMBER):
+        for shape in range(0, shape_range):
+            for color in range(0, color_range):
+                for num in range(0, number_range):
                     for fill in range(0, fill_range):
                         if card_type == 'pattern':
                             self.cards.append(Card(sprites,

@@ -27,16 +27,16 @@ try:
 except ImportError:
     GRID_CELL_SIZE = 0
 
-from constants import LOW, HIGH, SELECTMASK, MATCHMASK, ROW, COL,\
+from constants import LOW, MEDIUM, HIGH, SELECTMASK, MATCHMASK, ROW, COL,\
     WORD_CARD_INDICIES, MATCH_POSITION, DEAD_DICTS, DEAD_KEYS, WHITE_SPACE,\
-    NOISE_KEYS, WORD_CARD_MAP, KEYMAP, CARD_HEIGHT, CARD_WIDTH
+    NOISE_KEYS, WORD_CARD_MAP, KEYMAP, CARD_HEIGHT, CARD_WIDTH, DEAL
 from grid import Grid
 from deck import Deck
 from card import Card
 from sprites import Sprites, Sprite
 from gencards import generate_selected_card, generate_match_card
 
-difficulty_level = [LOW, HIGH]
+difficulty_level = [MEDIUM, HIGH, LOW]
 
 
 class Game():
@@ -271,6 +271,11 @@ class Game():
                  int(self.total_time % 60)))
             self.match_timeout_id = gobject.timeout_add(2000,
                                                         self._show_matches, 0)
+            return True
+        elif self.grid.cards_in_grid() == DEAL + 3 and not self._find_a_match():
+            self.set_label("deck", "")
+            self.set_label("clock", "")
+            self.set_label("status", _("unsolvable"))
             return True
         return False
 
