@@ -20,7 +20,9 @@ try:
     from sugar.activity.widgets import StopButton
     from sugar.graphics.toolbarbox import ToolbarBox
     from sugar.graphics.toolbarbox import ToolbarButton
+    """
     from namingalert import NamingAlert
+    """
     _new_sugar_system = True
 except ImportError:
     _new_sugar_system = False
@@ -209,15 +211,14 @@ class VisualMatchActivity(activity.Activity):
         if self.vmw.robot:
             self._robot_cb(button)
 
+    """
     def _write_to_journal_cb(self, button):
-        print "------------------"
-        print type(self)
-        print "------------------"
         title_alert = NamingAlert(self, activity.get_bundle_path())
         title_alert.set_transient_for(self.get_toplevel())
         title_alert.show()
         self.reveal()
         return True
+    """
 
     def _read_journal_data(self):
         """ There may be data from a previous instance. """
@@ -296,12 +297,14 @@ class VisualMatchActivity(activity.Activity):
             toolbox.toolbar.insert(activity_button, 0)
             activity_button.show()
 
+            """
             # Naming alert button
             write_to_journal_button = _button_factory("journal-write",
                                                       _('Write in Journal'),
                                                       self._write_to_journal_cb,
                                                       toolbox.toolbar, None,
                                                       '<Ctrl>j')
+            """
 
             games_toolbar_button = ToolbarButton(
                     page=games_toolbar,
