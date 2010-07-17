@@ -370,7 +370,7 @@ class Game():
 
     def _expose_cb(self, win, event):
         """ Time to refresh all of the sprites """
-        self.sprites.redraw_sprites()
+        self.sprites.redraw_sprites(event.area)
         return True
 
     def _destroy_cb(self, win, event):
