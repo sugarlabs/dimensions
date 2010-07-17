@@ -20,7 +20,7 @@ try:
     from sugar.activity.widgets import StopButton
     from sugar.graphics.toolbarbox import ToolbarBox
     from sugar.graphics.toolbarbox import ToolbarButton
-    # from namingalert import NamingAlert
+    from namingalert import NamingAlert
     _new_sugar_system = True
 except ImportError:
     _new_sugar_system = False
@@ -52,7 +52,7 @@ except(ImportError, AttributeError):
 from StringIO import StringIO
 
 from constants import DECKSIZE, PRODUCT, HASH, ROMAN, WORD, CHINESE, MAYAN, \
-                      DOTS, STAR, DICE, LINES, DEAL
+                      INCAN, DOTS, STAR, DICE, LINES, DEAL
 from game import Game
 
 LEVEL_ICONS = ['level2', 'level3', 'level1']
@@ -209,14 +209,15 @@ class VisualMatchActivity(activity.Activity):
         if self.vmw.robot:
             self._robot_cb(button)
 
-    '''
-    def _write_to_journal_cb(self, button, path):
-        title_alert = NamingAlert(self, path)
+    def _write_to_journal_cb(self, button):
+        print "------------------"
+        print type(self)
+        print "------------------"
+        title_alert = NamingAlert(self, activity.get_bundle_path())
         title_alert.set_transient_for(self.get_toplevel())
         title_alert.show()
         self.reveal()
         return True
-    '''
 
     def _read_journal_data(self):
         """ There may be data from a previous instance. """
@@ -295,14 +296,12 @@ class VisualMatchActivity(activity.Activity):
             toolbox.toolbar.insert(activity_button, 0)
             activity_button.show()
 
-            '''
             # Naming alert button
-            write_to_journal_button = _button_factoty("journal-write",
+            write_to_journal_button = _button_factory("journal-write",
                                                       _('Write in Journal'),
                                                       self._write_to_journal_cb,
                                                       toolbox.toolbar, None,
                                                       '<Ctrl>j')
-            '''
 
             games_toolbar_button = ToolbarButton(
                     page=games_toolbar,
@@ -398,6 +397,10 @@ class VisualMatchActivity(activity.Activity):
                                             self._number_card_O_cb,
                                             numbers_toolbar,
                                             MAYAN)
+        self.quipu_button = _button_factory('incan', _('Quipu'),
+                                            self._number_card_O_cb,
+                                            numbers_toolbar,
+                                            INCAN)
         _separator_factory(numbers_toolbar, True, False)
         self.hash_button = _button_factory('hash', _('hash marks'),
                                            self._number_card_C_cb,

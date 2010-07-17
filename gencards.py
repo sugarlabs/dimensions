@@ -150,6 +150,22 @@ class SVG:
         svg_string += "</g>\n"
         return svg_string
 
+    def _svg_quipu(self, n, x, y):
+        print "quipu: %d %d %d" % (n, x, y)
+        svg_string = "%s%f%s%f%s" % ("<g\n   transform=\"translate(",x,", ",y,
+                                     ")\">\n")
+        x2 = x
+        self.set_stroke_width(2.0)
+        svg_string += self._svg_line(x2-40, 7.5, x2+40, 7.5)
+        x2 -= 20
+        x1 = x2+7.5
+        for i in range(n):
+            svg_string += self._svg_line(x1, 0, x2, 15)
+            x1 += 7.5
+            x2 += 7.5
+        svg_string += "</g>\n"
+        return svg_string
+
     def _svg_die(self, n, x, y):
         svg_string = "%s%f%s%f%s" % ("<g\n   transform=\"translate(",x,", ",y,
                                      ")\">\n")
@@ -257,6 +273,15 @@ class SVG:
     #
     # Card pattern generators
     #
+    def number_incan(self, n):
+        x = 20
+        y = 30
+        print "number incan: %d" % (n)
+        svg_string = self._svg_quipu(int(n/10), x, y)
+        x = 40
+        svg_string += self._svg_quipu(n % 10, x, y)
+        return svg_string
+
     def number_mayan(self, n):
         x = 42.5
         x1,x2,xc,x3,x4 = x+5,x+15,x+20,x+25,x+35
@@ -578,7 +603,7 @@ def generate_number_card(t,c,n,s,number_types,scale):
     svg = SVG()
     stab = {0:5,1:7,2:11}
     methodO = [svg.number_roman, svg.number_product, svg.number_chinese,\
-               svg.number_word, svg.number_mayan]
+               svg.number_word, svg.nummber_mayan, svg.number_incan]
     methodC = [svg.dots_in_a_line, svg.dots_in_a_circle, svg.points_in_a_star,\
                svg.number_hash, svg.dice]
     methodX = svg.number_arabic
