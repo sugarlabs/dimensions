@@ -39,7 +39,7 @@ from sprites import Sprite
 class Card:
     """ Individual cards """
 
-    def __init__(self, sprites, svg_string, attributes, load_from_file=False):
+    def __init__(self, sprites, svg_string, attributes, load_from_file=False, scale=1.0):
         """ Create the card and store its attributes """
         if attributes[0] == SELECTMASK:
             self.spr = Sprite(sprites, 0, 0, svg_str_to_pixbuf(svg_string))
@@ -57,7 +57,7 @@ class Card:
                          self.num * FILLS +\
                          self.fill
             if load_from_file:
-                self.spr = Sprite(sprites, 0, 0, load_image(svg_string))
+                self.spr = Sprite(sprites, 0, 0, load_image(svg_string, scale))
             else:
                 self.spr = Sprite(sprites, 0, 0, svg_str_to_pixbuf(svg_string))
 
@@ -78,6 +78,7 @@ def svg_str_to_pixbuf(svg_string):
     pixbuf = pl.get_pixbuf()
     return pixbuf
 
-def load_image(path):
-    return gtk.gdk.pixbuf_new_from_file_at_size(path, CARD_WIDTH, CARD_HEIGHT)
+def load_image(path, scale):
+    return gtk.gdk.pixbuf_new_from_file_at_size(path, scale * CARD_WIDTH,
+                                                scale * CARD_HEIGHT)
 

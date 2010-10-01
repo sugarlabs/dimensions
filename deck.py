@@ -59,8 +59,8 @@ class Deck:
                                                    [shape, color, num, fill]))
                         elif card_type == 'custom':
                             self.cards.append(Card(sprites,
-                                                   lists[i],
-                                                   [shape, color, num, fill],load_from_file=True))
+                                lists[i], [shape, color, num, fill],
+                                load_from_file=True, scale=scale))
                             i += 1
                         else:
                             self.cards.append(Card(sprites,
