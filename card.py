@@ -23,23 +23,12 @@ from constants import SELECTMASK, MATCHMASK, COLORS, NUMBER, FILLS, \
 
 from sprites import Sprite
 
-#
-# class for defining individual cards
-# tw - image related
-# pattern - game logic related
-# card index is generated in the following loop:
-#        for shape in range(0,SHAPES):
-#            for color in range(0,COLORS):
-#                for num in range(0,NUMBER):
-#                    for fill in range(0,FILLS):
-# if shape == SELECTMASK then generate special card-selected overlay
-#
-
 
 class Card:
     """ Individual cards """
 
-    def __init__(self, sprites, svg_string, attributes, load_from_file=False, scale=1.0):
+    def __init__(self, sprites, svg_string, attributes, load_from_file=False,
+                 scale=1.0):
         """ Create the card and store its attributes """
         if attributes[0] == SELECTMASK:
             self.spr = Sprite(sprites, 0, 0, svg_str_to_pixbuf(svg_string))
@@ -77,6 +66,7 @@ def svg_str_to_pixbuf(svg_string):
     pl.close()
     pixbuf = pl.get_pixbuf()
     return pixbuf
+
 
 def load_image(path, scale):
     return gtk.gdk.pixbuf_new_from_file_at_size(path, scale * CARD_WIDTH,
