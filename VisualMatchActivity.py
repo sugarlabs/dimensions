@@ -195,7 +195,7 @@ class VisualMatchActivity(activity.Activity):
 
     def _import_cb(self, button=None):
         """ Import custom cards from the Journal """
-        basename = None
+        name = None
         chooser = ObjectChooser(_('Choose custom card'), self,
             gtk.DIALOG_MODAL |
             gtk.DIALOG_DESTROY_WITH_PARENT, \
@@ -210,23 +210,28 @@ class VisualMatchActivity(activity.Activity):
                     mime_type = jobject.metadata['mime_type']
                     _logger.debug('result of choose: %s (%s)' % \
                                       (name, str(mime_type)))
-                    # We need to strip off any numeric suffix
-                    basename, suffix = name.split('.', 2)
         finally:
             chooser.destroy()
             del chooser
 
-        if basename is not None:
-            self._find_custom_paths(basename, mime_type)
+        if name is not None:
+            self._find_custom_paths(name, mime_type)
 
-    def _find_custom_paths(self, basename, mime_type):
+    def _find_custom_paths(self, name, mime_type):
+        parts = name.split('.')
+        basename = parts[0]
+        suffix = ''
+        if len(parts) > 2:
+            for i in range(2,len(name)):
+                suffix += '.'
+                suffix += parts[i]
         dsobjects, nobjects = datastore.find({'mime_type': str(mime_type)})
         self.vmw.custom_paths = []
         if nobjects > 0:
             for j in range(DECKSIZE):
                 for i in range(nobjects):
                     if dsobjects[i].metadata['title'] == \
-                       basename + '.' + str(j+1):
+                       basename + '.' + str(j+1) + suffix:
                         _logger.debug('result of find: %s' %\
                                           dsobjects[i].metadata['title'])
                         self.vmw.custom_paths.append(dsobjects[i].file_path)
