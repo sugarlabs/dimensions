@@ -27,6 +27,9 @@ try:
 except ImportError:
     _new_sugar_system = False
 from sugar.graphics.toolbutton import ToolButton
+from sugar.graphics.objectchooser import ObjectChooser
+from sugar.datastore import datastore
+from sugar import mime
 
 import telepathy
 from dbus.service import signal
@@ -54,7 +57,9 @@ except(ImportError, AttributeError):
 from StringIO import StringIO
 
 from constants import DECKSIZE, PRODUCT, HASH, ROMAN, WORD, CHINESE, MAYAN, \
-                      INCAN, DOTS, STAR, DICE, LINES, DEAL
+                      INCAN, DOTS, STAR, DICE, LINES, DEAL, HIGH, MEDIUM, LOW, \
+                      DIFFICULTY_LEVEL
+
 from game import Game
 
 LEVEL_ICONS = ['level2', 'level3', 'level1']
@@ -147,6 +152,8 @@ class VisualMatchActivity(activity.Activity):
         if self.vmw.joiner():  # joiner cannot change level
             return
         self.vmw.card_type = card_type
+        if card_type == 'custom' and len(self.vmw.custom_paths) < 9:
+            self._import_cb()
         self.vmw.new_game()
 
     def _robot_cb(self, button):
@@ -168,6 +175,9 @@ class VisualMatchActivity(activity.Activity):
         self.vmw.level += 1
         if self.vmw.level == len(LEVEL_LABELS):
             self.vmw.level = 0
+        self.set_level_label()
+
+    def set_level_label(self):
         self.level_label.set_text(self.calc_level_label(self.vmw.low_score,
                                                         self.vmw.level))
         self.level_button.set_icon(LEVEL_ICONS[self.vmw.level])
@@ -182,6 +192,59 @@ class VisualMatchActivity(activity.Activity):
                     (LEVEL_LABELS[play_level],
                      int(low_score[play_level] / 60),
                      int(low_score[play_level] % 60))
+
+    def _import_cb(self, button=None):
+        """ Import custom cards from the Journal """
+        chooser = ObjectChooser(_('Choose document'), self,
+            gtk.DIALOG_MODAL |
+            gtk.DIALOG_DESTROY_WITH_PARENT, \
+            what_filter=mime.GENERIC_TYPE_IMAGE)
+
+        try:
+            result = chooser.run()
+            if result == gtk.RESPONSE_ACCEPT:
+                jobject = chooser.get_selected_object()
+                if jobject and jobject.file_path:
+                    name = jobject.metadata['title']
+                    mime_type = jobject.metadata['mime_type']
+                    _logger.debug('result of choose: %s (%s)' % \
+                                      (name, str(mime_type)))
+                    # We need to strip off any numeric suffix
+                    basename, suffix = name.split('.', 2)
+        finally:
+            chooser.destroy()
+            del chooser
+
+        self._find_custom_paths(basename, mime_type)
+
+    def _find_custom_paths(self, basename, mime_type):
+        dsobjects, nobjects = datastore.find({'mime_type': str(mime_type)})
+        self.vmw.custom_paths = []
+        if nobjects > 0:
+            for j in range(DECKSIZE):
+                for i in range(nobjects):
+                    if dsobjects[i].metadata['title'] == \
+                       basename + '.' + str(j+1):
+                        _logger.debug('result of find: %s' %\
+                                          dsobjects[i].metadata['title'])
+                        self.vmw.custom_paths.append(dsobjects[i].file_path)
+                        break
+        self.vmw.card_type = 'custom'
+        if len(self.vmw.custom_paths) < 9:
+            self.vmw.card_type = 'pattern'
+        elif len(self.vmw.custom_paths) < 27:
+            self.vmw.level = DIFFICULTY_LEVEL.index(LOW)
+        elif len(self.vmw.custom_paths) < 81:
+            self.vmw.level = DIFFICULTY_LEVEL.index(MEDIUM)
+        else:
+            self.vmw.level = DIFFICULTY_LEVEL.index(HIGH)
+        if self.vmw.card_type == 'custom':
+            self.button_custom.set_icon('new_custom_game')
+            self.button_custom.set_tooltip(_('New custom game'))
+            self.metadata['custom_name'] = basename
+            self.metadata['custom_mime_type'] = mime_type
+        self.set_level_label()
+        return
 
     def _number_card_O_cb(self, button, numberO):
         """ Choose between O-card list for numbers game. """
@@ -222,27 +285,43 @@ class VisualMatchActivity(activity.Activity):
 
     def _read_journal_data(self):
         """ There may be data from a previous instance. """
-        try:  # Try reading restored settings from the Journal.
+        if 'play_level' in self.metadata:
             self._play_level = int(self.metadata['play_level'])
-            self._robot_time = int(self.metadata['robot_time'])
-            self._card_type = self.metadata['cardtype']
-            self._numberO = int(self.metadata['numberO'])
-            self._numberC = int(self.metadata['numberC'])
-            self._matches = int(self.metadata['matches'])
-            self._robot_matches = int(self.metadata['robot_matches'])
-            self._total_time = int(self.metadata['total_time'])
-            self._deck_index = int(self.metadata['deck_index'])
-        except KeyError:  # Otherwise, use default values.
+        else:
             self._play_level = 2
+        if 'robot_time' in self.metadata:
+            self._robot_time = int(self.metadata['robot_time'])
+        else:
             self._robot_time = 60
+        if 'cardtype' in self.metadata:
+            self._card_type = self.metadata['cardtype']
+        else:
             self._card_type = 'pattern'
+        if 'numberO' in self.metadata:
+            self._numberO = int(self.metadata['numberO'])
+        else:
             self._numberO = PRODUCT
+        if 'numberC' in self.metadata:
+            self._numberC = int(self.metadata['numberC'])
+        else:
             self._numberC = HASH
+        if 'matches' in self.metadata:
+            self._matches = int(self.metadata['matches'])
+        else:
             self._matches = 0
+        if 'robot_matches' in self.metadata:
+            self._robot_matches = int(self.metadata['robot_matches'])
+        else:
             self._robot_matches = 0
+        if 'total_time' in self.metadata:
+            self._total_time = int(self.metadata['total_time'])
+        else:
             self._total_time = 0
+        if 'deck_index' in self.metadata:
+            self._deck_index = int(self.metadata['deck_index'])
+        else:
             self._deck_index = 0
-        try:  # Some saved games may not have the word list.
+        if 'mouse' in self.metadata:
             self._word_lists = [[self.metadata['mouse'], \
                                  self.metadata['cat'], \
                                  self.metadata['dog']], \
@@ -252,26 +331,31 @@ class VisualMatchActivity(activity.Activity):
                                 [self.metadata['moon'], \
                                  self.metadata['sun'], \
                                  self.metadata['earth']]]
-        except KeyError:
+        else:
             self._word_lists = [[_('mouse'), _('cat'), _('dog')],
                                 [_('cheese'), _('apple'), _('bread')],
                                 [_('moon'), _('sun'), _('earth')]]
-        try:  # Were we editing the word list?
+        if 'editing_word_list' in self.metadata:
             self._editing_word_list = bool(int(
                 self.metadata['editing_word_list']))
-        except KeyError:
+        else:
             self._editing_word_list = False
-        try:  # We may have different combinations of low scores saved.
+        if 'low_score_intermediate' in self.metadata:
             self._low_score = [int(self.metadata['low_score_intermediate']),
                                int(self.metadata['low_score_expert']),
                                int(self.metadata['low_score_beginner'])]
-        except KeyError:
-            try:
-                self._low_score = [-1,
-                                    int(self.metadata['low_score_expert']),
-                                    int(self.metadata['low_score_beginner'])]
-            except KeyError:
-                self._low_score = [-1, -1, -1]
+        elif 'low_score_expert' in self.metadata:
+            self._low_score = [-1,
+                                int(self.metadata['low_score_expert']),
+                                int(self.metadata['low_score_beginner'])]
+        else:
+            self._low_score = [-1, -1, -1]
+        if self._card_type == 'custom':
+            if 'custom_name' in self.metadata:
+                self._basename = self.metadata['custom_name']
+                self._mime_type = self.metadata['custom_mime_type']
+            else:
+                self._card_type = 'pattern'
 
     def _find_datapath(self, _old_sugar_system):
         """ Find the datapath for saving card files. """
@@ -349,18 +433,22 @@ class VisualMatchActivity(activity.Activity):
             toolbox.set_current_toolbar(1)
 
         # Add the buttons and spinners to the toolbars
-        self.button1 = _button_factory("new-pattern-game",
+        self.button_pattern = _button_factory('new-pattern-game',
                                        _('New pattern game'),
                                        self._select_game_cb, games_toolbar,
                                        'pattern')
-        self.button2 = _button_factory("new-number-game",
+        self.button_number = _button_factory('new-number-game',
                                        _('New number game'),
                                        self._select_game_cb, games_toolbar,
                                        'number')
-        self.button3 = _button_factory("new-word-game",
+        self.button_word = _button_factory('new-word-game',
                                        _('New word game'),
                                        self._select_game_cb, games_toolbar,
                                        'word')
+        self.button_custom = _button_factory('insert-image',
+                                       _('Import custom cards'),
+                                       self._select_game_cb, games_toolbar,
+                                       'custom')
         if not new_sugar_system:
             self._set_labels(games_toolbar)
         self.robot_button = _button_factory("robot-off",
@@ -380,6 +468,8 @@ class VisualMatchActivity(activity.Activity):
                                                  _('Edit word lists.'),
                                                  self._edit_words_cb,
                                                  tools_toolbar)
+        self.import_button = _button_factory('insert-image',
+            _('Import custom cards'), self._import_cb, tools_toolbar)
         self.product_button = _button_factory('product', _('product'),
                                               self._number_card_O_cb,
                                               numbers_toolbar,
@@ -461,6 +551,8 @@ class VisualMatchActivity(activity.Activity):
         self.vmw.buddies = []
         self.vmw.word_lists = self._word_lists
         self.vmw.editing_word_list = self._editing_word_list
+        if self.vmw.card_type == 'custom':
+            self._find_custom_paths(self._basename, self._mime_type)
         return canvas
 
     def write_file(self, file_path):

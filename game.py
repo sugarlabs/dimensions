@@ -17,7 +17,9 @@ import pygtk
 pygtk.require('2.0')
 import gtk
 import gobject
+
 from gettext import gettext as _
+
 import logging
 _logger = logging.getLogger('visualmatch-activity')
 
@@ -27,16 +29,16 @@ try:
 except ImportError:
     GRID_CELL_SIZE = 0
 
-from constants import LOW, MEDIUM, HIGH, SELECTMASK, MATCHMASK, ROW, COL,\
-    WORD_CARD_INDICIES, MATCH_POSITION, DEAD_DICTS, DEAD_KEYS, WHITE_SPACE,\
-    NOISE_KEYS, WORD_CARD_MAP, KEYMAP, CARD_HEIGHT, CARD_WIDTH, DEAL
+from constants import LOW, MEDIUM, HIGH, SELECTMASK, MATCHMASK, ROW, COL, \
+    WORD_CARD_INDICIES, MATCH_POSITION, DEAD_DICTS, DEAD_KEYS, WHITE_SPACE, \
+    NOISE_KEYS, WORD_CARD_MAP, KEYMAP, CARD_HEIGHT, CARD_WIDTH, DEAL, \
+    DIFFICULTY_LEVEL
+
 from grid import Grid
 from deck import Deck
 from card import Card
 from sprites import Sprites, Sprite
 from gencards import generate_selected_card, generate_match_card
-
-difficulty_level = [MEDIUM, HIGH, LOW]
 
 
 class Game():
@@ -67,6 +69,7 @@ class Game():
         self.scale = 0.8 * self.height / (CARD_HEIGHT * 5.5)
         self.card_width = CARD_WIDTH * self.scale
         self.card_height = CARD_HEIGHT * self.scale
+        self.custom_paths = []
         self.sprites = Sprites(self.canvas)
         self.selected = []
         self.match_display_area = []
@@ -103,9 +106,14 @@ class Game():
         # Restore saved state on resume or share.
         if saved_state is not None:
             _logger.debug("Restoring state: %s" % (str(saved_state)))
-            self.deck = Deck(self.sprites, self.card_type,
+            if self.card_type == 'custom':
+                self.deck = Deck(self.sprites, self.card_type,
+                             [self.numberO, self.numberC], self.custom_paths,
+                             self.scale, DIFFICULTY_LEVEL[self.level])
+            else:
+                self.deck = Deck(self.sprites, self.card_type,
                              [self.numberO, self.numberC], self.word_lists,
-                             self.scale, difficulty_level[self.level])
+                             self.scale, DIFFICULTY_LEVEL[self.level])
             self.deck.hide()
             self.deck.index = deck_index
             _deck_start = ROW * COL + 3
@@ -120,9 +128,15 @@ class Game():
                                             * self.matches])
         elif not self.joiner():
             _logger.debug("Starting new game.")
-            self.deck = Deck(self.sprites, self.card_type,
-                             [self.numberO, self.numberC], self.word_lists,
-                             self.scale, difficulty_level[self.level])
+            if self.card_type == 'custom':
+                self.deck = Deck(self.sprites, self.card_type,
+                                 [self.numberO, self.numberC],
+                                 self.custom_paths,
+                                 self.scale, DIFFICULTY_LEVEL[self.level])
+            else:
+                self.deck = Deck(self.sprites, self.card_type,
+                                 [self.numberO, self.numberC], self.word_lists,
+                                 self.scale, DIFFICULTY_LEVEL[self.level])
             self.deck.hide()
             self.deck.shuffle()
             self.grid.deal(self.deck)
@@ -176,7 +190,7 @@ class Game():
         self.card_type = 'word'
         self.deck = Deck(self.sprites, self.card_type,
                          [self.numberO, self.numberC], self.word_lists,
-                         self.scale, difficulty_level[1])
+                         self.scale, DIFFICULTY_LEVEL[1])
         self.deck.hide()
         self._unselect()
         self.matches = 0
@@ -370,7 +384,7 @@ class Game():
 
     def _expose_cb(self, win, event):
         """ Time to refresh all of the sprites """
-        self.sprites.redraw_sprites(event.area)
+        self.sprites.refresh(event)
         return True
 
     def _destroy_cb(self, win, event):

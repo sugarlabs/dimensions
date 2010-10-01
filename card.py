@@ -15,7 +15,12 @@ import pygtk
 pygtk.require('2.0')
 import gtk
 
-from constants import SELECTMASK, MATCHMASK, COLORS, NUMBER, FILLS
+import logging
+_logger = logging.getLogger('visualmatch-activity')
+
+from constants import SELECTMASK, MATCHMASK, COLORS, NUMBER, FILLS, \
+    CARD_WIDTH, CARD_HEIGHT
+
 from sprites import Sprite
 
 #
@@ -34,7 +39,7 @@ from sprites import Sprite
 class Card:
     """ Individual cards """
 
-    def __init__(self, sprites, svg_string, attributes):
+    def __init__(self, sprites, svg_string, attributes, load_from_file=False):
         """ Create the card and store its attributes """
         if attributes[0] == SELECTMASK:
             self.spr = Sprite(sprites, 0, 0, svg_str_to_pixbuf(svg_string))
@@ -51,7 +56,10 @@ class Card:
                          self.color * NUMBER * FILLS +\
                          self.num * FILLS +\
                          self.fill
-            self.spr = Sprite(sprites, 0, 0, svg_str_to_pixbuf(svg_string))
+            if load_from_file:
+                self.spr = Sprite(sprites, 0, 0, load_image(svg_string))
+            else:
+                self.spr = Sprite(sprites, 0, 0, svg_str_to_pixbuf(svg_string))
 
     def show_card(self):
         """ Show the care """
@@ -69,3 +77,7 @@ def svg_str_to_pixbuf(svg_string):
     pl.close()
     pixbuf = pl.get_pixbuf()
     return pixbuf
+
+def load_image(path):
+    return gtk.gdk.pixbuf_new_from_file_at_size(path, CARD_WIDTH, CARD_HEIGHT)
+

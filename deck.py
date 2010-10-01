@@ -25,9 +25,10 @@ from gencards import generate_pattern_card, generate_number_card, \
 class Deck:
     """ Class for defining deck of card """
 
-    def __init__(self, sprites, card_type, numbers_type, word_lists, scale,
+    def __init__(self, sprites, card_type, numbers_type, lists, scale,
                  level=HIGH):
-        """ Create the deck of cards. """
+        """ Create the deck of cards.
+            'lists' is either a list of words or paths """
         self.cards = []
         # If level is 'simple', only generate one fill type
         shape_range = SHAPES
@@ -40,6 +41,7 @@ class Deck:
             fill_range = 1
             shape_range = 1
         # Initialize the deck of cards by looping through all the patterns
+        i = 0
         for shape in range(0, shape_range):
             for color in range(0, color_range):
                 for num in range(0, number_range):
@@ -55,13 +57,18 @@ class Deck:
                                                        color, num, fill,
                                                        numbers_type, scale),
                                                    [shape, color, num, fill]))
+                        elif card_type == 'custom':
+                            self.cards.append(Card(sprites,
+                                                   lists[i],
+                                                   [shape, color, num, fill],load_from_file=True))
+                            i += 1
                         else:
                             self.cards.append(Card(sprites,
                                                    generate_word_card(shape,
                                                    color, num, fill, scale),
                                                    [shape, color, num, fill]))
                             self.cards[len(self.cards) - 1].spr.set_label(
-                                                   word_lists[shape][num])
+                                                   lists[shape][num])
                             self.cards[len(self.cards)\
                                       - 1].spr.set_label_color(
                                                    COLOR_PAIRS[color][0])
