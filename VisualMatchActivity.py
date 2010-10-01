@@ -195,7 +195,8 @@ class VisualMatchActivity(activity.Activity):
 
     def _import_cb(self, button=None):
         """ Import custom cards from the Journal """
-        chooser = ObjectChooser(_('Choose document'), self,
+        basename = None
+        chooser = ObjectChooser(_('Choose custom card'), self,
             gtk.DIALOG_MODAL |
             gtk.DIALOG_DESTROY_WITH_PARENT, \
             what_filter=mime.GENERIC_TYPE_IMAGE)
@@ -215,7 +216,8 @@ class VisualMatchActivity(activity.Activity):
             chooser.destroy()
             del chooser
 
-        self._find_custom_paths(basename, mime_type)
+        if basename is not None:
+            self._find_custom_paths(basename, mime_type)
 
     def _find_custom_paths(self, basename, mime_type):
         dsobjects, nobjects = datastore.find({'mime_type': str(mime_type)})
@@ -239,7 +241,7 @@ class VisualMatchActivity(activity.Activity):
         else:
             self.vmw.level = DIFFICULTY_LEVEL.index(HIGH)
         if self.vmw.card_type == 'custom':
-            self.button_custom.set_icon('new_custom_game')
+            self.button_custom.set_icon('new-custom-game')
             self.button_custom.set_tooltip(_('New custom game'))
             self.metadata['custom_name'] = basename
             self.metadata['custom_mime_type'] = mime_type
@@ -397,19 +399,19 @@ class VisualMatchActivity(activity.Activity):
             toolbox.toolbar.insert(games_toolbar_button, -1)
             games_toolbar_button.show()
 
-            tools_toolbar_button = ToolbarButton(
-                    page=tools_toolbar,
-                    icon_name='view-source')
-            tools_toolbar.show()
-            toolbox.toolbar.insert(tools_toolbar_button, -1)
-            tools_toolbar_button.show()
-
             numbers_toolbar_button = ToolbarButton(
                     page=numbers_toolbar,
                     icon_name='number-tools')
             numbers_toolbar.show()
             toolbox.toolbar.insert(numbers_toolbar_button, -1)
             numbers_toolbar_button.show()
+
+            tools_toolbar_button = ToolbarButton(
+                    page=tools_toolbar,
+                    icon_name='view-source')
+            tools_toolbar.show()
+            toolbox.toolbar.insert(tools_toolbar_button, -1)
+            tools_toolbar_button.show()
 
             self._set_labels(toolbox.toolbar)
             _separator_factory(toolbox.toolbar, False, True)
@@ -422,13 +424,14 @@ class VisualMatchActivity(activity.Activity):
             self.set_toolbar_box(toolbox)
             toolbox.show()
 
+            games_toolbar_button.set_expanded(True)
         else:
             # Use pre-0.86 toolbar design
             toolbox = activity.ActivityToolbox(self)
             self.set_toolbox(toolbox)
             toolbox.add_toolbar(_('Game'), games_toolbar)
-            toolbox.add_toolbar(_('Tools'), tools_toolbar)
             toolbox.add_toolbar(_('Numbers'), numbers_toolbar)
+            toolbox.add_toolbar(_('Tools'), tools_toolbar)
             toolbox.show()
             toolbox.set_current_toolbar(1)
 
@@ -449,21 +452,13 @@ class VisualMatchActivity(activity.Activity):
                                        _('Import custom cards'),
                                        self._select_game_cb, games_toolbar,
                                        'custom')
-        if not new_sugar_system:
+
+        if new_sugar_system:
+            self._set_extras(games_toolbar, games_toolbar=True)
+        else:
             self._set_labels(games_toolbar)
-        self.robot_button = _button_factory("robot-off",
-                                            _('Play with the computer'),
-                                            self._robot_cb, tools_toolbar)
-        self._robot_time_spin = _spin_factory(self._robot_time, 15, 180,
-                                              self._robot_time_spin_cb,
-                                              tools_toolbar)
-        _separator_factory(tools_toolbar, True, False)
-        self.level_button = _button_factory(LEVEL_ICONS[self._play_level],
-                                            _('Set difficulty level.'),
-                                            self._level_cb, tools_toolbar)
-        self.level_label = _label_factory(self.calc_level_label(
-                self._low_score, self._play_level), tools_toolbar)
-        _separator_factory(tools_toolbar, True, False)
+            self._set_extras(tools_toolbar, games_toolbar=False)
+
         self.words_tool_button = _button_factory('word-tools',
                                                  _('Edit word lists.'),
                                                  self._edit_words_cb,
@@ -515,6 +510,24 @@ class VisualMatchActivity(activity.Activity):
                                             self._number_card_C_cb,
                                             numbers_toolbar,
                                             LINES)
+
+    def _set_extras(self, toolbar, games_toolbar=True):
+        if games_toolbar:
+            _separator_factory(toolbar, True, False)
+        self.robot_button = _button_factory("robot-off",
+                                            _('Play with the computer'),
+                                            self._robot_cb, toolbar)
+        self._robot_time_spin = _spin_factory(self._robot_time, 15, 180,
+                                              self._robot_time_spin_cb,
+                                              toolbar)
+        _separator_factory(toolbar, True, False)
+        self.level_button = _button_factory(LEVEL_ICONS[self._play_level],
+                                            _('Set difficulty level.'),
+                                            self._level_cb, toolbar)
+        self.level_label = _label_factory(self.calc_level_label(
+                self._low_score, self._play_level), toolbar)
+        if not games_toolbar:
+            _separator_factory(toolbar, True, False)
 
     def _set_labels(self, toolbar):
         """ Add labels to toolbar toolbar """
