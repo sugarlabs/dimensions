@@ -69,6 +69,6 @@ def svg_str_to_pixbuf(string):
 
 
 def load_image(path, scale):
-    return gtk.gdk.pixbuf_new_from_file_at_size(path, scale * CARD_WIDTH,
-                                                scale * CARD_HEIGHT)
+    return gtk.gdk.pixbuf_new_from_file_at_size(path, int(scale * CARD_WIDTH),
+                                                int(scale * CARD_HEIGHT))
 
