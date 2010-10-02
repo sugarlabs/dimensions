@@ -603,7 +603,7 @@ def generate_number_card(t,c,n,s,number_types,scale):
     svg = SVG()
     stab = {0:5,1:7,2:11}
     methodO = [svg.number_roman, svg.number_product, svg.number_chinese,\
-               svg.number_word, svg.nummber_mayan, svg.number_incan]
+               svg.number_word, svg.number_mayan, svg.number_incan]
     methodC = [svg.dots_in_a_line, svg.dots_in_a_circle, svg.points_in_a_star,\
                svg.number_hash, svg.dice]
     methodX = svg.number_arabic
