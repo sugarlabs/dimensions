@@ -126,6 +126,36 @@ def _separator_factory(toolbar, visible=True, expand=False):
     _separator.show()
 
 
+def _find_the_number_in_the_name(name):
+    """ Find which element in an array (journal entry title) is a number """
+    parts = name.split('.')
+    before = ''
+    after = ''
+    for i in range(len(parts)):
+        ii = len(parts) - i - 1
+        try:
+            int(parts[ii])
+            for j in range(ii):
+                before += (parts[j] + '.')
+            for j in range(ii + 1, len(parts)):
+                after += ('.' + parts[j])
+            return before, after, ii
+        except ValueError:
+            pass
+    return '', '', -1
+
+
+def _construct_a_name(before, i, after):
+    """ Make a numbered file name from parts """
+    name = ''
+    if before != '':
+        name += before
+    name += str(i)
+    if after != '':
+        name += after
+    return name
+
+
 class VisualMatchActivity(activity.Activity):
     """ Dimension matching game """
     def __init__(self, handle):
@@ -218,20 +248,17 @@ class VisualMatchActivity(activity.Activity):
             self._find_custom_paths(name, mime_type)
 
     def _find_custom_paths(self, name, mime_type):
-        parts = name.split('.')
-        basename = parts[0]
-        suffix = ''
-        if len(parts) > 2:
-            for i in range(2,len(name)):
-                suffix += '.'
-                suffix += parts[i]
+        basename, suffix, i = _find_the_number_in_the_name(name)
+        if i < 0: # not part of a numbered sequence
+            self.vmw.card_type = 'pattern'
+            return
         dsobjects, nobjects = datastore.find({'mime_type': str(mime_type)})
         self.vmw.custom_paths = []
         if nobjects > 0:
             for j in range(DECKSIZE):
                 for i in range(nobjects):
                     if dsobjects[i].metadata['title'] == \
-                       basename + '.' + str(j+1) + suffix:
+                            _construct_a_name(basename, j + 1, suffix):
                         _logger.debug('result of find: %s' %\
                                           dsobjects[i].metadata['title'])
                         self.vmw.custom_paths.append(dsobjects[i].file_path)
@@ -248,7 +275,7 @@ class VisualMatchActivity(activity.Activity):
         if self.vmw.card_type == 'custom':
             self.button_custom.set_icon('new-custom-game')
             self.button_custom.set_tooltip(_('New custom game'))
-            self.metadata['custom_name'] = basename
+            self.metadata['custom_name'] = name
             self.metadata['custom_mime_type'] = mime_type
         self.set_level_label()
         return
