@@ -227,8 +227,7 @@ class VisualMatchActivity(activity.Activity):
         """ Import custom cards from the Journal """
         name = None
         chooser = ObjectChooser(_('Choose custom card'), self,
-            gtk.DIALOG_MODAL |
-            gtk.DIALOG_DESTROY_WITH_PARENT, \
+            gtk.DIALOG_MODAL | gtk.DIALOG_DESTROY_WITH_PARENT,
             what_filter=mime.GENERIC_TYPE_IMAGE)
 
         try:
@@ -252,7 +251,10 @@ class VisualMatchActivity(activity.Activity):
         if i < 0: # not part of a numbered sequence
             self.vmw.card_type = 'pattern'
             return
-        dsobjects, nobjects = datastore.find({'mime_type': str(mime_type)})
+        if _new_sugar_system:
+            dsobjects, nobjects = datastore.find({'mime_type': str(mime_type)})
+        else:
+            dsobjects, nobjects = datastore.find({'title': basename})
         self.vmw.custom_paths = []
         if nobjects > 0:
             for j in range(DECKSIZE):
