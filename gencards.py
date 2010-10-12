@@ -273,10 +273,14 @@ class SVG:
     #
     # Card pattern generators
     #
+    def smiley(self):
+        self.set_font("DejaVu")
+        return self._svg_text(63.5, 63.5, 72, "", '☻')
+
     def number_incan(self, n):
         x = 20
         y = 30
-        print "number incan: %d" % (n)
+        # print "number incan: %d" % (n)
         svg_string = self._svg_quipu(int(n/10), x, y)
         x = 40
         svg_string += self._svg_quipu(n % 10, x, y)
@@ -588,11 +592,20 @@ class SVG:
 #
 # Card generators
 #
+def generate_smiley(scale):
+    svg = SVG()
+    svg.set_scale(scale * 2)
+    svg.set_colors([YELLOW, BLACK])
+    svg_string = svg.header()
+    svg_string += svg.smiley()
+    svg_string += svg.footer()
+    return svg_string
+
 def generate_pattern_card(t,c,n,s,scale):
     svg = SVG()
     svg.set_scale(scale)
     svg.set_stroke_width(0.5)
-    svg.set_colors([BLACK,COLOR_PAIRS[c][1]])
+    svg.set_colors([BLACK, COLOR_PAIRS[c][1]])
     svg_string = svg.header()
     svg_string += svg.pattern_card(CARD_TYPES[t],COLOR_PAIRS[c],n+1,
                                    FILL_STYLES[s])
@@ -609,7 +622,7 @@ def generate_number_card(t,c,n,s,number_types,scale):
     methodX = svg.number_arabic
     svg.set_scale(scale)
     svg.set_stroke_width(0.5)
-    svg.set_colors([BLACK,COLOR_PAIRS[c][1]])
+    svg.set_colors([BLACK, COLOR_PAIRS[c][1]])
     svg_string = svg.header()
     svg_string += svg.number_card(t,(n+1)*stab[s],COLOR_PAIRS[c][0],
                               methodX,methodO[number_types[0]],
@@ -621,7 +634,7 @@ def generate_word_card(t,c,n,s,scale):
     svg = SVG()
     svg.set_scale(scale)
     svg.set_stroke_width(0.5)
-    svg.set_colors([BLACK,COLOR_PAIRS[c][1]])
+    svg.set_colors([BLACK, COLOR_PAIRS[c][1]])
     svg_string = svg.header()
     svg_string += svg.word_card(t,COLOR_PAIRS[c],n,WORD_STYLES[s])
     svg_string += svg.footer()
@@ -640,7 +653,7 @@ def generate_selected_card(scale):
     svg = SVG()
     svg.set_scale(scale)
     svg.set_stroke_width(3.0)
-    svg.set_colors([BLACK,"none"])
+    svg.set_colors([BLACK, "none"])
     svg_string = svg.header()
     svg_string += svg.footer()
     return svg_string

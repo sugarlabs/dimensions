@@ -32,13 +32,14 @@ except ImportError:
 from constants import LOW, MEDIUM, HIGH, SELECTMASK, MATCHMASK, ROW, COL, \
     WORD_CARD_INDICIES, MATCH_POSITION, DEAD_DICTS, DEAD_KEYS, WHITE_SPACE, \
     NOISE_KEYS, WORD_CARD_MAP, KEYMAP, CARD_HEIGHT, CARD_WIDTH, DEAL, \
-    DIFFICULTY_LEVEL
+    DIFFICULTY_LEVEL, BACKGROUNDMASK
 
 from grid import Grid
 from deck import Deck
 from card import Card
 from sprites import Sprites, Sprite
-from gencards import generate_selected_card, generate_match_card
+from gencards import generate_selected_card, generate_match_card, \
+    generate_smiley
 
 
 class Game():
@@ -73,6 +74,7 @@ class Game():
         self.sprites = Sprites(self.canvas)
         self.selected = []
         self.match_display_area = []
+        self.smiley = None
         self.clicked = [None, None, None]
         self.editing_word_list = False
         self.edit_card = None
@@ -92,6 +94,7 @@ class Game():
         if not hasattr(self, 'grid'):
             self.grid = Grid(self.width, self.height, self.card_width,
                              self.card_height)
+
             for i in range(0, 3):
                 self.selected.append(Card(self.sprites,
                                           generate_selected_card(self.scale),
@@ -101,6 +104,12 @@ class Game():
                                           [MATCHMASK, 0, 0, 0]))
                 self.grid.display_match(self.match_display_area[i].spr, i)
 
+            self.smiley = Card(self.sprites, generate_smiley(self.scale),
+                               [BACKGROUNDMASK, 0, 0, 0])
+            self.smiley.spr.move((self.width / 2 - \
+                                      self.smiley.spr.rect.width / 2,
+                                  self.height / 2 -\
+                                      self.smiley.spr.rect.height / 2))
         self._unselect()
 
         # Restore saved state on resume or share.
@@ -160,6 +169,8 @@ class Game():
                self.match_timeout_id is not None:
                 gobject.source_remove(self.match_timeout_id)
             self._timer_reset()
+
+        self.smiley.hide_card()
 
     def _sharing(self):
         """ Are we sharing? """
@@ -283,6 +294,7 @@ class Game():
             self.set_label("status", "%s (%d:%02d)" %
                 (_("Game over"), int(self.total_time / 60),
                  int(self.total_time % 60)))
+            self.smiley.show_card()
             self.match_timeout_id = gobject.timeout_add(2000,
                                                         self._show_matches, 0)
             return True
