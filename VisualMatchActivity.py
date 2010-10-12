@@ -228,12 +228,13 @@ class VisualMatchActivity(activity.Activity):
         chooser = None
         name = None
         try:
-            if 'image/svg+xml' in \
+            # See #2398
+            if 'image/svg+xml' not in \
                     mime.get_generic_type(mime.GENERIC_TYPE_IMAGE).mime_types:
-                chooser = ObjectChooser(parent=self,
-                                        what_filter=mime.GENERIC_TYPE_IMAGE)
-            else: # We want to be able to load SVG (See #2398)
-                chooser = ObjectChooser(parent=self)
+                mime.get_generic_type(
+                    mime.GENERIC_TYPE_IMAGE).mime_types.append('image/svg+xml')
+            chooser = ObjectChooser(parent=self,
+                                    what_filter=mime.GENERIC_TYPE_IMAGE)
         except TypeError:
             chooser = ObjectChooser(None, self,
                 gtk.DIALOG_MODAL | gtk.DIALOG_DESTROY_WITH_PARENT)
