@@ -20,9 +20,6 @@ try:
     from sugar.activity.widgets import StopButton
     from sugar.graphics.toolbarbox import ToolbarBox
     from sugar.graphics.toolbarbox import ToolbarButton
-    """
-    from namingalert import NamingAlert
-    """
     _new_sugar_system = True
 except ImportError:
     _new_sugar_system = False
@@ -162,14 +159,13 @@ class VisualMatchActivity(activity.Activity):
         """ Initialize the Sugar activity """
         super(VisualMatchActivity, self).__init__(handle)
 
-        # Set things up.
         self._read_journal_data()
-        datapath = self._find_datapath(_old_sugar_system)
+        self._old_sugar_system = _old_sugar_system
+        datapath = self._find_datapath()
         self._setup_toolbars(_new_sugar_system)
         canvas = self._setup_canvas(datapath)
         self._setup_presence_service()
 
-        # Then start playing the game.
         if not hasattr(self, '_saved_state'):
             self._saved_state = None
         self.vmw.new_game(self._saved_state, self._deck_index)
@@ -227,7 +223,7 @@ class VisualMatchActivity(activity.Activity):
         """ Import custom cards from the Journal """
         chooser = None
         name = None
-        try:
+        if hasattr(mime, 'GENERIC_TYPE_IMAGE'):
             # See #2398
             if 'image/svg+xml' not in \
                     mime.get_generic_type(mime.GENERIC_TYPE_IMAGE).mime_types:
@@ -235,9 +231,12 @@ class VisualMatchActivity(activity.Activity):
                     mime.GENERIC_TYPE_IMAGE).mime_types.append('image/svg+xml')
             chooser = ObjectChooser(parent=self,
                                     what_filter=mime.GENERIC_TYPE_IMAGE)
-        except TypeError:
-            chooser = ObjectChooser(None, self,
-                gtk.DIALOG_MODAL | gtk.DIALOG_DESTROY_WITH_PARENT)
+        else:
+            try:
+                chooser = ObjectChooser(parent=self, what_filter=None)
+            except TypeError:
+                chooser = ObjectChooser(None, self,
+                    gtk.DIALOG_MODAL | gtk.DIALOG_DESTROY_WITH_PARENT)
 
         if chooser is not None:
             try:
@@ -271,7 +270,8 @@ class VisualMatchActivity(activity.Activity):
                             _construct_a_name(basename, j + 1, suffix):
                         _logger.debug('result of find: %s' %\
                                           dsobjects[i].metadata['title'])
-                        self.vmw.custom_paths.append(dsobjects[i].file_path)
+                        # self.vmw.custom_paths.append(dsobjects[i].file_path)
+                        self.vmw.custom_paths.append(dsobjects[i])
                         break
         self.vmw.card_type = 'custom'
         if len(self.vmw.custom_paths) < 9:
@@ -317,15 +317,6 @@ class VisualMatchActivity(activity.Activity):
         self.vmw.edit_word_list()
         if self.vmw.robot:
             self._robot_cb(button)
-
-    """
-    def _write_to_journal_cb(self, button):
-        title_alert = NamingAlert(self, activity.get_bundle_path())
-        title_alert.set_transient_for(self.get_toplevel())
-        title_alert.show()
-        self.reveal()
-        return True
-    """
 
     def _read_journal_data(self):
         """ There may be data from a previous instance. """
@@ -401,14 +392,13 @@ class VisualMatchActivity(activity.Activity):
             else:
                 self._card_type = 'pattern'
 
-    def _find_datapath(self, _old_sugar_system):
+    def _find_datapath(self):
         """ Find the datapath for saving card files. """
-        self._old_sugar_system = _old_sugar_system
-        if self._old_sugar_system:
+        if hasattr(self, 'get_activity_root'):
+            return os.path.join(self.get_activity_root(), 'data')
+        else:
             return os.path.join(os.environ['HOME'], ".sugar", "default",
                                 SERVICE, 'data')
-        else:
-            return os.path.join(self.get_activity_root(), 'data')
 
     def _setup_toolbars(self, new_sugar_system):
         """ Setup the toolbars.. """
@@ -419,20 +409,10 @@ class VisualMatchActivity(activity.Activity):
         if new_sugar_system:
             toolbox = ToolbarBox()
 
-            # Activity toolbar
             activity_button = ActivityToolbarButton(self)
 
             toolbox.toolbar.insert(activity_button, 0)
             activity_button.show()
-
-            """
-            # Naming alert button
-            write_to_journal_button = _button_factory("journal-write",
-                                                      _('Write in Journal'),
-                                                      self._write_to_journal_cb,
-                                                      toolbox.toolbar, None,
-                                                      '<Ctrl>j')
-            """
 
             games_toolbar_button = ToolbarButton(
                     page=games_toolbar,
@@ -468,7 +448,6 @@ class VisualMatchActivity(activity.Activity):
 
             games_toolbar_button.set_expanded(True)
         else:
-            # Use pre-0.86 toolbar design
             toolbox = activity.ActivityToolbox(self)
             self.set_toolbox(toolbox)
             toolbox.add_toolbar(_('Game'), games_toolbar)
@@ -477,7 +456,6 @@ class VisualMatchActivity(activity.Activity):
             toolbox.show()
             toolbox.set_current_toolbar(1)
 
-        # Add the buttons and spinners to the toolbars
         self.button_pattern = _button_factory('new-pattern-game',
                                        _('New pattern game'),
                                        self._select_game_cb, games_toolbar,
@@ -696,7 +674,6 @@ class VisualMatchActivity(activity.Activity):
         self.pservice = presenceservice.get_instance()
         self.initiating = None  # sharing (True) or joining (False)
 
-        # Add my buddy object to the list
         owner = self.pservice.get_owner()
         self.owner = owner
         self.vmw.buddies.append(self.owner)
@@ -719,7 +696,6 @@ class VisualMatchActivity(activity.Activity):
         self.tubes_chan = self._shared_activity.telepathy_tubes_chan
         self.text_chan = self._shared_activity.telepathy_text_chan
 
-        # call back for "NewTube" signal
         self.tubes_chan[telepathy.CHANNEL_TYPE_TUBES].connect_to_signal\
             ('NewTube', self._new_tube_cb)
 
@@ -741,7 +717,6 @@ class VisualMatchActivity(activity.Activity):
         self.tubes_chan = self._shared_activity.telepathy_tubes_chan
         self.text_chan = self._shared_activity.telepathy_text_chan
 
-        # call back for "NewTube" signal
         self.tubes_chan[telepathy.CHANNEL_TYPE_TUBES].connect_to_signal(\
             'NewTube', self._new_tube_cb)
 
@@ -776,11 +751,9 @@ class VisualMatchActivity(activity.Activity):
                 self.tubes_chan[telepathy.CHANNEL_TYPE_TUBES], id, \
                 group_iface=self.text_chan[telepathy.CHANNEL_INTERFACE_GROUP])
 
-            # We'll use a chattube to send serialized data back and forth.
             self.chattube = ChatTube(tube_conn, self.initiating, \
                 self.event_received_cb)
 
-            # Now that we have the tube, we can ask for the deck of cards.
             if self.waiting_for_deck:
                 self._send_event("j")
 
@@ -855,7 +828,6 @@ class ChatTube(ExportedGObject):
     def send_stack_cb(self, text, sender=None):
         if sender == self.tube.get_unique_name():
             return
-        # _logger.debug("This connection has no unique name yet.")
         self.stack = text
         self.stack_received_cb(text)
 
