@@ -225,29 +225,31 @@ class VisualMatchActivity(activity.Activity):
 
     def _import_cb(self, button=None):
         """ Import custom cards from the Journal """
+        chooser = None
         name = None
-        """
-        chooser = ObjectChooser(_('Choose custom card'), self,
-            gtk.DIALOG_MODAL | gtk.DIALOG_DESTROY_WITH_PARENT,
-            what_filter=mime.GENERIC_TYPE_IMAGE)
-        """
-        chooser = ObjectChooser(parent=self,
-                                what_filter=mime.GENERIC_TYPE_IMAGE)
         try:
-            result = chooser.run()
-            if result == gtk.RESPONSE_ACCEPT:
-                jobject = chooser.get_selected_object()
-                if jobject and jobject.file_path:
-                    name = jobject.metadata['title']
-                    mime_type = jobject.metadata['mime_type']
-                    _logger.debug('result of choose: %s (%s)' % \
-                                      (name, str(mime_type)))
-        finally:
-            chooser.destroy()
-            del chooser
+            chooser = ObjectChooser(parent=self,
+                                    what_filter=mime.GENERIC_TYPE_IMAGE)
+        except TypeError:
+            chooser = ObjectChooser(None, self,
+                gtk.DIALOG_MODAL | gtk.DIALOG_DESTROY_WITH_PARENT)
 
-        if name is not None:
-            self._find_custom_paths(name, mime_type)
+        if chooser is not None:
+            try:
+                result = chooser.run()
+                if result == gtk.RESPONSE_ACCEPT:
+                    jobject = chooser.get_selected_object()
+                    if jobject and jobject.file_path:
+                        name = jobject.metadata['title']
+                        mime_type = jobject.metadata['mime_type']
+                        _logger.debug('result of choose: %s (%s)' % \
+                                          (name, str(mime_type)))
+            finally:
+                chooser.destroy()
+                del chooser
+
+            if name is not None:
+                self._find_custom_paths(name, mime_type)
 
     def _find_custom_paths(self, name, mime_type):
         basename, suffix, i = _find_the_number_in_the_name(name)
