@@ -27,7 +27,7 @@ from sprites import Sprite
 class Card:
     """ Individual cards """
 
-    def __init__(self, sprites, string, attributes, load_from_file=False,
+    def __init__(self, sprites, string, attributes, file_path=None,
                  scale=1.0):
         """ Create the card and store its attributes """
         if attributes[0] == SELECTMASK:
@@ -45,13 +45,15 @@ class Card:
                          self.color * NUMBER * FILLS +\
                          self.num * FILLS +\
                          self.fill
-            if load_from_file:
-                self.spr = Sprite(sprites, 0, 0, load_image(string, scale))
-            else:
-                self.spr = Sprite(sprites, 0, 0, svg_str_to_pixbuf(string))
+            self.spr = Sprite(sprites, 0, 0, svg_str_to_pixbuf(string))
+            if file_path is not None:
+                self.spr.set_image(load_image(file_path, scale), i=1,
+                                   dx=int(scale * CARD_WIDTH * .125),
+                                   dy=int(scale * CARD_HEIGHT * .125))
+
 
     def show_card(self):
-        """ Show the care """
+        """ Show the card """
         self.spr.set_layer(2000)
         self.spr.draw()
 
@@ -68,7 +70,8 @@ def svg_str_to_pixbuf(string):
     return pixbuf
 
 
-def load_image(path, scale):
-    return gtk.gdk.pixbuf_new_from_file_at_size(path, int(scale * CARD_WIDTH),
-                                                int(scale * CARD_HEIGHT))
+def load_image(object, scale):
+    return gtk.gdk.pixbuf_new_from_file_at_size(object.file_path,
+                                                int(scale * CARD_WIDTH * .75),
+                                                int(scale * CARD_HEIGHT * .75))
 

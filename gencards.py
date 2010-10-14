@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-#Copyright (c) 2009,10 Walter Bender
+#Copyright (c) 2009, 10 Walter Bender
 
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -10,7 +10,7 @@
 #
 # You should have received a copy of the GNU Lesser General Public
 # License along with this library; if not, write to the
-# Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+# Free Software Foundation, Inc., 59 Temple Place - Suite 330, 
 # Boston, MA 02111-1307, USA.
 
 import os
@@ -30,9 +30,9 @@ class SVG:
         self._font = 'DejaVu'
 
     def _svg_style(self, extras=""):
-        return "%s%s%s%s%s%f%s%s%s" % ("style=\"fill:", self._fill, ";stroke:",
-                                       self._stroke, ";stroke-width:",
-                                       self._stroke_width, ";", extras,
+        return "%s%s%s%s%s%f%s%s%s" % ("style=\"fill:", self._fill, ";stroke:", 
+                                       self._stroke, ";stroke-width:", 
+                                       self._stroke_width, ";", extras, 
                                        "\" />\n")
 
     def _svg_rect(self, w, h, rx, ry, x, y):
@@ -63,8 +63,8 @@ class SVG:
     def _svg_text(self, x, y, size, style, string):
         svg_string = "  <text\n"
         svg_string += "%s%s%s%s%s%s%s" % (
-            "     style=\"font-size:12px;text-anchor:middle;", style,
-            ";text-align:center;font-family:", self._font, ";fill:",
+            "     style=\"font-size:12px;text-anchor:middle;", style, 
+            ";text-align:center;font-family:", self._font, ";fill:", 
             self._stroke, ";\">\n")
         svg_string += "      <tspan\n"
         svg_string += "       x=\"%f\"\n" % (x)
@@ -80,7 +80,7 @@ class SVG:
              "-1.8 -1.2,-2.9 0,-2.3 1.9,-4.1 4.1,-4.1 1.1,0 2.2,0.5 2.9,1.2 l ",
              "4.1,4.1 14.1,-14.1 c 0.8,-0.7 1.8,-1.2 2.9,-1.2 2.3,0 4.1,1.9 ",
              "4.1,4.1 0,1.1 -0.5,2.2 -1.2,2.9 l -14.1,14.1 -5.7,5.9 z\"\n",
-             "   transform=\"translate(",x-10,", -25)\"\n")
+             "   transform=\"translate(", x-10, ", -25)\"\n")
         svg_string += self._svg_style()
         return svg_string
 
@@ -94,35 +94,36 @@ class SVG:
                 "4.1,-4.1 1.1,0 2.2,0.5 2.9,1.2 l 10.1,10.1 10.1,-10.1 c ",
                 "0.8,-0.7 1.8,-1.2 2.9,-1.2 2.3,0 4.1,1.9 4.1,4.1 0,1.1 ",
                 "-0.5,2.2 -1.2,2.9 l -10.1,10.1 z\"\n")
-        svg_string += "%s%f%s" % ("   transform=\"translate(",x-10,", -25)\"\n")
+        svg_string += "%s%f%s" % ("   transform=\"translate(", x-10,
+                                  ", -25)\"\n")
         svg_string += self._svg_style()
         return svg_string
 
     def _svg_circle_of_dots(self, n, x, y):
-        rtab = {5:9,7:13,11:17}
+        rtab = {5:9, 7:13, 11:17}
         r = rtab[n]
         ox = 0
         oy = 32.5
-        da = pi*2/n
+        da = pi * 2 / n
         a = 0
-        nx = ox+sin(a)*r
-        ny = oy+cos(a)*r
-        svg_string = "%s%f%s%f%s" % ("<g\n   transform=\"translate(",x,", ",y,
-                                     ")\">\n")
+        nx = ox + sin(a) * r
+        ny = oy + cos(a) * r
+        svg_string = "%s%f%s%f%s" % ("<g\n   transform=\"translate(", x, ", ",
+                                     y, ")\">\n")
         self.set_stroke_width(2.0)
         for i in range(n):
             svg_string += self._svg_circle(nx, ny, 3)
             a += da
-            nx = ox+sin(a)*r
-            ny = oy+cos(a)*r
+            nx = ox + sin(a) * r
+            ny = oy + cos(a) * r
         svg_string += "</g>\n"
         return svg_string
 
     def _svg_line_of_dots(self, n, x, y):
-        cxtab = {5:37.5,7:27.5,11:7.5,10:37.5,14:27.5,22:7.5,15:37.5,21:27.5,\
-                 33:7.5}
-        svg_string = "%s%f%s%f%s" % ("<g\n   transform=\"translate(",x,", ",y,
-                                     ")\">\n")
+        cxtab = {5:37.5, 7:27.5, 11:7.5, 10:37.5, 14:27.5, 22:7.5, 15:37.5,
+                 21:27.5, 33:7.5}
+        svg_string = "%s%f%s%f%s" % ("<g\n   transform=\"translate(", x, ", ",
+                                     y, ")\">\n")
         cx = cxtab[n]
         self.set_stroke_width(2.0)
         for i in range(n):
@@ -132,16 +133,16 @@ class SVG:
         return svg_string
 
     def _svg_hash(self, n, x, y):
-        cxtab = {5:42.5,7:32.5,11:22.5,10:42.5,14:32.5,22:22.5,\
-                 15:42.5,21:32.5,33:22.5}
+        cxtab = {5:42.5, 7:32.5, 11:22.5, 10:42.5, 14:32.5, 22:22.5,
+                 15:42.5, 21:32.5, 33:22.5}
         cy = 5
         x2 = cxtab[n]
-        x1 = 7.5+x2
-        svg_string = "%s%f%s%f%s" % ("<g\n   transform=\"translate(",x,", ",y,
-                                     ")\">\n")
+        x1 = 7.5 + x2
+        svg_string = "%s%f%s%f%s" % ("<g\n   transform=\"translate(", x, ", ",
+                                     y, ")\">\n")
         self.set_stroke_width(2.0)
         for i in range(n):
-            if (i+1)%5==0:
+            if (i + 1) % 5 == 0:
                 svg_string += self._svg_line(x1-40, 7.5, x2, 7.5)
             else:
                 svg_string += self._svg_line(x1, 0, x2, 15)
@@ -152,13 +153,13 @@ class SVG:
 
     def _svg_quipu(self, n, x, y):
         print "quipu: %d %d %d" % (n, x, y)
-        svg_string = "%s%f%s%f%s" % ("<g\n   transform=\"translate(",x,", ",y,
-                                     ")\">\n")
+        svg_string = "%s%f%s%f%s" % ("<g\n   transform=\"translate(", x, ", ",
+                                     y, ")\">\n")
         x2 = x
         self.set_stroke_width(2.0)
         svg_string += self._svg_line(x2-40, 7.5, x2+40, 7.5)
         x2 -= 20
-        x1 = x2+7.5
+        x1 = x2 + 7.5
         for i in range(n):
             svg_string += self._svg_line(x1, 0, x2, 15)
             x1 += 7.5
@@ -167,19 +168,19 @@ class SVG:
         return svg_string
 
     def _svg_die(self, n, x, y):
-        svg_string = "%s%f%s%f%s" % ("<g\n   transform=\"translate(",x,", ",y,
-                                     ")\">\n")
+        svg_string = "%s%f%s%f%s" % ("<g\n   transform=\"translate(", x, ", ",
+                                     y, "\">\n")
         self.set_stroke_width(1.5)
-        self.set_colors([self._stroke,"none"])
+        self.set_colors([self._stroke, "none"])
         svg_string += self._svg_rect(25, 25, 2, 2, 0, 0)
         self.set_stroke_width(2)
-        self.set_colors([self._stroke,self._stroke])
-        if n in [2,3,4,5,6]:
+        self.set_colors([self._stroke, self._stroke])
+        if n in [2, 3, 4, 5, 6]:
             svg_string += self._svg_circle(6, 6, 1.5)
             svg_string += self._svg_circle(19, 19, 1.5)
-        if n in [1,3,5]:
+        if n in [1, 3, 5]:
             svg_string += self._svg_circle(12.5, 12.5, 1.5)
-        if n in [4,5,6]:
+        if n in [4, 5, 6]:
             svg_string += self._svg_circle(19, 6, 1.5)
             svg_string += self._svg_circle(6, 19, 1.5)
         if n in [6]:
@@ -189,21 +190,21 @@ class SVG:
         return svg_string
 
     def _svg_star(self, n, x, y):
-        turntable = {5:3,7:3,11:5}
+        turntable = {5:3, 7:3, 11:5}
         turns = turntable[n]
         x1 = 0
         y1 = 0
         a = 0
-        svg_string = "%s%f%s%f%s" % ("<g\n   transform=\"translate(",x,", ",y,
-                                     ")\">\n")
+        svg_string = "%s%f%s%f%s" % ("<g\n   transform=\"translate(", x, ", ",
+                                     y, ")\">\n")
         self.set_stroke_width(1.8)
-        for i in range(n*turns):
-            x2 = x1+sin(a)*40
-            y2 = y1+cos(a)*40
+        for i in range(n * turns):
+            x2 = x1 + sin(a) * 40
+            y2 = y1 + cos(a) * 40
             svg_string += self._svg_line(x1, y1, x2, y2)
             x1 = x2
             y1 = y2
-            a += turns*2*pi/n
+            a += turns * 2 * pi / n
         svg_string += "</g>\n"
         return svg_string
 
@@ -215,9 +216,9 @@ class SVG:
             self.set_colors([stroke, fill])
         else:
             self.set_colors([stroke, stroke])
-        svg_string += self._svg_circle(x+17, 38, 16)
+        svg_string += self._svg_circle(x + 17, 38, 16)
         self.set_colors([stroke, fill])
-        svg_string += self._svg_circle(x+17, 38, 8)
+        svg_string += self._svg_circle(x + 17, 38, 8)
         return svg_string
 
     def _svg_bar(self, x, y):
@@ -241,11 +242,11 @@ class SVG:
         svg_string += "   xmlns:svg=\"http://www.w3.org/2000/svg\"\n"
         svg_string += "   xmlns=\"http://www.w3.org/2000/svg\"\n"
         svg_string += "   version=\"1.0\"\n"
-        svg_string += "%s%f%s" % ("   width=\"", 125*self._scale, "\"\n")
-        svg_string += "%s%f%s" % ("   height=\"", 75*self._scale, "\">\n")
+        svg_string += "%s%f%s" % ("   width=\"", 125 * self._scale, "\"\n")
+        svg_string += "%s%f%s" % ("   height=\"", 75 * self._scale, "\">\n")
         svg_string += "%s%f%s%f%s" % ("<g\n       transform=\"matrix(", 
-                                      self._scale, ",0,0,", self._scale,
-                                      ",0,0)\">\n")
+                                      self._scale, ", 0, 0, ", self._scale, 
+                                      ", 0, 0)\">\n")
         svg_string += self._background()
         return svg_string
 
@@ -281,16 +282,16 @@ class SVG:
         x = 20
         y = 30
         # print "number incan: %d" % (n)
-        svg_string = self._svg_quipu(int(n/10), x, y)
+        svg_string = self._svg_quipu(int(n / 10), x, y)
         x = 40
         svg_string += self._svg_quipu(n % 10, x, y)
         return svg_string
 
     def number_mayan(self, n):
         x = 42.5
-        x1,x2,xc,x3,x4 = x+5,x+15,x+20,x+25,x+35
+        x1, x2, xc, x3, x4 = x + 5, x + 15, x + 20, x + 25, x + 35
         y = 60
-        y1s,y5s,y10s,y20s = y,y-10,y-20,y-40
+        y1s, y5s, y10s, y20s = y, y - 10, y - 20, y - 40
         if n == 5:
             svg_string = self._svg_bar(x, y1s)
         elif n == 7:
@@ -325,28 +326,28 @@ class SVG:
         elif n == 33:
             svg_string = self._svg_bar(x, y1s)
             svg_string += self._svg_bar(x, y5s)
-            svg_string += self._svg_circle(x1,y10s,3)
-            svg_string += self._svg_circle(xc,y10s,3)
-            svg_string += self._svg_circle(x4,y10s,3)
-            svg_string += self._svg_circle(xc,y20s,3)
+            svg_string += self._svg_circle(x1, y10s, 3)
+            svg_string += self._svg_circle(xc, y10s, 3)
+            svg_string += self._svg_circle(x4, y10s, 3)
+            svg_string += self._svg_circle(xc, y20s, 3)
         return svg_string
 
     def dots_in_a_line(self, n):
-        if n%3 == 0:
+        if n % 3 == 0:
             y = 12.5
-            nn = n/3
-        elif n%2 == 0:
+            nn = n / 3
+        elif n % 2 == 0:
             y = 22.5
-            nn = n/2
+            nn = n / 2
         else:
             y = 32.5
             nn = n
-        if n%5 == 0:
-            n/=5
-        elif n%7 == 0:
-            n/=7
+        if n % 5 == 0:
+            n /= 5
+        elif n % 7 == 0:
+            n /= 7
         else:
-            n/=11
+            n /= 11
         svg_string = ""
         for i in range(n):
             svg_string += self._svg_line_of_dots(nn, 5, y)
@@ -355,32 +356,32 @@ class SVG:
 
     def points_in_a_star(self, n):
         svg_string = ""
-        if n%3 == 0:
+        if n % 3 == 0:
             x = 25
-            nn = n/3
-        elif n%2 == 0:
+            nn = n / 3
+        elif n % 2 == 0:
             x = 37.5
-            nn = n/2
+            nn = n / 2
         else:
             x = 62.5
             nn = n
         if n%5 == 0:
-            n/=5
+            n /= 5
             y = 15
         elif n%7 == 0:
-            n/=7
+            n /= 7
             y = 15
         else:
-            n/=11
+            n /= 11
             y = 15
         for i in range(n):
             if n == 3:
                 if i == 0:
-                    y+=12
+                    y += 12
                 elif i == 1:
-                    y-=24
+                    y -= 24
                 else:
-                    y+=24
+                    y += 24
             svg_string += self._svg_star(nn, x, y)
             if n == 2:
                 x += 50
@@ -390,32 +391,32 @@ class SVG:
 
     def dots_in_a_circle(self, n):
         svg_string = ""
-        if n%3 == 0:
+        if n % 3 == 0:
             x = 25
-            nn = n/3
-        elif n%2 == 0:
+            nn = n / 3
+        elif n % 2 == 0:
             x = 37.5
-            nn = n/2
+            nn = n / 2
         else:
             x = 62.5
             nn = n
-        if n%5 == 0:
-            n/=5
+        if n % 5 == 0:
+            n /= 5
             y = 5
-        elif n%7 == 0:
-            n/=7
+        elif n % 7 == 0:
+            n /= 7
             y = 5
         else:
-            n/=11
+            n /= 11
             y = 5
         for i in range(n):
             if n == 3:
                 if i == 0:
-                    y+=12
+                    y += 12
                 elif i == 1:
-                    y-=24
+                    y -= 24
                 else:
-                    y+=24
+                    y += 24
             svg_string += self._svg_circle_of_dots(nn, x, y)
             if n == 2:
                 x += 50
@@ -427,19 +428,19 @@ class SVG:
         svg_string = ""
         if n%3 == 0:
             y = 12.5
-            nn = n/3
-        elif n%2 == 0:
+            nn = n / 3
+        elif n % 2 == 0:
             y = 22.5
-            nn = n/2
+            nn = n / 2
         else:
             y = 32.5
             nn = n
-        if n%5 == 0:
-            n/=5
-        elif n%7 == 0:
-            n/=7
+        if n % 5 == 0:
+            n /= 5
+        elif n % 7 == 0:
+            n /= 7
         else:
-            n/=11
+            n /= 11
         for i in range(n):
             svg_string += self._svg_hash(nn, 5, y)
             y += 20
@@ -601,42 +602,47 @@ def generate_smiley(scale):
     svg_string += svg.footer()
     return svg_string
 
-def generate_pattern_card(t,c,n,s,scale):
+def generate_pattern_card(t, c, n, s, scale):
     svg = SVG()
     svg.set_scale(scale)
     svg.set_stroke_width(0.5)
     svg.set_colors([BLACK, COLOR_PAIRS[c][1]])
     svg_string = svg.header()
-    svg_string += svg.pattern_card(CARD_TYPES[t],COLOR_PAIRS[c],n+1,
+    svg_string += svg.pattern_card(CARD_TYPES[t], COLOR_PAIRS[c], n+1, 
                                    FILL_STYLES[s])
     svg_string += svg.footer()
     return svg_string
 
-def generate_number_card(t,c,n,s,number_types,scale):
+def generate_number_card(t, c, n, s, number_types, scale):
     svg = SVG()
-    stab = {0:5,1:7,2:11}
-    methodO = [svg.number_roman, svg.number_product, svg.number_chinese,\
+    stab = {0:5, 1:7, 2:11}
+    methodO = [svg.number_roman, svg.number_product, svg.number_chinese,
                svg.number_word, svg.number_mayan, svg.number_incan]
-    methodC = [svg.dots_in_a_line, svg.dots_in_a_circle, svg.points_in_a_star,\
+    methodC = [svg.dots_in_a_line, svg.dots_in_a_circle, svg.points_in_a_star,
                svg.number_hash, svg.dice]
     methodX = svg.number_arabic
     svg.set_scale(scale)
     svg.set_stroke_width(0.5)
     svg.set_colors([BLACK, COLOR_PAIRS[c][1]])
     svg_string = svg.header()
-    svg_string += svg.number_card(t,(n+1)*stab[s],COLOR_PAIRS[c][0],
-                              methodX,methodO[number_types[0]],
+    svg_string += svg.number_card(t, (n + 1) * stab[s], COLOR_PAIRS[c][0], 
+                              methodX, methodO[number_types[0]], 
                               methodC[number_types[1]])
     svg_string += svg.footer()
     return svg_string
 
-def generate_word_card(t,c,n,s,scale):
+def generate_word_card(t, c, n, s, scale):
     svg = SVG()
     svg.set_scale(scale)
     svg.set_stroke_width(0.5)
-    svg.set_colors([BLACK, COLOR_PAIRS[c][1]])
+    if s == 0:
+        svg.set_colors([BLACK, COLOR_PAIRS[c][1]])
+    elif s == 1:
+        svg.set_colors([BLACK, COLOR_PAIRS[c][0]])
+    else:
+        svg.set_colors([BLACK, DARK_COLOR[c]])
     svg_string = svg.header()
-    svg_string += svg.word_card(t,COLOR_PAIRS[c],n,WORD_STYLES[s])
+    svg_string += svg.word_card(t, COLOR_PAIRS[c], n, WORD_STYLES[s])
     svg_string += svg.footer()
     return svg_string
 
@@ -644,7 +650,7 @@ def generate_match_card(scale):
     svg = SVG()
     svg.set_scale(scale)
     svg.set_stroke_width(3.0)
-    svg.set_colors(["#A0A0A0","#F0F0F0"])
+    svg.set_colors(["#A0A0A0", "#F0F0F0"])
     svg_string = svg.header()
     svg_string += svg.footer()
     return svg_string
@@ -667,9 +673,9 @@ def open_file(datapath, filename):
 def close_file(f):
     f.close()
 
-def generator(datapath,mO=MAYAN,mC=HASH):
+def generator(datapath, mO=MAYAN, mC=HASH):
     generate_pattern_cards(datapath)
-    generate_number_cards(datapath,[mO,mC])
+    generate_number_cards(datapath, [mO, mC])
     generate_word_cards(datapath)
     generate_extras(datapath)
 
@@ -681,11 +687,11 @@ def generate_pattern_cards(datapath):
                 for s in range(3):
                     filename = "pattern-%d.svg" % (i)
                     f = open_file(datapath, filename)
-                    f.write(generate_pattern_card(t,c,n,s,1))
+                    f.write(generate_pattern_card(t, c, n, s, 1))
                     close_file(f)
                     i += 1
 
-def generate_number_cards(datapath,number_types):
+def generate_number_cards(datapath, number_types):
     i = 0
     for t in range(3):
         for c in range(3):
@@ -693,7 +699,7 @@ def generate_number_cards(datapath,number_types):
                 for s in range(3):
                     filename = "number-%d.svg" % (i)
                     f = open_file(datapath, filename)
-                    f.write(generate_number_card(t,c,n,s,number_types,1))
+                    f.write(generate_number_card(t, c, n, s, number_types, 1))
                     close_file(f)
                     i += 1
 
@@ -705,7 +711,7 @@ def generate_word_cards(datapath):
                 for s in range(3):
                     filename = "word-%d.svg" % (i)
                     f = open_file(datapath, filename)
-                    f.write(generate_word_card(t,c,n,s,1))
+                    f.write(generate_word_card(t, c, n, s, 1))
                     close_file(f)
                     i += 1
 
