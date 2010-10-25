@@ -24,9 +24,8 @@ try:
 except ImportError:
     _new_sugar_system = False
 from sugar.graphics.toolbutton import ToolButton
-from sugar.graphics.objectchooser import ObjectChooser
+
 from sugar.datastore import datastore
-from sugar import mime
 
 import telepathy
 from dbus.service import signal
@@ -123,36 +122,6 @@ def _separator_factory(toolbar, visible=True, expand=False):
     _separator.show()
 
 
-def _find_the_number_in_the_name(name):
-    """ Find which element in an array (journal entry title) is a number """
-    parts = name.split('.')
-    before = ''
-    after = ''
-    for i in range(len(parts)):
-        ii = len(parts) - i - 1
-        try:
-            int(parts[ii])
-            for j in range(ii):
-                before += (parts[j] + '.')
-            for j in range(ii + 1, len(parts)):
-                after += ('.' + parts[j])
-            return before, after, ii
-        except ValueError:
-            pass
-    return '', '', -1
-
-
-def _construct_a_name(before, i, after):
-    """ Make a numbered file name from parts """
-    name = ''
-    if before != '':
-        name += before
-    name += str(i)
-    if after != '':
-        name += after
-    return name
-
-
 class VisualMatchActivity(activity.Activity):
     """ Dimension matching game """
     def __init__(self, handle):
@@ -161,7 +130,7 @@ class VisualMatchActivity(activity.Activity):
 
         self._read_journal_data()
         self._old_sugar_system = _old_sugar_system
-        datapath = self._find_datapath()
+        datapath = self._find_datapath(activity)
         self._setup_toolbars(_new_sugar_system)
         canvas = self._setup_canvas(datapath)
         self._setup_presence_service()
@@ -169,18 +138,23 @@ class VisualMatchActivity(activity.Activity):
         if not hasattr(self, '_saved_state'):
             self._saved_state = None
         self.vmw.new_game(self._saved_state, self._deck_index)
+
         if self._editing_word_list:
             self.vmw.editing_word_list = True
             self.vmw.edit_word_list()
+        elif self._editing_custom_cards:
+            self.vmw.editing_custom_cards = True
+            self.vmw.edit_custom_card()
 
     def _select_game_cb(self, button, card_type):
         """ Choose which game we are playing. """
         if self.vmw.joiner():  # joiner cannot change level
             return
         self.vmw.card_type = card_type
-        if card_type == 'custom' and len(self.vmw.custom_paths) < 9:
-            self._import_cb()
-        self.vmw.new_game()
+        if card_type == 'custom' and self.vmw.custom_paths[0] is None:
+            self.image_import_cb()
+        else:
+            self.vmw.new_game()
 
     def _robot_cb(self, button):
         """ Toggle robot assist on/off """
@@ -219,76 +193,12 @@ class VisualMatchActivity(activity.Activity):
                      int(low_score[play_level] / 60),
                      int(low_score[play_level] % 60))
 
-    def _import_cb(self, button=None):
+    def image_import_cb(self, button=None):
         """ Import custom cards from the Journal """
-        chooser = None
-        name = None
-        if hasattr(mime, 'GENERIC_TYPE_IMAGE'):
-            # See #2398
-            if 'image/svg+xml' not in \
-                    mime.get_generic_type(mime.GENERIC_TYPE_IMAGE).mime_types:
-                mime.get_generic_type(
-                    mime.GENERIC_TYPE_IMAGE).mime_types.append('image/svg+xml')
-            chooser = ObjectChooser(parent=self,
-                                    what_filter=mime.GENERIC_TYPE_IMAGE)
-        else:
-            try:
-                chooser = ObjectChooser(parent=self, what_filter=None)
-            except TypeError:
-                chooser = ObjectChooser(None, self,
-                    gtk.DIALOG_MODAL | gtk.DIALOG_DESTROY_WITH_PARENT)
-
-        if chooser is not None:
-            try:
-                result = chooser.run()
-                if result == gtk.RESPONSE_ACCEPT:
-                    jobject = chooser.get_selected_object()
-                    if jobject and jobject.file_path:
-                        name = jobject.metadata['title']
-                        mime_type = jobject.metadata['mime_type']
-                        _logger.debug('result of choose: %s (%s)' % \
-                                          (name, str(mime_type)))
-            finally:
-                chooser.destroy()
-                del chooser
-
-            if name is not None:
-                self._find_custom_paths(name, mime_type)
-
-    def _find_custom_paths(self, name, mime_type):
-        basename, suffix, i = _find_the_number_in_the_name(name)
-        if i < 0: # not part of a numbered sequence
-            self.vmw.card_type = 'pattern'
-            return
-        dsobjects, nobjects = datastore.find({'mime_type': [str(mime_type)]})
-        _logger.debug('%d' % nobjects)
-        self.vmw.custom_paths = []
-        if nobjects > 0:
-            for j in range(DECKSIZE):
-                for i in range(nobjects):
-                    if dsobjects[i].metadata['title'] == \
-                            _construct_a_name(basename, j + 1, suffix):
-                        _logger.debug('result of find: %s' %\
-                                          dsobjects[i].metadata['title'])
-                        # self.vmw.custom_paths.append(dsobjects[i].file_path)
-                        self.vmw.custom_paths.append(dsobjects[i])
-                        break
-        self.vmw.card_type = 'custom'
-        if len(self.vmw.custom_paths) < 9:
-            self.vmw.card_type = 'pattern'
-        elif len(self.vmw.custom_paths) < 27:
-            self.vmw.level = DIFFICULTY_LEVEL.index(LOW)
-        elif len(self.vmw.custom_paths) < 81:
-            self.vmw.level = DIFFICULTY_LEVEL.index(MEDIUM)
-        else:
-            self.vmw.level = DIFFICULTY_LEVEL.index(HIGH)
-        if self.vmw.card_type == 'custom':
-            self.button_custom.set_icon('new-custom-game')
-            self.button_custom.set_tooltip(_('New custom game'))
-            self.metadata['custom_name'] = name
-            self.metadata['custom_mime_type'] = mime_type
-        self.set_level_label()
-        return
+        self.vmw.editing_custom_cards = True
+        self.vmw.edit_custom_card()
+        if self.vmw.robot:
+            self._robot_cb(button)
 
     def _number_card_O_cb(self, button, numberO):
         """ Choose between O-card list for numbers game. """
@@ -385,17 +295,28 @@ class VisualMatchActivity(activity.Activity):
                                 int(self.metadata['low_score_beginner'])]
         else:
             self._low_score = [-1, -1, -1]
+        if 'editing_custom_cards' in self.metadata:
+            self._editing_custom_cards = bool(int(
+                self.metadata['editing_custom_cards']))
+        else:
+            self._editing_custom_cards = False
         if self._card_type == 'custom':
-            if 'custom_name' in self.metadata:
-                self._basename = self.metadata['custom_name']
-                self._mime_type = self.metadata['custom_mime_type']
+            if 'custom_object' in self.metadata:
+                self._custom_object = self.metadata['custom_object']
             else:
+                self._custom_object = None
                 self._card_type = 'pattern'
+        self._custom_jobject = []
+        for i in range(9):
+            if 'custom_' + str(i) in self.metadata:
+                self._custom_jobject.append(self.metadata['custom_' + str(i)])
+            else:
+                self._custom_jobject.append(None)
 
-    def _find_datapath(self):
+    def _find_datapath(self, activity):
         """ Find the datapath for saving card files. """
-        if hasattr(self, 'get_activity_root'):
-            return os.path.join(self.get_activity_root(), 'data')
+        if hasattr(activity, 'get_activity_root'):
+            return os.path.join(activity.get_activity_root(), 'data')
         else:
             return os.path.join(os.environ['HOME'], ".sugar", "default",
                                 SERVICE, 'data')
@@ -457,21 +378,15 @@ class VisualMatchActivity(activity.Activity):
             toolbox.set_current_toolbar(1)
 
         self.button_pattern = _button_factory('new-pattern-game',
-                                       _('New pattern game'),
-                                       self._select_game_cb, games_toolbar,
-                                       'pattern')
+            _('New pattern game'), self._select_game_cb, games_toolbar,
+                                              'pattern')
         self.button_number = _button_factory('new-number-game',
-                                       _('New number game'),
-                                       self._select_game_cb, games_toolbar,
-                                       'number')
-        self.button_word = _button_factory('new-word-game',
-                                       _('New word game'),
-                                       self._select_game_cb, games_toolbar,
-                                       'word')
-        self.button_custom = _button_factory('insert-image',
-                                       _('Import custom cards'),
-                                       self._select_game_cb, games_toolbar,
-                                       'custom')
+            _('New number game'), self._select_game_cb, games_toolbar, 'number')
+        self.button_word = _button_factory('new-word-game', _('New word game'),
+            self._select_game_cb, games_toolbar, 'word')
+        self.button_custom = _button_factory('no-custom-game',
+            _('Import custom cards'), self._select_game_cb, games_toolbar,
+                                             'custom')
 
         if new_sugar_system:
             self._set_extras(games_toolbar, games_toolbar=True)
@@ -484,7 +399,7 @@ class VisualMatchActivity(activity.Activity):
                                                  self._edit_words_cb,
                                                  tools_toolbar)
         self.import_button = _button_factory('insert-image',
-            _('Import custom cards'), self._import_cb, tools_toolbar)
+            _('Import custom cards'), self.image_import_cb, tools_toolbar)
         self.product_button = _button_factory('product', _('product'),
                                               self._number_card_O_cb,
                                               numbers_toolbar,
@@ -584,8 +499,15 @@ class VisualMatchActivity(activity.Activity):
         self.vmw.buddies = []
         self.vmw.word_lists = self._word_lists
         self.vmw.editing_word_list = self._editing_word_list
-        if self.vmw.card_type == 'custom':
-            self._find_custom_paths(self._basename, self._mime_type)
+        if hasattr(self, '_custom_object') and self._custom_object is not None:
+            _logger.debug('restoring %s' % (self._custom_object))
+            self.vmw._find_custom_paths(datastore.get(self._custom_object))
+        for i in range(9):
+            if hasattr(self, '_custom_jobject') and \
+               self._custom_jobject[i] is not None:
+                self.vmw.custom_paths[i] = datastore.get(
+                    self._custom_jobject[i])
+                _logger.debug('restoring %s' % (self._custom_jobject[i]))
         return canvas
 
     def write_file(self, file_path):
@@ -630,7 +552,8 @@ class VisualMatchActivity(activity.Activity):
             else:
                 data.append(i.index)
         for i in self.vmw.clicked:
-            if i is None or self.vmw.editing_word_list:
+            if i is None or self.vmw.deck.spr_to_card(i) is None or \
+               self.vmw.editing_word_list:
                 data.append(None)
             else:
                 data.append(self.vmw.deck.spr_to_card(i).index)
@@ -640,7 +563,8 @@ class VisualMatchActivity(activity.Activity):
             else:
                 data.append(i.index)
         for i in self.vmw.match_list:
-            data.append(self.vmw.deck.spr_to_card(i).index)
+            if self.vmw.deck.spr_to_card(i) is not None:
+                data.append(self.vmw.deck.spr_to_card(i).index)
         for i in self.vmw.word_lists:
             for j in i:
                 data.append(j)

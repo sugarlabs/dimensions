@@ -17,6 +17,9 @@ import random
 
 from constants import ROW, COL, MATCH_POSITION, DEAL
 
+import logging
+_logger = logging.getLogger('visualmatch-activity')
+
 
 class Grid:
     """ Class for managing ROWxCOL matrix of cards """

@@ -43,9 +43,9 @@ class Deck:
         # Initialize the deck of cards by looping through all the patterns
         i = 0
         for shape in range(0, shape_range):
-            for color in range(0, color_range):
-                for num in range(0, number_range):
-                    for fill in range(0, fill_range):
+            for fill in range(0, fill_range):
+                for color in range(0, color_range):
+                    for num in range(0, number_range):
                         i = self._make(sprites, card_type, numbers_type, i,
                                        lists, scale, shape, color, num, fill)
 
@@ -61,9 +61,13 @@ class Deck:
             self.cards.append(Card(sprites, generate_number_card(shape, color,
                 num, fill, numbers_type, scale), [shape, color, num, fill]))
         elif card_type == 'custom':
-            self.cards.append(Card(sprites, generate_word_card(color, shape,
-                num, fill, scale), [shape, color, num, fill],
-                file_path=lists[i], scale=scale))
+            if len(lists) == 9:
+                index = shape * 3 + num
+            else:
+                index = i
+            self.cards.append(Card(sprites, generate_word_card(shape, color,
+                 num, fill, scale), [shape, color, num, fill],
+                file_path=lists[index], scale=scale))
             i += 1
         else:
             self.cards.append(Card(sprites, generate_word_card(shape, color,
@@ -127,7 +131,7 @@ class Deck:
     def index_to_card(self, i):
         """ Given a card index, find the corresponding card in the deck. """
         for c in self.cards:
-            if c.index == i:
+            if c is not None and c.index == i:
                 return c
         return None
 

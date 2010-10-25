@@ -46,25 +46,25 @@ MEDIUM = 'medium'
 HIGH = 'high'
 DIFFICULTY_LEVEL = [MEDIUM, HIGH, LOW]
 
-RED_STROKE = "#FF6040"
-RED_FILL = "#FFC4B8"
-DARK_RED = "#C03020"
-BLUE_STROKE = "#0060C8"
-BLUE_FILL = "#ACC8E4"
-DARK_BLUE = "#003064"
-GREEN_STROKE = "#00B418"
-GREEN_FILL = "#AFE8A8"
-DARK_GREEN = "#005A0C"
-BLACK = "#000000"
-WHITE = "#FFFFFF"
-YELLOW = "#FFFF00"
-GRAY = "#C0C0C0"
+RED_STROKE = '#FF6040'
+RED_FILL = '#FFC4B8'
+DARK_RED = '#802014'
+BLUE_STROKE = '#0060C8'
+BLUE_FILL = '#ACC8E4'
+DARK_BLUE = '#003064'
+GREEN_STROKE = '#00B418'
+GREEN_FILL = '#AFE8A8'
+DARK_GREEN = '#005A0C'
+BLACK = '#000000'
+WHITE = '#FFFFFF'
+YELLOW = '#FFFF00'
+GRAY = '#C0C0C0'
 DARK_COLOR = [DARK_RED, DARK_GREEN, DARK_BLUE]
 COLOR_PAIRS = ([RED_STROKE, RED_FILL],
                [GREEN_STROKE, GREEN_FILL],
                [BLUE_STROKE, BLUE_FILL])
-FILL_STYLES = ["solid", "none", "gradient"]
-CARD_TYPES = ["X", "O", "C"]
+FILL_STYLES = ['solid', 'none', 'gradient']
+CARD_TYPES = ['X', 'O', 'C']
 ROMAN_NUMERALS = {5: 'V', 7: 'VII', 10: 'X', 11: 'XI', 14: 'XIV', 15: 'XV',
                   21: 'XXI', 22: 'XXII', 33: 'XXXIII'}
 NUMBER_NAMES = {5: _('five'), 7: _('seven'), 11: _('eleven'), 10: _('ten'),
@@ -75,11 +75,18 @@ NUMBER_PRODUCTS = {5: '1×5', 7: '1×7', 11: '1×11', 10: '2×5',
                    21: '3×7', 33: '3×11'}
 CHINESE_NUMERALS = {5: '五', 7: '七', 10: '十', 11: '十一', 14: '十四',
                     15: '十五', 21: '廿一', 22: '廿二', 33: '卅三'}
-WORD_STYLES = ["font-weight: bold", "", "font-style: italic"]
-WORD_CARD_INDICIES = [1, 4, 7, 37, 40, 43, 73, 76, 79, None, None, None, None,
+WORD_STYLES = ['font-weight: bold', '', 'font-style: italic']
+WORD_CARD_INDICIES = [0, 4, 8, 36, 40, 44, 72, 76, 80, None, None, None, None,
                       None, None]
-WORD_CARD_MAP = {1: (0, 0), 4: (0, 1), 7: (0, 2), 37: (1, 0), 40: (1, 1),
-                 43: (1, 2), 73: (2, 0), 76: (2, 1), 79: (2, 2)}
+WORD_CARD_MAP = {WORD_CARD_INDICIES[0]: (0, 0), WORD_CARD_INDICIES[1]: (0, 1),
+                 WORD_CARD_INDICIES[2]: (0, 2), WORD_CARD_INDICIES[3]: (1, 0),
+                 WORD_CARD_INDICIES[4]: (1, 1), WORD_CARD_INDICIES[5]: (1, 2),
+                 WORD_CARD_INDICIES[6]: (2, 0), WORD_CARD_INDICIES[7]: (2, 1),
+                 WORD_CARD_INDICIES[8]: (2, 2)}
+CUSTOM_CARD_INDICIES = [0, 4, 8, 36, 40, 44, 72, 76, 80, None, None, None, None,
+                        None, None]
+# CUSTOM_CARD_INDICIES = [0, 1, 2, 36, 37, 38, 72, 73, 74, None, None, None, None, None, None]
+
 
 # 'dead key' Unicode dictionaries
 DEAD_KEYS = ['grave', 'acute', 'circumflex', 'tilde', 'diaeresis', 'abovering']

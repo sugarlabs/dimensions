@@ -20,6 +20,10 @@ import gobject
 
 from gettext import gettext as _
 
+from sugar.graphics.objectchooser import ObjectChooser
+from sugar.datastore import datastore
+from sugar import mime
+
 import logging
 _logger = logging.getLogger('visualmatch-activity')
 
@@ -32,7 +36,7 @@ except ImportError:
 from constants import LOW, MEDIUM, HIGH, SELECTMASK, MATCHMASK, ROW, COL, \
     WORD_CARD_INDICIES, MATCH_POSITION, DEAD_DICTS, DEAD_KEYS, WHITE_SPACE, \
     NOISE_KEYS, WORD_CARD_MAP, KEYMAP, CARD_HEIGHT, CARD_WIDTH, DEAL, \
-    DIFFICULTY_LEVEL, BACKGROUNDMASK
+    DIFFICULTY_LEVEL, BACKGROUNDMASK, DECKSIZE, CUSTOM_CARD_INDICIES
 
 from grid import Grid
 from deck import Deck
@@ -40,6 +44,36 @@ from card import Card
 from sprites import Sprites, Sprite
 from gencards import generate_selected_card, generate_match_card, \
     generate_smiley
+
+
+def _find_the_number_in_the_name(name):
+    """ Find which element in an array (journal entry title) is a number """
+    parts = name.split('.')
+    before = ''
+    after = ''
+    for i in range(len(parts)):
+        ii = len(parts) - i - 1
+        try:
+            int(parts[ii])
+            for j in range(ii):
+                before += (parts[j] + '.')
+            for j in range(ii + 1, len(parts)):
+                after += ('.' + parts[j])
+            return before, after, ii
+        except ValueError:
+            pass
+    return '', '', -1
+
+
+def _construct_a_name(before, i, after):
+    """ Make a numbered file name from parts """
+    name = ''
+    if before != '':
+        name += before
+    name += str(i)
+    if after != '':
+        name += after
+    return name
 
 
 class Game():
@@ -70,13 +104,15 @@ class Game():
         self.scale = 0.8 * self.height / (CARD_HEIGHT * 5.5)
         self.card_width = CARD_WIDTH * self.scale
         self.card_height = CARD_HEIGHT * self.scale
-        self.custom_paths = []
+        self.custom_paths = [None, None, None, None, None, None, None, None,
+                             None]
         self.sprites = Sprites(self.canvas)
         self.selected = []
         self.match_display_area = []
         self.smiley = None
         self.clicked = [None, None, None]
         self.editing_word_list = False
+        self.editing_custom_cards = False
         self.edit_card = None
         self.dead_key = None
 
@@ -84,6 +120,7 @@ class Game():
         """ Start a new game """
         # If we were editing the word list, time to stop
         self.editing_word_list = False
+        self.editing_custom_cards = False
         self.edit_card = None
 
         # If there is already a deck, hide it.
@@ -127,21 +164,20 @@ class Game():
             self.deck.index = deck_index
             _deck_start = ROW * COL + 3
             _deck_stop = _deck_start + self.deck.count()
-            self._restore_word_list(
-                             saved_state[_deck_stop + 3 * self.matches:])
+            self._restore_word_list(saved_state[_deck_stop + \
+                                                    3 * self.matches:])
             self.deck.restore(saved_state[_deck_start: _deck_stop])
             self.grid.restore(self.deck, saved_state[0: ROW * COL])
             self._restore_selected(saved_state[ROW * COL: ROW * COL + 3])
-            self._restore_matches(
-                             saved_state[_deck_stop: _deck_stop + 3\
-                                            * self.matches])
+            self._restore_matches(saved_state[_deck_stop: _deck_stop + \
+                                                  3 * self.matches])
         elif not self.joiner():
             _logger.debug("Starting new game.")
             if self.card_type == 'custom':
                 self.deck = Deck(self.sprites, self.card_type,
                                  [self.numberO, self.numberC],
-                                 self.custom_paths,
-                                 self.scale, DIFFICULTY_LEVEL[self.level])
+                                 self.custom_paths, self.scale,
+                                 DIFFICULTY_LEVEL[self.level])
             else:
                 self.deck = Deck(self.sprites, self.card_type,
                                  [self.numberO, self.numberC], self.word_lists,
@@ -191,6 +227,38 @@ class Game():
             return True
         return False
 
+    def edit_custom_card(self):
+        """ Update the custom cards from the Journal """
+        if not self.editing_custom_cards:
+            return
+
+        # Set the card type to custom, and generate a new deck.
+        self.deck.hide()
+        self.card_type = 'custom'
+        if len(self.custom_paths) < 3:
+            for i in range(len(self.custom_paths), 81):
+                self.custom_paths.append(None)
+        self.deck = Deck(self.sprites, self.card_type,
+                         [self.numberO, self.numberC],
+                         self.custom_paths,
+                         self.scale, DIFFICULTY_LEVEL.index(HIGH))
+        self.deck.hide()
+        self._unselect()
+        self.matches = 0
+        self.robot_matches = 0
+        self.match_list = []
+        self.total_time = 0
+        self.edit_card = None
+        self.dead_key = None
+        if hasattr(self, 'timeout_id') and self.timeout_id is not None:
+            gobject.source_remove(self.timeout_id)
+        # Fill the grid with custom cards.
+        self.grid.restore(self.deck, CUSTOM_CARD_INDICIES)
+        self.set_label("deck", "")
+        self.set_label("match", "")
+        self.set_label("clock", "")
+        self.set_label("status", _('Edit the custom cards.'))
+
     def edit_word_list(self):
         """ Update the word cards """
         if not self.editing_word_list:
@@ -201,7 +269,7 @@ class Game():
         self.card_type = 'word'
         self.deck = Deck(self.sprites, self.card_type,
                          [self.numberO, self.numberC], self.word_lists,
-                         self.scale, DIFFICULTY_LEVEL[1])
+                         self.scale, DIFFICULTY_LEVEL.index(HIGH))
         self.deck.hide()
         self._unselect()
         self.matches = 0
@@ -272,7 +340,9 @@ class Game():
                 self.selected[i].show_card()
                 break
 
-        if self.editing_word_list == True:
+        _logger.debug("selecting card %d" % (
+                self.deck.cards.index(self.deck.spr_to_card(spr))))
+        if self.editing_word_list:
             # Only edit one card at a time, so unselect other cards
             for a in self.clicked:
                 if a is not None and a is not spr:
@@ -281,6 +351,22 @@ class Game():
                     self.selected[i].hide_card()
             # Edit card label
             self.edit_card = self.deck.spr_to_card(spr)
+        elif self.editing_custom_cards:
+            # Only edit one card at a time, so unselect other cards
+            for a in self.clicked:
+                if a is not None and a is not spr:
+                    i = self.clicked.index(a)
+                    self.clicked[i] = None
+                    self.selected[i].hide_card()
+            # Choose an image from the Journal for a card
+            self.edit_card = self.deck.spr_to_card(spr)
+            self._choose_custom_card()
+            # Regenerate the deck with the new card definitions
+            self.deck = Deck(self.sprites, self.card_type,
+                             [self.numberO, self.numberC],
+                             self.custom_paths, self.scale, DIFFICULTY_LEVEL[1])
+            self.deck.hide()
+            self.grid.restore(self.deck, CUSTOM_CARD_INDICIES)
         elif None not in self.clicked:
             # If we have three cards selected, test for a match.
             self._test_for_a_match()
@@ -538,6 +624,94 @@ class Game():
                    != 0:
                 return False
         return True
+
+    def _choose_custom_card(self):
+        """ Select a custom card from the Journal """
+        chooser = None
+        name = None
+        if hasattr(mime, 'GENERIC_TYPE_IMAGE'):
+            # See #2398
+            if 'image/svg+xml' not in \
+                    mime.get_generic_type(mime.GENERIC_TYPE_IMAGE).mime_types:
+                mime.get_generic_type(
+                    mime.GENERIC_TYPE_IMAGE).mime_types.append('image/svg+xml')
+            chooser = ObjectChooser(parent=self.activity,
+                                    what_filter=mime.GENERIC_TYPE_IMAGE)
+        else:
+            try:
+                chooser = ObjectChooser(parent=self, what_filter=None)
+            except TypeError:
+                chooser = ObjectChooser(None, self.activity,
+                    gtk.DIALOG_MODAL | gtk.DIALOG_DESTROY_WITH_PARENT)
+
+        if chooser is not None:
+            try:
+                result = chooser.run()
+                if result == gtk.RESPONSE_ACCEPT:
+                    jobject = chooser.get_selected_object()
+                    if jobject and jobject.file_path:
+                        name = jobject.metadata['title']
+                        mime_type = jobject.metadata['mime_type']
+                        _logger.debug('result of choose: %s (%s)' % \
+                                          (name, str(mime_type)))
+            finally:
+                chooser.destroy()
+                del chooser
+
+            if name is not None:
+                self._find_custom_paths(jobject)
+
+    def _find_custom_paths(self, jobject):
+        """ Associate a Journal object with a card """
+        found_a_sequence = False
+        if self.custom_paths[0] is None:
+            basename, suffix, i = _find_the_number_in_the_name(
+                jobject.metadata['title'])
+            """ If this is the first card, try to find paths for other custom
+            cards based on the name; else just load the card. """
+            if i >= 0:
+                dsobjects, nobjects = datastore.find(
+                    {'mime_type': [str(jobject.metadata['mime_type'])]})
+                _logger.debug('%d' % nobjects)
+                self.custom_paths = []
+                if nobjects > 0:
+                    for j in range(DECKSIZE):
+                        for i in range(nobjects):
+                            if dsobjects[i].metadata['title'] == \
+                                    _construct_a_name(basename, j + 1, suffix):
+                                _logger.debug('result of find: %s' % \
+                                              dsobjects[i].metadata['title'])
+                                self.custom_paths.append(dsobjects[i])
+                                break
+
+                if len(self.custom_paths) < 9:
+                    for i in range(3, 81):
+                        self.custom_paths.append(
+                            self.custom_paths[int(i / 27)])
+                elif len(self.custom_paths) < 27:
+                    for i in range(9, 81):
+                        self.custom_paths.append(
+                            self.custom_paths[int(i / 9)])
+                elif len(self.custom_paths) < 81:
+                    for i in range(9, 81):
+                        self.custom_paths.append(
+                            self.custom_paths[int(i / 3)])
+                found_a_sequence = True
+                self.activity.metadata['custom_object'] = jobject.object_id
+                self.activity.metadata['custom_mime_type'] = \
+                    jobject.metadata['mime_type']
+
+        if not found_a_sequence:
+            grid_index = self.grid.spr_to_grid(self.edit_card.spr)
+            _logger.debug('editing card %d' % (grid_index))
+            self.custom_paths[grid_index] = jobject
+            self.activity.metadata['custom_' + str(grid_index)] = \
+                jobject.object_id
+
+        self.card_type = 'custom'
+        self.activity.button_custom.set_icon('new-custom-game')
+        self.activity.button_custom.set_tooltip(_('New custom game'))
+        return
 
 
 class Permutation:
