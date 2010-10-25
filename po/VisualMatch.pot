@@ -8,332 +8,337 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-10-01 11:41-0400\n"
+"POT-Creation-Date: 2010-10-25 18:18-0400\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: activity/activity.info:2 /home/walter/Desktop/set/visualmatch.py:35
-#: /home/walter/Desktop/set/game.py:427
+#: activity/activity.info:2
+#: /home/walter/Desktop/activities/set/visualmatch.py:35
+#: /home/walter/Desktop/activities/set/game.py:525
 msgid "Visual Match"
 msgstr ""
 
-#: /home/walter/Desktop/set/constants.py:63
+#: /home/walter/Desktop/activities/set/constants.py:70
 msgid "five"
 msgstr ""
 
-#: /home/walter/Desktop/set/constants.py:63
+#: /home/walter/Desktop/activities/set/constants.py:70
 msgid "seven"
 msgstr ""
 
-#: /home/walter/Desktop/set/constants.py:63
+#: /home/walter/Desktop/activities/set/constants.py:70
 msgid "eleven"
 msgstr ""
 
-#: /home/walter/Desktop/set/constants.py:63
+#: /home/walter/Desktop/activities/set/constants.py:70
 msgid "ten"
 msgstr ""
 
-#: /home/walter/Desktop/set/constants.py:64
+#: /home/walter/Desktop/activities/set/constants.py:71
 msgid "fourteen"
 msgstr ""
 
-#: /home/walter/Desktop/set/constants.py:64
+#: /home/walter/Desktop/activities/set/constants.py:71
 msgid "fifteen"
 msgstr ""
 
-#: /home/walter/Desktop/set/constants.py:64
+#: /home/walter/Desktop/activities/set/constants.py:71
 msgid "twenty two"
 msgstr ""
 
-#: /home/walter/Desktop/set/constants.py:65
+#: /home/walter/Desktop/activities/set/constants.py:72
 msgid "twenty one"
 msgstr ""
 
-#: /home/walter/Desktop/set/constants.py:65
+#: /home/walter/Desktop/activities/set/constants.py:72
 msgid "thirty three"
 msgstr ""
 
-#: /home/walter/Desktop/set/visualmatch.py:36
+#: /home/walter/Desktop/activities/set/visualmatch.py:36
 msgid "Click on cards to create sets of three."
 msgstr ""
 
-#: /home/walter/Desktop/set/visualmatch.py:40
+#: /home/walter/Desktop/activities/set/visualmatch.py:40
 msgid "Toggle level"
 msgstr ""
 
-#: /home/walter/Desktop/set/visualmatch.py:49
-#: /home/walter/Desktop/set/VisualMatchActivity.py:440
+#: /home/walter/Desktop/activities/set/visualmatch.py:49
+#: /home/walter/Desktop/activities/set/VisualMatchActivity.py:381
 msgid "New pattern game"
 msgstr ""
 
-#: /home/walter/Desktop/set/visualmatch.py:53
-#: /home/walter/Desktop/set/VisualMatchActivity.py:444
+#: /home/walter/Desktop/activities/set/visualmatch.py:53
+#: /home/walter/Desktop/activities/set/VisualMatchActivity.py:384
 msgid "New number game"
 msgstr ""
 
-#: /home/walter/Desktop/set/visualmatch.py:57
-#: /home/walter/Desktop/set/VisualMatchActivity.py:448
+#: /home/walter/Desktop/activities/set/visualmatch.py:57
+#: /home/walter/Desktop/activities/set/VisualMatchActivity.py:385
 msgid "New word game"
 msgstr ""
 
-#: /home/walter/Desktop/set/visualmatch.py:66
+#: /home/walter/Desktop/activities/set/visualmatch.py:66
 msgid "Robot on/off"
 msgstr ""
 
-#: /home/walter/Desktop/set/visualmatch.py:70
+#: /home/walter/Desktop/activities/set/visualmatch.py:70
 msgid "90 sec."
 msgstr ""
 
-#: /home/walter/Desktop/set/visualmatch.py:74
+#: /home/walter/Desktop/activities/set/visualmatch.py:74
 msgid "60 sec."
 msgstr ""
 
-#: /home/walter/Desktop/set/visualmatch.py:78
+#: /home/walter/Desktop/activities/set/visualmatch.py:78
 msgid "45 sec."
 msgstr ""
 
-#: /home/walter/Desktop/set/visualmatch.py:82
+#: /home/walter/Desktop/activities/set/visualmatch.py:82
 msgid "30 sec."
 msgstr ""
 
-#: /home/walter/Desktop/set/visualmatch.py:86
+#: /home/walter/Desktop/activities/set/visualmatch.py:86
 msgid "15 sec."
 msgstr ""
 
-#: /home/walter/Desktop/set/visualmatch.py:95
+#: /home/walter/Desktop/activities/set/visualmatch.py:95
 msgid "Product"
 msgstr ""
 
-#: /home/walter/Desktop/set/visualmatch.py:99
+#: /home/walter/Desktop/activities/set/visualmatch.py:99
 msgid "Roman"
 msgstr ""
 
-#: /home/walter/Desktop/set/visualmatch.py:103
+#: /home/walter/Desktop/activities/set/visualmatch.py:103
 msgid "Word"
 msgstr ""
 
-#: /home/walter/Desktop/set/visualmatch.py:107
-#: /home/walter/Desktop/set/VisualMatchActivity.py:480
+#: /home/walter/Desktop/activities/set/visualmatch.py:107
+#: /home/walter/Desktop/activities/set/VisualMatchActivity.py:415
 msgid "Chinese"
 msgstr ""
 
-#: /home/walter/Desktop/set/visualmatch.py:111
-#: /home/walter/Desktop/set/VisualMatchActivity.py:484
+#: /home/walter/Desktop/activities/set/visualmatch.py:111
+#: /home/walter/Desktop/activities/set/VisualMatchActivity.py:419
 msgid "Mayan"
 msgstr ""
 
-#: /home/walter/Desktop/set/visualmatch.py:115
+#: /home/walter/Desktop/activities/set/visualmatch.py:115
 msgid "Hash"
 msgstr ""
 
-#: /home/walter/Desktop/set/visualmatch.py:119
+#: /home/walter/Desktop/activities/set/visualmatch.py:119
 msgid "Dice"
 msgstr ""
 
-#: /home/walter/Desktop/set/visualmatch.py:123
+#: /home/walter/Desktop/activities/set/visualmatch.py:123
 msgid "Dots"
 msgstr ""
 
-#: /home/walter/Desktop/set/visualmatch.py:127
+#: /home/walter/Desktop/activities/set/visualmatch.py:127
 msgid "Star"
 msgstr ""
 
-#: /home/walter/Desktop/set/visualmatch.py:131
+#: /home/walter/Desktop/activities/set/visualmatch.py:131
 msgid "Lines"
 msgstr ""
 
-#: /home/walter/Desktop/set/visualmatch.py:171
-#: /home/walter/Desktop/set/VisualMatchActivity.py:337
+#: /home/walter/Desktop/activities/set/visualmatch.py:171
+#: /home/walter/Desktop/activities/set/VisualMatchActivity.py:280
 msgid "mouse"
 msgstr ""
 
-#: /home/walter/Desktop/set/visualmatch.py:171
-#: /home/walter/Desktop/set/VisualMatchActivity.py:337
+#: /home/walter/Desktop/activities/set/visualmatch.py:171
+#: /home/walter/Desktop/activities/set/VisualMatchActivity.py:280
 msgid "cat"
 msgstr ""
 
-#: /home/walter/Desktop/set/visualmatch.py:171
-#: /home/walter/Desktop/set/VisualMatchActivity.py:337
+#: /home/walter/Desktop/activities/set/visualmatch.py:171
+#: /home/walter/Desktop/activities/set/VisualMatchActivity.py:280
 msgid "dog"
 msgstr ""
 
-#: /home/walter/Desktop/set/visualmatch.py:172
-#: /home/walter/Desktop/set/VisualMatchActivity.py:338
+#: /home/walter/Desktop/activities/set/visualmatch.py:172
+#: /home/walter/Desktop/activities/set/VisualMatchActivity.py:281
 msgid "cheese"
 msgstr ""
 
-#: /home/walter/Desktop/set/visualmatch.py:172
-#: /home/walter/Desktop/set/VisualMatchActivity.py:338
+#: /home/walter/Desktop/activities/set/visualmatch.py:172
+#: /home/walter/Desktop/activities/set/VisualMatchActivity.py:281
 msgid "apple"
 msgstr ""
 
-#: /home/walter/Desktop/set/visualmatch.py:172
-#: /home/walter/Desktop/set/VisualMatchActivity.py:338
+#: /home/walter/Desktop/activities/set/visualmatch.py:172
+#: /home/walter/Desktop/activities/set/VisualMatchActivity.py:281
 msgid "bread"
 msgstr ""
 
-#: /home/walter/Desktop/set/visualmatch.py:173
-#: /home/walter/Desktop/set/VisualMatchActivity.py:339
+#: /home/walter/Desktop/activities/set/visualmatch.py:173
+#: /home/walter/Desktop/activities/set/VisualMatchActivity.py:282
 msgid "moon"
 msgstr ""
 
-#: /home/walter/Desktop/set/visualmatch.py:173
-#: /home/walter/Desktop/set/VisualMatchActivity.py:339
+#: /home/walter/Desktop/activities/set/visualmatch.py:173
+#: /home/walter/Desktop/activities/set/VisualMatchActivity.py:282
 msgid "sun"
 msgstr ""
 
-#: /home/walter/Desktop/set/visualmatch.py:173
-#: /home/walter/Desktop/set/VisualMatchActivity.py:339
+#: /home/walter/Desktop/activities/set/visualmatch.py:173
+#: /home/walter/Desktop/activities/set/VisualMatchActivity.py:282
 msgid "earth"
 msgstr ""
 
-#: /home/walter/Desktop/set/game.py:209
+#: /home/walter/Desktop/activities/set/game.py:260
+msgid "Edit the custom cards."
+msgstr ""
+
+#: /home/walter/Desktop/activities/set/game.py:288
 msgid "Edit the word cards."
 msgstr ""
 
-#: /home/walter/Desktop/set/game.py:284
+#: /home/walter/Desktop/activities/set/game.py:381
 msgid "Game over"
 msgstr ""
 
-#: /home/walter/Desktop/set/game.py:292
+#: /home/walter/Desktop/activities/set/game.py:390
 msgid "unsolvable"
 msgstr ""
 
-#: /home/walter/Desktop/set/game.py:316 /home/walter/Desktop/set/game.py:397
-#: /home/walter/Desktop/set/VisualMatchActivity.py:538
+#: /home/walter/Desktop/activities/set/game.py:414
+#: /home/walter/Desktop/activities/set/game.py:495
+#: /home/walter/Desktop/activities/set/VisualMatchActivity.py:473
 msgid "cards"
 msgstr ""
 
-#: /home/walter/Desktop/set/game.py:327
+#: /home/walter/Desktop/activities/set/game.py:425
 msgid "New record"
 msgstr ""
 
-#: /home/walter/Desktop/set/game.py:403 /home/walter/Desktop/set/game.py:405
+#: /home/walter/Desktop/activities/set/game.py:501
+#: /home/walter/Desktop/activities/set/game.py:503
 msgid "match"
 msgstr ""
 
-#: /home/walter/Desktop/set/game.py:410 /home/walter/Desktop/set/game.py:412
-#: /home/walter/Desktop/set/VisualMatchActivity.py:540
+#: /home/walter/Desktop/activities/set/game.py:508
+#: /home/walter/Desktop/activities/set/game.py:510
+#: /home/walter/Desktop/activities/set/VisualMatchActivity.py:475
 msgid "matches"
 msgstr ""
 
-#: /home/walter/Desktop/set/VisualMatchActivity.py:66
-msgid "intermediate"
-msgstr ""
-
-#: /home/walter/Desktop/set/VisualMatchActivity.py:66
-msgid "expert"
-msgstr ""
-
-#: /home/walter/Desktop/set/VisualMatchActivity.py:66
-msgid "beginner"
-msgstr ""
-
-#: /home/walter/Desktop/set/VisualMatchActivity.py:163
-msgid "Play with the computer."
-msgstr ""
-
-#: /home/walter/Desktop/set/VisualMatchActivity.py:168
-msgid "Stop playing with the computer."
-msgstr ""
-
-#: /home/walter/Desktop/set/VisualMatchActivity.py:199
-msgid "Choose custom card"
-msgstr ""
-
-#: /home/walter/Desktop/set/VisualMatchActivity.py:245
+#: /home/walter/Desktop/activities/set/game.py:713
 msgid "New custom game"
 msgstr ""
 
-#: /home/walter/Desktop/set/VisualMatchActivity.py:432
+#: /home/walter/Desktop/activities/set/VisualMatchActivity.py:62
+msgid "intermediate"
+msgstr ""
+
+#: /home/walter/Desktop/activities/set/VisualMatchActivity.py:62
+msgid "expert"
+msgstr ""
+
+#: /home/walter/Desktop/activities/set/VisualMatchActivity.py:62
+msgid "beginner"
+msgstr ""
+
+#: /home/walter/Desktop/activities/set/VisualMatchActivity.py:163
+msgid "Play with the computer."
+msgstr ""
+
+#: /home/walter/Desktop/activities/set/VisualMatchActivity.py:168
+msgid "Stop playing with the computer."
+msgstr ""
+
+#: /home/walter/Desktop/activities/set/VisualMatchActivity.py:374
 msgid "Game"
 msgstr ""
 
-#: /home/walter/Desktop/set/VisualMatchActivity.py:433
+#: /home/walter/Desktop/activities/set/VisualMatchActivity.py:375
 msgid "Numbers"
 msgstr ""
 
-#: /home/walter/Desktop/set/VisualMatchActivity.py:434
+#: /home/walter/Desktop/activities/set/VisualMatchActivity.py:376
 msgid "Tools"
 msgstr ""
 
-#: /home/walter/Desktop/set/VisualMatchActivity.py:452
-#: /home/walter/Desktop/set/VisualMatchActivity.py:467
+#: /home/walter/Desktop/activities/set/VisualMatchActivity.py:388
+#: /home/walter/Desktop/activities/set/VisualMatchActivity.py:402
 msgid "Import custom cards"
 msgstr ""
 
-#: /home/walter/Desktop/set/VisualMatchActivity.py:463
+#: /home/walter/Desktop/activities/set/VisualMatchActivity.py:398
 msgid "Edit word lists."
 msgstr ""
 
-#: /home/walter/Desktop/set/VisualMatchActivity.py:468
+#: /home/walter/Desktop/activities/set/VisualMatchActivity.py:403
 msgid "product"
 msgstr ""
 
-#: /home/walter/Desktop/set/VisualMatchActivity.py:472
+#: /home/walter/Desktop/activities/set/VisualMatchActivity.py:407
 msgid "Roman numerals"
 msgstr ""
 
-#: /home/walter/Desktop/set/VisualMatchActivity.py:476
+#: /home/walter/Desktop/activities/set/VisualMatchActivity.py:411
 msgid "word"
 msgstr ""
 
-#: /home/walter/Desktop/set/VisualMatchActivity.py:488
+#: /home/walter/Desktop/activities/set/VisualMatchActivity.py:423
 msgid "Quipu"
 msgstr ""
 
-#: /home/walter/Desktop/set/VisualMatchActivity.py:493
+#: /home/walter/Desktop/activities/set/VisualMatchActivity.py:428
 msgid "hash marks"
 msgstr ""
 
-#: /home/walter/Desktop/set/VisualMatchActivity.py:497
+#: /home/walter/Desktop/activities/set/VisualMatchActivity.py:432
 msgid "dots in a circle"
 msgstr ""
 
-#: /home/walter/Desktop/set/VisualMatchActivity.py:501
+#: /home/walter/Desktop/activities/set/VisualMatchActivity.py:436
 msgid "points on a star"
 msgstr ""
 
-#: /home/walter/Desktop/set/VisualMatchActivity.py:505
+#: /home/walter/Desktop/activities/set/VisualMatchActivity.py:440
 msgid "dice"
 msgstr ""
 
-#: /home/walter/Desktop/set/VisualMatchActivity.py:509
+#: /home/walter/Desktop/activities/set/VisualMatchActivity.py:444
 msgid "dots in a line"
 msgstr ""
 
-#: /home/walter/Desktop/set/VisualMatchActivity.py:518
+#: /home/walter/Desktop/activities/set/VisualMatchActivity.py:453
 msgid "Play with the computer"
 msgstr ""
 
-#: /home/walter/Desktop/set/VisualMatchActivity.py:525
+#: /home/walter/Desktop/activities/set/VisualMatchActivity.py:460
 msgid "Set difficulty level."
 msgstr ""
 
-#: /home/walter/Desktop/set/VisualMatchActivity.py:534
+#: /home/walter/Desktop/activities/set/VisualMatchActivity.py:469
 msgid "Find a match."
 msgstr ""
 
-#: /home/walter/Desktop/set/namingalert.py:82
+#: /home/walter/Desktop/activities/set/namingalert.py:82
 msgid "Describe your activity"
 msgstr ""
 
-#: /home/walter/Desktop/set/namingalert.py:87
+#: /home/walter/Desktop/activities/set/namingalert.py:87
 msgid "Keep"
 msgstr ""
 
-#: /home/walter/Desktop/set/namingalert.py:283
+#: /home/walter/Desktop/activities/set/namingalert.py:283
 msgid "Untitled"
 msgstr ""
 
-#: /home/walter/Desktop/set/namingalert.py:290
+#: /home/walter/Desktop/activities/set/namingalert.py:290
 msgid "Description:"
 msgstr ""
 
-#: /home/walter/Desktop/set/namingalert.py:314
+#: /home/walter/Desktop/activities/set/namingalert.py:314
 msgid "Tags:"
 msgstr ""
