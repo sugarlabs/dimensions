@@ -1,3 +1,10 @@
+27
+
+* smiley-face "reward" for finishing a game
+* work around datastore.find issue on 0.84 builds
+* work around chooser issues with old Sugar builds (#2398)
+* improved workflow for importing custom cards
+
 26
 
 * import custom cards from Journal
