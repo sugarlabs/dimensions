@@ -2,151 +2,325 @@
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-#, fuzzy
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-12-07 18:05+0000\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2010-07-07 00:32-0400\n"
+"PO-Revision-Date: 2011-02-11 09:48+0200\n"
+"Last-Translator: Danishka Navin <danishka@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: si\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Translate Toolkit 1.3.0\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Pootle 2.0.3\n"
 
-#: activity/activity.info:2 /home/walter/Desktop/set/window.py:265
-#: /home/walter/Desktop/set/visualmatch.py:42
+#: activity/activity.info:2 game.py:409 visualmatch.py:36
 msgid "Visual Match"
-msgstr ""
+msgstr "දෘශ්‍ය ගැලපුම"
 
-#: /home/walter/Desktop/set/window.py:124
-#: /home/walter/Desktop/set/window.py:185
-#: /home/walter/Desktop/set/VisualMatchActivity.py:112
-msgid "cards remaining"
-msgstr ""
+#: VisualMatchActivity.py:59
+msgid "beginner"
+msgstr "නවකයා"
 
-#: /home/walter/Desktop/set/window.py:125
-#: /home/walter/Desktop/set/window.py:212
-#: /home/walter/Desktop/set/VisualMatchActivity.py:123
-#: /home/walter/Desktop/set/VisualMatchActivity.py:293
+#: VisualMatchActivity.py:59
+msgid "expert"
+msgstr "ප්‍රවීණ"
+
+#: VisualMatchActivity.py:154
+msgid "Play with the computer."
+msgstr "පරිගණකය සමග ක්‍රීඩා කරන්න"
+
+#: VisualMatchActivity.py:159
+msgid "Stop playing with the computer."
+msgstr "පරිගණකය සමග ක්‍රීඩා කිරීම නවත්තන්න"
+
+#: VisualMatchActivity.py:253 visualmatch.py:180
+msgid "mouse"
+msgstr "මවුසය"
+
+#: VisualMatchActivity.py:253 visualmatch.py:180
+msgid "cat"
+msgstr "පූසා"
+
+#: VisualMatchActivity.py:253 visualmatch.py:180
+msgid "dog"
+msgstr "බල්ලා"
+
+#: VisualMatchActivity.py:254 visualmatch.py:181
+msgid "cheese"
+msgstr "චීස්"
+
+#: VisualMatchActivity.py:254 visualmatch.py:181
+msgid "apple"
+msgstr "ඇපල්"
+
+#: VisualMatchActivity.py:254 visualmatch.py:181
+msgid "bread"
+msgstr "පාන්"
+
+#: VisualMatchActivity.py:255 visualmatch.py:182
+msgid "moon"
+msgstr "හද"
+
+#: VisualMatchActivity.py:255 visualmatch.py:182
+msgid "sun"
+msgstr "ඉර"
+
+#: VisualMatchActivity.py:255 visualmatch.py:182
+msgid "earth"
+msgstr "පොළව"
+
+#: VisualMatchActivity.py:331
+msgid "Game"
+msgstr "ක්‍රීඩාව"
+
+#: VisualMatchActivity.py:332
+msgid "Tools"
+msgstr "වෙවලම්"
+
+#: VisualMatchActivity.py:333
+msgid "Numbers"
+msgstr "අංක"
+
+#: VisualMatchActivity.py:339 visualmatch.py:56
+msgid "New pattern game"
+msgstr "අළුත් මෝස්තර ක්‍රීඩාව"
+
+#: VisualMatchActivity.py:343 visualmatch.py:60
+msgid "New number game"
+msgstr "නව අංකය ක්‍රිඩාව"
+
+#: VisualMatchActivity.py:347 visualmatch.py:64
+msgid "New word game"
+msgstr "නව වදන් ක්‍රීඩාව"
+
+#: VisualMatchActivity.py:353
+msgid "Play with the computer"
+msgstr "පරිගණකය සමග ක්‍රීඩා කරන්න"
+
+#: VisualMatchActivity.py:360
+msgid "Set difficulty level."
+msgstr "අසීරු මට්ටම යොදන්න"
+
+#: VisualMatchActivity.py:366
+msgid "Edit word lists."
+msgstr "වචන ලැයිස්තුව සකසන්න."
+
+#: VisualMatchActivity.py:369
+msgid "product"
+msgstr "නිෂ්පාදනය"
+
+#: VisualMatchActivity.py:373
+msgid "Roman numerals"
+msgstr "රෝමාණු සංඛ්‍යාංක"
+
+#: VisualMatchActivity.py:377
+msgid "word"
+msgstr "වචන"
+
+#: VisualMatchActivity.py:381 visualmatch.py:114
+msgid "Chinese"
+msgstr "චීන"
+
+#: VisualMatchActivity.py:385 visualmatch.py:118
+msgid "Mayan"
+msgstr "මයන්"
+
+#: VisualMatchActivity.py:390
+msgid "hash marks"
+msgstr "හැෂ් සලකුණු"
+
+#: VisualMatchActivity.py:394
+msgid "dots in a circle"
+msgstr "වෘත්තයේ ඇති තිත්"
+
+#: VisualMatchActivity.py:398
+msgid "points on a star"
+msgstr "තරැවේ ඇති ලකුණු"
+
+#: VisualMatchActivity.py:402
+msgid "dice"
+msgstr "දාදු කැටය"
+
+#: VisualMatchActivity.py:406
+msgid "dots in a line"
+msgstr "රේඛාවක ඇති තිත්"
+
+#: VisualMatchActivity.py:413
+msgid "Find a match."
+msgstr "ගැළපීමක් සොයන්න."
+
+#: VisualMatchActivity.py:417 game.py:298 game.py:379
+msgid "cards"
+msgstr "කඩදාසි කුට්ටම"
+
+#: VisualMatchActivity.py:419 game.py:392 game.py:394
 msgid "matches"
-msgstr ""
+msgstr "ගැළපීම්"
 
-#: /home/walter/Desktop/set/window.py:192
+#: constants.py:58
+msgid "five"
+msgstr "පහ"
+
+#: constants.py:58
+msgid "seven"
+msgstr "හත"
+
+#: constants.py:58
+msgid "eleven"
+msgstr "එකොලහ"
+
+#: constants.py:58
+msgid "ten"
+msgstr "දහය"
+
+#: constants.py:59
+msgid "fourteen"
+msgstr "දාහතර"
+
+#: constants.py:59
+msgid "fifteen"
+msgstr "පහළොව"
+
+#: constants.py:59
+msgid "twenty two"
+msgstr "විසි දෙක"
+
+#: constants.py:60
+msgid "twenty one"
+msgstr "විසි එක"
+
+#: constants.py:60
+msgid "thirty three"
+msgstr "තිස් තුන"
+
+#: game.py:196
+msgid "Edit the word cards."
+msgstr "කඩදාසි කුට්ටමේ වචනය සංස්කරණය කරන්න"
+
+#: game.py:271
 msgid "Game over"
-msgstr ""
+msgstr "ක්‍රීඩාව අවසන්"
 
-#: /home/walter/Desktop/set/window.py:192
-#: /home/walter/Desktop/set/window.py:200
-msgid "seconds"
-msgstr ""
-
-#: /home/walter/Desktop/set/window.py:200
+#: game.py:309
 msgid "New record"
-msgstr ""
+msgstr "අලුත්වාර්තාවක්"
 
-#: /home/walter/Desktop/set/window.py:208
-#: /home/walter/Desktop/set/window.py:210
+#: game.py:385 game.py:387
 msgid "match"
-msgstr ""
+msgstr "තරගය"
 
-#: /home/walter/Desktop/set/window.py:218
-msgid "no match"
-msgstr ""
+#: namingalert.py:82
+msgid "Describe your activity"
+msgstr "ඔබගේ ක්‍රියාකාරකම විස්තර කරන්න"
 
-#: /home/walter/Desktop/set/visualmatch.py:43
+#: namingalert.py:87
+msgid "Keep"
+msgstr "තබාගන්න"
+
+#: namingalert.py:283
+msgid "Untitled"
+msgstr "සිරස්තල රහිත"
+
+#: namingalert.py:290
+msgid "Description:"
+msgstr "විස්තරය"
+
+#: namingalert.py:314
+msgid "Tags:"
+msgstr "ලේබල්"
+
+#: visualmatch.py:37
 msgid "Click on cards to create sets of three."
 msgstr ""
 
-#: /home/walter/Desktop/set/visualmatch.py:49
-#: /home/walter/Desktop/set/VisualMatchActivity.py:81
-#: /home/walter/Desktop/set/VisualMatchActivity.py:248
-msgid "New pattern game"
+#: visualmatch.py:47
+msgid "Toggle level"
 msgstr ""
 
-#: /home/walter/Desktop/set/visualmatch.py:53
-#: /home/walter/Desktop/set/VisualMatchActivity.py:90
-#: /home/walter/Desktop/set/VisualMatchActivity.py:257
-msgid "New number game"
+#: visualmatch.py:73
+msgid "Robot on/off"
 msgstr ""
 
-#: /home/walter/Desktop/set/visualmatch.py:57
-#: /home/walter/Desktop/set/VisualMatchActivity.py:99
-#: /home/walter/Desktop/set/VisualMatchActivity.py:266
-msgid "New word game"
-msgstr ""
+#: visualmatch.py:77
+msgid "90 sec."
+msgstr "තත්පර 90"
 
-#: /home/walter/Desktop/set/gencards.py:212
-msgid "dog"
-msgstr ""
+#: visualmatch.py:81
+msgid "60 sec."
+msgstr "තත්පර 60"
 
-#: /home/walter/Desktop/set/gencards.py:212
-msgid "cat"
-msgstr ""
+#: visualmatch.py:85
+msgid "45 sec."
+msgstr "තත්පර 45"
 
-#: /home/walter/Desktop/set/gencards.py:212
-msgid "mouse"
-msgstr ""
+#: visualmatch.py:89
+msgid "30 sec."
+msgstr "තත්පර 30"
 
-#: /home/walter/Desktop/set/gencards.py:214
-msgid "apple"
-msgstr ""
+#: visualmatch.py:93
+msgid "15 sec."
+msgstr "තත්පර 15"
 
-#: /home/walter/Desktop/set/gencards.py:214
-msgid "bread"
-msgstr ""
+#: visualmatch.py:102
+msgid "Product"
+msgstr "නිෂ්පාදනය"
 
-#: /home/walter/Desktop/set/gencards.py:214
-msgid "cheese"
-msgstr ""
+#: visualmatch.py:106
+msgid "Roman"
+msgstr "රෝමානු"
 
-#: /home/walter/Desktop/set/gencards.py:216
-msgid "sun"
-msgstr ""
+#: visualmatch.py:110
+msgid "Word"
+msgstr "වචන"
 
-#: /home/walter/Desktop/set/gencards.py:216
-msgid "moon"
-msgstr ""
+#: visualmatch.py:122
+msgid "Hash"
+msgstr "හැෂ්"
 
-#: /home/walter/Desktop/set/gencards.py:216
-msgid "earth"
-msgstr ""
+#: visualmatch.py:126
+msgid "Dice"
+msgstr "දාදු කැටය"
 
-#: /home/walter/Desktop/set/VisualMatchActivity.py:145
-#: /home/walter/Desktop/set/VisualMatchActivity.py:319
-msgid "Find a match."
-msgstr ""
+#: visualmatch.py:130
+msgid "Dots"
+msgstr "තිත්"
 
-#: /home/walter/Desktop/set/VisualMatchActivity.py:159
-msgid "Write in Journal"
-msgstr ""
+#: visualmatch.py:134
+msgid "Star"
+msgstr "තරුව"
 
-#: /home/walter/Desktop/set/VisualMatchActivity.py:181
-msgid "Project"
-msgstr ""
-
-#: /home/walter/Desktop/set/VisualMatchActivity.py:280
-msgid "cards remain in the deck"
-msgstr ""
-
-#: /home/walter/Desktop/set/namingalert.py:82
-msgid "Describe your activity"
-msgstr ""
-
-#: /home/walter/Desktop/set/namingalert.py:87
-msgid "Keep"
-msgstr ""
-
-#: /home/walter/Desktop/set/namingalert.py:283
-msgid "Untitled"
-msgstr ""
-
-#: /home/walter/Desktop/set/namingalert.py:290
-msgid "Description:"
-msgstr ""
-
-#: /home/walter/Desktop/set/namingalert.py:314
-msgid "Tags:"
-msgstr ""
+#: visualmatch.py:138
+msgid "Lines"
+msgstr "රේඛා"
