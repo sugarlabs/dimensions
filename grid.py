@@ -17,6 +17,9 @@ import random
 
 from constants import ROW, COL, MATCH_POSITION, DEAL
 
+import logging
+_logger = logging.getLogger('visualmatch-activity')
+
 
 class Grid:
     """ Class for managing ROWxCOL matrix of cards """
@@ -35,12 +38,12 @@ class Grid:
     def deal(self, deck):
         """ Deal an initial set of cards. """
         for i in range(ROW * COL):
+            self.grid[i] = None
             if i < (ROW - 1) * COL:
-                self.grid[i] = deck.deal_next_card()
-                self.place_a_card(self.grid[i], self.grid_to_xy(i)[0],
-                                  self.grid_to_xy(i)[1])
-            else:         # Leave a blank row for extra cards at the bottom.
-                self.grid[i] = None
+                if not deck.empty():
+                    self.grid[i] = deck.deal_next_card()
+                    self.place_a_card(self.grid[i], self.grid_to_xy(i)[0],
+                                      self.grid_to_xy(i)[1])
 
     def deal_extra_cards(self, deck):
         """ Add cards to the bottom row when there is no match.

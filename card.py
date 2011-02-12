@@ -15,32 +15,26 @@ import pygtk
 pygtk.require('2.0')
 import gtk
 
-from constants import SELECTMASK, MATCHMASK, COLORS, NUMBER, FILLS
-from sprites import Sprite
+import logging
+_logger = logging.getLogger('visualmatch-activity')
 
-#
-# class for defining individual cards
-# tw - image related
-# pattern - game logic related
-# card index is generated in the following loop:
-#        for shape in range(0,SHAPES):
-#            for color in range(0,COLORS):
-#                for num in range(0,NUMBER):
-#                    for fill in range(0,FILLS):
-# if shape == SELECTMASK then generate special card-selected overlay
-#
+from constants import SELECTMASK, MATCHMASK, COLORS, NUMBER, FILLS, \
+    CARD_WIDTH, CARD_HEIGHT
+
+from sprites import Sprite
 
 
 class Card:
     """ Individual cards """
 
-    def __init__(self, sprites, svg_string, attributes):
+    def __init__(self, sprites, string, attributes, file_path=None,
+                 scale=1.0):
         """ Create the card and store its attributes """
         if attributes[0] == SELECTMASK:
-            self.spr = Sprite(sprites, 0, 0, svg_str_to_pixbuf(svg_string))
+            self.spr = Sprite(sprites, 0, 0, svg_str_to_pixbuf(string))
             self.index = SELECTMASK
         elif attributes[0] == MATCHMASK:
-            self.spr = Sprite(sprites, 0, 0, svg_str_to_pixbuf(svg_string))
+            self.spr = Sprite(sprites, 0, 0, svg_str_to_pixbuf(string))
             self.index = MATCHMASK
         else:
             self.shape = attributes[0]
@@ -51,10 +45,15 @@ class Card:
                          self.color * NUMBER * FILLS +\
                          self.num * FILLS +\
                          self.fill
-            self.spr = Sprite(sprites, 0, 0, svg_str_to_pixbuf(svg_string))
+            self.spr = Sprite(sprites, 0, 0, svg_str_to_pixbuf(string))
+            if file_path is not None:
+                self.spr.set_image(load_image(file_path, scale), i=1,
+                                   dx=int(scale * CARD_WIDTH * .125),
+                                   dy=int(scale * CARD_HEIGHT * .125))
+
 
     def show_card(self):
-        """ Show the care """
+        """ Show the card """
         self.spr.set_layer(2000)
         self.spr.draw()
 
@@ -62,10 +61,17 @@ class Card:
         self.spr.hide()
 
 
-def svg_str_to_pixbuf(svg_string):
+def svg_str_to_pixbuf(string):
     """ Load pixbuf from SVG string """
     pl = gtk.gdk.PixbufLoader('svg')
-    pl.write(svg_string)
+    pl.write(string)
     pl.close()
     pixbuf = pl.get_pixbuf()
     return pixbuf
+
+
+def load_image(object, scale):
+    return gtk.gdk.pixbuf_new_from_file_at_size(object.file_path,
+                                                int(scale * CARD_WIDTH * .75),
+                                                int(scale * CARD_HEIGHT * .75))
+

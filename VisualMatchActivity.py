@@ -5,7 +5,7 @@
 # the Free Software Foundation; either version 3 of the License, or
 # (at your option) any later version.
 #
-# You should have received a copy of the GNU Lesser General Public
+# You should have received a copy of the GNU General Public
 # License along with this library; if not, write to the
 # Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 # Boston, MA 02111-1307, USA.
@@ -20,11 +20,12 @@ try:
     from sugar.activity.widgets import StopButton
     from sugar.graphics.toolbarbox import ToolbarBox
     from sugar.graphics.toolbarbox import ToolbarButton
-    # from namingalert import NamingAlert
     _new_sugar_system = True
 except ImportError:
     _new_sugar_system = False
 from sugar.graphics.toolbutton import ToolButton
+
+from sugar.datastore import datastore
 
 import telepathy
 from dbus.service import signal
@@ -52,12 +53,14 @@ except(ImportError, AttributeError):
 from StringIO import StringIO
 
 from constants import DECKSIZE, PRODUCT, HASH, ROMAN, WORD, CHINESE, MAYAN, \
-                      DOTS, STAR, DICE, LINES, DEAL
+                      INCAN, DOTS, STAR, DICE, LINES, DEAL, HIGH, MEDIUM, LOW, \
+                      DIFFICULTY_LEVEL
+
 from game import Game
 
-level_icons = ['level1', 'level2']
-level_labels = [_('beginner'), _('expert')]
-level_decksize = [DECKSIZE / 3, DECKSIZE]
+LEVEL_ICONS = ['level2', 'level3', 'level1']
+LEVEL_LABELS = [_('intermediate'), _('expert'), _('beginner')]
+LEVEL_DECKSIZE = [DECKSIZE / 3, DECKSIZE, DECKSIZE / 9]
 
 SERVICE = 'org.sugarlabs.VisualMatchActivity'
 IFACE = SERVICE
@@ -125,27 +128,33 @@ class VisualMatchActivity(activity.Activity):
         """ Initialize the Sugar activity """
         super(VisualMatchActivity, self).__init__(handle)
 
-        # Set things up.
         self._read_journal_data()
-        datapath = self._find_datapath(_old_sugar_system)
+        self._old_sugar_system = _old_sugar_system
+        datapath = self._find_datapath(activity)
         self._setup_toolbars(_new_sugar_system)
         canvas = self._setup_canvas(datapath)
         self._setup_presence_service()
 
-        # Then start playing the game.
         if not hasattr(self, '_saved_state'):
             self._saved_state = None
         self.vmw.new_game(self._saved_state, self._deck_index)
+
         if self._editing_word_list:
             self.vmw.editing_word_list = True
             self.vmw.edit_word_list()
+        elif self._editing_custom_cards:
+            self.vmw.editing_custom_cards = True
+            self.vmw.edit_custom_card()
 
     def _select_game_cb(self, button, card_type):
         """ Choose which game we are playing. """
         if self.vmw.joiner():  # joiner cannot change level
             return
         self.vmw.card_type = card_type
-        self.vmw.new_game()
+        if card_type == 'custom' and self.vmw.custom_paths[0] is None:
+            self.image_import_cb()
+        else:
+            self.vmw.new_game()
 
     def _robot_cb(self, button):
         """ Toggle robot assist on/off """
@@ -160,24 +169,36 @@ class VisualMatchActivity(activity.Activity):
             self.robot_button.set_icon('robot-on')
 
     def _level_cb(self, button):
-        """ Switch between levels """
+        """ Cycle between levels """
         if self.vmw.joiner():  # joiner cannot change level
             return
-        self.vmw.level = 1 - self.vmw.level
+        self.vmw.level += 1
+        if self.vmw.level == len(LEVEL_LABELS):
+            self.vmw.level = 0
+        self.set_level_label()
+
+    def set_level_label(self):
         self.level_label.set_text(self.calc_level_label(self.vmw.low_score,
                                                         self.vmw.level))
-        self.level_button.set_icon(level_icons[self.vmw.level])
+        self.level_button.set_icon(LEVEL_ICONS[self.vmw.level])
         self.vmw.new_game()
 
     def calc_level_label(self, low_score, play_level):
         """ Show the score. """
         if low_score[play_level] == -1:
-            return level_labels[play_level]
+            return LEVEL_LABELS[play_level]
         else:
             return "%s (%d:%02d)" % \
-                    (level_labels[play_level],
+                    (LEVEL_LABELS[play_level],
                      int(low_score[play_level] / 60),
                      int(low_score[play_level] % 60))
+
+    def image_import_cb(self, button=None):
+        """ Import custom cards from the Journal """
+        self.vmw.editing_custom_cards = True
+        self.vmw.edit_custom_card()
+        if self.vmw.robot:
+            self._robot_cb(button)
 
     def _number_card_O_cb(self, button, numberO):
         """ Choose between O-card list for numbers game. """
@@ -207,41 +228,45 @@ class VisualMatchActivity(activity.Activity):
         if self.vmw.robot:
             self._robot_cb(button)
 
-    '''
-    def _write_to_journal_cb(self, button, path):
-        title_alert = NamingAlert(self, path)
-        title_alert.set_transient_for(self.get_toplevel())
-        title_alert.show()
-        self.reveal()
-        return True
-    '''
-
     def _read_journal_data(self):
         """ There may be data from a previous instance. """
-        try:  # Try reading restored settings from the Journal.
+        if 'play_level' in self.metadata:
             self._play_level = int(self.metadata['play_level'])
+        else:
+            self._play_level = 2
+        if 'robot_time' in self.metadata:
             self._robot_time = int(self.metadata['robot_time'])
-            self._card_type = self.metadata['cardtype']
-            self._low_score = [int(self.metadata['low_score_beginner']), \
-                               int(self.metadata['low_score_expert'])]
-            self._numberO = int(self.metadata['numberO'])
-            self._numberC = int(self.metadata['numberC'])
-            self._matches = int(self.metadata['matches'])
-            self._robot_matches = int(self.metadata['robot_matches'])
-            self._total_time = int(self.metadata['total_time'])
-            self._deck_index = int(self.metadata['deck_index'])
-        except KeyError:  # Otherwise, use default values.
-            self._play_level = 0
+        else:
             self._robot_time = 60
+        if 'cardtype' in self.metadata:
+            self._card_type = self.metadata['cardtype']
+        else:
             self._card_type = 'pattern'
-            self._low_score = [-1, -1]
+        if 'numberO' in self.metadata:
+            self._numberO = int(self.metadata['numberO'])
+        else:
             self._numberO = PRODUCT
+        if 'numberC' in self.metadata:
+            self._numberC = int(self.metadata['numberC'])
+        else:
             self._numberC = HASH
+        if 'matches' in self.metadata:
+            self._matches = int(self.metadata['matches'])
+        else:
             self._matches = 0
+        if 'robot_matches' in self.metadata:
+            self._robot_matches = int(self.metadata['robot_matches'])
+        else:
             self._robot_matches = 0
+        if 'total_time' in self.metadata:
+            self._total_time = int(self.metadata['total_time'])
+        else:
             self._total_time = 0
+        if 'deck_index' in self.metadata:
+            self._deck_index = int(self.metadata['deck_index'])
+        else:
             self._deck_index = 0
-        try:  # Some saved games may not have the word list
+        if 'mouse' in self.metadata:
             self._word_lists = [[self.metadata['mouse'], \
                                  self.metadata['cat'], \
                                  self.metadata['dog']], \
@@ -251,24 +276,50 @@ class VisualMatchActivity(activity.Activity):
                                 [self.metadata['moon'], \
                                  self.metadata['sun'], \
                                  self.metadata['earth']]]
-        except KeyError:
-            self._word_lists = [[_('mouse'), _('cat'), _('dog')], \
-                                [_('cheese'), _('apple'), _('bread')], \
+        else:
+            self._word_lists = [[_('mouse'), _('cat'), _('dog')],
+                                [_('cheese'), _('apple'), _('bread')],
                                 [_('moon'), _('sun'), _('earth')]]
-        try:  # Were we editing the word list?
+        if 'editing_word_list' in self.metadata:
             self._editing_word_list = bool(int(
                 self.metadata['editing_word_list']))
-        except KeyError:
+        else:
             self._editing_word_list = False
+        if 'low_score_intermediate' in self.metadata:
+            self._low_score = [int(self.metadata['low_score_intermediate']),
+                               int(self.metadata['low_score_expert']),
+                               int(self.metadata['low_score_beginner'])]
+        elif 'low_score_expert' in self.metadata:
+            self._low_score = [-1,
+                                int(self.metadata['low_score_expert']),
+                                int(self.metadata['low_score_beginner'])]
+        else:
+            self._low_score = [-1, -1, -1]
+        if 'editing_custom_cards' in self.metadata:
+            self._editing_custom_cards = bool(int(
+                self.metadata['editing_custom_cards']))
+        else:
+            self._editing_custom_cards = False
+        if self._card_type == 'custom':
+            if 'custom_object' in self.metadata:
+                self._custom_object = self.metadata['custom_object']
+            else:
+                self._custom_object = None
+                self._card_type = 'pattern'
+        self._custom_jobject = []
+        for i in range(9):
+            if 'custom_' + str(i) in self.metadata:
+                self._custom_jobject.append(self.metadata['custom_' + str(i)])
+            else:
+                self._custom_jobject.append(None)
 
-    def _find_datapath(self, _old_sugar_system):
+    def _find_datapath(self, activity):
         """ Find the datapath for saving card files. """
-        self._old_sugar_system = _old_sugar_system
-        if self._old_sugar_system:
+        if hasattr(activity, 'get_activity_root'):
+            return os.path.join(activity.get_activity_root(), 'data')
+        else:
             return os.path.join(os.environ['HOME'], ".sugar", "default",
                                 SERVICE, 'data')
-        else:
-            return os.path.join(self.get_activity_root(), 'data')
 
     def _setup_toolbars(self, new_sugar_system):
         """ Setup the toolbars.. """
@@ -279,20 +330,10 @@ class VisualMatchActivity(activity.Activity):
         if new_sugar_system:
             toolbox = ToolbarBox()
 
-            # Activity toolbar
             activity_button = ActivityToolbarButton(self)
 
             toolbox.toolbar.insert(activity_button, 0)
             activity_button.show()
-
-            '''
-            # Naming alert button
-            write_to_journal_button = _button_factoty("journal-write",
-                                                      _('Write in Journal'),
-                                                      self._write_to_journal_cb,
-                                                      toolbox.toolbar, None,
-                                                      '<Ctrl>j')
-            '''
 
             games_toolbar_button = ToolbarButton(
                     page=games_toolbar,
@@ -301,19 +342,19 @@ class VisualMatchActivity(activity.Activity):
             toolbox.toolbar.insert(games_toolbar_button, -1)
             games_toolbar_button.show()
 
-            tools_toolbar_button = ToolbarButton(
-                    page=tools_toolbar,
-                    icon_name='view-source')
-            tools_toolbar.show()
-            toolbox.toolbar.insert(tools_toolbar_button, -1)
-            tools_toolbar_button.show()
-
             numbers_toolbar_button = ToolbarButton(
                     page=numbers_toolbar,
                     icon_name='number-tools')
             numbers_toolbar.show()
             toolbox.toolbar.insert(numbers_toolbar_button, -1)
             numbers_toolbar_button.show()
+
+            tools_toolbar_button = ToolbarButton(
+                    page=tools_toolbar,
+                    icon_name='view-source')
+            tools_toolbar.show()
+            toolbox.toolbar.insert(tools_toolbar_button, -1)
+            tools_toolbar_button.show()
 
             self._set_labels(toolbox.toolbar)
             _separator_factory(toolbox.toolbar, False, True)
@@ -326,48 +367,39 @@ class VisualMatchActivity(activity.Activity):
             self.set_toolbar_box(toolbox)
             toolbox.show()
 
+            games_toolbar_button.set_expanded(True)
         else:
-            # Use pre-0.86 toolbar design
             toolbox = activity.ActivityToolbox(self)
             self.set_toolbox(toolbox)
             toolbox.add_toolbar(_('Game'), games_toolbar)
-            toolbox.add_toolbar(_('Tools'), tools_toolbar)
             toolbox.add_toolbar(_('Numbers'), numbers_toolbar)
+            toolbox.add_toolbar(_('Tools'), tools_toolbar)
             toolbox.show()
             toolbox.set_current_toolbar(1)
 
-        # Add the buttons and spinners to the toolbars
-        self.button1 = _button_factory("new-pattern-game",
-                                       _('New pattern game'),
-                                       self._select_game_cb, games_toolbar,
-                                       'pattern')
-        self.button2 = _button_factory("new-number-game",
-                                       _('New number game'),
-                                       self._select_game_cb, games_toolbar,
-                                       'number')
-        self.button3 = _button_factory("new-word-game",
-                                       _('New word game'),
-                                       self._select_game_cb, games_toolbar,
-                                       'word')
-        if not new_sugar_system:
+        self.button_pattern = _button_factory('new-pattern-game',
+            _('New pattern game'), self._select_game_cb, games_toolbar,
+                                              'pattern')
+        self.button_number = _button_factory('new-number-game',
+            _('New number game'), self._select_game_cb, games_toolbar, 'number')
+        self.button_word = _button_factory('new-word-game', _('New word game'),
+            self._select_game_cb, games_toolbar, 'word')
+        self.button_custom = _button_factory('no-custom-game',
+            _('Import custom cards'), self._select_game_cb, games_toolbar,
+                                             'custom')
+
+        if new_sugar_system:
+            self._set_extras(games_toolbar, games_toolbar=True)
+        else:
             self._set_labels(games_toolbar)
-        self.robot_button = _button_factory("robot-off",
-                                            _('Play with the computer'),
-                                            self._robot_cb, tools_toolbar)
-        self._robot_time_spin = _spin_factory(self._robot_time, 15, 180,
-                                              self._robot_time_spin_cb,
-                                              tools_toolbar)
-        _separator_factory(tools_toolbar, True, False)
-        self.level_button = _button_factory(level_icons[self._play_level],
-                                            _('Set difficulty level.'),
-                                            self._level_cb, tools_toolbar)
-        self.level_label = _label_factory(self.calc_level_label(
-                self._low_score, self._play_level), tools_toolbar)
-        _separator_factory(tools_toolbar, True, False)
+            self._set_extras(tools_toolbar, games_toolbar=False)
+
         self.words_tool_button = _button_factory('word-tools',
                                                  _('Edit word lists.'),
                                                  self._edit_words_cb,
                                                  tools_toolbar)
+        self.import_button = _button_factory('insert-image',
+            _('Import custom cards'), self.image_import_cb, tools_toolbar)
         self.product_button = _button_factory('product', _('product'),
                                               self._number_card_O_cb,
                                               numbers_toolbar,
@@ -388,6 +420,10 @@ class VisualMatchActivity(activity.Activity):
                                             self._number_card_O_cb,
                                             numbers_toolbar,
                                             MAYAN)
+        self.quipu_button = _button_factory('incan', _('Quipu'),
+                                            self._number_card_O_cb,
+                                            numbers_toolbar,
+                                            INCAN)
         _separator_factory(numbers_toolbar, True, False)
         self.hash_button = _button_factory('hash', _('hash marks'),
                                            self._number_card_C_cb,
@@ -410,12 +446,30 @@ class VisualMatchActivity(activity.Activity):
                                             numbers_toolbar,
                                             LINES)
 
+    def _set_extras(self, toolbar, games_toolbar=True):
+        if games_toolbar:
+            _separator_factory(toolbar, True, False)
+        self.robot_button = _button_factory("robot-off",
+                                            _('Play with the computer'),
+                                            self._robot_cb, toolbar)
+        self._robot_time_spin = _spin_factory(self._robot_time, 15, 180,
+                                              self._robot_time_spin_cb,
+                                              toolbar)
+        _separator_factory(toolbar, True, False)
+        self.level_button = _button_factory(LEVEL_ICONS[self._play_level],
+                                            _('Set difficulty level.'),
+                                            self._level_cb, toolbar)
+        self.level_label = _label_factory(self.calc_level_label(
+                self._low_score, self._play_level), toolbar)
+        if not games_toolbar:
+            _separator_factory(toolbar, True, False)
+
     def _set_labels(self, toolbar):
         """ Add labels to toolbar toolbar """
         self.status_label = _label_factory(_('Find a match.'), toolbar)
         _separator_factory(toolbar, True, False)
         self.deck_label = _label_factory("%d %s" % \
-                                             (level_decksize[self._play_level]\
+                                             (LEVEL_DECKSIZE[self._play_level]\
                                                   - DEAL, _('cards')), toolbar)
         _separator_factory(toolbar, True, False)
         self.match_label = _label_factory("%d %s" % (0, _('matches')), toolbar)
@@ -445,6 +499,15 @@ class VisualMatchActivity(activity.Activity):
         self.vmw.buddies = []
         self.vmw.word_lists = self._word_lists
         self.vmw.editing_word_list = self._editing_word_list
+        if hasattr(self, '_custom_object') and self._custom_object is not None:
+            _logger.debug('restoring %s' % (self._custom_object))
+            self.vmw._find_custom_paths(datastore.get(self._custom_object))
+        for i in range(9):
+            if hasattr(self, '_custom_jobject') and \
+               self._custom_jobject[i] is not None:
+                self.vmw.custom_paths[i] = datastore.get(
+                    self._custom_jobject[i])
+                _logger.debug('restoring %s' % (self._custom_jobject[i]))
         return canvas
 
     def write_file(self, file_path):
@@ -453,7 +516,8 @@ class VisualMatchActivity(activity.Activity):
         if hasattr(self, 'vmw'):
             self.metadata['play_level'] = self.vmw.level
             self.metadata['low_score_beginner'] = int(self.vmw.low_score[0])
-            self.metadata['low_score_expert'] = int(self.vmw.low_score[1])
+            self.metadata['low_score_intermediate'] = int(self.vmw.low_score[1])
+            self.metadata['low_score_expert'] = int(self.vmw.low_score[2])
             self.metadata['robot_time'] = self.vmw.robot_time
             self.metadata['numberO'] = self.vmw.numberO
             self.metadata['numberC'] = self.vmw.numberC
@@ -488,7 +552,8 @@ class VisualMatchActivity(activity.Activity):
             else:
                 data.append(i.index)
         for i in self.vmw.clicked:
-            if i is None or self.vmw.editing_word_list:
+            if i is None or self.vmw.deck.spr_to_card(i) is None or \
+               self.vmw.editing_word_list:
                 data.append(None)
             else:
                 data.append(self.vmw.deck.spr_to_card(i).index)
@@ -498,7 +563,8 @@ class VisualMatchActivity(activity.Activity):
             else:
                 data.append(i.index)
         for i in self.vmw.match_list:
-            data.append(self.vmw.deck.spr_to_card(i).index)
+            if self.vmw.deck.spr_to_card(i) is not None:
+                data.append(self.vmw.deck.spr_to_card(i).index)
         for i in self.vmw.word_lists:
             for j in i:
                 data.append(j)
@@ -532,7 +598,6 @@ class VisualMatchActivity(activity.Activity):
         self.pservice = presenceservice.get_instance()
         self.initiating = None  # sharing (True) or joining (False)
 
-        # Add my buddy object to the list
         owner = self.pservice.get_owner()
         self.owner = owner
         self.vmw.buddies.append(self.owner)
@@ -555,7 +620,6 @@ class VisualMatchActivity(activity.Activity):
         self.tubes_chan = self._shared_activity.telepathy_tubes_chan
         self.text_chan = self._shared_activity.telepathy_text_chan
 
-        # call back for "NewTube" signal
         self.tubes_chan[telepathy.CHANNEL_TYPE_TUBES].connect_to_signal\
             ('NewTube', self._new_tube_cb)
 
@@ -577,7 +641,6 @@ class VisualMatchActivity(activity.Activity):
         self.tubes_chan = self._shared_activity.telepathy_tubes_chan
         self.text_chan = self._shared_activity.telepathy_text_chan
 
-        # call back for "NewTube" signal
         self.tubes_chan[telepathy.CHANNEL_TYPE_TUBES].connect_to_signal(\
             'NewTube', self._new_tube_cb)
 
@@ -612,11 +675,9 @@ class VisualMatchActivity(activity.Activity):
                 self.tubes_chan[telepathy.CHANNEL_TYPE_TUBES], id, \
                 group_iface=self.text_chan[telepathy.CHANNEL_INTERFACE_GROUP])
 
-            # We'll use a chattube to send serialized data back and forth.
             self.chattube = ChatTube(tube_conn, self.initiating, \
                 self.event_received_cb)
 
-            # Now that we have the tube, we can ask for the deck of cards.
             if self.waiting_for_deck:
                 self._send_event("j")
 
@@ -653,7 +714,7 @@ class VisualMatchActivity(activity.Activity):
             self.vmw.level = int(text)
             self.level_label.set_text(self.calc_level_label(
                 self.vmw.low_score, self.vmw.level))
-            self.level_button.set_icon(level_icons[self.vmw.level])
+            self.level_button.set_icon(LEVEL_ICONS[self.vmw.level])
         elif text[0] == 'X':
             e, text = text.split(':')
             _logger.debug("receiving deck index from sharer " + text)
@@ -691,7 +752,6 @@ class ChatTube(ExportedGObject):
     def send_stack_cb(self, text, sender=None):
         if sender == self.tube.get_unique_name():
             return
-        # _logger.debug("This connection has no unique name yet.")
         self.stack = text
         self.stack_received_cb(text)
 

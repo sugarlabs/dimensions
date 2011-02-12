@@ -1,3 +1,24 @@
+27
+
+* smiley-face "reward" for finishing a game
+* work around datastore.find issue on 0.84 builds
+* work around chooser issues with old Sugar builds (#2398)
+* improved workflow for importing custom cards
+
+26
+
+* import custom cards from Journal
+
+25
+
+* Quipu number game
+* optimization of sprite refresh
+
+24
+
+* added beginner level
+* detect unsolvable game-play situations
+
 23
 
 * Byron Corrales fixed the robot/word-edit conflict (#2057)

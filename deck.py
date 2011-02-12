@@ -15,7 +15,8 @@ pygtk.require('2.0')
 import gtk
 from random import randrange
 
-from constants import HIGH, FILLS, SHAPES, NUMBER, COLORS, COLOR_PAIRS
+from constants import HIGH, MEDIUM, LOW, FILLS, SHAPES, NUMBER, COLORS, \
+                      COLOR_PAIRS
 from card import Card
 from gencards import generate_pattern_card, generate_number_card, \
                      generate_word_card
@@ -24,52 +25,67 @@ from gencards import generate_pattern_card, generate_number_card, \
 class Deck:
     """ Class for defining deck of card """
 
-    def __init__(self, sprites, card_type, numbers_type, word_lists, scale,
+    def __init__(self, sprites, card_type, numbers_type, lists, scale,
                  level=HIGH):
-        """ Create the deck of cards. """
+        """ Create the deck of cards.
+            'lists' is either a list of words or paths """
         self.cards = []
         # If level is 'simple', only generate one fill type
-        if level == HIGH:
-            fill_range = FILLS
-        else:
+        shape_range = SHAPES
+        color_range = COLORS
+        number_range = NUMBER
+        fill_range = FILLS
+        if level == MEDIUM:
+            fill_range = 1       
+        elif level == LOW:
             fill_range = 1
+            shape_range = 1
         # Initialize the deck of cards by looping through all the patterns
-        for shape in range(0, SHAPES):
-            for color in range(0, COLORS):
-                for num in range(0, NUMBER):
-                    for fill in range(0, fill_range):
-                        if card_type == 'pattern':
-                            self.cards.append(Card(sprites,
-                                                   generate_pattern_card(shape,
-                                                   color, num, fill, scale),
-                                                   [shape, color, num, fill]))
-                        elif card_type == 'number':
-                            self.cards.append(Card(sprites,
-                                                   generate_number_card(shape,
-                                                       color, num, fill,
-                                                       numbers_type, scale),
-                                                   [shape, color, num, fill]))
-                        else:
-                            self.cards.append(Card(sprites,
-                                                   generate_word_card(shape,
-                                                   color, num, fill, scale),
-                                                   [shape, color, num, fill]))
-                            self.cards[len(self.cards) - 1].spr.set_label(
-                                                   word_lists[shape][num])
-                            self.cards[len(self.cards)\
-                                      - 1].spr.set_label_color(
-                                                   COLOR_PAIRS[color][0])
-                            self.cards[len(self.cards)\
-                                      - 1].spr.set_label_attributes(scale * 24)
-                            if fill == 0:
-                                self.cards[len(self.cards)\
-                                      - 1].spr.set_font('Sans Bold')
-                            elif fill == 2:
-                                self.cards[len(self.cards)\
-                                      - 1].spr.set_font('Sans Italic')
+        i = 0
+        for shape in range(0, shape_range):
+            for fill in range(0, fill_range):
+                for color in range(0, color_range):
+                    for num in range(0, number_range):
+                        i = self._make(sprites, card_type, numbers_type, i,
+                                       lists, scale, shape, color, num, fill)
 
         # Remember the current position in the deck.
         self.index = 0
+
+    def _make(self, sprites, card_type, numbers_type, i, lists, scale, shape,
+              color, num, fill):
+        if card_type == 'pattern':
+            self.cards.append(Card(sprites, generate_pattern_card(shape, color,
+                num, fill, scale), [shape, color, num, fill]))
+        elif card_type == 'number':
+            self.cards.append(Card(sprites, generate_number_card(shape, color,
+                num, fill, numbers_type, scale), [shape, color, num, fill]))
+        elif card_type == 'custom':
+            if len(lists) == 9:
+                index = shape * 3 + num
+            else:
+                index = i
+            self.cards.append(Card(sprites, generate_word_card(shape, color,
+                 num, fill, scale), [shape, color, num, fill],
+                file_path=lists[index], scale=scale))
+            i += 1
+        else:
+            self.cards.append(Card(sprites, generate_word_card(shape, color,
+                num, fill, scale), [shape, color, num, fill]))
+            self.cards[len(self.cards) - 1].spr.set_label(lists[shape][num])
+            self.cards[len(self.cards) - 1].spr.set_label_attributes(scale * 24)
+            if fill == 0:
+                self.cards[len(self.cards) - 1].spr.set_font('Sans Bold')
+                self.cards[len(self.cards) - 1].spr.set_label_color(
+                    COLOR_PAIRS[color][0])
+            elif fill == 1:
+                self.cards[len(self.cards) - 1].spr.set_label_color(
+                    COLOR_PAIRS[color][1])
+            elif fill == 2:
+                self.cards[len(self.cards) - 1].spr.set_font('Sans Italic')
+                self.cards[len(self.cards) - 1].spr.set_label_color(
+                    COLOR_PAIRS[color][1])
+        return i
 
     def shuffle(self):
         """ Shuffle the deck (Knuth algorithm). """
@@ -115,7 +131,7 @@ class Deck:
     def index_to_card(self, i):
         """ Given a card index, find the corresponding card in the deck. """
         for c in self.cards:
-            if c.index == i:
+            if c is not None and c.index == i:
                 return c
         return None
 
