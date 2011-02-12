@@ -228,90 +228,49 @@ class VisualMatchActivity(activity.Activity):
         if self.vmw.robot:
             self._robot_cb(button)
 
+    def _read_metadata(self, keyword, default_value):
+        """ If the keyword is found, return stored value """
+        if keyword in self.metadata:
+            return(self.metadata[keyword])
+        else:
+            return(default_value)
+
     def _read_journal_data(self):
         """ There may be data from a previous instance. """
-        if 'play_level' in self.metadata:
-            self._play_level = int(self.metadata['play_level'])
-        else:
-            self._play_level = 2
-        if 'robot_time' in self.metadata:
-            self._robot_time = int(self.metadata['robot_time'])
-        else:
-            self._robot_time = 60
-        if 'cardtype' in self.metadata:
-            self._card_type = self.metadata['cardtype']
-        else:
-            self._card_type = 'pattern'
-        if 'numberO' in self.metadata:
-            self._numberO = int(self.metadata['numberO'])
-        else:
-            self._numberO = PRODUCT
-        if 'numberC' in self.metadata:
-            self._numberC = int(self.metadata['numberC'])
-        else:
-            self._numberC = HASH
-        if 'matches' in self.metadata:
-            self._matches = int(self.metadata['matches'])
-        else:
-            self._matches = 0
-        if 'robot_matches' in self.metadata:
-            self._robot_matches = int(self.metadata['robot_matches'])
-        else:
-            self._robot_matches = 0
-        if 'total_time' in self.metadata:
-            self._total_time = int(self.metadata['total_time'])
-        else:
-            self._total_time = 0
-        if 'deck_index' in self.metadata:
-            self._deck_index = int(self.metadata['deck_index'])
-        else:
-            self._deck_index = 0
-        if 'mouse' in self.metadata:
-            self._word_lists = [[self.metadata['mouse'], \
-                                 self.metadata['cat'], \
-                                 self.metadata['dog']], \
-                                [self.metadata['cheese'], \
-                                 self.metadata['apple'], \
-                                 self.metadata['bread']], \
-                                [self.metadata['moon'], \
-                                 self.metadata['sun'], \
-                                 self.metadata['earth']]]
-        else:
-            self._word_lists = [[_('mouse'), _('cat'), _('dog')],
-                                [_('cheese'), _('apple'), _('bread')],
-                                [_('moon'), _('sun'), _('earth')]]
-        if 'editing_word_list' in self.metadata:
-            self._editing_word_list = bool(int(
-                self.metadata['editing_word_list']))
-        else:
-            self._editing_word_list = False
-        if 'low_score_intermediate' in self.metadata:
-            self._low_score = [int(self.metadata['low_score_intermediate']),
-                               int(self.metadata['low_score_expert']),
-                               int(self.metadata['low_score_beginner'])]
-        elif 'low_score_expert' in self.metadata:
-            self._low_score = [-1,
-                                int(self.metadata['low_score_expert']),
-                                int(self.metadata['low_score_beginner'])]
-        else:
-            self._low_score = [-1, -1, -1]
-        if 'editing_custom_cards' in self.metadata:
-            self._editing_custom_cards = bool(int(
-                self.metadata['editing_custom_cards']))
-        else:
-            self._editing_custom_cards = False
+        self._play_level = int(self._read_metadata('play_level', 1))
+        self._robot_time = int(self._read_metadata('robot_time', 60))
+        self._card_type = self._read_metadata('cardtype', 'pattern')
+        self._low_score = [int(self._read_metadata(
+                    'low_score_intermediate', -1)),
+                           int(self._read_metadata('low_score_expert', -1)),
+                           int(self._read_metadata('low_score_beginner', -1))]
+        self._numberO = int(self._read_metadata('numberO', PRODUCT))
+        self._numberC = int(self._read_metadata('numberC', HASH))
+        self._matches = int(self._read_metadata('matches', 0))
+        self._robot_matches = int(self._read_metadata('robot_matches', 0))
+        self._total_time = int(self._read_metadata('total_time', 0))
+        self._deck_index = int(self._read_metadata('deck_index', 0))
+        self._word_lists = [[self._read_metadata('mouse', _('mouse')),
+                             self._read_metadata('cat', _('cat')),
+                             self._read_metadata('dog', _('dog'))],
+                            [self._read_metadata('cheese', _('cheese')),
+                             self._read_metadata('apple', _('apple')),
+                             self._read_metadata('bread', _('bread'))],
+                            [self._read_metadata('moon', _('moon')),
+                             self._read_metadata('sun', _('sun')),
+                             self._read_metadata('earth', _('earth'))]]
+        self._editing_word_list = bool(int(self._read_metadata(
+                    'editing_word_list', 0)))
+        self._editing_custom_cards = bool(int(self._read_metadata(
+                    'editing_custom_cards', 0)))
         if self._card_type == 'custom':
-            if 'custom_object' in self.metadata:
-                self._custom_object = self.metadata['custom_object']
-            else:
-                self._custom_object = None
+            self._custom_object = self._read_metadata('custom_object', None)
+            if self._custom_object == None:
                 self._card_type = 'pattern'
         self._custom_jobject = []
         for i in range(9):
-            if 'custom_' + str(i) in self.metadata:
-                self._custom_jobject.append(self.metadata['custom_' + str(i)])
-            else:
-                self._custom_jobject.append(None)
+            self._custom_jobject.append(self._read_metadata(
+                    'custom_' + str(i), None))
 
     def _find_datapath(self, activity):
         """ Find the datapath for saving card files. """
