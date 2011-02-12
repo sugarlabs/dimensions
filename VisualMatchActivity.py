@@ -138,6 +138,10 @@ class VisualMatchActivity(activity.Activity):
         if not hasattr(self, '_saved_state'):
             self._saved_state = None
         self.vmw.new_game(self._saved_state, self._deck_index)
+        if self._saved_state == None:
+            # Launch "attract mode" by turning on Robot with 5 second delay
+            self.vmw.robot_time = 5
+            self._robot_cb()
 
         if self._editing_word_list:
             self.vmw.editing_word_list = True
@@ -154,9 +158,15 @@ class VisualMatchActivity(activity.Activity):
         if card_type == 'custom' and self.vmw.custom_paths[0] is None:
             self.image_import_cb()
         else:
+            if self.vmw.robot_time == 5:
+                # Turn off attract mode
+                if self.vmw.robot:
+                    self._robot_cb()
+                self.vmw.robot_time = 15
+                self._robot_time_spin.set_value(self.vmw.robot_time)
             self.vmw.new_game()
 
-    def _robot_cb(self, button):
+    def _robot_cb(self, button=None):
         """ Toggle robot assist on/off """
         if self.vmw.robot:
             self.vmw.robot = False
