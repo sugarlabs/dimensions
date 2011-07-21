@@ -2,151 +2,192 @@
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2009-12-07 18:05+0000\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"PO-Revision-Date: 2011-07-21 21:37+0200\n"
+"Last-Translator: Myckel Habets <myckel@sdf.lonestar.org>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: nl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Translate Toolkit 1.3.0\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Pootle 2.0.1\n"
 
 #: activity/activity.info:2 /home/walter/Desktop/set/window.py:265
 #: /home/walter/Desktop/set/visualmatch.py:42
+#: game.py:525
+#: visualmatch.py:35
 msgid "Visual Match"
-msgstr ""
+msgstr "Visueel Passend"
 
 #: /home/walter/Desktop/set/window.py:124
 #: /home/walter/Desktop/set/window.py:185
 #: /home/walter/Desktop/set/VisualMatchActivity.py:112
 msgid "cards remaining"
-msgstr ""
+msgstr "kaarten resterend"
 
 #: /home/walter/Desktop/set/window.py:125
 #: /home/walter/Desktop/set/window.py:212
 #: /home/walter/Desktop/set/VisualMatchActivity.py:123
 #: /home/walter/Desktop/set/VisualMatchActivity.py:293
+#: VisualMatchActivity.py:444
+#: game.py:508
+#: game.py:510
 msgid "matches"
-msgstr ""
+msgstr "paren"
 
 #: /home/walter/Desktop/set/window.py:192
+#: game.py:381
 msgid "Game over"
-msgstr ""
+msgstr "Spel klaar"
 
 #: /home/walter/Desktop/set/window.py:192
 #: /home/walter/Desktop/set/window.py:200
 msgid "seconds"
-msgstr ""
+msgstr "seconden"
 
 #: /home/walter/Desktop/set/window.py:200
+#: game.py:425
 msgid "New record"
-msgstr ""
+msgstr "Nieuw record"
 
 #: /home/walter/Desktop/set/window.py:208
 #: /home/walter/Desktop/set/window.py:210
+#: game.py:501
+#: game.py:503
 msgid "match"
-msgstr ""
+msgstr "paar"
 
 #: /home/walter/Desktop/set/window.py:218
 msgid "no match"
-msgstr ""
+msgstr "geen overeenkomst"
 
 #: /home/walter/Desktop/set/visualmatch.py:43
+#: visualmatch.py:36
 msgid "Click on cards to create sets of three."
-msgstr ""
+msgstr "Klik op de kaarten om sets van drie te maken."
 
 #: /home/walter/Desktop/set/visualmatch.py:49
 #: /home/walter/Desktop/set/VisualMatchActivity.py:81
 #: /home/walter/Desktop/set/VisualMatchActivity.py:248
+#: VisualMatchActivity.py:350
+#: visualmatch.py:49
 msgid "New pattern game"
-msgstr ""
+msgstr "Nieuw patroon spel"
 
 #: /home/walter/Desktop/set/visualmatch.py:53
 #: /home/walter/Desktop/set/VisualMatchActivity.py:90
 #: /home/walter/Desktop/set/VisualMatchActivity.py:257
+#: VisualMatchActivity.py:353
+#: visualmatch.py:53
 msgid "New number game"
-msgstr ""
+msgstr "Nieuw nummerspel"
 
 #: /home/walter/Desktop/set/visualmatch.py:57
 #: /home/walter/Desktop/set/VisualMatchActivity.py:99
 #: /home/walter/Desktop/set/VisualMatchActivity.py:266
+#: VisualMatchActivity.py:354
+#: visualmatch.py:57
 msgid "New word game"
-msgstr ""
+msgstr "Nieuw woordspel"
 
 #: /home/walter/Desktop/set/gencards.py:212
+#: VisualMatchActivity.py:265
+#: visualmatch.py:171
 msgid "dog"
-msgstr ""
+msgstr "hond"
 
 #: /home/walter/Desktop/set/gencards.py:212
+#: VisualMatchActivity.py:264
+#: visualmatch.py:171
 msgid "cat"
-msgstr ""
+msgstr "kat"
 
 #: /home/walter/Desktop/set/gencards.py:212
+#: VisualMatchActivity.py:263
+#: visualmatch.py:171
 msgid "mouse"
-msgstr ""
+msgstr "muis"
 
 #: /home/walter/Desktop/set/gencards.py:214
+#: VisualMatchActivity.py:267
+#: visualmatch.py:172
 msgid "apple"
-msgstr ""
+msgstr "appel"
 
 #: /home/walter/Desktop/set/gencards.py:214
+#: VisualMatchActivity.py:268
+#: visualmatch.py:172
 msgid "bread"
-msgstr ""
+msgstr "brood"
 
 #: /home/walter/Desktop/set/gencards.py:214
+#: VisualMatchActivity.py:266
+#: visualmatch.py:172
 msgid "cheese"
-msgstr ""
+msgstr "kaas"
 
 #: /home/walter/Desktop/set/gencards.py:216
+#: VisualMatchActivity.py:270
+#: visualmatch.py:173
 msgid "sun"
-msgstr ""
+msgstr "zon"
 
 #: /home/walter/Desktop/set/gencards.py:216
+#: VisualMatchActivity.py:269
+#: visualmatch.py:173
 msgid "moon"
-msgstr ""
+msgstr "maan"
 
 #: /home/walter/Desktop/set/gencards.py:216
+#: VisualMatchActivity.py:271
+#: visualmatch.py:173
 msgid "earth"
-msgstr ""
+msgstr "aarde"
 
 #: /home/walter/Desktop/set/VisualMatchActivity.py:145
 #: /home/walter/Desktop/set/VisualMatchActivity.py:319
+#: VisualMatchActivity.py:438
 msgid "Find a match."
-msgstr ""
+msgstr "Zoek een paar."
 
 #: /home/walter/Desktop/set/VisualMatchActivity.py:159
 msgid "Write in Journal"
-msgstr ""
+msgstr "Schrijf naar logboek"
 
 #: /home/walter/Desktop/set/VisualMatchActivity.py:181
 msgid "Project"
-msgstr ""
+msgstr "Project"
 
 #: /home/walter/Desktop/set/VisualMatchActivity.py:280
 msgid "cards remain in the deck"
-msgstr ""
+msgstr "kaarten resterend in set"
 
 #: /home/walter/Desktop/set/namingalert.py:82
+#: namingalert.py:82
 msgid "Describe your activity"
-msgstr ""
+msgstr "Omschrijf je activiteit"
 
 #: /home/walter/Desktop/set/namingalert.py:87
+#: namingalert.py:87
 msgid "Keep"
-msgstr ""
+msgstr "Bewaar"
 
 #: /home/walter/Desktop/set/namingalert.py:283
+#: namingalert.py:283
 msgid "Untitled"
-msgstr ""
+msgstr "Zonder titel"
 
 #: /home/walter/Desktop/set/namingalert.py:290
+#: namingalert.py:290
 msgid "Description:"
-msgstr ""
+msgstr "Omschrijving:"
 
 #: /home/walter/Desktop/set/namingalert.py:314
+#: namingalert.py:314
 msgid "Tags:"
-msgstr ""
+msgstr "Merktekens:"
