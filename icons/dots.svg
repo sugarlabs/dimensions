@@ -2,23 +2,29 @@
 <!-- Created with Inkscape (http://www.inkscape.org/) -->
 
 <svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
    xmlns:svg="http://www.w3.org/2000/svg"
    xmlns="http://www.w3.org/2000/svg"
    version="1.0"
    width="55"
    height="55"
    id="svg2">
+  <metadata
+     id="metadata3019">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
   <defs
      id="defs4" />
-  <rect
-     width="50.94099"
-     height="50.940994"
-     rx="8.1506357"
-     ry="7.0263433"
-     x="2.0295048"
-     y="2.0295029"
-     id="rect2817"
-     style="fill:#000000;fill-opacity:1;stroke:#808080;stroke-width:4.05900621;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none" />
   <g
      transform="translate(-35,-10.859424)"
      id="g6"

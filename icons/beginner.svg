@@ -12,7 +12,7 @@
    height="55"
    id="svg2">
   <metadata
-     id="metadata3118">
+     id="metadata8">
     <rdf:RDF>
       <cc:Work
          rdf:about="">
@@ -25,14 +25,11 @@
   </metadata>
   <defs
      id="defs4" />
-  <text
-     x="9.4238281"
-     y="34.956055"
-     id="text2394"
-     xml:space="preserve"
-     style="font-size:40px;font-style:normal;font-weight:normal;fill:#ffffff;fill-opacity:1;stroke:none;font-family:Bitstream Vera Sans"><tspan
-       x="9.4238281"
-       y="34.956055"
-       id="tspan2396"
-       style="font-size:20px">five</tspan></text>
+  <rect
+     width="25"
+     height="25"
+     x="15"
+     y="15"
+     id="rect2816"
+     style="fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke:none" />
 </svg>
