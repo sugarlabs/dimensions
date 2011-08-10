@@ -111,6 +111,8 @@ class Game():
         self.match_display_area = []
         self.smiley = None
         self.clicked = [None, None, None]
+        self.low_score = [-1, -1, -1]
+        self.robot = False
         self.numberC = 0
         self.numberO = 0
         self.word_lists = None
@@ -153,6 +155,8 @@ class Game():
         self._unselect()
 
         # Restore saved state on resume or share.
+        if not hasattr(self, 'card_type'):
+            return
         if saved_state is not None:
             _logger.debug("Restoring state: %s" % (str(saved_state)))
             if self.card_type == 'custom':
