@@ -111,6 +111,9 @@ class Game():
         self.match_display_area = []
         self.smiley = None
         self.clicked = [None, None, None]
+        self.numberC = 0
+        self.numberO = 0
+        self.word_lists = None
         self.editing_word_list = False
         self.editing_custom_cards = False
         self.edit_card = None
