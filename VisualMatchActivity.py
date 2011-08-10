@@ -16,14 +16,16 @@ import gtk
 
 from sugar.activity import activity
 try:
+    from sugar.graphics.toolbarbox import ToolbarBox
+    _NEW_SUGAR_SYSTEM = True
+except ImportError:
+    _NEW_SUGAR_SYSTEM = False
+if _NEW_SUGAR_SYSTEM:
     from sugar.activity.widgets import ActivityToolbarButton
     from sugar.activity.widgets import StopButton
-    from sugar.graphics.toolbarbox import ToolbarBox
     from sugar.graphics.toolbarbox import ToolbarButton
-    _new_sugar_system = True
-except ImportError:
-    _new_sugar_system = False
 from sugar.graphics.toolbutton import ToolButton
+from sugar.graphics.radiotoolbutton import RadioToolButton
 
 from sugar.datastore import datastore
 
@@ -58,13 +60,37 @@ from constants import DECKSIZE, PRODUCT, HASH, ROMAN, WORD, CHINESE, MAYAN, \
 
 from game import Game
 
-LEVEL_ICONS = ['level2', 'level3', 'level1']
+BEGINNER = 2
+INTERMEDIATE = 0
+EXPERT = 1
 LEVEL_LABELS = [_('intermediate'), _('expert'), _('beginner')]
 LEVEL_DECKSIZE = [DECKSIZE / 3, DECKSIZE, DECKSIZE / 9]
+
+NUMBER_O_BUTTONS = {}
+NUMBER_C_BUTTONS = {}
+LEVEL_BUTTONS = {}
 
 SERVICE = 'org.sugarlabs.VisualMatchActivity'
 IFACE = SERVICE
 PATH = '/org/augarlabs/VisualMatchActivity'
+
+
+def _radio_button_factory(name='', toolbar=None, cb=None, arg=None,
+                          tooltip=None, group=None):
+    ''' Add a radio button to a toolbar '''
+    button = RadioToolButton(group=group)
+    button.set_named_icon(name)
+    if cb is not None:
+        if arg is None:
+            button.connect('clicked', cb)
+        else:
+            button.connect('clicked', cb, arg)
+    if toolbar is not None:
+        toolbar.insert(button, -1)
+    button.show()
+    if tooltip is not None:
+        button.set_tooltip(tooltip)
+    return button
 
 
 def _button_factory(icon_name, tooltip, callback, toolbar, cb_arg=None,
@@ -131,7 +157,7 @@ class VisualMatchActivity(activity.Activity):
         self._read_journal_data()
         self._old_sugar_system = _old_sugar_system
         datapath = self._find_datapath(activity)
-        self._setup_toolbars(_new_sugar_system)
+        self._setup_toolbars(_NEW_SUGAR_SYSTEM)
         canvas = self._setup_canvas(datapath)
         self._setup_presence_service()
 
@@ -178,19 +204,16 @@ class VisualMatchActivity(activity.Activity):
                 _('Stop playing with the computer.'))
             self.robot_button.set_icon('robot-on')
 
-    def _level_cb(self, button):
+    def _level_cb(self, button, level):
         """ Cycle between levels """
         if self.vmw.joiner():  # joiner cannot change level
             return
-        self.vmw.level += 1
-        if self.vmw.level == len(LEVEL_LABELS):
-            self.vmw.level = 0
+        self.vmw.level = level
         self.set_level_label()
 
     def set_level_label(self):
         self.level_label.set_text(self.calc_level_label(self.vmw.low_score,
                                                         self.vmw.level))
-        self.level_button.set_icon(LEVEL_ICONS[self.vmw.level])
         self.vmw.new_game()
 
     def calc_level_label(self, low_score, play_level):
@@ -367,53 +390,101 @@ class VisualMatchActivity(activity.Activity):
                                                  _('Edit word lists.'),
                                                  self._edit_words_cb,
                                                  tools_toolbar)
-        self.import_button = _button_factory('insert-image',
+        self.import_button = _button_factory('image-tools',
             _('Import custom cards'), self.image_import_cb, tools_toolbar)
-        self.product_button = _button_factory('product', _('product'),
-                                              self._number_card_O_cb,
-                                              numbers_toolbar,
-                                              PRODUCT)
-        self.roman_button = _button_factory('roman', _('Roman numerals'),
-                                            self._number_card_O_cb,
-                                            numbers_toolbar,
-                                            ROMAN)
-        self.word_button = _button_factory('word', _('word'),
-                                           self._number_card_O_cb,
-                                           numbers_toolbar,
-                                           WORD)
-        self.chinese_button = _button_factory('chinese', _('Chinese'),
-                                              self._number_card_O_cb,
-                                              numbers_toolbar,
-                                              CHINESE)
-        self.mayan_button = _button_factory('mayan', _('Mayan'),
-                                            self._number_card_O_cb,
-                                            numbers_toolbar,
-                                            MAYAN)
-        self.quipu_button = _button_factory('incan', _('Quipu'),
-                                            self._number_card_O_cb,
-                                            numbers_toolbar,
-                                            INCAN)
+
+
+        self.product_button = _radio_button_factory(
+            name='product',
+            tooltip=_('product'),
+            cb=self._number_card_O_cb,
+            arg=PRODUCT,
+            toolbar=numbers_toolbar,
+            group=None)
+        NUMBER_O_BUTTONS[PRODUCT] = self.product_button
+        self.roman_button = _radio_button_factory(
+            name='roman',
+            tooltip=_('Roman numerals'),
+            cb=self._number_card_O_cb,
+            arg=ROMAN,
+            toolbar=numbers_toolbar,
+            group=self.product_button)
+        NUMBER_O_BUTTONS[ROMAN] = self.roman_button
+        self.word_button = _radio_button_factory(
+            name='word',
+            tooltip=_('word'),
+            cb=self._number_card_O_cb,
+            arg=WORD,
+            toolbar=numbers_toolbar,
+            group=self.product_button)
+        NUMBER_O_BUTTONS[WORD] = self.word_button
+        self.chinese_button = _radio_button_factory(
+            name='chinese',
+            tooltip=_('Chinese'),
+            cb=self._number_card_O_cb,
+            arg=CHINESE,
+            toolbar=numbers_toolbar,
+            group=self.product_button)
+        NUMBER_O_BUTTONS[CHINESE] = self.chinese_button
+        self.mayan_button = _radio_button_factory(
+            name='mayan',
+            tooltip=_('Mayan'),
+            cb=self._number_card_O_cb,
+            arg=MAYAN,
+            toolbar=numbers_toolbar,
+            group=self.product_button)
+        NUMBER_O_BUTTONS[MAYAN] = self.mayan_button
+        self.incan_button = _radio_button_factory(
+            name='incan',
+            tooltip=_('Quipu'),
+            cb=self._number_card_O_cb,
+            arg=INCAN,
+            toolbar=numbers_toolbar,
+            group=self.product_button)
+        NUMBER_O_BUTTONS[INCAN] = self.incan_button
+
         _separator_factory(numbers_toolbar, True, False)
-        self.hash_button = _button_factory('hash', _('hash marks'),
-                                           self._number_card_C_cb,
-                                           numbers_toolbar,
-                                           HASH)
-        self.dots_button = _button_factory('dots', _('dots in a circle'),
-                                           self._number_card_C_cb,
-                                           numbers_toolbar,
-                                           DOTS)
-        self.star_button = _button_factory('star', _('points on a star'),
-                                           self._number_card_C_cb,
-                                           numbers_toolbar,
-                                           STAR)
-        self.dice_button = _button_factory('dice', _('dice'),
-                                           self._number_card_C_cb,
-                                           numbers_toolbar,
-                                           DICE)
-        self.lines_button = _button_factory('lines', _('dots in a line'),
-                                            self._number_card_C_cb,
-                                            numbers_toolbar,
-                                            LINES)
+
+        self.hash_button = _radio_button_factory(
+            name='hash',
+            tooltip=_('hash marks'),
+            cb=self._number_card_C_cb,
+            arg=HASH,
+            toolbar=numbers_toolbar,
+            group=None)
+        NUMBER_C_BUTTONS[HASH] = self.hash_button
+        self.dots_button = _radio_button_factory(
+            name='dots',
+            tooltip=_('dots in a circle'),
+            cb=self._number_card_C_cb,
+            arg=DOTS,
+            toolbar=numbers_toolbar,
+            group=self.hash_button)
+        NUMBER_C_BUTTONS[DOTS] = self.dots_button
+        self.star_button = _radio_button_factory(
+            name='star',
+            tooltip=_('points on a star'),
+            cb=self._number_card_C_cb,
+            arg=STAR,
+            toolbar=numbers_toolbar,
+            group=self.hash_button)
+        NUMBER_C_BUTTONS[STAR] = self.star_button
+        self.dice_button = _radio_button_factory(
+            name='dice',
+            tooltip=_('dice'),
+            cb=self._number_card_C_cb,
+            arg=DICE,
+            toolbar=numbers_toolbar,
+            group=self.hash_button)
+        NUMBER_C_BUTTONS[DICE] = self.dice_button
+        self.lines_button = _radio_button_factory(
+            name='lines',
+            tooltip=_('dots in a line'),
+            cb=self._number_card_C_cb,
+            arg=LINES,
+            toolbar=numbers_toolbar,
+            group=self.hash_button)
+        NUMBER_C_BUTTONS[LINES] = self.lines_button
 
     def _set_extras(self, toolbar, games_toolbar=True):
         if games_toolbar:
@@ -425,11 +496,35 @@ class VisualMatchActivity(activity.Activity):
                                               self._robot_time_spin_cb,
                                               toolbar)
         _separator_factory(toolbar, True, False)
-        self.level_button = _button_factory(LEVEL_ICONS[self._play_level],
-                                            _('Set difficulty level.'),
-                                            self._level_cb, toolbar)
+
+        self.beginner_button = _radio_button_factory(
+            name='beginner',
+            tooltip=_('beginner'),
+            cb=self._level_cb,
+            arg=BEGINNER,
+            toolbar=toolbar,
+            group=None)
+        LEVEL_BUTTONS[BEGINNER] = self.beginner_button
+        self.intermediate_button = _radio_button_factory(
+            name='intermediate',
+            tooltip=_('intermediate'),
+            cb=self._level_cb,
+            arg=INTERMEDIATE,
+            toolbar=toolbar,
+            group=self.beginner_button)
+        LEVEL_BUTTONS[INTERMEDIATE] = self.intermediate_button
+        self.expert_button = _radio_button_factory(
+            name='expert',
+            tooltip=_('expert'),
+            cb=self._level_cb,
+            arg=EXPERT,
+            toolbar=toolbar,
+            group=self.beginner_button)
+        LEVEL_BUTTONS[EXPERT] = self.expert_button
+
         self.level_label = _label_factory(self.calc_level_label(
                 self._low_score, self._play_level), toolbar)
+
         if not games_toolbar:
             _separator_factory(toolbar, True, False)
 
@@ -456,12 +551,15 @@ class VisualMatchActivity(activity.Activity):
 
         self.vmw = Game(canvas, datapath, self)
         self.vmw.level = self._play_level
+        LEVEL_BUTTONS[self._play_level].set_active(True)
         self.vmw.card_type = self._card_type
         self.vmw.robot = False
         self.vmw.robot_time = self._robot_time
         self.vmw.low_score = self._low_score
         self.vmw.numberO = self._numberO
+        NUMBER_O_BUTTONS[self._numberO].set_active(True)
         self.vmw.numberC = self._numberC
+        NUMBER_C_BUTTONS[self._numberC].set_active(True)
         self.vmw.matches = self._matches
         self.vmw.robot_matches = self._robot_matches
         self.vmw.total_time = self._total_time
