@@ -1,0 +1,324 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2011-08-03 10:26-0400\n"
+"PO-Revision-Date: 2011-08-19 08:05+0200\n"
+"Last-Translator: Chris <cjl@laptop.org>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: hus\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Pootle 2.0.1\n"
+
+#: activity/activity.info:2 visualmatch.py:35 game.py:525
+msgid "Visual Match"
+msgstr "jununul tsu'uxtalab"
+
+#: constants.py:70
+msgid "five"
+msgstr "bo'"
+
+#: constants.py:70
+msgid "seven"
+msgstr "buk'"
+
+#: constants.py:70
+msgid "eleven"
+msgstr "laju jun"
+
+#: constants.py:70
+msgid "ten"
+msgstr "laju"
+
+#: constants.py:71
+msgid "fourteen"
+msgstr "laju tse'"
+
+#: constants.py:71
+msgid "fifteen"
+msgstr "laju bo'"
+
+#: constants.py:71
+msgid "twenty two"
+msgstr "jun inik tsab"
+
+#: constants.py:72
+msgid "twenty one"
+msgstr "jun inik jun"
+
+#: constants.py:72
+msgid "thirty three"
+msgstr "jun inik laju ox"
+
+#: visualmatch.py:36
+msgid "Click on cards to create sets of three."
+msgstr "ka t'ajchi klik al an úw japixtalab abal ka tse'jka' i mulkudh ti óx"
+
+#: visualmatch.py:40
+msgid "Toggle level"
+msgstr "jalkuy wichat"
+
+#: visualmatch.py:49 VisualMatchActivity.py:350
+msgid "New pattern game"
+msgstr "It ubat'intalab xi tse'jkadh"
+
+#: visualmatch.py:53 VisualMatchActivity.py:353
+msgid "New number game"
+msgstr "It ubat'intalab ti ajixtalab"
+
+#: visualmatch.py:57 VisualMatchActivity.py:354
+msgid "New word game"
+msgstr "It ubat'intalab al an kaw"
+
+#: visualmatch.py:66
+msgid "Robot on/off"
+msgstr "Lekwts'iy/Tepdha Robot"
+
+#: visualmatch.py:70
+msgid "90 sec."
+msgstr "tse' inik lajú in adhim an k'ij"
+
+#: visualmatch.py:74
+msgid "60 sec."
+msgstr "óx inik in adhim an k'ij"
+
+#: visualmatch.py:78
+msgid "45 sec."
+msgstr "tsab inik bo' in adhim an k'ij"
+
+#: visualmatch.py:82
+msgid "30 sec."
+msgstr "tse' inik lajú in adhim an k'ij"
+
+#: visualmatch.py:86
+msgid "15 sec."
+msgstr "lajú bo' in adhim an k'ij"
+
+#: visualmatch.py:95
+msgid "Product"
+msgstr "bajúdh"
+
+#: visualmatch.py:99
+msgid "Roman"
+msgstr "Ajixtalab"
+
+#: visualmatch.py:103
+msgid "Word"
+msgstr "dhuchadh kaw"
+
+#: visualmatch.py:107 VisualMatchActivity.py:384
+msgid "Chinese"
+msgstr "Chino"
+
+#: visualmatch.py:111 VisualMatchActivity.py:388
+msgid "Mayan"
+msgstr "Maya"
+
+#: visualmatch.py:115
+msgid "Hash"
+msgstr "K'itsláb kúbat"
+
+# del verbo dar
+#: visualmatch.py:119
+msgid "Dice"
+msgstr "Binadh"
+
+#: visualmatch.py:123
+msgid "Dots"
+msgstr "t'ukmichik"
+
+#: visualmatch.py:127
+msgid "Star"
+msgstr "ót"
+
+#: visualmatch.py:131
+msgid "Lines"
+msgstr "Kits'lab"
+
+#: visualmatch.py:171 VisualMatchActivity.py:263
+msgid "mouse"
+msgstr "t'el"
+
+#: visualmatch.py:171 VisualMatchActivity.py:264
+msgid "cat"
+msgstr "mitsú"
+
+#: visualmatch.py:171 VisualMatchActivity.py:265
+msgid "dog"
+msgstr "pik'ó"
+
+#: visualmatch.py:172 VisualMatchActivity.py:266
+msgid "cheese"
+msgstr "kwechodh dhak kápnel in k'al an pak'ax"
+
+#: visualmatch.py:172 VisualMatchActivity.py:267
+msgid "apple"
+msgstr "manzana"
+
+#: visualmatch.py:172 VisualMatchActivity.py:268
+msgid "bread"
+msgstr "ts'imadh bokól"
+
+#: visualmatch.py:173 VisualMatchActivity.py:269
+msgid "moon"
+msgstr "íts'"
+
+#: visualmatch.py:173 VisualMatchActivity.py:270
+msgid "sun"
+msgstr "k'ak'al"
+
+#: visualmatch.py:173 VisualMatchActivity.py:271
+msgid "earth"
+msgstr "tsabál"
+
+#: game.py:260
+msgid "Edit the custom cards."
+msgstr "ka jalkuy an úw japixtalab xi exbachik"
+
+#: game.py:288
+msgid "Edit the word cards."
+msgstr "ka jalk'uy an úw japixtalab al an dhuchlab k'aw"
+
+#: game.py:381
+msgid "Game over"
+msgstr "taltal an ubat'intaláb"
+
+#: game.py:390
+msgid "unsolvable"
+msgstr "yab in kwa'al in exbatal"
+
+#: game.py:414 game.py:495 VisualMatchActivity.py:442
+msgid "cards"
+msgstr "úw japixtalab"
+
+#: game.py:425
+msgid "New record"
+msgstr "It ts'at'a"
+
+#: game.py:501 game.py:503
+msgid "match"
+msgstr "jepádh"
+
+#: game.py:508 game.py:510 VisualMatchActivity.py:444
+msgid "matches"
+msgstr "jepádhchik"
+
+#: game.py:713
+msgid "New custom game"
+msgstr "It ubat'intaláb an lejab"
+
+#: VisualMatchActivity.py:62
+msgid "intermediate"
+msgstr "Tse'jeltal"
+
+#: VisualMatchActivity.py:62
+msgid "expert"
+msgstr "ts'alpadh"
+
+#: VisualMatchActivity.py:62
+msgid "beginner"
+msgstr "exobal ubat"
+
+#: VisualMatchActivity.py:173
+msgid "Play with the computer."
+msgstr "ubát' kal an abatnóm pat'al"
+
+#: VisualMatchActivity.py:178
+msgid "Stop playing with the computer."
+msgstr "Kubiy tit ubát kal an abatnóm pat'al"
+
+#: VisualMatchActivity.py:343
+msgid "Game"
+msgstr "Ubat'intalab"
+
+#: VisualMatchActivity.py:344
+msgid "Numbers"
+msgstr "Ajixtaláb"
+
+#: VisualMatchActivity.py:345
+msgid "Tools"
+msgstr "Ayixtalab"
+
+#: VisualMatchActivity.py:357 VisualMatchActivity.py:371
+msgid "Import custom cards"
+msgstr "chi'dhomtalab kal al úw japixtalab xi bijidhits"
+
+#: VisualMatchActivity.py:367
+msgid "Edit word lists."
+msgstr "jalk'uy an k'elab káw"
+
+#: VisualMatchActivity.py:372
+msgid "product"
+msgstr "In alwá'"
+
+#: VisualMatchActivity.py:376
+msgid "Roman numerals"
+msgstr "Ajumtalab romanos"
+
+#: VisualMatchActivity.py:380
+msgid "word"
+msgstr "káw"
+
+#: VisualMatchActivity.py:392
+msgid "Quipu"
+msgstr "Quipu"
+
+# k'elab columna
+#: VisualMatchActivity.py:397
+msgid "hash marks"
+msgstr "k'elab"
+
+#: VisualMatchActivity.py:401
+msgid "dots in a circle"
+msgstr "t'ukmichik al jun i kwechó'"
+
+#: VisualMatchActivity.py:405
+msgid "points on a star"
+msgstr "chumchik a ót"
+
+#: VisualMatchActivity.py:409
+msgid "dice"
+msgstr "tsé pekmidh"
+
+#: VisualMatchActivity.py:413
+msgid "dots in a line"
+msgstr "túkmichik al i k'itslab"
+
+#: VisualMatchActivity.py:422
+msgid "Play with the computer"
+msgstr "Ubát' kal an abatnóm pat'al"
+
+#: VisualMatchActivity.py:429
+msgid "Set difficulty level."
+msgstr "Ka takuy xi k'ibat ma ju'tá ti wichat"
+
+#: VisualMatchActivity.py:438
+msgid "Find a match."
+msgstr "ka junkúw"
+
+#: namingalert.py:82
+msgid "Describe your activity"
+msgstr "Ka oná in alwa' a tojlabil"
+
+#: namingalert.py:87
+msgid "Keep"
+msgstr "Dhaya'"
+
+#: namingalert.py:283
+msgid "Untitled"
+msgstr "Yab in kwa'al in óktal in bij"
+
+#: namingalert.py:290
+msgid "Description:"
+msgstr "Tejwamedhotalab"
+
+#: namingalert.py:314
+msgid "Tags:"
+msgstr "Xin kwa'alits an bijlab"
