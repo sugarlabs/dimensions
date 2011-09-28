@@ -2,152 +2,365 @@
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-12-07 18:05+0000\n"
-"PO-Revision-Date: 2009-12-18 23:25-0400\n"
-"Last-Translator: Γιάννης Κασκαμανίδης <ttnfy17@yahoo.gr>\n"
+"POT-Creation-Date: 2011-09-27 00:32-0400\n"
+"PO-Revision-Date: 2011-02-24 23:39+0200\n"
+"Last-Translator: John Sarlis <sarlis@sch.gr>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
-"Language: el\n"
+"Language: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Pootle 1.2.1\n"
+"X-Generator: Pootle 2.0.1\n"
 
-#: activity/activity.info:2 /home/walter/Desktop/set/window.py:265
-#: /home/walter/Desktop/set/visualmatch.py:42
+#: activity/activity.info:2 game.py:532 visualmatch.py:35
 msgid "Visual Match"
 msgstr "Βρες τα τρίδυμα!"
 
-#: /home/walter/Desktop/set/window.py:124
-#: /home/walter/Desktop/set/window.py:185
-#: /home/walter/Desktop/set/VisualMatchActivity.py:112
-msgid "cards remaining"
-msgstr "κάρτες που απομένουν"
+#: VisualMatchActivity.py:66 VisualMatchActivity.py:510
+msgid "intermediate"
+msgstr "μέτριος"
 
-#: /home/walter/Desktop/set/window.py:125
-#: /home/walter/Desktop/set/window.py:212
-#: /home/walter/Desktop/set/VisualMatchActivity.py:123
-#: /home/walter/Desktop/set/VisualMatchActivity.py:293
-msgid "matches"
-msgstr "συνδυάζεται"
+#: VisualMatchActivity.py:66 VisualMatchActivity.py:518
+msgid "expert"
+msgstr "προχωρημένος"
 
-#: /home/walter/Desktop/set/window.py:192
-msgid "Game over"
-msgstr "Τέλος παιχνιδιού"
+#: VisualMatchActivity.py:66 VisualMatchActivity.py:502
+msgid "beginner"
+msgstr "αρχάριος"
 
-#: /home/walter/Desktop/set/window.py:192
-#: /home/walter/Desktop/set/window.py:200
-msgid "seconds"
-msgstr "δευτερόλεπτα"
+#: VisualMatchActivity.py:199
+msgid "Play with the computer."
+msgstr "Αναπαραγωγή με τον υπολογιστή."
 
-#: /home/walter/Desktop/set/window.py:200
-msgid "New record"
-msgstr "Νέα εγγραφή"
+#: VisualMatchActivity.py:204
+msgid "Stop playing with the computer."
+msgstr "Διακοπή αναπαραγωγής με τον υπολογιστή."
 
-#: /home/walter/Desktop/set/window.py:208
-#: /home/walter/Desktop/set/window.py:210
-msgid "match"
-msgstr "συνδυάζεται"
-
-#: /home/walter/Desktop/set/window.py:218
-msgid "no match"
-msgstr "δεν συνδυάζεται"
-
-#: /home/walter/Desktop/set/visualmatch.py:43
-msgid "Click on cards to create sets of three."
-msgstr "Κάντε κλικ στις κάρτες για να δημιουργήσετε ομάδες των τριών."
-
-#: /home/walter/Desktop/set/visualmatch.py:49
-#: /home/walter/Desktop/set/VisualMatchActivity.py:81
-#: /home/walter/Desktop/set/VisualMatchActivity.py:248
-msgid "New pattern game"
-msgstr "Νέο πρότυπο παιχνιδιού"
-
-#: /home/walter/Desktop/set/visualmatch.py:53
-#: /home/walter/Desktop/set/VisualMatchActivity.py:90
-#: /home/walter/Desktop/set/VisualMatchActivity.py:257
-msgid "New number game"
-msgstr "Νέο παιχνίδι με αριθμούς"
-
-#: /home/walter/Desktop/set/visualmatch.py:57
-#: /home/walter/Desktop/set/VisualMatchActivity.py:99
-#: /home/walter/Desktop/set/VisualMatchActivity.py:266
-msgid "New word game"
-msgstr "Νέο παιχνίδι με λέξεις"
-
-#: /home/walter/Desktop/set/gencards.py:212
-msgid "dog"
-msgstr "σκύλος"
-
-#: /home/walter/Desktop/set/gencards.py:212
-msgid "cat"
-msgstr "γάτα"
-
-#: /home/walter/Desktop/set/gencards.py:212
+#: VisualMatchActivity.py:286 visualmatch.py:171
 msgid "mouse"
 msgstr "ποντίκι"
 
-#: /home/walter/Desktop/set/gencards.py:214
-msgid "apple"
-msgstr "μήλο"
+#: VisualMatchActivity.py:287 visualmatch.py:171
+msgid "cat"
+msgstr "γάτα"
 
-#: /home/walter/Desktop/set/gencards.py:214
-msgid "bread"
-msgstr "ψωμί"
+#: VisualMatchActivity.py:288 visualmatch.py:171
+msgid "dog"
+msgstr "σκύλος"
 
-#: /home/walter/Desktop/set/gencards.py:214
+#: VisualMatchActivity.py:289 visualmatch.py:172
 msgid "cheese"
 msgstr "τυρί"
 
-#: /home/walter/Desktop/set/gencards.py:216
-msgid "sun"
-msgstr "ήλιος"
+#: VisualMatchActivity.py:290 visualmatch.py:172
+msgid "apple"
+msgstr "μήλο"
 
-#: /home/walter/Desktop/set/gencards.py:216
+#: VisualMatchActivity.py:291 visualmatch.py:172
+msgid "bread"
+msgstr "ψωμί"
+
+#: VisualMatchActivity.py:292 visualmatch.py:173
 msgid "moon"
 msgstr "φεγγάρι"
 
-#: /home/walter/Desktop/set/gencards.py:216
+#: VisualMatchActivity.py:293 visualmatch.py:173
+msgid "sun"
+msgstr "ήλιος"
+
+#: VisualMatchActivity.py:294 visualmatch.py:173
 msgid "earth"
 msgstr "γη"
 
-#: /home/walter/Desktop/set/VisualMatchActivity.py:145
-#: /home/walter/Desktop/set/VisualMatchActivity.py:319
+#: VisualMatchActivity.py:366
+msgid "Game"
+msgstr "Παιχνίδι"
+
+#: VisualMatchActivity.py:367
+msgid "Numbers"
+msgstr "Αριθμοί"
+
+#: VisualMatchActivity.py:368
+msgid "Tools"
+msgstr "Εργαλεία"
+
+#: VisualMatchActivity.py:373 visualmatch.py:49
+msgid "New pattern game"
+msgstr "Νέο πρότυπο παιχνιδιού"
+
+#: VisualMatchActivity.py:376 visualmatch.py:53
+msgid "New number game"
+msgstr "Νέο παιχνίδι με αριθμούς"
+
+#: VisualMatchActivity.py:377 visualmatch.py:57
+msgid "New word game"
+msgstr "Νέο παιχνίδι με λέξεις"
+
+#: VisualMatchActivity.py:380 VisualMatchActivity.py:394
+msgid "Import custom cards"
+msgstr "Εισαγωγή καρτών χρήστη"
+
+#: VisualMatchActivity.py:390
+msgid "Edit word lists."
+msgstr "Επεξεργασία καταλόγου λέξεων."
+
+#: VisualMatchActivity.py:399
+msgid "product"
+msgstr "προϊόν"
+
+#: VisualMatchActivity.py:407
+msgid "Roman numerals"
+msgstr "Ρωμαϊκή αρίθμηση"
+
+#: VisualMatchActivity.py:415
+msgid "word"
+msgstr "λέξη"
+
+#: VisualMatchActivity.py:423 visualmatch.py:107
+msgid "Chinese"
+msgstr "Κινέζικο"
+
+#: VisualMatchActivity.py:431 visualmatch.py:111
+msgid "Mayan"
+msgstr "Μάγια"
+
+#: VisualMatchActivity.py:439
+msgid "Quipu"
+msgstr "Κουίπου"
+
+#: VisualMatchActivity.py:450
+msgid "hash marks"
+msgstr "σημεία δίεσης"
+
+#: VisualMatchActivity.py:458
+msgid "dots in a circle"
+msgstr "τελείες σε κύκλο"
+
+#: VisualMatchActivity.py:466
+msgid "points on a star"
+msgstr "σημεία σε αστέρι"
+
+#: VisualMatchActivity.py:474
+msgid "dice"
+msgstr "κύβος"
+
+#: VisualMatchActivity.py:482
+msgid "dots in a line"
+msgstr "τελείες σε γραμμή"
+
+#: VisualMatchActivity.py:493
+msgid "Play with the computer"
+msgstr "Αναπαραγωγή με τον υπολογιστή."
+
+#: VisualMatchActivity.py:533
 msgid "Find a match."
-msgstr "Βρες το ταίρι"
+msgstr "Βρες το ταίρι."
 
-#: /home/walter/Desktop/set/VisualMatchActivity.py:159
-msgid "Write in Journal"
-msgstr "Αποθήκευση στο Ημερολόγιο"
+#: VisualMatchActivity.py:537 game.py:421 game.py:502
+msgid "cards"
+msgstr "κάρτες"
 
-#: /home/walter/Desktop/set/VisualMatchActivity.py:181
-msgid "Project"
-msgstr "Έργο"
+#: VisualMatchActivity.py:539 game.py:515 game.py:517
+msgid "matches"
+msgstr "συνδυάζεται"
 
-#: /home/walter/Desktop/set/VisualMatchActivity.py:280
-msgid "cards remain in the deck"
-msgstr "κάρτες που απομένουν"
+#: constants.py:70
+msgid "five"
+msgstr "πέντε"
 
-#: /home/walter/Desktop/set/namingalert.py:82
-msgid "Describe your activity"
-msgstr "Περιγράψτε τη δραστηριότητά σας"
+#: constants.py:70
+msgid "seven"
+msgstr "επτά"
 
-#: /home/walter/Desktop/set/namingalert.py:87
-msgid "Keep"
-msgstr "Αποθήκευση"
+#: constants.py:70
+msgid "eleven"
+msgstr "έντεκα"
 
-#: /home/walter/Desktop/set/namingalert.py:283
-msgid "Untitled"
-msgstr "Χωρίς τίτλο"
+#: constants.py:70
+msgid "ten"
+msgstr "δέκα"
 
-#: /home/walter/Desktop/set/namingalert.py:290
-msgid "Description:"
-msgstr "Περιγραφή:"
+#: constants.py:71
+msgid "fourteen"
+msgstr "δεκατέσσερα"
 
-#: /home/walter/Desktop/set/namingalert.py:314
-msgid "Tags:"
-msgstr "Ετικέτες:"
+#: constants.py:71
+msgid "fifteen"
+msgstr "δεκαπέντε"
+
+#: constants.py:71
+msgid "twenty two"
+msgstr "είκοσι δύο"
+
+#: constants.py:72
+msgid "twenty one"
+msgstr "είκοσι ένα"
+
+#: constants.py:72
+msgid "thirty three"
+msgstr "τριάντα τρία"
+
+#: game.py:267
+msgid "Edit the custom cards."
+msgstr "Επεξεργασία των καρτών χρήστη."
+
+#: game.py:295
+msgid "Edit the word cards."
+msgstr "Επεξεργασία των καρτών με τις λέξεις."
+
+#: game.py:388
+msgid "Game over"
+msgstr "Τέλος παιχνιδιού"
+
+#: game.py:397
+msgid "unsolvable"
+msgstr "δεν έχει λύση"
+
+#: game.py:432
+msgid "New record"
+msgstr "Νέα εγγραφή"
+
+#: game.py:508 game.py:510
+msgid "match"
+msgstr "συνδυάζεται"
+
+#: game.py:720
+msgid "New custom game"
+msgstr "Νέο παιχνίδι χρήστη"
+
+#: visualmatch.py:36
+msgid "Click on cards to create sets of three."
+msgstr "Κάντε κλικ στις κάρτες για να δημιουργήσετε ομάδες των τριών."
+
+#: visualmatch.py:40
+msgid "Toggle level"
+msgstr "Εναλλαγή επιπέδου"
+
+#: visualmatch.py:66
+msgid "Robot on/off"
+msgstr "Άνοιγμα/Κλείσιμο του ρομπότ"
+
+#: visualmatch.py:70
+msgid "90 sec."
+msgstr "90 δευτ."
+
+#: visualmatch.py:74
+msgid "60 sec."
+msgstr "60 δευτ."
+
+#: visualmatch.py:78
+msgid "45 sec."
+msgstr "45 δευτ."
+
+#: visualmatch.py:82
+msgid "30 sec."
+msgstr "30 δευτ."
+
+#: visualmatch.py:86
+msgid "15 sec."
+msgstr "15 δευτ."
+
+#: visualmatch.py:95
+msgid "Product"
+msgstr "Προϊόν"
+
+#: visualmatch.py:99
+msgid "Roman"
+msgstr "Ρωμαϊκό"
+
+#: visualmatch.py:103
+msgid "Word"
+msgstr "Λέξη"
+
+#: visualmatch.py:115
+msgid "Hash"
+msgstr "Δίεση"
+
+#: visualmatch.py:119
+msgid "Dice"
+msgstr "Κύβος"
+
+#: visualmatch.py:123
+msgid "Dots"
+msgstr "Τελείες"
+
+#: visualmatch.py:127
+msgid "Star"
+msgstr "Αστέρι"
+
+#: visualmatch.py:131
+msgid "Lines"
+msgstr "Γραμμές"
+
+#~ msgid "Set difficulty level."
+#~ msgstr "Ορισμός επιπέδου δυσκολίας."
+
+#~ msgid "Describe your activity"
+#~ msgstr "Περιγράψτε τη δραστηριότητά σας"
+
+#~ msgid "Keep"
+#~ msgstr "Αποθήκευση"
+
+#~ msgid "Untitled"
+#~ msgstr "Χωρίς τίτλο"
+
+#~ msgid "Description:"
+#~ msgstr "Περιγραφή:"
+
+#~ msgid "Tags:"
+#~ msgstr "Ετικέτες:"
+
+#~ msgid "cards remaining"
+#~ msgstr "κάρτες που απομένουν"
+
+#~ msgid "seconds"
+#~ msgstr "δευτερόλεπτα"
+
+#~ msgid "no match"
+#~ msgstr "δεν συνδυάζεται"
+
+#~ msgid "Write in Journal"
+#~ msgstr "Αποθήκευση στο Ημερολόγιο"
+
+#~ msgid "Project"
+#~ msgstr "Έργο"
+
+#~ msgid "cards remain in the deck"
+#~ msgstr "κάρτες που απομένουν"
