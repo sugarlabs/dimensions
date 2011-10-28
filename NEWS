@@ -1,156 +1,207 @@
+31
+
+ENHANCEMENT:
+* Animate matches when moving to discard pile
+
+BUG FIX:
+* FIx GPLv3 license address
+
 30
 
-* switching buttons to radio buttons
-* more button icon refactoring
+ENHANCEMENTS:
+* Switching buttons to radio buttons
+* More button icon refactoring
 
 29
 
-* "standardized" icons
+ENHANCEMENT:
+* "Standardized" icons
 
 28
 
-* added "attract mode" on first launch
+ENHANCEMENT:
+* Added "attract mode" on first launch
 
 27
 
-* smiley-face "reward" for finishing a game
-* work around datastore.find issue on 0.84 builds
-* work around chooser issues with old Sugar builds (#2398)
-* improved workflow for importing custom cards
+ENHANCEMENTS:
+* Smiley-face "reward" for finishing a game
+* Improved workflow for importing custom cards
+
+BUG FIXES:
+* Work around datastore.find issue on 0.84 builds
+* Work around chooser issues with old Sugar builds (#2398)
 
 26
 
-* import custom cards from Journal
+ENHANCEMENT:
+* Import custom cards from Journal
 
 25
 
+ENHANCEMENTS:
 * Quipu number game
-* optimization of sprite refresh
+* Optimization of sprite refresh
 
 24
 
-* added beginner level
-* detect unsolvable game-play situations
+ENHANCEMENTS:
+* Added beginner level
+* Detect unsolvable game-play situations
 
 23
 
+BUG FIXES:
 * Byron Corrales fixed the robot/word-edit conflict (#2057)
-* general code cleanup
+* General code cleanup
 
 22
 
-* fixed SVG bug in old Sugar builds
+BUG FIX:
+* Fixed SVG bug in old Sugar builds
 
 21
 
+BUG FIXES:
 * general clean up of sprite library
 * updated licenses
 
 20
 
-* added more combinations to the dice game, e.g., 5=4+1, 5=3+2
-* fixed bug in sprite library
-* using refactored card generator
+ENHANCEMENT:
+* Added more combinations to the dice game, e.g., 5=4+1, 5=3+2
+
+BUG FIXES:
+* Fixed bug in sprite library
+* Using refactored card generator
 
 19
 
-* fixed bug with Mayan 33
-* cleaned up some icons that had SVG problems on old Sugar builds
+BUG FIXES:
+* Fixed bug with Mayan 33
+* Cleaned up some icons that had SVG problems on old Sugar builds
 
 18
 
-* word game lists can be edited
+ENHANCEMENTS:
+* Word-game lists can be edited
 * Mayan number game
-* "fileless" SVG generation
-* fixed SVG problem on old Sugar builds
+* "Fileless" SVG generation
+
+BUG FIX:
+* Fixed SVG problem on old Sugar builds
 
 17
 
-* fixed Class problem with command-line version
-* cleaned up license language (GPL v3)
+BUG FIXES:
+* Fixed Class problem with command-line version
+* Cleaned up license language (GPL v3)
 
 16
 
-* fixed bug preventing play on old Sugar instances
-* simple sharing/collaborating
-* save/resume from Journal 
-* new (improved?) toolbar layout
-* match-history animation at end game
+ENHANCEMENTS:
+* Simple sharing/collaborating
+* Save/resume from Journal 
+* New (improved?) toolbar layout
+* Match-history animation at end game
+
+BUG FIX:
+* Fixed bug preventing play on old Sugar instances
 
 15
 
-* added low/high levels for game play
-* new activity icon
+ENHANCEMENTS:
+* Added low/high levels for game play
+* New activity icon
 
 14
 
-* computer assistant
+ENHANCEMENT:
+* Computer assistant
 
 13
 
-* more number games
+ENHANCEMENT:
+* More number games
 
 12
 
-* reverting to three colors to simplify game play
-* experimenting with different number-game card styles
-* adding bold and italic to word cards
-* consolidate grid after dealing extra cards
-* refactoring of sprites library
+ENHANCEMENTS:
+* Reverting to three colors to simplify game play
+* Experimenting with different number-game card styles
+* Adding bold and italic to word cards
+* Consolidate grid after dealing extra cards
+* Refactoring of sprites library
 
 11
 
-* add check for match on first deal
-* fixed bug in extra card positions
+BUG FIXES:
+* Add check for match on first deal
+* Fixed bug in extra card positions
 
 10
 
+ENHANCEMENTS:
 * es, fr translation
-* rotated cards to enable larger/longer text strings
-* cleaned up match logic for word games
+* Rotated cards to enable larger/longer text strings
+
+BUG FIX:
+* Cleaned up match logic for word games
 
 9
 
-* auto-deal of extra cards when needed
-* added glue for launching outside of Sugar
-* save "low score" to Journal
-* added numbers and words games
-* autogenerate cards on the fly
-* minutes:seconds display for total time
-* general code cleanup
+ENHANCEMENTS:
+* Auto-deal of extra cards when needed
+* Added glue for launching outside of Sugar
+* Save "low score" to Journal
+* Added numbers and words games
+* Autogenerate cards on the fly
+* Minutes:seconds display for total time
+* General code cleanup
 
 8
 
-* fixed bug in new game labels
-* added unselect
+ENHANCEMENT:
+* Added unselect
+
+BUG FIX:
+* Fixed bug in new game labels
 
 7
 
-* more distinct colors on cards
-* count seconds between matches
-* detect game over
-* automatically deals extra cards when necessary
+ENHANCEMENTS:
+* More distinct colors on cards
+* Count seconds between matches
+* Detect game over
+* Automatically deals extra cards when necessary
 
 6
 
-* fixed card selection bug
+BUG FIX:
+* Fixed card selection bug
 
 5
 
-* added search function
+ENHANCEMENT:
+* Added search function
 
 4
 
-* add 3 cards when you get stuck
+ENHANCEMENT:
+* Add 3 cards when you get stuck
 
 3
 
+ENHANCEMENTS:
 * Eliminate naming alert from pre-0.86 toolbar
-* New pot file
+* New .pot file
 
 2
 
+ENHANCEMENT:
 * New icon
+
+BUG FIX:
 * Fixed problem with the New Game button
 
 1
