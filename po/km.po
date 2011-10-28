@@ -2,151 +2,300 @@
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-12-07 18:05+0000\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2011-10-03 00:33-0400\n"
+"PO-Revision-Date: 2011-04-10 16:35+0200\n"
+"Last-Translator: Chris <cjl@laptop.org>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Translate Toolkit 1.3.0\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Pootle 2.0.1\n"
 
-#: activity/activity.info:2 /home/walter/Desktop/set/window.py:265
-#: /home/walter/Desktop/set/visualmatch.py:42
+#: activity/activity.info:2 game.py:532 visualmatch.py:35
 msgid "Visual Match"
 msgstr ""
 
-#: /home/walter/Desktop/set/window.py:124
-#: /home/walter/Desktop/set/window.py:185
-#: /home/walter/Desktop/set/VisualMatchActivity.py:112
-msgid "cards remaining"
+#: VisualMatchActivity.py:66 VisualMatchActivity.py:510
+msgid "intermediate"
 msgstr ""
 
-#: /home/walter/Desktop/set/window.py:125
-#: /home/walter/Desktop/set/window.py:212
-#: /home/walter/Desktop/set/VisualMatchActivity.py:123
-#: /home/walter/Desktop/set/VisualMatchActivity.py:293
-msgid "matches"
+#: VisualMatchActivity.py:66 VisualMatchActivity.py:518
+msgid "expert"
+msgstr "ជំនាញ"
+
+#: VisualMatchActivity.py:66 VisualMatchActivity.py:502
+msgid "beginner"
+msgstr "ដំបូង"
+
+#: VisualMatchActivity.py:199
+msgid "Play with the computer."
 msgstr ""
 
-#: /home/walter/Desktop/set/window.py:192
-msgid "Game over"
+#: VisualMatchActivity.py:204
+msgid "Stop playing with the computer."
 msgstr ""
 
-#: /home/walter/Desktop/set/window.py:192
-#: /home/walter/Desktop/set/window.py:200
-msgid "seconds"
-msgstr ""
+#: VisualMatchActivity.py:286 visualmatch.py:171
+msgid "mouse"
+msgstr "កណ្ដុរ"
 
-#: /home/walter/Desktop/set/window.py:200
-msgid "New record"
-msgstr ""
-
-#: /home/walter/Desktop/set/window.py:208
-#: /home/walter/Desktop/set/window.py:210
-msgid "match"
-msgstr ""
-
-#: /home/walter/Desktop/set/window.py:218
-msgid "no match"
-msgstr ""
-
-#: /home/walter/Desktop/set/visualmatch.py:43
-msgid "Click on cards to create sets of three."
-msgstr ""
-
-#: /home/walter/Desktop/set/visualmatch.py:49
-#: /home/walter/Desktop/set/VisualMatchActivity.py:81
-#: /home/walter/Desktop/set/VisualMatchActivity.py:248
-msgid "New pattern game"
-msgstr ""
-
-#: /home/walter/Desktop/set/visualmatch.py:53
-#: /home/walter/Desktop/set/VisualMatchActivity.py:90
-#: /home/walter/Desktop/set/VisualMatchActivity.py:257
-msgid "New number game"
-msgstr ""
-
-#: /home/walter/Desktop/set/visualmatch.py:57
-#: /home/walter/Desktop/set/VisualMatchActivity.py:99
-#: /home/walter/Desktop/set/VisualMatchActivity.py:266
-msgid "New word game"
-msgstr ""
-
-#: /home/walter/Desktop/set/gencards.py:212
-msgid "dog"
-msgstr ""
-
-#: /home/walter/Desktop/set/gencards.py:212
+#: VisualMatchActivity.py:287 visualmatch.py:171
 msgid "cat"
 msgstr ""
 
-#: /home/walter/Desktop/set/gencards.py:212
-msgid "mouse"
+#: VisualMatchActivity.py:288 visualmatch.py:171
+msgid "dog"
 msgstr ""
 
-#: /home/walter/Desktop/set/gencards.py:214
+#: VisualMatchActivity.py:289 visualmatch.py:172
+msgid "cheese"
+msgstr "ប្រូម៉ាស"
+
+#: VisualMatchActivity.py:290 visualmatch.py:172
 msgid "apple"
-msgstr ""
+msgstr "ផ្លែ​ប៉ោម"
 
-#: /home/walter/Desktop/set/gencards.py:214
+#: VisualMatchActivity.py:291 visualmatch.py:172
 msgid "bread"
 msgstr ""
 
-#: /home/walter/Desktop/set/gencards.py:214
-msgid "cheese"
-msgstr ""
+#: VisualMatchActivity.py:292 visualmatch.py:173
+msgid "moon"
+msgstr "ព្រះចន្ទ"
 
-#: /home/walter/Desktop/set/gencards.py:216
+#: VisualMatchActivity.py:293 visualmatch.py:173
 msgid "sun"
 msgstr ""
 
-#: /home/walter/Desktop/set/gencards.py:216
-msgid "moon"
-msgstr ""
-
-#: /home/walter/Desktop/set/gencards.py:216
+#: VisualMatchActivity.py:294 visualmatch.py:173
 msgid "earth"
 msgstr ""
 
-#: /home/walter/Desktop/set/VisualMatchActivity.py:145
-#: /home/walter/Desktop/set/VisualMatchActivity.py:319
+#: VisualMatchActivity.py:366
+msgid "Game"
+msgstr "ល្បែង"
+
+#: VisualMatchActivity.py:367
+msgid "Numbers"
+msgstr "ចំនួន"
+
+#: VisualMatchActivity.py:368
+msgid "Tools"
+msgstr "ឧបករណ៍"
+
+#: VisualMatchActivity.py:373 visualmatch.py:49
+msgid "New pattern game"
+msgstr ""
+
+#: VisualMatchActivity.py:376 visualmatch.py:53
+msgid "New number game"
+msgstr ""
+
+#: VisualMatchActivity.py:377 visualmatch.py:57
+msgid "New word game"
+msgstr ""
+
+#: VisualMatchActivity.py:380 VisualMatchActivity.py:394
+msgid "Import custom cards"
+msgstr ""
+
+#: VisualMatchActivity.py:390
+msgid "Edit word lists."
+msgstr ""
+
+#: VisualMatchActivity.py:399
+msgid "product"
+msgstr "ផលិតផល"
+
+#: VisualMatchActivity.py:407
+msgid "Roman numerals"
+msgstr "លេខ​រ៉ូម៉ាំង"
+
+#: VisualMatchActivity.py:415
+#, fuzzy
+msgid "word"
+msgstr "ផែនដី"
+
+#: VisualMatchActivity.py:423 visualmatch.py:107
+msgid "Chinese"
+msgstr "ចិន"
+
+#: VisualMatchActivity.py:431 visualmatch.py:111
+msgid "Mayan"
+msgstr ""
+
+#: VisualMatchActivity.py:439
+msgid "Quipu"
+msgstr ""
+
+#: VisualMatchActivity.py:450
+msgid "hash marks"
+msgstr ""
+
+#: VisualMatchActivity.py:458
+msgid "dots in a circle"
+msgstr ""
+
+#: VisualMatchActivity.py:466
+msgid "points on a star"
+msgstr ""
+
+#: VisualMatchActivity.py:474
+msgid "dice"
+msgstr ""
+
+#: VisualMatchActivity.py:482
+msgid "dots in a line"
+msgstr ""
+
+#: VisualMatchActivity.py:493
+msgid "Play with the computer"
+msgstr ""
+
+#: VisualMatchActivity.py:533
 msgid "Find a match."
 msgstr ""
 
-#: /home/walter/Desktop/set/VisualMatchActivity.py:159
-msgid "Write in Journal"
+#: VisualMatchActivity.py:537 game.py:421 game.py:502
+msgid "cards"
 msgstr ""
 
-#: /home/walter/Desktop/set/VisualMatchActivity.py:181
-msgid "Project"
+#: VisualMatchActivity.py:539 game.py:515 game.py:517
+msgid "matches"
+msgstr "ផ្គូផ្គង"
+
+#: constants.py:70
+msgid "five"
+msgstr "ប្រាំ"
+
+#: constants.py:70
+msgid "seven"
+msgstr "ប្រាំពីរ"
+
+#: constants.py:70
+msgid "eleven"
+msgstr "ដប់មួយ"
+
+#: constants.py:70
+#, fuzzy
+msgid "ten"
+msgstr "នោះ"
+
+#: constants.py:71
+msgid "fourteen"
+msgstr "ដប់​បួន"
+
+#: constants.py:71
+msgid "fifteen"
+msgstr "ដប់​ប្រាំ"
+
+#: constants.py:71
+msgid "twenty two"
 msgstr ""
 
-#: /home/walter/Desktop/set/VisualMatchActivity.py:280
-msgid "cards remain in the deck"
+#: constants.py:72
+msgid "twenty one"
 msgstr ""
 
-#: /home/walter/Desktop/set/namingalert.py:82
-msgid "Describe your activity"
+#: constants.py:72
+msgid "thirty three"
 msgstr ""
 
-#: /home/walter/Desktop/set/namingalert.py:87
-msgid "Keep"
+#: game.py:267
+msgid "Edit the custom cards."
 msgstr ""
 
-#: /home/walter/Desktop/set/namingalert.py:283
-msgid "Untitled"
+#: game.py:295
+msgid "Edit the word cards."
 msgstr ""
 
-#: /home/walter/Desktop/set/namingalert.py:290
-msgid "Description:"
+#: game.py:388
+msgid "Game over"
+msgstr "ល្បែង​ចប់​ហើយ"
+
+#: game.py:397
+msgid "unsolvable"
 msgstr ""
 
-#: /home/walter/Desktop/set/namingalert.py:314
-msgid "Tags:"
+#: game.py:432
+msgid "New record"
 msgstr ""
+
+#: game.py:508 game.py:510
+#, fuzzy
+msgid "match"
+msgstr "បំណះ"
+
+#: game.py:720
+msgid "New custom game"
+msgstr ""
+
+#: visualmatch.py:36
+msgid "Click on cards to create sets of three."
+msgstr ""
+
+#: visualmatch.py:40
+msgid "Toggle level"
+msgstr ""
+
+#: visualmatch.py:66
+msgid "Robot on/off"
+msgstr ""
+
+#: visualmatch.py:70
+msgid "90 sec."
+msgstr ""
+
+#: visualmatch.py:74
+msgid "60 sec."
+msgstr ""
+
+#: visualmatch.py:78
+msgid "45 sec."
+msgstr ""
+
+#: visualmatch.py:82
+msgid "30 sec."
+msgstr ""
+
+#: visualmatch.py:86
+msgid "15 sec."
+msgstr ""
+
+#: visualmatch.py:95
+msgid "Product"
+msgstr "ផលិតផល"
+
+#: visualmatch.py:99
+msgid "Roman"
+msgstr "រ៉ូម៉ាំង"
+
+#: visualmatch.py:103
+msgid "Word"
+msgstr "ពាក្យ"
+
+#: visualmatch.py:115
+msgid "Hash"
+msgstr ""
+
+#: visualmatch.py:119
+msgid "Dice"
+msgstr ""
+
+#: visualmatch.py:123
+msgid "Dots"
+msgstr "ចំណុច"
+
+#: visualmatch.py:127
+msgid "Star"
+msgstr "ផ្កាយ"
+
+#: visualmatch.py:131
+msgid "Lines"
+msgstr "បន្ទាត់"
