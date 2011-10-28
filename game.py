@@ -7,11 +7,11 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 3 of the License, or
 # (at your option) any later version.
-#
-# You should have received a copy of the GNU Lesser General Public
-# License along with this library; if not, write to the
-# Free Software Foundation, Inc., 59 Temple Place - Suite 330,
-# Boston, MA 02111-1307, USA.
+
+# You should have received a copy of the GNU General Public License
+# along with this library; if not, write to the Free Software
+# Foundation, 51 Franklin Street, Suite 500 Boston, MA 02110-1335 USA
+
 
 import pygtk
 pygtk.require('2.0')
@@ -47,7 +47,7 @@ from gencards import generate_selected_card, generate_match_card, \
 
 
 def _find_the_number_in_the_name(name):
-    """ Find which element in an array (journal entry title) is a number """
+    ''' Find which element in an array (journal entry title) is a number '''
     parts = name.split('.')
     before = ''
     after = ''
@@ -66,21 +66,15 @@ def _find_the_number_in_the_name(name):
 
 
 def _construct_a_name(before, i, after):
-    """ Make a numbered file name from parts """
-    name = ''
-    if before != '':
-        name += before
-    name += str(i)
-    if after != '':
-        name += after
-    return name
+    ''' Make a numbered filename from parts '''
+    return '%s%s%s' % (before, str(i), after)
 
 
 class Game():
-    """ The game play -- called from within Sugar or GNOME """
+    ''' The game play -- called from within Sugar or GNOME '''
 
     def __init__(self, canvas, path, parent=None):
-        """ Initialize the playing surface """
+        ''' Initialize the playing surface '''
         self.path = path
         self.activity = parent
 
@@ -95,10 +89,10 @@ class Game():
         self.canvas.set_flags(gtk.CAN_FOCUS)
         self.canvas.add_events(gtk.gdk.BUTTON_PRESS_MASK)
         self.canvas.add_events(gtk.gdk.BUTTON_RELEASE_MASK)
-        self.canvas.connect("expose-event", self._expose_cb)
-        self.canvas.connect("button-press-event", self._button_press_cb)
-        self.canvas.connect("button-release-event", self._button_release_cb)
-        self.canvas.connect("key_press_event", self._keypress_cb)
+        self.canvas.connect('expose-event', self._expose_cb)
+        self.canvas.connect('button-press-event', self._button_press_cb)
+        self.canvas.connect('button-release-event', self._button_release_cb)
+        self.canvas.connect('key_press_event', self._keypress_cb)
         self.width = gtk.gdk.screen_width()
         self.height = gtk.gdk.screen_height() - GRID_CELL_SIZE
         self.scale = 0.8 * self.height / (CARD_HEIGHT * 5.5)
@@ -122,7 +116,7 @@ class Game():
         self.dead_key = None
 
     def new_game(self, saved_state=None, deck_index=0):
-        """ Start a new game """
+        ''' Start a new game '''
         # If we were editing the word list, time to stop
         self.editing_word_list = False
         self.editing_custom_cards = False
@@ -158,7 +152,7 @@ class Game():
         if not hasattr(self, 'card_type'):
             return
         if saved_state is not None:
-            _logger.debug("Restoring state: %s" % (str(saved_state)))
+            _logger.debug('Restoring state: %s' % (str(saved_state)))
             if self.card_type == 'custom':
                 self.deck = Deck(self.sprites, self.card_type,
                              [self.numberO, self.numberC], self.custom_paths,
@@ -179,7 +173,7 @@ class Game():
             self._restore_matches(saved_state[_deck_stop: _deck_stop + \
                                                   3 * self.matches])
         elif not self.joiner():
-            _logger.debug("Starting new game.")
+            _logger.debug('Starting new game.')
             if self.card_type == 'custom':
                 self.deck = Deck(self.sprites, self.card_type,
                                  [self.numberO, self.numberC],
@@ -201,7 +195,7 @@ class Game():
 
         # When sharer starts a new game, joiners should be notified.
         if self.sharer():
-            self.activity._send_event("J")
+            self.activity._send_event('J')
 
         self._update_labels()
         if self._game_over():
@@ -216,26 +210,26 @@ class Game():
         self.smiley.hide_card()
 
     def _sharing(self):
-        """ Are we sharing? """
+        ''' Are we sharing? '''
         if self.sugar and hasattr(self.activity, 'chattube') and \
             self.activity.chattube is not None:
             return True
         return False
 
     def joiner(self):
-        """ Are you the one joining? """
+        ''' Are you the one joining? '''
         if self._sharing() and not self.activity.initiating:
             return True
         return False
 
     def sharer(self):
-        """ Are you the one sharing? """
+        ''' Are you the one sharing? '''
         if self._sharing() and self.activity.initiating:
             return True
         return False
 
     def edit_custom_card(self):
-        """ Update the custom cards from the Journal """
+        ''' Update the custom cards from the Journal '''
         if not self.editing_custom_cards:
             return
 
@@ -261,13 +255,13 @@ class Game():
             gobject.source_remove(self.timeout_id)
         # Fill the grid with custom cards.
         self.grid.restore(self.deck, CUSTOM_CARD_INDICIES)
-        self.set_label("deck", "")
-        self.set_label("match", "")
-        self.set_label("clock", "")
-        self.set_label("status", _('Edit the custom cards.'))
+        self.set_label('deck', '')
+        self.set_label('match', '')
+        self.set_label('clock', '')
+        self.set_label('status', _('Edit the custom cards.'))
 
     def edit_word_list(self):
-        """ Update the word cards """
+        ''' Update the word cards '''
         if not self.editing_word_list:
             return
 
@@ -289,18 +283,18 @@ class Game():
             gobject.source_remove(self.timeout_id)
         # Fill the grid with word cards.
         self.grid.restore(self.deck, WORD_CARD_INDICIES)
-        self.set_label("deck", "")
-        self.set_label("match", "")
-        self.set_label("clock", "")
-        self.set_label("status", _('Edit the word cards.'))
+        self.set_label('deck', '')
+        self.set_label('match', '')
+        self.set_label('clock', '')
+        self.set_label('status', _('Edit the word cards.'))
 
     def _button_press_cb(self, win, event):
-        """ Just grab focus on press. """
+        ''' Just grab focus on press. '''
         win.grab_focus()
         return True
 
     def _button_release_cb(self, win, event):
-        """ Select the sprite under the mouse and process the selection. """
+        ''' Select the sprite under the mouse and process the selection. '''
         win.grab_focus()
         x, y = map(int, event.get_coords())
         spr = self.sprites.find_sprite((x, y))
@@ -309,21 +303,21 @@ class Game():
         if self._sharing():
             if self.deck.spr_to_card(spr) is not None:
                 self.activity._send_event(
-                    "B:" + str(self.deck.spr_to_card(spr).index))
+                    'B:' + str(self.deck.spr_to_card(spr).index))
             i = self._selected(spr)
             if i is not -1:
-                self.activity._send_event("S:" + str(i))
+                self.activity._send_event('S:' + str(i))
         return self._process_selection(spr)
 
     def _selected(self, spr):
-        """ Mark the selected card """
+        ''' Mark the selected card '''
         for i in range(3):
             if self.selected[i].spr == spr:
                 return i
         return -1
 
     def _process_selection(self, spr):
-        """ Check for matches """
+        ''' Check for matches '''
         # Make sure a card in the matched pile isn't selected.
         x, y = spr.get_xy()
         if x == MATCH_POSITION:
@@ -347,7 +341,7 @@ class Game():
                 self.selected[i].show_card()
                 break
 
-        _logger.debug("selecting card %d" % (
+        _logger.debug('selecting card %d' % (
                 self.deck.cards.index(self.deck.spr_to_card(spr))))
         if self.editing_word_list:
             # Only edit one card at a time, so unselect other cards
@@ -371,7 +365,8 @@ class Game():
             # Regenerate the deck with the new card definitions
             self.deck = Deck(self.sprites, self.card_type,
                              [self.numberO, self.numberC],
-                             self.custom_paths, self.scale, DIFFICULTY_LEVEL[1])
+                             self.custom_paths, self.scale,
+                             DIFFICULTY_LEVEL[1])
             self.deck.hide()
             self.grid.restore(self.deck, CUSTOM_CARD_INDICIES)
         elif None not in self.clicked:
@@ -380,26 +375,27 @@ class Game():
         return True
 
     def _game_over(self):
-        """ Game is over when the deck is empty and no more matches. """
+        ''' Game is over when the deck is empty and no more matches. '''
         if self.deck.empty() and not self._find_a_match():
-            self.set_label("deck", "")
-            self.set_label("clock", "")
-            self.set_label("status", "%s (%d:%02d)" %
-                (_("Game over"), int(self.total_time / 60),
+            self.set_label('deck', '')
+            self.set_label('clock', '')
+            self.set_label('status', '%s (%d:%02d)' %
+                (_('Game over'), int(self.total_time / 60),
                  int(self.total_time % 60)))
             self.smiley.show_card()
-            self.match_timeout_id = gobject.timeout_add(2000,
-                                                        self._show_matches, 0)
+            self.match_timeout_id = gobject.timeout_add(
+                2000, self._show_matches, 0)
             return True
-        elif self.grid.cards_in_grid() == DEAL + 3 and not self._find_a_match():
-            self.set_label("deck", "")
-            self.set_label("clock", "")
-            self.set_label("status", _("unsolvable"))
+        elif self.grid.cards_in_grid() == DEAL + 3 \
+                and not self._find_a_match():
+            self.set_label('deck', '')
+            self.set_label('clock', '')
+            self.set_label('status', _('unsolvable'))
             return True
         return False
 
     def _test_for_a_match(self):
-        """ If we have a match, then we have work to do. """
+        ''' If we have a match, then we have work to do. '''
         if self._match_check([self.deck.spr_to_card(self.clicked[0]),
                               self.deck.spr_to_card(self.clicked[1]),
                               self.deck.spr_to_card(self.clicked[2])],
@@ -417,7 +413,7 @@ class Game():
 
             # Remove the match and deal three new cards.
             self.grid.remove_and_replace(self.clicked, self.deck)
-            self.set_label("deck", "%d %s" %
+            self.set_label('deck', '%d %s' %
                            (self.deck.cards_remaining(), _('cards')))
 
             # Test to see if the game is over.
@@ -428,7 +424,7 @@ class Game():
                     self.low_score[self.level] = self.total_time
                 elif self.total_time < self.low_score[self.level]:
                     self.low_score[self.level] = self.total_time
-                    self.set_label("status", "%s (%d:%02d)" %
+                    self.set_label('status', '%s (%d:%02d)' %
                         (_('New record'), int(self.total_time / 60),
                          int(self.total_time % 60)))
                 if not self.sugar:
@@ -450,13 +446,13 @@ class Game():
         self._unselect()
 
     def _unselect(self):
-        """ Unselect the cards """
+        ''' Unselect the cards '''
         self.clicked = [None, None, None]
         for a in self.selected:
             a.hide_card()
 
     def _keypress_cb(self, area, event):
-        """ Keypress: editing word cards or selecting cards to play """
+        ''' Keypress: editing word cards or selecting cards to play '''
         k = gtk.gdk.keyval_name(event.keyval)
         u = gtk.gdk.keyval_to_unicode(event.keyval)
         if self.editing_word_list and self.edit_card is not None:
@@ -468,8 +464,8 @@ class Game():
                 return True
             if k == 'BackSpace':
                 self.edit_card.spr.labels[0] =\
-                self.edit_card.spr.labels[0]\
-                    [:len(self.edit_card.spr.labels[0]) - 1]
+                self.edit_card.spr.labels[0][
+                    :len(self.edit_card.spr.labels[0]) - 1]
             else:
                 if self.dead_key is not None:
                     u = DEAD_DICTS[DEAD_KEYS.index(self.dead_key[5:])][k]
@@ -488,51 +484,51 @@ class Game():
         return True
 
     def _expose_cb(self, win, event):
-        """ Time to refresh all of the sprites """
+        ''' Time to refresh all of the sprites '''
         self.sprites.refresh(event)
         return True
 
     def _destroy_cb(self, win, event):
-        """ This is the end """
+        ''' This is the end '''
         gtk.main_quit()
 
     def _update_labels(self):
-        """ Write strings to a label in the toolbar. """
-        self.set_label("deck", "%d %s" %
+        ''' Write strings to a label in the toolbar. '''
+        self.set_label('deck', '%d %s' %
             (self.deck.cards_remaining(), _('cards')))
-        self.set_label("status", "")
+        self.set_label('status', '')
         if self.matches == 1:
             if self.robot_matches > 0:
-                self.set_label("match", "%d (%d) %s" % (
+                self.set_label('match', '%d (%d) %s' % (
                     self.matches - self.robot_matches, self.robot_matches,
                     _('match')))
             else:
-                self.set_label("match", "%d %s" % (self.matches, _('match')))
+                self.set_label('match', '%d %s' % (self.matches, _('match')))
         else:
             if self.robot_matches > 0:
-                self.set_label("match", "%d (%d) %s" % (
+                self.set_label('match', '%d (%d) %s' % (
                     self.matches - self.robot_matches, self.robot_matches,
-                    _("matches")))
+                    _('matches')))
             else:
-                self.set_label("match", "%d %s" % (self.matches, _('matches')))
+                self.set_label('match', '%d %s' % (self.matches, _('matches')))
 
     def set_label(self, label, s):
-        """ Update the toolbar labels """
+        ''' Update the toolbar labels '''
         if self.sugar:
-            if label == "deck":
+            if label == 'deck':
                 self.activity.deck_label.set_text(s)
-            elif label == "status":
+            elif label == 'status':
                 self.activity.status_label.set_text(s)
-            elif label == "clock":
+            elif label == 'clock':
                 self.activity.clock_label.set_text(s)
-            elif label == "match":
+            elif label == 'match':
                 self.activity.match_label.set_text(s)
         else:
-            if hasattr(self, "win") and label is not "clock":
-                self.win.set_title("%s: %s" % (_('Visual Match'), s))
+            if hasattr(self, 'win') and label is not 'clock':
+                self.win.set_title('%s: %s' % (_('Visual Match'), s))
 
     def _restore_selected(self, saved_selected_indices):
-        """ Restore the selected cards upon resume or share. """
+        ''' Restore the selected cards upon resume or share. '''
         j = 0
         for i in saved_selected_indices:
             if i is None:
@@ -546,7 +542,7 @@ class Game():
             j += 1
 
     def _restore_matches(self, saved_match_list_indices):
-        """ Restore the match list upon resume or share. """
+        ''' Restore the match list upon resume or share. '''
         j = 0
         self.match_list = []
         for i in saved_match_list_indices:
@@ -558,29 +554,29 @@ class Game():
                 self.grid.display_match(self.match_list[l - 3 + j], j)
 
     def _restore_word_list(self, saved_word_list):
-        """ Restore the word list upon resume or share. """
+        ''' Restore the word list upon resume or share. '''
         if len(saved_word_list) == 9:
             for i in range(3):
                 for j in range(3):
                     self.word_lists[i][j] = saved_word_list[i * 3 + j]
 
     def _counter(self):
-        """ Display of seconds since start_time. """
+        ''' Display of seconds since start_time. '''
         seconds = int(gobject.get_current_time() - self.start_time)
-        self.set_label("clock", str(seconds))
+        self.set_label('clock', str(seconds))
         if self.robot and self.robot_time < seconds:
             self._find_a_match(True)
         else:
             self.timeout_id = gobject.timeout_add(1000, self._counter)
 
     def _timer_reset(self):
-        """ Reset the timer for the robot """
+        ''' Reset the timer for the robot '''
         self.start_time = gobject.get_current_time()
         self.timeout_id = None
         self._counter()
 
     def _show_matches(self, i):
-        """ Show all the matches as a simple animation. """
+        ''' Show all the matches as a simple animation. '''
         if i < self.matches:
             for j in range(3):
                 self.grid.display_match(self.match_list[i * 3 + j], j)
@@ -589,7 +585,7 @@ class Game():
                                                         i + 1)
 
     def _find_a_match(self, robot_match=False):
-        """ Check to see whether there are any matches on the board. """
+        ''' Check to see whether there are any matches on the board. '''
         a = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14]
         for i in Permutation(a):  # TODO: really should be combination
             cardarray = [self.grid.grid[i[0]],
@@ -605,7 +601,7 @@ class Game():
         return False
 
     def _match_check(self, cardarray, card_type):
-        """ For each attribute, either it is the same or different. """
+        ''' For each attribute, either it is the same or different. '''
         for a in cardarray:
             if a is None:
                 return False
@@ -633,7 +629,7 @@ class Game():
         return True
 
     def _choose_custom_card(self):
-        """ Select a custom card from the Journal """
+        ''' Select a custom card from the Journal '''
         chooser = None
         name = None
         if hasattr(mime, 'GENERIC_TYPE_IMAGE'):
@@ -669,13 +665,13 @@ class Game():
                 self._find_custom_paths(jobject)
 
     def _find_custom_paths(self, jobject):
-        """ Associate a Journal object with a card """
+        ''' Associate a Journal object with a card '''
         found_a_sequence = False
         if self.custom_paths[0] is None:
             basename, suffix, i = _find_the_number_in_the_name(
                 jobject.metadata['title'])
-            """ If this is the first card, try to find paths for other custom
-            cards based on the name; else just load the card. """
+            ''' If this is the first card, try to find paths for other custom
+            cards based on the name; else just load the card. '''
             if i >= 0:
                 dsobjects, nobjects = datastore.find(
                     {'mime_type': [str(jobject.metadata['mime_type'])]})
@@ -722,7 +718,7 @@ class Game():
 
 
 class Permutation:
-    """Permutaion class for checking for all possible matches on the grid """
+    '''Permutaion class for checking for all possible matches on the grid '''
 
     def __init__(self, elist):
         self._data = elist[:]
