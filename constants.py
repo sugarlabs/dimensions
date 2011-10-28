@@ -5,11 +5,11 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 3 of the License, or
 # (at your option) any later version.
-#
-# You should have received a copy of the GNU Lesser General Public
-# License along with this library; if not, write to the
-# Free Software Foundation, Inc., 59 Temple Place - Suite 330,
-# Boston, MA 02111-1307, USA.
+
+# You should have received a copy of the GNU General Public License
+# along with this library; if not, write to the Free Software
+# Foundation, 51 Franklin Street, Suite 500 Boston, MA 02110-1335 USA
+
 
 from gettext import gettext as _
 MATCH_POSITION = 10
@@ -83,10 +83,8 @@ WORD_CARD_MAP = {WORD_CARD_INDICIES[0]: (0, 0), WORD_CARD_INDICIES[1]: (0, 1),
                  WORD_CARD_INDICIES[4]: (1, 1), WORD_CARD_INDICIES[5]: (1, 2),
                  WORD_CARD_INDICIES[6]: (2, 0), WORD_CARD_INDICIES[7]: (2, 1),
                  WORD_CARD_INDICIES[8]: (2, 2)}
-CUSTOM_CARD_INDICIES = [0, 4, 8, 36, 40, 44, 72, 76, 80, None, None, None, None,
-                        None, None]
-# CUSTOM_CARD_INDICIES = [0, 1, 2, 36, 37, 38, 72, 73, 74, None, None, None, None, None, None]
-
+CUSTOM_CARD_INDICIES = [0, 4, 8, 36, 40, 44, 72, 76, 80, None, None, None,
+                        None, None, None]
 
 # 'dead key' Unicode dictionaries
 DEAD_KEYS = ['grave', 'acute', 'circumflex', 'tilde', 'diaeresis', 'abovering']

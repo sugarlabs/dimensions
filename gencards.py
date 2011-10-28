@@ -7,21 +7,21 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 3 of the License, or
 # (at your option) any later version.
-#
-# You should have received a copy of the GNU Lesser General Public
-# License along with this library; if not, write to the
-# Free Software Foundation, Inc., 59 Temple Place - Suite 330, 
-# Boston, MA 02111-1307, USA.
+
+# You should have received a copy of the GNU General Public License
+# along with this library; if not, write to the Free Software
+# Foundation, 51 Franklin Street, Suite 500 Boston, MA 02110-1335 USA
+
 
 import os
 from gettext import gettext as _
 from math import sin, cos, pi
 from constants import *
 
-#
-# SVG generators
-#
+
 class SVG:
+    ''' SVG generators '''
+
     def __init__(self):
         self._scale = 1
         self._stroke_width = 1.0
@@ -30,9 +30,9 @@ class SVG:
         self._font = 'DejaVu'
 
     def _svg_style(self, extras=""):
-        return "%s%s%s%s%s%f%s%s%s" % ("style=\"fill:", self._fill, ";stroke:", 
-                                       self._stroke, ";stroke-width:", 
-                                       self._stroke_width, ";", extras, 
+        return "%s%s%s%s%s%f%s%s%s" % ("style=\"fill:", self._fill, ";stroke:",
+                                       self._stroke, ";stroke-width:",
+                                       self._stroke_width, ";", extras,
                                        "\" />\n")
 
     def _svg_rect(self, w, h, rx, ry, x, y):
@@ -63,8 +63,8 @@ class SVG:
     def _svg_text(self, x, y, size, style, string):
         svg_string = "  <text\n"
         svg_string += "%s%s%s%s%s%s%s" % (
-            "     style=\"font-size:12px;text-anchor:middle;", style, 
-            ";text-align:center;font-family:", self._font, ";fill:", 
+            "     style=\"font-size:12px;text-anchor:middle;", style,
+            ";text-align:center;font-family:", self._font, ";fill:",
             self._stroke, ";\">\n")
         svg_string += "      <tspan\n"
         svg_string += "       x=\"%f\"\n" % (x)
@@ -75,12 +75,12 @@ class SVG:
         return svg_string
 
     def _svg_check(self, x):
-        svg_string = "%s%s%s%s%s%f%s" %\
+        svg_string = "%s%s%s%s%s%f%s" % \
             ("<path d=\"m 22.5,76.1 l -5.9,-5.9 -4.1,-4.1 c -0.7,-0.7 -1.2,",
-             "-1.8 -1.2,-2.9 0,-2.3 1.9,-4.1 4.1,-4.1 1.1,0 2.2,0.5 2.9,1.2 l ",
-             "4.1,4.1 14.1,-14.1 c 0.8,-0.7 1.8,-1.2 2.9,-1.2 2.3,0 4.1,1.9 ",
+             "-1.8 -1.2,-2.9 0,-2.3 1.9,-4.1 4.1,-4.1 1.1,0 2.2,0.5 2.9,1.2 l",
+             " 4.1,4.1 14.1,-14.1 c 0.8,-0.7 1.8,-1.2 2.9,-1.2 2.3,0 4.1,1.9 ",
              "4.1,4.1 0,1.1 -0.5,2.2 -1.2,2.9 l -14.1,14.1 -5.7,5.9 z\"\n",
-             "   transform=\"translate(", x-10, ", -25)\"\n")
+             "   transform=\"translate(", x - 10, ", -25)\"\n")
         svg_string += self._svg_style()
         return svg_string
 
@@ -94,13 +94,13 @@ class SVG:
                 "4.1,-4.1 1.1,0 2.2,0.5 2.9,1.2 l 10.1,10.1 10.1,-10.1 c ",
                 "0.8,-0.7 1.8,-1.2 2.9,-1.2 2.3,0 4.1,1.9 4.1,4.1 0,1.1 ",
                 "-0.5,2.2 -1.2,2.9 l -10.1,10.1 z\"\n")
-        svg_string += "%s%f%s" % ("   transform=\"translate(", x-10,
+        svg_string += "%s%f%s" % ("   transform=\"translate(", x - 10,
                                   ", -25)\"\n")
         svg_string += self._svg_style()
         return svg_string
 
     def _svg_circle_of_dots(self, n, x, y):
-        rtab = {5:9, 7:13, 11:17}
+        rtab = {5: 9, 7: 13, 11: 17}
         r = rtab[n]
         ox = 0
         oy = 32.5
@@ -120,8 +120,8 @@ class SVG:
         return svg_string
 
     def _svg_line_of_dots(self, n, x, y):
-        cxtab = {5:37.5, 7:27.5, 11:7.5, 10:37.5, 14:27.5, 22:7.5, 15:37.5,
-                 21:27.5, 33:7.5}
+        cxtab = {5: 37.5, 7: 27.5, 11: 7.5, 10: 37.5, 14: 27.5, 22: 7.5,
+                 15: 37.5, 21: 2.5, 33: 7.5}
         svg_string = "%s%f%s%f%s" % ("<g\n   transform=\"translate(", x, ", ",
                                      y, ")\">\n")
         cx = cxtab[n]
@@ -133,8 +133,8 @@ class SVG:
         return svg_string
 
     def _svg_hash(self, n, x, y):
-        cxtab = {5:42.5, 7:32.5, 11:22.5, 10:42.5, 14:32.5, 22:22.5,
-                 15:42.5, 21:32.5, 33:22.5}
+        cxtab = {5: 42.5, 7: 32.5, 11: 22.5, 10: 42.5, 14: 32.5, 22: 22.5,
+                 15: 42.5, 21: 32.5, 33: 22.5}
         cy = 5
         x2 = cxtab[n]
         x1 = 7.5 + x2
@@ -143,7 +143,7 @@ class SVG:
         self._set_stroke_width(2.0)
         for i in range(n):
             if (i + 1) % 5 == 0:
-                svg_string += self._svg_line(x1-40, 7.5, x2, 7.5)
+                svg_string += self._svg_line(x1 - 40, 7.5, x2, 7.5)
             else:
                 svg_string += self._svg_line(x1, 0, x2, 15)
             x1 += 7.5
@@ -156,7 +156,7 @@ class SVG:
                                      y, ")\">\n")
         x2 = x
         self._set_stroke_width(2.0)
-        svg_string += self._svg_line(x2-40, 7.5, x2+40, 7.5)
+        svg_string += self._svg_line(x2 - 40, 7.5, x2 + 40, 7.5)
         x2 -= 20
         x1 = x2 + 7.5
         for i in range(n):
@@ -186,7 +186,7 @@ class SVG:
         return svg_string
 
     def _svg_star(self, n, x, y):
-        turntable = {5:3, 7:3, 11:5}
+        turntable = {5: 3, 7: 3, 11: 5}
         turns = turntable[n]
         x1 = 0
         y1 = 0
@@ -240,8 +240,8 @@ class SVG:
         svg_string += "   version=\"1.0\"\n"
         svg_string += "%s%f%s" % ("   width=\"", 125 * self._scale, "\"\n")
         svg_string += "%s%f%s" % ("   height=\"", 75 * self._scale, "\">\n")
-        svg_string += "%s%f%s%f%s" % ("<g\n       transform=\"matrix(", 
-                                      self._scale, ", 0, 0, ", self._scale, 
+        svg_string += "%s%f%s%f%s" % ("<g\n       transform=\"matrix(",
+                                      self._scale, ", 0, 0, ", self._scale,
                                       ", 0, 0)\">\n")
         svg_string += self._background()
         return svg_string
@@ -299,7 +299,7 @@ class SVG:
         elif number == 11:
             svg_string = self._svg_bar(x, y1s)
             svg_string += self._svg_bar(x, y5s)
-            svg_string += self._svg_circle(x+20, y10s, 3)
+            svg_string += self._svg_circle(x + 20, y10s, 3)
         elif number == 14:
             svg_string = self._svg_bar(x, y1s)
             svg_string += self._svg_bar(x, y5s)
@@ -497,14 +497,14 @@ class SVG:
         else:
             self._set_colors([stroke, stroke])
         if number == 1:
-           svg_string += self._svg_check(45.5)
+            svg_string += self._svg_check(45.5)
         elif number == 2:
-           svg_string += self._svg_check(25.5)
-           svg_string += self._svg_check(65.5)
+            svg_string += self._svg_check(25.5)
+            svg_string += self._svg_check(65.5)
         else:
-           svg_string += self._svg_check( 5.5)
-           svg_string += self._svg_check(45.5)
-           svg_string += self._svg_check(85.5)
+            svg_string += self._svg_check(5.5)
+            svg_string += self._svg_check(45.5)
+            svg_string += self._svg_check(85.5)
         return svg_string
 
     def _cross_card(self, number, style, stroke, fill):
@@ -516,27 +516,27 @@ class SVG:
         else:
             self._set_colors([stroke, stroke])
         if number == 1:
-           svg_string += self._svg_cross(45.5)
+            svg_string += self._svg_cross(45.5)
         elif number == 2:
-           svg_string += self._svg_cross(25.5)
-           svg_string += self._svg_cross(65.5)
+            svg_string += self._svg_cross(25.5)
+            svg_string += self._svg_cross(65.5)
         else:
-           svg_string += self._svg_cross( 5.5)
-           svg_string += self._svg_cross(45.5)
-           svg_string += self._svg_cross(85.5)
+            svg_string += self._svg_cross(5.5)
+            svg_string += self._svg_cross(45.5)
+            svg_string += self._svg_cross(85.5)
         return svg_string
 
     def _circle_card(self, number, style, stroke, fill):
         svg_string = ""
         if number == 1:
-           svg_string += self._svg_donut(45.5, style, stroke, fill)
+            svg_string += self._svg_donut(45.5, style, stroke, fill)
         elif number == 2:
-           svg_string += self._svg_donut(25.5, style, stroke, fill)
-           svg_string += self._svg_donut(65.5, style, stroke, fill)
+            svg_string += self._svg_donut(25.5, style, stroke, fill)
+            svg_string += self._svg_donut(65.5, style, stroke, fill)
         else:
-           svg_string += self._svg_donut( 5.5, style, stroke, fill)
-           svg_string += self._svg_donut(45.5, style, stroke, fill)
-           svg_string += self._svg_donut(85.5, style, stroke, fill)
+            svg_string += self._svg_donut(5.5, style, stroke, fill)
+            svg_string += self._svg_donut(45.5, style, stroke, fill)
+            svg_string += self._svg_donut(85.5, style, stroke, fill)
         return svg_string
 
     def _number_arabic(self, number):
@@ -579,13 +579,14 @@ class SVG:
 
     def _pattern_card(self, shape, color, number, fill):
         self._set_stroke_width(1.8)
-        pattern_styles = [self._cross_card, self._circle_card, self._check_card]
+        pattern_styles = [self._cross_card, self._circle_card,
+                          self._check_card]
         return pattern_styles[CARD_TYPES.index(shape)](number, fill, color[0],
                                                        color[1])
 
-#
 # Card generators
-#
+
+
 def generate_smiley(scale):
     svg = SVG()
     svg._set_scale(scale * 2)
@@ -595,6 +596,7 @@ def generate_smiley(scale):
     svg_string += svg._footer()
     return svg_string
 
+
 def generate_pattern_card(shape, color, number, fill, scale):
     svg = SVG()
     svg._set_scale(scale)
@@ -602,13 +604,14 @@ def generate_pattern_card(shape, color, number, fill, scale):
     svg._set_colors([BLACK, COLOR_PAIRS[color][1]])
     svg_string = svg._header()
     svg_string += svg._pattern_card(CARD_TYPES[shape], COLOR_PAIRS[color],
-                                    number+1, FILL_STYLES[fill])
+                                    number + 1, FILL_STYLES[fill])
     svg_string += svg._footer()
     return svg_string
 
+
 def generate_number_card(shape, color, number, fill, number_types, scale):
     svg = SVG()
-    stab = {0:5, 1:7, 2:11}
+    stab = {0: 5, 1: 7, 2: 11}
     methodO = [svg._number_roman, svg._number_product, svg._number_chinese,
                svg._number_word, svg._number_mayan, svg._number_incan]
     methodC = [svg._dots_in_a_line, svg._dots_in_a_circle,
@@ -619,11 +622,12 @@ def generate_number_card(shape, color, number, fill, number_types, scale):
     svg._set_colors([BLACK, COLOR_PAIRS[color][1]])
     svg_string = svg._header()
     svg_string += svg._number_card(shape, (number + 1) * stab[fill],
-                                  COLOR_PAIRS[color][0], 
-                                  methodX, methodO[number_types[0]], 
+                                  COLOR_PAIRS[color][0],
+                                  methodX, methodO[number_types[0]],
                                   methodC[number_types[1]])
     svg_string += svg._footer()
     return svg_string
+
 
 def generate_word_card(shape, color, number, fill, scale):
     svg = SVG()
@@ -647,6 +651,7 @@ def generate_word_card(shape, color, number, fill, scale):
     svg_string += svg._footer()
     return svg_string
 
+
 def generate_match_card(scale):
     svg = SVG()
     svg._set_scale(scale)
@@ -655,6 +660,7 @@ def generate_match_card(scale):
     svg_string = svg._header()
     svg_string += svg._footer()
     return svg_string
+
 
 def generate_selected_card(scale):
     svg = SVG()
@@ -665,20 +671,23 @@ def generate_selected_card(scale):
     svg_string += svg._footer()
     return svg_string
 
-#
 # Command line utilities used for testing purposed only
-#
+
+
 def open_file(datapath, filename):
     return file(os.path.join(datapath, filename), "w")
 
+
 def close_file(f):
     f.close()
+
 
 def generator(datapath, mO=MAYAN, mC=HASH):
     generate_pattern_cards(datapath)
     generate_number_cards(datapath, [mO, mC])
     generate_word_cards(datapath)
     generate_extras(datapath)
+
 
 def generate_pattern_cards(datapath):
     i = 0
@@ -692,6 +701,7 @@ def generate_pattern_cards(datapath):
                     close_file(f)
                     i += 1
 
+
 def generate_number_cards(datapath, number_types):
     i = 0
     for t in range(3):
@@ -703,6 +713,7 @@ def generate_number_cards(datapath, number_types):
                     f.write(generate_number_card(t, c, n, s, number_types, 1))
                     close_file(f)
                     i += 1
+
 
 def generate_word_cards(datapath):
     i = 0
@@ -716,6 +727,7 @@ def generate_word_cards(datapath):
                     close_file(f)
                     i += 1
 
+
 def generate_extras(datapath):
     f = open_file(datapath, "match.svg")
     f.write(generate_match_card(1))
@@ -724,8 +736,10 @@ def generate_extras(datapath):
     f.write(generate_selected_card(1))
     close_file(f)
 
+
 def main():
     return 0
+
 
 if __name__ == "__main__":
     if not os.path.exists(os.path.join(os.path.abspath('.'), 'images')):

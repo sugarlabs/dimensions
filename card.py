@@ -5,11 +5,11 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 3 of the License, or
 # (at your option) any later version.
-#
-# You should have received a copy of the GNU Lesser General Public
-# License along with this library; if not, write to the
-# Free Software Foundation, Inc., 59 Temple Place - Suite 330,
-# Boston, MA 02111-1307, USA.
+
+# You should have received a copy of the GNU General Public License
+# along with this library; if not, write to the Free Software
+# Foundation, 51 Franklin Street, Suite 500 Boston, MA 02110-1335 USA
+
 
 import pygtk
 pygtk.require('2.0')
@@ -25,11 +25,11 @@ from sprites import Sprite
 
 
 class Card:
-    """ Individual cards """
+    ''' Individual cards '''
 
     def __init__(self, sprites, string, attributes, file_path=None,
                  scale=1.0):
-        """ Create the card and store its attributes """
+        ''' Create the card and store its attributes '''
         if attributes[0] == SELECTMASK:
             self.spr = Sprite(sprites, 0, 0, svg_str_to_pixbuf(string))
             self.index = SELECTMASK
@@ -41,9 +41,9 @@ class Card:
             self.color = attributes[1]
             self.num = attributes[2]
             self.fill = attributes[3]
-            self.index = self.shape * COLORS * NUMBER * FILLS+\
-                         self.color * NUMBER * FILLS +\
-                         self.num * FILLS +\
+            self.index = self.shape * COLORS * NUMBER * FILLS + \
+                         self.color * NUMBER * FILLS + \
+                         self.num * FILLS + \
                          self.fill
             self.spr = Sprite(sprites, 0, 0, svg_str_to_pixbuf(string))
             if file_path is not None:
@@ -51,18 +51,18 @@ class Card:
                                    dx=int(scale * CARD_WIDTH * .125),
                                    dy=int(scale * CARD_HEIGHT * .125))
 
-
     def show_card(self):
-        """ Show the card """
+        ''' Show the card '''
         self.spr.set_layer(2000)
         self.spr.draw()
 
     def hide_card(self):
+        ''' Hide a card '''
         self.spr.hide()
 
 
 def svg_str_to_pixbuf(string):
-    """ Load pixbuf from SVG string """
+    ''' Load pixbuf from SVG string '''
     pl = gtk.gdk.PixbufLoader('svg')
     pl.write(string)
     pl.close()
@@ -71,7 +71,7 @@ def svg_str_to_pixbuf(string):
 
 
 def load_image(object, scale):
+    ''' Load pixbuf from file '''
     return gtk.gdk.pixbuf_new_from_file_at_size(object.file_path,
                                                 int(scale * CARD_WIDTH * .75),
                                                 int(scale * CARD_HEIGHT * .75))
-

@@ -4,11 +4,12 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 3 of the License, or
 # (at your option) any later version.
-#
-# You should have received a copy of the GNU General Public
-# License along with this library; if not, write to the
-# Free Software Foundation, Inc., 59 Temple Place - Suite 330,
-# Boston, MA 02111-1307, USA.
+
+
+# You should have received a copy of the GNU General Public License
+# along with this library; if not, write to the Free Software
+# Foundation, 51 Franklin Street, Suite 500 Boston, MA 02110-1335 USA
+
 
 import pygtk
 pygtk.require('2.0')
@@ -55,10 +56,10 @@ except(ImportError, AttributeError):
 from StringIO import StringIO
 
 from constants import DECKSIZE, PRODUCT, HASH, ROMAN, WORD, CHINESE, MAYAN, \
-                      INCAN, DOTS, STAR, DICE, LINES, DEAL, HIGH, MEDIUM, LOW, \
-                      DIFFICULTY_LEVEL
+                      INCAN, DOTS, STAR, DICE, LINES, DEAL
 
 from game import Game
+
 
 BEGINNER = 2
 INTERMEDIATE = 0
@@ -372,8 +373,9 @@ class VisualMatchActivity(activity.Activity):
         self.button_pattern = _button_factory('new-pattern-game',
             _('New pattern game'), self._select_game_cb, games_toolbar,
                                               'pattern')
-        self.button_number = _button_factory('new-number-game',
-            _('New number game'), self._select_game_cb, games_toolbar, 'number')
+        self.button_number = _button_factory(
+            'new-number-game', _('New number game'), self._select_game_cb,
+            games_toolbar, 'number')
         self.button_word = _button_factory('new-word-game', _('New word game'),
             self._select_game_cb, games_toolbar, 'word')
         self.button_custom = _button_factory('no-custom-game',
@@ -392,7 +394,6 @@ class VisualMatchActivity(activity.Activity):
                                                  tools_toolbar)
         self.import_button = _button_factory('image-tools',
             _('Import custom cards'), self.image_import_cb, tools_toolbar)
-
 
         self.product_button = _radio_button_factory(
             name='product',
@@ -583,7 +584,8 @@ class VisualMatchActivity(activity.Activity):
         if hasattr(self, 'vmw'):
             self.metadata['play_level'] = self.vmw.level
             self.metadata['low_score_beginner'] = int(self.vmw.low_score[0])
-            self.metadata['low_score_intermediate'] = int(self.vmw.low_score[1])
+            self.metadata['low_score_intermediate'] = int(
+                self.vmw.low_score[1])
             self.metadata['low_score_expert'] = int(self.vmw.low_score[2])
             self.metadata['robot_time'] = self.vmw.robot_time
             self.metadata['numberO'] = self.vmw.numberO
@@ -687,8 +689,8 @@ class VisualMatchActivity(activity.Activity):
         self.tubes_chan = self._shared_activity.telepathy_tubes_chan
         self.text_chan = self._shared_activity.telepathy_text_chan
 
-        self.tubes_chan[telepathy.CHANNEL_TYPE_TUBES].connect_to_signal\
-            ('NewTube', self._new_tube_cb)
+        self.tubes_chan[telepathy.CHANNEL_TYPE_TUBES].connect_to_signal(
+            'NewTube', self._new_tube_cb)
 
         _logger.debug('This is my activity: making a tube...')
         id = self.tubes_chan[telepathy.CHANNEL_TYPE_TUBES].OfferDBusTube(

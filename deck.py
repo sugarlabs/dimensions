@@ -4,11 +4,11 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 3 of the License, or
 # (at your option) any later version.
-#
-# You should have received a copy of the GNU Lesser General Public
-# License along with this library; if not, write to the
-# Free Software Foundation, Inc., 59 Temple Place - Suite 330,
-# Boston, MA 02111-1307, USA.
+
+# You should have received a copy of the GNU General Public License
+# along with this library; if not, write to the Free Software
+# Foundation, 51 Franklin Street, Suite 500 Boston, MA 02110-1335 USA
+
 
 import pygtk
 pygtk.require('2.0')
@@ -36,7 +36,7 @@ class Deck:
         number_range = NUMBER
         fill_range = FILLS
         if level == MEDIUM:
-            fill_range = 1       
+            fill_range = 1
         elif level == LOW:
             fill_range = 1
             shape_range = 1
@@ -73,7 +73,8 @@ class Deck:
             self.cards.append(Card(sprites, generate_word_card(shape, color,
                 num, fill, scale), [shape, color, num, fill]))
             self.cards[len(self.cards) - 1].spr.set_label(lists[shape][num])
-            self.cards[len(self.cards) - 1].spr.set_label_attributes(scale * 24)
+            self.cards[len(self.cards) - 1].spr.set_label_attributes(
+                scale * 24)
             if fill == 0:
                 self.cards[len(self.cards) - 1].spr.set_font('Sans Bold')
                 self.cards[len(self.cards) - 1].spr.set_label_color(
