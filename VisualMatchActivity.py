@@ -25,8 +25,6 @@ if _NEW_SUGAR_SYSTEM:
     from sugar.activity.widgets import ActivityToolbarButton
     from sugar.activity.widgets import StopButton
     from sugar.graphics.toolbarbox import ToolbarButton
-from sugar.graphics.toolbutton import ToolButton
-from sugar.graphics.radiotoolbutton import RadioToolButton
 
 from sugar.datastore import datastore
 
@@ -98,6 +96,7 @@ class VisualMatchActivity(activity.Activity):
         if self._saved_state == None:
             # Launch 'attract mode' by turning on Robot with 5 second delay
             self.vmw.robot_time = 5
+            self._robot_time_spin.set_value(self.vmw.robot_time)
             self._robot_cb()
 
         if self._editing_word_list:
@@ -426,7 +425,7 @@ class VisualMatchActivity(activity.Activity):
             'robot-off', toolbar, self._robot_cb,
             tooltip=_('Play with the computer'))
 
-        self._robot_time_spin = spin_factory(self._robot_time, 15, 180,
+        self._robot_time_spin = spin_factory(self._robot_time, 5, 180,
                                               self._robot_time_spin_cb,
                                               toolbar)
         separator_factory(toolbar, False, True)
