@@ -1,3 +1,12 @@
+32
+
+ENHANCEMENT:
+* Using Cairo graphics
+* Animate loading of new cards
+
+BUG FIX:
+* Set robot time during "attract mode"
+
 31
 
 ENHANCEMENT:
