@@ -42,8 +42,10 @@ class Grid:
         self.xinc = int(card_width * 1.2)
         self.top = 10
         self.yinc = int(card_height * 1.33)
-        self.dx = [0, 0, 0]
-        self.dy = [0, 0, 0]
+        self.dx = [0, 0, 0, 0, 0, 0]
+        self.dy = [0, 0, 0, 0, 0, 0]
+        self.ex = [0, 0, 0, 0, 0, 0]
+        self.ey = [0, 0, 0, 0, 0, 0]
 
     def deal(self, deck):
         ''' Deal an initial set of cards. '''
@@ -85,7 +87,7 @@ class Grid:
 
     def remove_and_replace(self, clicked_set, deck):
         ''' Remove a match from the grid and replace with new cards. '''
-        for a in clicked_set:
+        for j, a in enumerate(clicked_set):
             # Move the match to the match display area
             self.display_match(a, clicked_set.index(a))
             # Find the index into the grid of the match card
@@ -97,9 +99,9 @@ class Grid:
                 else:
                     # Put new card in grid position of card we are replacing.
                     self.grid[i] = deck.deal_next_card()
-                    self.place_a_card(self.grid[i],
-                                      self.grid_to_xy(i)[0],
-                                      self.grid_to_xy(i)[1])
+                    timeout_id = gobject.timeout_add(
+                        1200, self.place_a_card, self.grid[i],
+                        self.grid_to_xy(i)[0], self.grid_to_xy(i)[1], j)
             else:
                 # Mark as empty the grid positions we are not refilling
                 self.grid[i] = None
@@ -107,17 +109,20 @@ class Grid:
     def display_match(self, spr, i):
         ''' Move card to the match area. '''
         spr.set_layer(2000)
-        self.dx[i] = int((MATCH_POSITION - spr.get_xy()[0]) / 10)
-        self.dy[i] = int(((self.top + i * self.yinc) - spr.get_xy()[1]) / 10)
-        timeout_id = gobject.timeout_add(100, self._move, spr, i)
+        self.ex[i] = MATCH_POSITION
+        self.ey[i] = self.top + i * self.yinc
+        self.dx[i] = int((self.ex[i] - spr.get_xy()[0]) / 10)
+        self.dy[i] = int((self.ey[i] - spr.get_xy()[1]) / 10)
+        timeout_id = gobject.timeout_add(
+            100, self._move_to_position, spr, i)
 
-    def _move(self, spr, i):
+    def _move_to_position(self, spr, i):
         spr.move_relative((self.dx[i], self.dy[i]))
-        if _distance_squared(spr.get_xy(),
-                             (MATCH_POSITION, self.top + i * self.yinc)) < 100:
-            spr.move((MATCH_POSITION, self.top + i * self.yinc))
+        if _distance_squared(spr.get_xy(), (self.ex[i], self.ey[i])) < 100:
+            spr.move((self.ex[i], self.ey[i]))
         else:
-            timeout_id = gobject.timeout_add(100, self._move, spr, i)
+            timeout_id = gobject.timeout_add(
+                100, self._move_to_position, spr, i)
 
     def consolidate(self):
         ''' If we have removed cards from an expanded grid,
@@ -134,11 +139,22 @@ class Grid:
                 else:
                     i += 1
 
-    def place_a_card(self, c, x, y):
+    def place_a_card(self, c, x, y, animate=-1):
         ''' Place a card at position x,y and display it. '''
         if c is not None:
-            c.spr.move((x, y))
-            c.show_card()
+            if animate == -1:
+                c.spr.move((x, y))
+                c.show_card()
+            else:
+                c.spr.set_layer(1999)
+                self.ex[animate + 3] = x
+                self.ey[animate + 3] = y
+                self.dx[animate + 3] = int(
+                    (self.ex[animate + 3] - c.spr.get_xy()[0]) / 10)
+                self.dy[animate + 3] = int(
+                    (self.ey[animate + 3] - c.spr.get_xy()[1]) / 10)
+                timeout_id = gobject.timeout_add(100, self._move_to_position,
+                        c.spr, animate + 3)
 
     def xy_to_grid(self, x, y):
         ''' Convert from sprite x,y to grid index. '''
