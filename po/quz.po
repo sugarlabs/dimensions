@@ -1,351 +1,394 @@
-# SOME DESCRIPTIVE TITLE.
-# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
-# This file is distributed under the same license as the PACKAGE package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-# SOME DESCRIPTIVE TITLE.
-# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
-# This file is distributed under the same license as the PACKAGE package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-# SOME DESCRIPTIVE TITLE.
-# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
-# This file is distributed under the same license as the PACKAGE package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-# SOME DESCRIPTIVE TITLE.
-# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
-# This file is distributed under the same license as the PACKAGE package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-# SOME DESCRIPTIVE TITLE.
-# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
-# This file is distributed under the same license as the PACKAGE package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-# SOME DESCRIPTIVE TITLE.
-# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
-# This file is distributed under the same license as the PACKAGE package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-# SOME DESCRIPTIVE TITLE.
-# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
-# This file is distributed under the same license as the PACKAGE package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-# SOME DESCRIPTIVE TITLE.
-# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
-# This file is distributed under the same license as the PACKAGE package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2011-08-03 10:26-0400\n"
-"PO-Revision-Date: 2011-12-07 05:23+0200\n"
+"PO-Revision-Date: 2011-11-26 09:26+0200\n"
 "Last-Translator: Chris <cjl@laptop.org>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
-"Language: pl\n"
+"Language: quz\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 "
-"|| n%100>=20) ? 1 : 2);\n"
+"Plural-Forms: nplurals=2; plural=(n % 10 == 1 && n % 100 != 11) ? 0 : 1;\n"
 "X-Generator: Pootle 2.0.5\n"
 
+#  "Coincidencia visual"
 #: activity/activity.info:2 visualmatch.py:35 game.py:525
 msgid "Visual Match"
-msgstr "Wzrokowa Para"
+msgstr ""
 
+#  "cinco"
 #: constants.py:70
 msgid "five"
-msgstr "pięć"
+msgstr ""
 
+#  "siete"
 #: constants.py:70
 msgid "seven"
-msgstr "siedem"
+msgstr ""
 
+#  "once"
 #: constants.py:70
 msgid "eleven"
-msgstr "jedenaście"
+msgstr ""
 
+#  "diez"
 #: constants.py:70
 msgid "ten"
-msgstr "dziesięć"
+msgstr ""
 
+#  "catorce"
 #: constants.py:71
 msgid "fourteen"
-msgstr "czternaście"
+msgstr ""
 
+#  "quince"
 #: constants.py:71
 msgid "fifteen"
-msgstr "piętnaście"
+msgstr ""
 
+#  "veintidós"
 #: constants.py:71
 msgid "twenty two"
-msgstr "dwadzieścia dwa"
+msgstr ""
 
+#  "veintiuno"
 #: constants.py:72
 msgid "twenty one"
-msgstr "dwadzieścia jeden"
+msgstr ""
 
+#  "treinta y tres"
 #: constants.py:72
 msgid "thirty three"
-msgstr "trzydzieści trzy"
+msgstr ""
 
+#  "Haga clic en las tarjetas para crear grupos de tres."
 #: visualmatch.py:36
 msgid "Click on cards to create sets of three."
-msgstr "Kliknij na karty aby utworzyć grupy po trzy."
+msgstr ""
 
+#  "Cambiar nivel"
 #: visualmatch.py:40
 msgid "Toggle level"
-msgstr "Zmiana poziomu"
+msgstr ""
 
+#  "Nuevo juego de diseños"
 #: visualmatch.py:49 VisualMatchActivity.py:350
 msgid "New pattern game"
-msgstr "Nowa gra we wzory"
+msgstr ""
 
+#  "Nuevo juego de números"
 #: visualmatch.py:53 VisualMatchActivity.py:353
 msgid "New number game"
-msgstr "Nowa gra liczbowa"
+msgstr ""
 
+#  "Nuevo juego de palabras"
 #: visualmatch.py:57 VisualMatchActivity.py:354
 msgid "New word game"
-msgstr "Nowa gra słowna"
+msgstr ""
 
+#  "Encender/Apagar Robot"
 #: visualmatch.py:66
 msgid "Robot on/off"
-msgstr "Włączyć/Wyłączyć Robota"
+msgstr ""
 
+#  "90 seg."
 #: visualmatch.py:70
 msgid "90 sec."
-msgstr "90 sek."
+msgstr ""
 
+#  "60 seg."
 #: visualmatch.py:74
 msgid "60 sec."
-msgstr "60 sek."
+msgstr ""
 
+#  "45 seg."
 #: visualmatch.py:78
 msgid "45 sec."
-msgstr "45 sek."
+msgstr ""
 
+#  "30 seg."
 #: visualmatch.py:82
 msgid "30 sec."
-msgstr "30 sek."
+msgstr ""
 
+#  "15 seg."
 #: visualmatch.py:86
 msgid "15 sec."
-msgstr "15 sek."
+msgstr ""
 
+#  "Producto"
 #: visualmatch.py:95
 msgid "Product"
-msgstr "Produkt"
+msgstr ""
 
+#  "Romano"
 #: visualmatch.py:99
 msgid "Roman"
-msgstr "Rzymski"
+msgstr ""
 
+#  "Palabras"
 #: visualmatch.py:103
 msgid "Word"
-msgstr "Słowo"
+msgstr ""
 
+#  "Chino"
 #: visualmatch.py:107 VisualMatchActivity.py:384
 msgid "Chinese"
-msgstr "Chiński"
+msgstr ""
 
+#  "Maya"
 #: visualmatch.py:111 VisualMatchActivity.py:388
 msgid "Mayan"
-msgstr "Majów"
+msgstr ""
 
+#  "Barras"
 #: visualmatch.py:115
 msgid "Hash"
-msgstr "Paski"
+msgstr ""
 
+#  "Dados"
 #: visualmatch.py:119
 msgid "Dice"
-msgstr "Kości"
+msgstr "Wayrukuna"
 
+#  "Puntos"
 #: visualmatch.py:123
 msgid "Dots"
-msgstr "Punkty"
+msgstr ""
 
+#  "Estrella"
 #: visualmatch.py:127
 msgid "Star"
-msgstr "Gwiazda"
+msgstr "Ch'aska"
 
+#  "Líneas"
 #: visualmatch.py:131
 msgid "Lines"
-msgstr "Linie"
+msgstr ""
 
+#  "ratón"
 #: visualmatch.py:171 VisualMatchActivity.py:263
 msgid "mouse"
-msgstr "mysz"
+msgstr ""
 
+#  "gato"
 #: visualmatch.py:171 VisualMatchActivity.py:264
 msgid "cat"
-msgstr "kot"
+msgstr ""
 
+#  "perro"
 #: visualmatch.py:171 VisualMatchActivity.py:265
 msgid "dog"
-msgstr "pies"
+msgstr ""
 
+#  "queso"
 #: visualmatch.py:172 VisualMatchActivity.py:266
 msgid "cheese"
-msgstr "ser"
+msgstr ""
 
+#  "manzana"
 #: visualmatch.py:172 VisualMatchActivity.py:267
 msgid "apple"
-msgstr "jabłko"
+msgstr ""
 
+#  "pan"
 #: visualmatch.py:172 VisualMatchActivity.py:268
 msgid "bread"
-msgstr "chleb"
+msgstr ""
 
+#  "luna"
 #: visualmatch.py:173 VisualMatchActivity.py:269
 msgid "moon"
-msgstr "księżyc"
+msgstr ""
 
+#  "sol"
 #: visualmatch.py:173 VisualMatchActivity.py:270
 msgid "sun"
-msgstr "słońce"
+msgstr ""
 
+#  "tierra"
 #: visualmatch.py:173 VisualMatchActivity.py:271
 msgid "earth"
-msgstr "ziemia"
+msgstr ""
 
+#  "Editar tarjetas personalizadas"
 #: game.py:260
 msgid "Edit the custom cards."
-msgstr "Edycja spersonalizowanych kart."
+msgstr ""
 
+#  "Editar las tarjetas de palabras."
 #: game.py:288
 msgid "Edit the word cards."
-msgstr "Edycja kart ze słowami."
+msgstr ""
 
+#  "Fin del juego"
 #: game.py:381
 msgid "Game over"
-msgstr "Koniec gry"
+msgstr ""
 
+#  "Sin solución"
 #: game.py:390
 msgid "unsolvable"
-msgstr "Bez rozwiązania"
+msgstr ""
 
+#  "tarjetas"
 #: game.py:414 game.py:495 VisualMatchActivity.py:442
 msgid "cards"
-msgstr "karty"
+msgstr ""
 
+#  "Nuevo récord"
 #: game.py:425
 msgid "New record"
-msgstr "Nowy rekord"
+msgstr ""
 
+#  "partido"
 #: game.py:501 game.py:503
 msgid "match"
-msgstr "rozgrywka"
+msgstr ""
 
+#  "partidos"
 #: game.py:508 game.py:510 VisualMatchActivity.py:444
 msgid "matches"
-msgstr "rozgrywki"
+msgstr ""
 
+#  "Nuevo juego a medida"
 #: game.py:713
 msgid "New custom game"
-msgstr "Nowa gra dowolna"
+msgstr ""
 
+#  "Intermedio"
 #: VisualMatchActivity.py:62
 msgid "intermediate"
-msgstr "średni"
+msgstr ""
 
+#  "experto"
 #: VisualMatchActivity.py:62
 msgid "expert"
-msgstr "ekspert"
+msgstr ""
 
+#  "principiante"
 #: VisualMatchActivity.py:62
 msgid "beginner"
-msgstr "początkujący"
+msgstr ""
 
+#  "Jugar con la computadora."
 #: VisualMatchActivity.py:173
 msgid "Play with the computer."
-msgstr "Gra z komputerem."
+msgstr ""
 
+#  "Parar de jugar con la computadora."
 #: VisualMatchActivity.py:178
 msgid "Stop playing with the computer."
-msgstr "Zakończ grę z komputerem."
+msgstr ""
 
+#  "Juego"
 #: VisualMatchActivity.py:343
 msgid "Game"
-msgstr "Gra"
+msgstr "Puqllay"
 
+#  "Números"
 #: VisualMatchActivity.py:344
 msgid "Numbers"
-msgstr "Numery"
+msgstr ""
 
+#  "Herramientas"
 #: VisualMatchActivity.py:345
 msgid "Tools"
-msgstr "Narzędzia"
+msgstr "Llamk'anakuna"
 
+#  "Importar tarjetas personalizadas"
 #: VisualMatchActivity.py:357 VisualMatchActivity.py:371
 msgid "Import custom cards"
-msgstr "Importuj spersonalizowane karty"
+msgstr ""
 
+#  "Editar listas de palabras."
 #: VisualMatchActivity.py:367
 msgid "Edit word lists."
-msgstr "Edycja list słów."
+msgstr ""
 
+#  "Producto"
 #: VisualMatchActivity.py:372
 msgid "product"
-msgstr "produkt"
+msgstr ""
 
+#  "Números romanos"
 #: VisualMatchActivity.py:376
 msgid "Roman numerals"
-msgstr "Liczby rzymskie"
+msgstr ""
 
+#  "Palabras"
 #: VisualMatchActivity.py:380
 msgid "word"
-msgstr "Słowa"
+msgstr ""
 
+#  "Quipu"
 #: VisualMatchActivity.py:392
 msgid "Quipu"
-msgstr "Quipu"
+msgstr ""
 
+#  "Barras"
 #: VisualMatchActivity.py:397
 msgid "hash marks"
-msgstr "paski"
+msgstr ""
 
+#  "Puntos en círculos"
 #: VisualMatchActivity.py:401
 msgid "dots in a circle"
-msgstr "punkty w okręgach"
+msgstr ""
 
+#  "Puntas de estrellas"
 #: VisualMatchActivity.py:405
 msgid "points on a star"
-msgstr "punkty na gwieździe"
+msgstr ""
 
+#  "Dados"
 #: VisualMatchActivity.py:409
 msgid "dice"
-msgstr "kości"
+msgstr "wayrukuna"
 
+#  "Puntos en líneas"
 #: VisualMatchActivity.py:413
 msgid "dots in a line"
-msgstr "punkty na liniach"
+msgstr ""
 
+#  "Jugar con la computadora."
 #: VisualMatchActivity.py:422
 msgid "Play with the computer"
-msgstr "Gra z komputerem"
+msgstr ""
 
+#  "Elegir nivel de dificultad."
 #: VisualMatchActivity.py:429
 msgid "Set difficulty level."
-msgstr "Wybór poziomu trudności."
+msgstr ""
 
+#  "Emparejar"
 #: VisualMatchActivity.py:438
 msgid "Find a match."
-msgstr "Połącz w pary."
+msgstr ""
 
+#  "Describa su actividad"
 #: namingalert.py:82
 msgid "Describe your activity"
-msgstr "Opisz swoją aktywność"
+msgstr ""
 
+#  "Guardar"
 #: namingalert.py:87
 msgid "Keep"
-msgstr "Zachować"
+msgstr "Kikinchata waqaychay"
 
+#  "Sin título"
 #: namingalert.py:283
 msgid "Untitled"
-msgstr "Bez tytułu"
+msgstr ""
 
+#  "Descripción:"
 #: namingalert.py:290
 msgid "Description:"
-msgstr "Opis:"
+msgstr "Imamanta:"
 
+#  "Etiquetas:"
 #: namingalert.py:314
 msgid "Tags:"
-msgstr "Etykiety:"
+msgstr "Sutichaq:"
