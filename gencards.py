@@ -589,7 +589,7 @@ class SVG:
 
 def generate_smiley(scale):
     svg = SVG()
-    svg._set_scale(scale * 2)
+    svg._set_scale(scale)
     svg._set_colors([YELLOW, BLACK])
     svg_string = svg._header()
     svg_string += svg._smiley()

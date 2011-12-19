@@ -103,7 +103,7 @@ class Game():
         self.sprites = Sprites(self.canvas)
         self.selected = []
         self.match_display_area = []
-        self.smiley = None
+        self.smiley = []
         self.clicked = [None, None, None]
         self.low_score = [-1, -1, -1]
         self.robot = False
@@ -140,12 +140,11 @@ class Game():
                                           [MATCHMASK, 0, 0, 0]))
                 self.grid.display_match(self.match_display_area[i].spr, i)
 
-            self.smiley = Card(self.sprites, generate_smiley(self.scale),
-                               [BACKGROUNDMASK, 0, 0, 0])
-            self.smiley.spr.move((self.width / 2 - \
-                                      self.smiley.spr.rect.width / 2,
-                                  self.height / 2 -\
-                                      self.smiley.spr.rect.height / 2))
+            for i in range((ROW - 1)* COL):
+                self.smiley.append(
+                    Card(self.sprites, generate_smiley(self.scale),
+                         [BACKGROUNDMASK, 0, 0, 0]))
+                self.smiley[-1].spr.move(self.grid.grid_to_xy(i))
         self._unselect()
 
         # Restore saved state on resume or share.
@@ -207,7 +206,8 @@ class Game():
                 gobject.source_remove(self.match_timeout_id)
             self._timer_reset()
 
-        self.smiley.hide_card()
+        for i in range((ROW - 1) * COL):
+            self.smiley[i].hide_card()
 
     def _sharing(self):
         ''' Are we sharing? '''
@@ -382,7 +382,9 @@ class Game():
             self.set_label('status', '%s (%d:%02d)' %
                 (_('Game over'), int(self.total_time / 60),
                  int(self.total_time % 60)))
-            self.smiley.show_card()
+            for i in range((ROW - 1) * COL):
+                if self.grid.grid[i] == None:
+                    self.smiley[i].show_card()
             self.match_timeout_id = gobject.timeout_add(
                 2000, self._show_matches, 0)
             return True
