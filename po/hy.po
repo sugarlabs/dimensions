@@ -27,15 +27,15 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2011-08-03 10:26-0400\n"
-"PO-Revision-Date: 2011-07-29 20:07+0200\n"
-"Last-Translator: <anush.mkrtchyan@ca1492.com>\n"
+"PO-Revision-Date: 2011-12-22 21:23+0200\n"
+"Last-Translator: Jasmine <udea_jasmine@yahoo.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
-"Language: \n"
+"Language: hy\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Pootle 2.0.1\n"
+"X-Generator: Pootle 2.0.5\n"
 
 #: activity/activity.info:2 visualmatch.py:35 game.py:525
 msgid "Visual Match"
@@ -231,19 +231,19 @@ msgstr "համատիպներ"
 
 #: game.py:713
 msgid "New custom game"
-msgstr "Նոր պատվիրված խաղ"
+msgstr "Նոր հարմարեցված խաղ"
 
 #: VisualMatchActivity.py:62
 msgid "intermediate"
-msgstr "միջանկյալ"
+msgstr "Միջին բարդության"
 
 #: VisualMatchActivity.py:62
 msgid "expert"
-msgstr "փորձագետ"
+msgstr "Փորձագետի մակարդակ"
 
 #: VisualMatchActivity.py:62
 msgid "beginner"
-msgstr "սկսնակ"
+msgstr "Սկսնակի մակարդակ"
 
 #: VisualMatchActivity.py:173
 msgid "Play with the computer."
@@ -267,7 +267,7 @@ msgstr "Գործիքներ"
 
 #: VisualMatchActivity.py:357 VisualMatchActivity.py:371
 msgid "Import custom cards"
-msgstr "Ներդնել պատվիրված քարտերը"
+msgstr "Ներմուծել հարմարեցված քարտերը"
 
 #: VisualMatchActivity.py:367
 msgid "Edit word lists."
@@ -279,12 +279,13 @@ msgstr "արտադրանք"
 
 #: VisualMatchActivity.py:376
 msgid "Roman numerals"
-msgstr "հռոմեական թվեր"
+msgstr "Հռոմեական թվեր"
 
 #: VisualMatchActivity.py:380
 msgid "word"
 msgstr "բառ"
 
+# Գունավոր թելերով ու հանգույցների համակարգով "հաշվիչ, որ օգտագործվում էր Ինկերի թագավորությունում:
 #: VisualMatchActivity.py:392
 msgid "Quipu"
 msgstr "Quipu"
@@ -295,11 +296,11 @@ msgstr "թափոնային բծեր"
 
 #: VisualMatchActivity.py:401
 msgid "dots in a circle"
-msgstr "կետեր շրջանագծից ներս"
+msgstr "կետեր` շրջանագծի ձևով"
 
 #: VisualMatchActivity.py:405
 msgid "points on a star"
-msgstr "աստղի թեւերը"
+msgstr "աստղի գագաթները"
 
 #: VisualMatchActivity.py:409
 msgid "dice"
@@ -307,7 +308,7 @@ msgstr "զառեր"
 
 #: VisualMatchActivity.py:413
 msgid "dots in a line"
-msgstr "կետեր գծի վրա"
+msgstr "կետեր` գծի վրա"
 
 #: VisualMatchActivity.py:422
 msgid "Play with the computer"
@@ -323,7 +324,7 @@ msgstr "Գտեք համատիպ:"
 
 #: namingalert.py:82
 msgid "Describe your activity"
-msgstr "Նկարագրեք Ձեր գործողությունը"
+msgstr "Նկարագրեք Ձեր գործունեությունը"
 
 #: namingalert.py:87
 msgid "Keep"
