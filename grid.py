@@ -118,7 +118,7 @@ class Grid:
 
     def _move_to_position(self, spr, i):
         spr.move_relative((self.dx[i], self.dy[i]))
-        if _distance_squared(spr.get_xy(), (self.ex[i], self.ey[i])) < 100:
+        if _distance_squared(spr.get_xy(), (self.ex[i], self.ey[i])) < 200:
             spr.move((self.ex[i], self.ey[i]))
         else:
             timeout_id = gobject.timeout_add(
