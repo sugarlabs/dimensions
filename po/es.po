@@ -159,7 +159,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2011-08-03 10:26-0400\n"
-"PO-Revision-Date: 2011-11-26 07:04+0200\n"
+"PO-Revision-Date: 2012-01-11 07:47+0200\n"
 "Last-Translator: Chris <cjl@laptop.org>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: es\n"
@@ -331,7 +331,7 @@ msgstr "tierra"
 
 #: game.py:260
 msgid "Edit the custom cards."
-msgstr "Editar tarjetas personalizadas"
+msgstr "Editar tarjetas personalizadas."
 
 #: game.py:288
 msgid "Edit the word cards."
@@ -446,7 +446,7 @@ msgstr "Puntos en líneas"
 # Should verb be left in indefinite form?
 #: VisualMatchActivity.py:422
 msgid "Play with the computer"
-msgstr "Jugar con la computadora."
+msgstr "Jugar con la computadora"
 
 #: VisualMatchActivity.py:429
 msgid "Set difficulty level."
@@ -454,7 +454,7 @@ msgstr "Elegir nivel de dificultad."
 
 #: VisualMatchActivity.py:438
 msgid "Find a match."
-msgstr "Emparejar"
+msgstr "Emparejar."
 
 #: namingalert.py:82
 msgid "Describe your activity"
