@@ -26,7 +26,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-08-03 10:26-0400\n"
+"POT-Creation-Date: 2012-02-15 00:33-0500\n"
 "PO-Revision-Date: 2011-12-22 21:23+0200\n"
 "Last-Translator: Jasmine <udea_jasmine@yahoo.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -37,9 +37,158 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 "X-Generator: Pootle 2.0.5\n"
 
-#: activity/activity.info:2 visualmatch.py:35 game.py:525
+#: activity/activity.info:2 game.py:544 visualmatch.py:35
 msgid "Visual Match"
 msgstr "Տեսողական համատիպություն"
+
+#: VisualMatchActivity.py:68 VisualMatchActivity.py:446
+msgid "intermediate"
+msgstr "Միջին բարդության"
+
+#: VisualMatchActivity.py:68 VisualMatchActivity.py:454
+msgid "expert"
+msgstr "Փորձագետի մակարդակ"
+
+#: VisualMatchActivity.py:68 VisualMatchActivity.py:438
+msgid "beginner"
+msgstr "Սկսնակի մակարդակ"
+
+#: VisualMatchActivity.py:129
+msgid "Play with the computer."
+msgstr "Խաղալ համակարգչի հետ"
+
+#: VisualMatchActivity.py:134
+msgid "Stop playing with the computer."
+msgstr "Դադարել խաղալ համակարգչի հետ:"
+
+#: VisualMatchActivity.py:216 visualmatch.py:171
+msgid "mouse"
+msgstr "մկնիկ"
+
+#: VisualMatchActivity.py:217 visualmatch.py:171
+msgid "cat"
+msgstr "կատու"
+
+#: VisualMatchActivity.py:218 visualmatch.py:171
+msgid "dog"
+msgstr "շուն"
+
+#: VisualMatchActivity.py:219 visualmatch.py:172
+msgid "cheese"
+msgstr "պանիր"
+
+#: VisualMatchActivity.py:220 visualmatch.py:172
+msgid "apple"
+msgstr "խնձոր"
+
+#: VisualMatchActivity.py:221 visualmatch.py:172
+msgid "bread"
+msgstr "հաց"
+
+#: VisualMatchActivity.py:222 visualmatch.py:173
+msgid "moon"
+msgstr "լուսին"
+
+#: VisualMatchActivity.py:223 visualmatch.py:173
+msgid "sun"
+msgstr "արեւ"
+
+#: VisualMatchActivity.py:224 visualmatch.py:173
+msgid "earth"
+msgstr "երկիր"
+
+#: VisualMatchActivity.py:296
+msgid "Game"
+msgstr "Խաղ"
+
+#: VisualMatchActivity.py:297
+msgid "Numbers"
+msgstr "Թվեր"
+
+#: VisualMatchActivity.py:298
+msgid "Tools"
+msgstr "Գործիքներ"
+
+#: VisualMatchActivity.py:304 visualmatch.py:49
+msgid "New pattern game"
+msgstr "Նոր նախշերի խաղ"
+
+#: VisualMatchActivity.py:307 visualmatch.py:53
+msgid "New number game"
+msgstr "Նոր թվերի խաղ"
+
+#: VisualMatchActivity.py:310 visualmatch.py:57
+msgid "New word game"
+msgstr "Նոր բառերի խաղ"
+
+#: VisualMatchActivity.py:313 VisualMatchActivity.py:327
+msgid "Import custom cards"
+msgstr "Ներմուծել հարմարեցված քարտերը"
+
+#: VisualMatchActivity.py:323
+msgid "Edit word lists."
+msgstr "Խմբագրել բառացանկերը:"
+
+#: VisualMatchActivity.py:334
+msgid "product"
+msgstr "արտադրանք"
+
+#: VisualMatchActivity.py:342
+msgid "Roman numerals"
+msgstr "Հռոմեական թվեր"
+
+#: VisualMatchActivity.py:350
+msgid "word"
+msgstr "բառ"
+
+#: VisualMatchActivity.py:358 visualmatch.py:107
+msgid "Chinese"
+msgstr "չինական"
+
+#: VisualMatchActivity.py:366 visualmatch.py:111
+msgid "Mayan"
+msgstr "մայաների"
+
+# Գունավոր թելերով ու հանգույցների համակարգով "հաշվիչ, որ օգտագործվում էր Ինկերի թագավորությունում:
+#: VisualMatchActivity.py:374
+msgid "Quipu"
+msgstr "Quipu"
+
+#: VisualMatchActivity.py:385
+msgid "hash marks"
+msgstr "թափոնային բծեր"
+
+#: VisualMatchActivity.py:393
+msgid "dots in a circle"
+msgstr "կետեր` շրջանագծի ձևով"
+
+#: VisualMatchActivity.py:401
+msgid "points on a star"
+msgstr "աստղի գագաթները"
+
+#: VisualMatchActivity.py:409
+msgid "dice"
+msgstr "զառեր"
+
+#: VisualMatchActivity.py:417
+msgid "dots in a line"
+msgstr "կետեր` գծի վրա"
+
+#: VisualMatchActivity.py:426
+msgid "Play with the computer"
+msgstr "Խաղալ համակարգչի հետ"
+
+#: VisualMatchActivity.py:466
+msgid "Find a match."
+msgstr "Գտեք համատիպ:"
+
+#: VisualMatchActivity.py:470 game.py:419 game.py:514
+msgid "cards"
+msgstr "քարտեր"
+
+#: VisualMatchActivity.py:472 game.py:527 game.py:529
+msgid "matches"
+msgstr "համատիպներ"
 
 #: constants.py:70
 msgid "five"
@@ -77,6 +226,34 @@ msgstr "քսանմեկ"
 msgid "thirty three"
 msgstr "երեսուներեք"
 
+#: game.py:261
+msgid "Edit the custom cards."
+msgstr "խմբագրել պատվիրված քարտերը"
+
+#: game.py:289
+msgid "Edit the word cards."
+msgstr "Խմբագրել բառաքարտերը:"
+
+#: game.py:383
+msgid "Game over"
+msgstr "Խաղն ավարտված է"
+
+#: game.py:395
+msgid "unsolvable"
+msgstr "անլուծելի"
+
+#: game.py:430
+msgid "New record"
+msgstr "Նոր գրանցում"
+
+#: game.py:520 game.py:522
+msgid "match"
+msgstr "նույնանման"
+
+#: game.py:732
+msgid "New custom game"
+msgstr "Նոր հարմարեցված խաղ"
+
 #: visualmatch.py:36
 msgid "Click on cards to create sets of three."
 msgstr "Սեղմեք քարտերի վրա՝ եռյակներ ստեղծելու համար"
@@ -84,18 +261,6 @@ msgstr "Սեղմեք քարտերի վրա՝ եռյակներ ստեղծելու
 #: visualmatch.py:40
 msgid "Toggle level"
 msgstr "Միացման մակարդակ"
-
-#: visualmatch.py:49 VisualMatchActivity.py:350
-msgid "New pattern game"
-msgstr "Նոր նախշերի խաղ"
-
-#: visualmatch.py:53 VisualMatchActivity.py:353
-msgid "New number game"
-msgstr "Նոր թվերի խաղ"
-
-#: visualmatch.py:57 VisualMatchActivity.py:354
-msgid "New word game"
-msgstr "Նոր բառերի խաղ"
 
 #: visualmatch.py:66
 msgid "Robot on/off"
@@ -133,14 +298,6 @@ msgstr "հռոմեական"
 msgid "Word"
 msgstr "Բառ"
 
-#: visualmatch.py:107 VisualMatchActivity.py:384
-msgid "Chinese"
-msgstr "չինական"
-
-#: visualmatch.py:111 VisualMatchActivity.py:388
-msgid "Mayan"
-msgstr "մայաների"
-
 #: visualmatch.py:115
 msgid "Hash"
 msgstr "Թափոն"
@@ -161,183 +318,20 @@ msgstr "Աստղ"
 msgid "Lines"
 msgstr "Գծեր"
 
-#: visualmatch.py:171 VisualMatchActivity.py:263
-msgid "mouse"
-msgstr "մկնիկ"
+#~ msgid "Set difficulty level."
+#~ msgstr "Սահմանել բարդության աստիճանը:"
 
-#: visualmatch.py:171 VisualMatchActivity.py:264
-msgid "cat"
-msgstr "կատու"
+#~ msgid "Describe your activity"
+#~ msgstr "Նկարագրեք Ձեր գործունեությունը"
 
-#: visualmatch.py:171 VisualMatchActivity.py:265
-msgid "dog"
-msgstr "շուն"
+#~ msgid "Keep"
+#~ msgstr "Պահել"
 
-#: visualmatch.py:172 VisualMatchActivity.py:266
-msgid "cheese"
-msgstr "պանիր"
+#~ msgid "Untitled"
+#~ msgstr "Անվերնագիր"
 
-#: visualmatch.py:172 VisualMatchActivity.py:267
-msgid "apple"
-msgstr "խնձոր"
+#~ msgid "Description:"
+#~ msgstr "Նկարագրություն."
 
-#: visualmatch.py:172 VisualMatchActivity.py:268
-msgid "bread"
-msgstr "հաց"
-
-#: visualmatch.py:173 VisualMatchActivity.py:269
-msgid "moon"
-msgstr "լուսին"
-
-#: visualmatch.py:173 VisualMatchActivity.py:270
-msgid "sun"
-msgstr "արեւ"
-
-#: visualmatch.py:173 VisualMatchActivity.py:271
-msgid "earth"
-msgstr "երկիր"
-
-#: game.py:260
-msgid "Edit the custom cards."
-msgstr "խմբագրել պատվիրված քարտերը"
-
-#: game.py:288
-msgid "Edit the word cards."
-msgstr "Խմբագրել բառաքարտերը:"
-
-#: game.py:381
-msgid "Game over"
-msgstr "Խաղն ավարտված է"
-
-#: game.py:390
-msgid "unsolvable"
-msgstr "անլուծելի"
-
-#: game.py:414 game.py:495 VisualMatchActivity.py:442
-msgid "cards"
-msgstr "քարտեր"
-
-#: game.py:425
-msgid "New record"
-msgstr "Նոր գրանցում"
-
-#: game.py:501 game.py:503
-msgid "match"
-msgstr "նույնանման"
-
-#: game.py:508 game.py:510 VisualMatchActivity.py:444
-msgid "matches"
-msgstr "համատիպներ"
-
-#: game.py:713
-msgid "New custom game"
-msgstr "Նոր հարմարեցված խաղ"
-
-#: VisualMatchActivity.py:62
-msgid "intermediate"
-msgstr "Միջին բարդության"
-
-#: VisualMatchActivity.py:62
-msgid "expert"
-msgstr "Փորձագետի մակարդակ"
-
-#: VisualMatchActivity.py:62
-msgid "beginner"
-msgstr "Սկսնակի մակարդակ"
-
-#: VisualMatchActivity.py:173
-msgid "Play with the computer."
-msgstr "Խաղալ համակարգչի հետ"
-
-#: VisualMatchActivity.py:178
-msgid "Stop playing with the computer."
-msgstr "Դադարել խաղալ համակարգչի հետ:"
-
-#: VisualMatchActivity.py:343
-msgid "Game"
-msgstr "Խաղ"
-
-#: VisualMatchActivity.py:344
-msgid "Numbers"
-msgstr "Թվեր"
-
-#: VisualMatchActivity.py:345
-msgid "Tools"
-msgstr "Գործիքներ"
-
-#: VisualMatchActivity.py:357 VisualMatchActivity.py:371
-msgid "Import custom cards"
-msgstr "Ներմուծել հարմարեցված քարտերը"
-
-#: VisualMatchActivity.py:367
-msgid "Edit word lists."
-msgstr "Խմբագրել բառացանկերը:"
-
-#: VisualMatchActivity.py:372
-msgid "product"
-msgstr "արտադրանք"
-
-#: VisualMatchActivity.py:376
-msgid "Roman numerals"
-msgstr "Հռոմեական թվեր"
-
-#: VisualMatchActivity.py:380
-msgid "word"
-msgstr "բառ"
-
-# Գունավոր թելերով ու հանգույցների համակարգով "հաշվիչ, որ օգտագործվում էր Ինկերի թագավորությունում:
-#: VisualMatchActivity.py:392
-msgid "Quipu"
-msgstr "Quipu"
-
-#: VisualMatchActivity.py:397
-msgid "hash marks"
-msgstr "թափոնային բծեր"
-
-#: VisualMatchActivity.py:401
-msgid "dots in a circle"
-msgstr "կետեր` շրջանագծի ձևով"
-
-#: VisualMatchActivity.py:405
-msgid "points on a star"
-msgstr "աստղի գագաթները"
-
-#: VisualMatchActivity.py:409
-msgid "dice"
-msgstr "զառեր"
-
-#: VisualMatchActivity.py:413
-msgid "dots in a line"
-msgstr "կետեր` գծի վրա"
-
-#: VisualMatchActivity.py:422
-msgid "Play with the computer"
-msgstr "Խաղալ համակարգչի հետ"
-
-#: VisualMatchActivity.py:429
-msgid "Set difficulty level."
-msgstr "Սահմանել բարդության աստիճանը:"
-
-#: VisualMatchActivity.py:438
-msgid "Find a match."
-msgstr "Գտեք համատիպ:"
-
-#: namingalert.py:82
-msgid "Describe your activity"
-msgstr "Նկարագրեք Ձեր գործունեությունը"
-
-#: namingalert.py:87
-msgid "Keep"
-msgstr "Պահել"
-
-#: namingalert.py:283
-msgid "Untitled"
-msgstr "Անվերնագիր"
-
-#: namingalert.py:290
-msgid "Description:"
-msgstr "Նկարագրություն."
-
-#: namingalert.py:314
-msgid "Tags:"
-msgstr "Պիտակներ:"
+#~ msgid "Tags:"
+#~ msgstr "Պիտակներ:"
