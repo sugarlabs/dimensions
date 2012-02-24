@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-08-03 10:26-0400\n"
+"POT-Creation-Date: 2012-02-15 00:33-0500\n"
 "PO-Revision-Date: 2011-08-07 19:17+0200\n"
 "Last-Translator: Aputsiaq Niels <aj@isit.gl>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,9 +17,157 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: Pootle 2.0.1\n"
 
-#: activity/activity.info:2 visualmatch.py:35 game.py:525
+#: activity/activity.info:2 game.py:544 visualmatch.py:35
 msgid "Visual Match"
 msgstr "Visuelt Match"
+
+#: VisualMatchActivity.py:68 VisualMatchActivity.py:446
+msgid "intermediate"
+msgstr "trænet"
+
+#: VisualMatchActivity.py:68 VisualMatchActivity.py:454
+msgid "expert"
+msgstr "ekspert"
+
+#: VisualMatchActivity.py:68 VisualMatchActivity.py:438
+msgid "beginner"
+msgstr "begynder"
+
+#: VisualMatchActivity.py:129
+msgid "Play with the computer."
+msgstr "Spil med computeren."
+
+#: VisualMatchActivity.py:134
+msgid "Stop playing with the computer."
+msgstr "Stop spillet med computeren."
+
+#: VisualMatchActivity.py:216 visualmatch.py:171
+msgid "mouse"
+msgstr "mus"
+
+#: VisualMatchActivity.py:217 visualmatch.py:171
+msgid "cat"
+msgstr "kat"
+
+#: VisualMatchActivity.py:218 visualmatch.py:171
+msgid "dog"
+msgstr "hund"
+
+#: VisualMatchActivity.py:219 visualmatch.py:172
+msgid "cheese"
+msgstr "ost"
+
+#: VisualMatchActivity.py:220 visualmatch.py:172
+msgid "apple"
+msgstr "æble"
+
+#: VisualMatchActivity.py:221 visualmatch.py:172
+msgid "bread"
+msgstr "brød"
+
+#: VisualMatchActivity.py:222 visualmatch.py:173
+msgid "moon"
+msgstr "måne"
+
+#: VisualMatchActivity.py:223 visualmatch.py:173
+msgid "sun"
+msgstr "sol"
+
+#: VisualMatchActivity.py:224 visualmatch.py:173
+msgid "earth"
+msgstr "jord"
+
+#: VisualMatchActivity.py:296
+msgid "Game"
+msgstr "Spil"
+
+#: VisualMatchActivity.py:297
+msgid "Numbers"
+msgstr "Tal"
+
+#: VisualMatchActivity.py:298
+msgid "Tools"
+msgstr "Værktøjer"
+
+#: VisualMatchActivity.py:304 visualmatch.py:49
+msgid "New pattern game"
+msgstr "Nyt mønsterspil"
+
+#: VisualMatchActivity.py:307 visualmatch.py:53
+msgid "New number game"
+msgstr "Nyt talspil"
+
+#: VisualMatchActivity.py:310 visualmatch.py:57
+msgid "New word game"
+msgstr "Nyt ordspil"
+
+#: VisualMatchActivity.py:313 VisualMatchActivity.py:327
+msgid "Import custom cards"
+msgstr "Importer brugerdefinerede kort"
+
+#: VisualMatchActivity.py:323
+msgid "Edit word lists."
+msgstr "Rediger ordliste."
+
+#: VisualMatchActivity.py:334
+msgid "product"
+msgstr "produkt"
+
+#: VisualMatchActivity.py:342
+msgid "Roman numerals"
+msgstr "Romertal"
+
+#: VisualMatchActivity.py:350
+msgid "word"
+msgstr "ord"
+
+#: VisualMatchActivity.py:358 visualmatch.py:107
+msgid "Chinese"
+msgstr "Kinesisk"
+
+#: VisualMatchActivity.py:366 visualmatch.py:111
+msgid "Mayan"
+msgstr "Maya"
+
+#: VisualMatchActivity.py:374
+msgid "Quipu"
+msgstr "Quipu"
+
+#: VisualMatchActivity.py:385
+msgid "hash marks"
+msgstr "hash-mærker"
+
+#: VisualMatchActivity.py:393
+msgid "dots in a circle"
+msgstr "prikker i en cirkel"
+
+#: VisualMatchActivity.py:401
+msgid "points on a star"
+msgstr "peger på en stjerne"
+
+#: VisualMatchActivity.py:409
+msgid "dice"
+msgstr "terning"
+
+#: VisualMatchActivity.py:417
+msgid "dots in a line"
+msgstr "prikker i en linje"
+
+#: VisualMatchActivity.py:426
+msgid "Play with the computer"
+msgstr "Spil med computeren"
+
+#: VisualMatchActivity.py:466
+msgid "Find a match."
+msgstr "Finde et match."
+
+#: VisualMatchActivity.py:470 game.py:419 game.py:514
+msgid "cards"
+msgstr "kort"
+
+#: VisualMatchActivity.py:472 game.py:527 game.py:529
+msgid "matches"
+msgstr "match"
 
 #: constants.py:70
 msgid "five"
@@ -57,6 +205,34 @@ msgstr "enogtyve"
 msgid "thirty three"
 msgstr "treogtredive"
 
+#: game.py:261
+msgid "Edit the custom cards."
+msgstr "Rediger de brugerdefinerede kort."
+
+#: game.py:289
+msgid "Edit the word cards."
+msgstr "Rediger ordkortene."
+
+#: game.py:383
+msgid "Game over"
+msgstr "Spillet er slut"
+
+#: game.py:395
+msgid "unsolvable"
+msgstr "uløselig"
+
+#: game.py:430
+msgid "New record"
+msgstr "Ny rekord"
+
+#: game.py:520 game.py:522
+msgid "match"
+msgstr "match"
+
+#: game.py:732
+msgid "New custom game"
+msgstr "Nyt brugerdefineret spil"
+
 #: visualmatch.py:36
 msgid "Click on cards to create sets of three."
 msgstr "Klik på kort for at oprette sæt af tre."
@@ -64,18 +240,6 @@ msgstr "Klik på kort for at oprette sæt af tre."
 #: visualmatch.py:40
 msgid "Toggle level"
 msgstr "Skjul/vis niveau"
-
-#: visualmatch.py:49 VisualMatchActivity.py:350
-msgid "New pattern game"
-msgstr "Nyt mønsterspil"
-
-#: visualmatch.py:53 VisualMatchActivity.py:353
-msgid "New number game"
-msgstr "Nyt talspil"
-
-#: visualmatch.py:57 VisualMatchActivity.py:354
-msgid "New word game"
-msgstr "Nyt ordspil"
 
 #: visualmatch.py:66
 msgid "Robot on/off"
@@ -113,14 +277,6 @@ msgstr "Romersk"
 msgid "Word"
 msgstr "Ord"
 
-#: visualmatch.py:107 VisualMatchActivity.py:384
-msgid "Chinese"
-msgstr "Kinesisk"
-
-#: visualmatch.py:111 VisualMatchActivity.py:388
-msgid "Mayan"
-msgstr "Maya"
-
 #: visualmatch.py:115
 msgid "Hash"
 msgstr "Hash"
@@ -141,182 +297,20 @@ msgstr "Stjerne"
 msgid "Lines"
 msgstr "Linjer"
 
-#: visualmatch.py:171 VisualMatchActivity.py:263
-msgid "mouse"
-msgstr "mus"
+#~ msgid "Set difficulty level."
+#~ msgstr "Angiv sværhedsgrad."
 
-#: visualmatch.py:171 VisualMatchActivity.py:264
-msgid "cat"
-msgstr "kat"
+#~ msgid "Describe your activity"
+#~ msgstr "Beskriv din aktivitet"
 
-#: visualmatch.py:171 VisualMatchActivity.py:265
-msgid "dog"
-msgstr "hund"
+#~ msgid "Keep"
+#~ msgstr "Behold"
 
-#: visualmatch.py:172 VisualMatchActivity.py:266
-msgid "cheese"
-msgstr "ost"
+#~ msgid "Untitled"
+#~ msgstr "Ikke navngivet"
 
-#: visualmatch.py:172 VisualMatchActivity.py:267
-msgid "apple"
-msgstr "æble"
+#~ msgid "Description:"
+#~ msgstr "Beskrivelse:"
 
-#: visualmatch.py:172 VisualMatchActivity.py:268
-msgid "bread"
-msgstr "brød"
-
-#: visualmatch.py:173 VisualMatchActivity.py:269
-msgid "moon"
-msgstr "måne"
-
-#: visualmatch.py:173 VisualMatchActivity.py:270
-msgid "sun"
-msgstr "sol"
-
-#: visualmatch.py:173 VisualMatchActivity.py:271
-msgid "earth"
-msgstr "jord"
-
-#: game.py:260
-msgid "Edit the custom cards."
-msgstr "Rediger de brugerdefinerede kort."
-
-#: game.py:288
-msgid "Edit the word cards."
-msgstr "Rediger ordkortene."
-
-#: game.py:381
-msgid "Game over"
-msgstr "Spillet er slut"
-
-#: game.py:390
-msgid "unsolvable"
-msgstr "uløselig"
-
-#: game.py:414 game.py:495 VisualMatchActivity.py:442
-msgid "cards"
-msgstr "kort"
-
-#: game.py:425
-msgid "New record"
-msgstr "Ny rekord"
-
-#: game.py:501 game.py:503
-msgid "match"
-msgstr "match"
-
-#: game.py:508 game.py:510 VisualMatchActivity.py:444
-msgid "matches"
-msgstr "match"
-
-#: game.py:713
-msgid "New custom game"
-msgstr "Nyt brugerdefineret spil"
-
-#: VisualMatchActivity.py:62
-msgid "intermediate"
-msgstr "trænet"
-
-#: VisualMatchActivity.py:62
-msgid "expert"
-msgstr "ekspert"
-
-#: VisualMatchActivity.py:62
-msgid "beginner"
-msgstr "begynder"
-
-#: VisualMatchActivity.py:173
-msgid "Play with the computer."
-msgstr "Spil med computeren."
-
-#: VisualMatchActivity.py:178
-msgid "Stop playing with the computer."
-msgstr "Stop spillet med computeren."
-
-#: VisualMatchActivity.py:343
-msgid "Game"
-msgstr "Spil"
-
-#: VisualMatchActivity.py:344
-msgid "Numbers"
-msgstr "Tal"
-
-#: VisualMatchActivity.py:345
-msgid "Tools"
-msgstr "Værktøjer"
-
-#: VisualMatchActivity.py:357 VisualMatchActivity.py:371
-msgid "Import custom cards"
-msgstr "Importer brugerdefinerede kort"
-
-#: VisualMatchActivity.py:367
-msgid "Edit word lists."
-msgstr "Rediger ordliste."
-
-#: VisualMatchActivity.py:372
-msgid "product"
-msgstr "produkt"
-
-#: VisualMatchActivity.py:376
-msgid "Roman numerals"
-msgstr "Romertal"
-
-#: VisualMatchActivity.py:380
-msgid "word"
-msgstr "ord"
-
-#: VisualMatchActivity.py:392
-msgid "Quipu"
-msgstr "Quipu"
-
-#: VisualMatchActivity.py:397
-msgid "hash marks"
-msgstr "hash-mærker"
-
-#: VisualMatchActivity.py:401
-msgid "dots in a circle"
-msgstr "prikker i en cirkel"
-
-#: VisualMatchActivity.py:405
-msgid "points on a star"
-msgstr "peger på en stjerne"
-
-#: VisualMatchActivity.py:409
-msgid "dice"
-msgstr "terning"
-
-#: VisualMatchActivity.py:413
-msgid "dots in a line"
-msgstr "prikker i en linje"
-
-#: VisualMatchActivity.py:422
-msgid "Play with the computer"
-msgstr "Spil med computeren"
-
-#: VisualMatchActivity.py:429
-msgid "Set difficulty level."
-msgstr "Angiv sværhedsgrad."
-
-#: VisualMatchActivity.py:438
-msgid "Find a match."
-msgstr "Finde et match."
-
-#: namingalert.py:82
-msgid "Describe your activity"
-msgstr "Beskriv din aktivitet"
-
-#: namingalert.py:87
-msgid "Keep"
-msgstr "Behold"
-
-#: namingalert.py:283
-msgid "Untitled"
-msgstr "Ikke navngivet"
-
-#: namingalert.py:290
-msgid "Description:"
-msgstr "Beskrivelse:"
-
-#: namingalert.py:314
-msgid "Tags:"
-msgstr "Mærkater:"
+#~ msgid "Tags:"
+#~ msgstr "Mærkater:"
