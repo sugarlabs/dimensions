@@ -502,7 +502,8 @@ class Game():
         cr.clip()
 
         # Refresh sprite list
-        self.sprites.redraw_sprites(cr=cr)
+        if cr is not None:
+            self.sprites.redraw_sprites(cr=cr)
 
     def _destroy_cb(self, win, event):
         ''' This is the end '''
