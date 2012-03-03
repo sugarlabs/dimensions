@@ -30,7 +30,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-12-02 00:33-0500\n"
+"POT-Creation-Date: 2012-02-15 00:33-0500\n"
 "PO-Revision-Date: 2011-02-14 16:39+0200\n"
 "Last-Translator: Chris <cjl@laptop.org>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -41,7 +41,7 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: Pootle 2.0.1\n"
 
-#: activity/activity.info:2 game.py:542 visualmatch.py:35
+#: activity/activity.info:2 game.py:544 visualmatch.py:35
 msgid "Visual Match"
 msgstr "Visual Match"
 
@@ -185,11 +185,11 @@ msgstr "Play with the computer"
 msgid "Find a match."
 msgstr "Find a match."
 
-#: VisualMatchActivity.py:470 game.py:417 game.py:512
+#: VisualMatchActivity.py:470 game.py:419 game.py:514
 msgid "cards"
 msgstr "cards"
 
-#: VisualMatchActivity.py:472 game.py:525 game.py:527
+#: VisualMatchActivity.py:472 game.py:527 game.py:529
 msgid "matches"
 msgstr "matches"
 
@@ -241,19 +241,19 @@ msgstr "Edit the word cards."
 msgid "Game over"
 msgstr "Game over"
 
-#: game.py:393
+#: game.py:395
 msgid "unsolvable"
 msgstr "unsolvable"
 
-#: game.py:428
+#: game.py:430
 msgid "New record"
 msgstr "New record"
 
-#: game.py:518 game.py:520
+#: game.py:520 game.py:522
 msgid "match"
 msgstr "match"
 
-#: game.py:730
+#: game.py:732
 msgid "New custom game"
 msgstr "New custom game"
 
