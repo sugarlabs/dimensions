@@ -35,8 +35,8 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2012-02-15 00:33-0500\n"
-"PO-Revision-Date: 2012-02-29 08:32+0200\n"
-"Last-Translator: Chris <cjl@laptop.org>\n"
+"PO-Revision-Date: 2012-03-12 11:34+0200\n"
+"Last-Translator: Meechai <malaku38@hotmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: th\n"
 "MIME-Version: 1.0\n"
@@ -47,19 +47,19 @@ msgstr ""
 
 #: activity/activity.info:2 game.py:544 visualmatch.py:35
 msgid "Visual Match"
-msgstr "เกมจับคู่( หาคู่ที่ match กัน)"
+msgstr "Visual Match"
 
 #: VisualMatchActivity.py:68 VisualMatchActivity.py:446
 msgid "intermediate"
-msgstr "ปานกลาง"
+msgstr "ระดับปานกลาง"
 
 #: VisualMatchActivity.py:68 VisualMatchActivity.py:454
 msgid "expert"
-msgstr "เชี่ยวชาญ"
+msgstr "ระดับผู้เชี่ยวชาญ"
 
 #: VisualMatchActivity.py:68 VisualMatchActivity.py:438
 msgid "beginner"
-msgstr "เริ่มต้น,ง่าย"
+msgstr "ระดับผู้เริ่มต้น"
 
 #: VisualMatchActivity.py:129
 msgid "Play with the computer."
@@ -71,7 +71,7 @@ msgstr "หยุดเล่นกับคอมพิวเตอร์"
 
 #: VisualMatchActivity.py:216 visualmatch.py:171
 msgid "mouse"
-msgstr "เมาส์ ,หนู"
+msgstr "หนู"
 
 #: VisualMatchActivity.py:217 visualmatch.py:171
 msgid "cat"
@@ -111,7 +111,7 @@ msgstr "เกม"
 
 #: VisualMatchActivity.py:297
 msgid "Numbers"
-msgstr "จำนวน"
+msgstr "ตัวเลข"
 
 #: VisualMatchActivity.py:298
 msgid "Tools"
@@ -119,15 +119,15 @@ msgstr "เครื่องมือ"
 
 #: VisualMatchActivity.py:304 visualmatch.py:49
 msgid "New pattern game"
-msgstr "เกมรูปแบบใหม่ (เกมแบบใหม่)"
+msgstr "เริ่มเกมรูปแบบใหม่"
 
 #: VisualMatchActivity.py:307 visualmatch.py:53
 msgid "New number game"
-msgstr "เริ่มเกมเลขอันใหม่"
+msgstr "เริ่มเกมตัวเลขเลขใหม่"
 
 #: VisualMatchActivity.py:310 visualmatch.py:57
 msgid "New word game"
-msgstr "เริ่มคำใหม่"
+msgstr "เริ่มเกมคำใหม่"
 
 #: VisualMatchActivity.py:313 VisualMatchActivity.py:327
 msgid "Import custom cards"
@@ -163,19 +163,19 @@ msgstr "ภาษากีปู(ชาวอินคา)"
 
 #: VisualMatchActivity.py:385
 msgid "hash marks"
-msgstr "สัญลักษณ์ขีดที่ใช้ในการนับจำนวน"
+msgstr "สัญลักษณ์ขีด"
 
 #: VisualMatchActivity.py:393
 msgid "dots in a circle"
-msgstr "จุดในวงกลม, จุดที่เรียงกันเป็นรูปวงกลม"
+msgstr "จุดในวงกลม"
 
 #: VisualMatchActivity.py:401
 msgid "points on a star"
-msgstr "การนับเลขที่อยู่ในรูปแบบของดาว"
+msgstr "จุดบนดาว"
 
 #: VisualMatchActivity.py:409
 msgid "dice"
-msgstr "การนับจำนวนที่อยู่ในรูปแบบของลูกเต๋า"
+msgstr "ลูกเต๋า"
 
 #: VisualMatchActivity.py:417
 msgid "dots in a line"
@@ -195,7 +195,7 @@ msgstr "การ์ด"
 
 #: VisualMatchActivity.py:472 game.py:527 game.py:529
 msgid "matches"
-msgstr "จับคู่"
+msgstr "คู่เหมือน"
 
 #: constants.py:70
 msgid "five"
@@ -223,7 +223,7 @@ msgstr "สิบห้า"
 
 #: constants.py:71
 msgid "twenty two"
-msgstr "ยี่สิบ"
+msgstr "ยี่สิบสอง"
 
 #: constants.py:72
 msgid "twenty one"
@@ -239,7 +239,7 @@ msgstr "แก้ไขการ์ดที่กำหนดเอง"
 
 #: game.py:289
 msgid "Edit the word cards."
-msgstr "แก้ไขศัพท์"
+msgstr "แก้ไขคำที่การ์ด"
 
 #: game.py:383
 msgid "Game over"
@@ -247,7 +247,7 @@ msgstr "จบเกม"
 
 #: game.py:395
 msgid "unsolvable"
-msgstr "ไม่สามารถหาค่าได้"
+msgstr "ไม่สามารถแก้ได้"
 
 #: game.py:430
 msgid "New record"
@@ -267,11 +267,11 @@ msgstr "คลิีกที่การ์ดเพื่อสร้าง �
 
 #: visualmatch.py:40
 msgid "Toggle level"
-msgstr "สลับระดับ"
+msgstr "สลักระดับ"
 
 #: visualmatch.py:66
 msgid "Robot on/off"
-msgstr "หุ่นยนต์เปิด/ปิด"
+msgstr "หุ่นยนต์ เปิด/ปิด"
 
 #: visualmatch.py:70
 msgid "90 sec."
@@ -303,11 +303,11 @@ msgstr "โรมัน"
 
 #: visualmatch.py:103
 msgid "Word"
-msgstr "ศัพท์ ,คำ"
+msgstr "คำ"
 
 #: visualmatch.py:115
 msgid "Hash"
-msgstr "ทำให้ยุ่งเหยิง"
+msgstr "ขีด"
 
 #: visualmatch.py:119
 msgid "Dice"
@@ -323,7 +323,7 @@ msgstr "ดาว"
 
 #: visualmatch.py:131
 msgid "Lines"
-msgstr "เส้น,บรรทัด"
+msgstr "เส้น"
 
 #~ msgid "Set difficulty level."
 #~ msgstr "ตั้งค่าในระดับที่ยาก"
