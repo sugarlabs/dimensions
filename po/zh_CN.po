@@ -2,151 +2,347 @@
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-#, fuzzy
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-12-07 18:05+0000\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2012-02-15 00:33-0500\n"
+"PO-Revision-Date: 2011-12-09 18:44+0200\n"
+"Last-Translator: lite <litekok@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: zh_CN\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Translate Toolkit 1.3.0\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Pootle 2.0.5\n"
 
-#: activity/activity.info:2 /home/walter/Desktop/set/window.py:265
-#: /home/walter/Desktop/set/visualmatch.py:42
+#: activity/activity.info:2 game.py:544 visualmatch.py:35
 msgid "Visual Match"
-msgstr ""
+msgstr "图案配对"
 
-#: /home/walter/Desktop/set/window.py:124
-#: /home/walter/Desktop/set/window.py:185
-#: /home/walter/Desktop/set/VisualMatchActivity.py:112
-msgid "cards remaining"
-msgstr ""
+#: VisualMatchActivity.py:68 VisualMatchActivity.py:446
+msgid "intermediate"
+msgstr "中级"
 
-#: /home/walter/Desktop/set/window.py:125
-#: /home/walter/Desktop/set/window.py:212
-#: /home/walter/Desktop/set/VisualMatchActivity.py:123
-#: /home/walter/Desktop/set/VisualMatchActivity.py:293
-msgid "matches"
-msgstr ""
+#: VisualMatchActivity.py:68 VisualMatchActivity.py:454
+msgid "expert"
+msgstr "专家"
 
-#: /home/walter/Desktop/set/window.py:192
-msgid "Game over"
-msgstr ""
+#: VisualMatchActivity.py:68 VisualMatchActivity.py:438
+msgid "beginner"
+msgstr "入门"
 
-#: /home/walter/Desktop/set/window.py:192
-#: /home/walter/Desktop/set/window.py:200
-msgid "seconds"
-msgstr ""
+#: VisualMatchActivity.py:129
+msgid "Play with the computer."
+msgstr "和电脑玩。"
 
-#: /home/walter/Desktop/set/window.py:200
-msgid "New record"
-msgstr ""
+#: VisualMatchActivity.py:134
+msgid "Stop playing with the computer."
+msgstr "停止和电脑玩。"
 
-#: /home/walter/Desktop/set/window.py:208
-#: /home/walter/Desktop/set/window.py:210
-msgid "match"
-msgstr ""
-
-#: /home/walter/Desktop/set/window.py:218
-msgid "no match"
-msgstr ""
-
-#: /home/walter/Desktop/set/visualmatch.py:43
-msgid "Click on cards to create sets of three."
-msgstr ""
-
-#: /home/walter/Desktop/set/visualmatch.py:49
-#: /home/walter/Desktop/set/VisualMatchActivity.py:81
-#: /home/walter/Desktop/set/VisualMatchActivity.py:248
-msgid "New pattern game"
-msgstr ""
-
-#: /home/walter/Desktop/set/visualmatch.py:53
-#: /home/walter/Desktop/set/VisualMatchActivity.py:90
-#: /home/walter/Desktop/set/VisualMatchActivity.py:257
-msgid "New number game"
-msgstr ""
-
-#: /home/walter/Desktop/set/visualmatch.py:57
-#: /home/walter/Desktop/set/VisualMatchActivity.py:99
-#: /home/walter/Desktop/set/VisualMatchActivity.py:266
-msgid "New word game"
-msgstr ""
-
-#: /home/walter/Desktop/set/gencards.py:212
-msgid "dog"
-msgstr ""
-
-#: /home/walter/Desktop/set/gencards.py:212
-msgid "cat"
-msgstr ""
-
-#: /home/walter/Desktop/set/gencards.py:212
+#: VisualMatchActivity.py:216 visualmatch.py:171
 msgid "mouse"
-msgstr ""
+msgstr "老鼠"
 
-#: /home/walter/Desktop/set/gencards.py:214
-msgid "apple"
-msgstr ""
+#: VisualMatchActivity.py:217 visualmatch.py:171
+msgid "cat"
+msgstr "猫"
 
-#: /home/walter/Desktop/set/gencards.py:214
-msgid "bread"
-msgstr ""
+#: VisualMatchActivity.py:218 visualmatch.py:171
+msgid "dog"
+msgstr "狗"
 
-#: /home/walter/Desktop/set/gencards.py:214
+#: VisualMatchActivity.py:219 visualmatch.py:172
 msgid "cheese"
-msgstr ""
+msgstr "奶酪"
 
-#: /home/walter/Desktop/set/gencards.py:216
-msgid "sun"
-msgstr ""
+#: VisualMatchActivity.py:220 visualmatch.py:172
+msgid "apple"
+msgstr "苹果"
 
-#: /home/walter/Desktop/set/gencards.py:216
+#: VisualMatchActivity.py:221 visualmatch.py:172
+msgid "bread"
+msgstr "面包"
+
+#: VisualMatchActivity.py:222 visualmatch.py:173
 msgid "moon"
-msgstr ""
+msgstr "月亮"
 
-#: /home/walter/Desktop/set/gencards.py:216
+#: VisualMatchActivity.py:223 visualmatch.py:173
+msgid "sun"
+msgstr "太阳"
+
+#: VisualMatchActivity.py:224 visualmatch.py:173
 msgid "earth"
-msgstr ""
+msgstr "地球"
 
-#: /home/walter/Desktop/set/VisualMatchActivity.py:145
-#: /home/walter/Desktop/set/VisualMatchActivity.py:319
+#: VisualMatchActivity.py:296
+msgid "Game"
+msgstr "游戏"
+
+#: VisualMatchActivity.py:297
+msgid "Numbers"
+msgstr "数字"
+
+#: VisualMatchActivity.py:298
+msgid "Tools"
+msgstr "工具"
+
+#: VisualMatchActivity.py:304 visualmatch.py:49
+msgid "New pattern game"
+msgstr "新的图案游戏"
+
+#: VisualMatchActivity.py:307 visualmatch.py:53
+msgid "New number game"
+msgstr "新的数字游戏"
+
+#: VisualMatchActivity.py:310 visualmatch.py:57
+msgid "New word game"
+msgstr "新的文字游戏"
+
+#: VisualMatchActivity.py:313 VisualMatchActivity.py:327
+msgid "Import custom cards"
+msgstr "导入自定义的卡片"
+
+#: VisualMatchActivity.py:323
+msgid "Edit word lists."
+msgstr "编辑字的列表。"
+
+#: VisualMatchActivity.py:334
+msgid "product"
+msgstr "产品"
+
+#: VisualMatchActivity.py:342
+msgid "Roman numerals"
+msgstr "罗马数字"
+
+#: VisualMatchActivity.py:350
+msgid "word"
+msgstr "字"
+
+#: VisualMatchActivity.py:358 visualmatch.py:107
+msgid "Chinese"
+msgstr "中文"
+
+#: VisualMatchActivity.py:366 visualmatch.py:111
+msgid "Mayan"
+msgstr "玛雅"
+
+#: VisualMatchActivity.py:374
+msgid "Quipu"
+msgstr "古秘鲁文"
+
+#: VisualMatchActivity.py:385
+msgid "hash marks"
+msgstr "码标线"
+
+#: VisualMatchActivity.py:393
+msgid "dots in a circle"
+msgstr "圆形中的点"
+
+#: VisualMatchActivity.py:401
+msgid "points on a star"
+msgstr "星形上的点"
+
+#: VisualMatchActivity.py:409
+msgid "dice"
+msgstr "骰子"
+
+#: VisualMatchActivity.py:417
+msgid "dots in a line"
+msgstr "线条上的点"
+
+#: VisualMatchActivity.py:426
+msgid "Play with the computer"
+msgstr "和电脑玩"
+
+#: VisualMatchActivity.py:466
 msgid "Find a match."
-msgstr ""
+msgstr "查找配对。"
 
-#: /home/walter/Desktop/set/VisualMatchActivity.py:159
-msgid "Write in Journal"
-msgstr ""
+#: VisualMatchActivity.py:470 game.py:419 game.py:514
+msgid "cards"
+msgstr "卡片"
 
-#: /home/walter/Desktop/set/VisualMatchActivity.py:181
-msgid "Project"
-msgstr ""
+#: VisualMatchActivity.py:472 game.py:527 game.py:529
+msgid "matches"
+msgstr "配对"
 
-#: /home/walter/Desktop/set/VisualMatchActivity.py:280
-msgid "cards remain in the deck"
-msgstr ""
+#: constants.py:70
+msgid "five"
+msgstr "五"
 
-#: /home/walter/Desktop/set/namingalert.py:82
-msgid "Describe your activity"
-msgstr ""
+#: constants.py:70
+msgid "seven"
+msgstr "七"
 
-#: /home/walter/Desktop/set/namingalert.py:87
-msgid "Keep"
-msgstr ""
+#: constants.py:70
+msgid "eleven"
+msgstr "十一"
 
-#: /home/walter/Desktop/set/namingalert.py:283
-msgid "Untitled"
-msgstr ""
+#: constants.py:70
+msgid "ten"
+msgstr "十"
 
-#: /home/walter/Desktop/set/namingalert.py:290
-msgid "Description:"
-msgstr ""
+#: constants.py:71
+msgid "fourteen"
+msgstr "十四"
 
-#: /home/walter/Desktop/set/namingalert.py:314
-msgid "Tags:"
-msgstr ""
+#: constants.py:71
+msgid "fifteen"
+msgstr "十五"
+
+#: constants.py:71
+msgid "twenty two"
+msgstr "二十二"
+
+#: constants.py:72
+msgid "twenty one"
+msgstr "二十一"
+
+#: constants.py:72
+msgid "thirty three"
+msgstr "三十三"
+
+#: game.py:261
+msgid "Edit the custom cards."
+msgstr "编辑自定义的卡片。"
+
+#: game.py:289
+msgid "Edit the word cards."
+msgstr "编辑字的卡片。"
+
+#: game.py:383
+msgid "Game over"
+msgstr "游戏结束"
+
+#: game.py:395
+msgid "unsolvable"
+msgstr "不可解的"
+
+#: game.py:430
+msgid "New record"
+msgstr "新的记录"
+
+#: game.py:520 game.py:522
+msgid "match"
+msgstr "配对"
+
+#: game.py:732
+msgid "New custom game"
+msgstr "新的自定义游戏"
+
+#: visualmatch.py:36
+msgid "Click on cards to create sets of three."
+msgstr "点击卡片创建三组图案。"
+
+#: visualmatch.py:40
+msgid "Toggle level"
+msgstr "切换级别"
+
+#: visualmatch.py:66
+msgid "Robot on/off"
+msgstr "机器人开/关"
+
+#: visualmatch.py:70
+msgid "90 sec."
+msgstr "90秒"
+
+#: visualmatch.py:74
+msgid "60 sec."
+msgstr "60秒"
+
+#: visualmatch.py:78
+msgid "45 sec."
+msgstr "45秒"
+
+#: visualmatch.py:82
+msgid "30 sec."
+msgstr "30秒"
+
+#: visualmatch.py:86
+msgid "15 sec."
+msgstr "15秒"
+
+#: visualmatch.py:95
+msgid "Product"
+msgstr "产品"
+
+#: visualmatch.py:99
+msgid "Roman"
+msgstr "罗马"
+
+#: visualmatch.py:103
+msgid "Word"
+msgstr "字"
+
+#: visualmatch.py:115
+msgid "Hash"
+msgstr "哈希"
+
+#: visualmatch.py:119
+msgid "Dice"
+msgstr "骰子"
+
+#: visualmatch.py:123
+msgid "Dots"
+msgstr "点"
+
+#: visualmatch.py:127
+msgid "Star"
+msgstr "星星"
+
+#: visualmatch.py:131
+msgid "Lines"
+msgstr "线条"
+
+#~ msgid "Set difficulty level."
+#~ msgstr "设置难度。"
+
+#~ msgid "Describe your activity"
+#~ msgstr "描述你的活动"
+
+#~ msgid "Keep"
+#~ msgstr "保持"
+
+#~ msgid "Untitled"
+#~ msgstr "无标题"
+
+#~ msgid "Description:"
+#~ msgstr "描述："
+
+#~ msgid "Tags:"
+#~ msgstr "标签："
