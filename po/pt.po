@@ -34,8 +34,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-12-02 00:33-0500\n"
-"PO-Revision-Date: 2012-01-23 04:06+0200\n"
+"POT-Creation-Date: 2012-02-15 00:33-0500\n"
+"PO-Revision-Date: 2012-04-03 00:56+0200\n"
 "Last-Translator: Eduardo H. <hoboprimate@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: pt\n"
@@ -45,9 +45,9 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: Pootle 2.0.5\n"
 
-#: activity/activity.info:2 game.py:542 visualmatch.py:35
+#: activity/activity.info:2 game.py:544 visualmatch.py:35
 msgid "Visual Match"
-msgstr "Corresponder Visualmente"
+msgstr "Combinar Visual"
 
 #: VisualMatchActivity.py:68 VisualMatchActivity.py:446
 msgid "intermediate"
@@ -189,13 +189,13 @@ msgstr "Jogar com o computador"
 msgid "Find a match."
 msgstr "Encontra uma correspondência."
 
-#: VisualMatchActivity.py:470 game.py:417 game.py:512
+#: VisualMatchActivity.py:470 game.py:419 game.py:514
 msgid "cards"
 msgstr "cartas"
 
-#: VisualMatchActivity.py:472 game.py:525 game.py:527
+#: VisualMatchActivity.py:472 game.py:527 game.py:529
 msgid "matches"
-msgstr "correspondências"
+msgstr "corresponde"
 
 #: constants.py:70
 msgid "five"
@@ -245,19 +245,19 @@ msgstr "Editar as cartas de palavras."
 msgid "Game over"
 msgstr "Fim de jogo"
 
-#: game.py:393
+#: game.py:395
 msgid "unsolvable"
 msgstr "sem solução"
 
-#: game.py:428
+#: game.py:430
 msgid "New record"
 msgstr "Novo recorde"
 
-#: game.py:518 game.py:520
+#: game.py:520 game.py:522
 msgid "match"
 msgstr "corresponder"
 
-#: game.py:730
+#: game.py:732
 msgid "New custom game"
 msgstr "Novo jogo personalizado"
 
