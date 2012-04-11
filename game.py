@@ -87,11 +87,13 @@ class Game():
             parent.show_all()
 
         self.canvas.set_flags(gtk.CAN_FOCUS)
-        self.canvas.add_events(gtk.gdk.BUTTON_PRESS_MASK)
-        self.canvas.add_events(gtk.gdk.BUTTON_RELEASE_MASK)
         self.canvas.connect('expose-event', self._expose_cb)
+        self.canvas.add_events(gtk.gdk.BUTTON_PRESS_MASK)
         self.canvas.connect('button-press-event', self._button_press_cb)
+        self.canvas.add_events(gtk.gdk.BUTTON_RELEASE_MASK)
         self.canvas.connect('button-release-event', self._button_release_cb)
+        self.canvas.add_events(gtk.gdk.POINTER_MOTION_MASK)
+        self.canvas.connect("motion-notify-event", self._mouse_move_cb)
         self.canvas.connect('key_press_event', self._keypress_cb)
         self.width = gtk.gdk.screen_width()
         self.height = gtk.gdk.screen_height() - GRID_CELL_SIZE
@@ -102,10 +104,14 @@ class Game():
                              None]
         self.sprites = Sprites(self.canvas)
         self.selected = []
+        self.press = None
         self.match_display_area = []
         self.smiley = []
         self.clicked = [None, None, None]
+        self.dragged_init_xy = [[None, None], [None, None], [None, None]]
+        self.dragpos = [0, 0]
         self.low_score = [-1, -1, -1]
+        self.all_scores = []
         self.robot = False
         self.numberC = 0
         self.numberO = 0
@@ -291,15 +297,49 @@ class Game():
     def _button_press_cb(self, win, event):
         ''' Just grab focus on press. '''
         win.grab_focus()
+        x, y = map(int, event.get_coords())
+        self.statpos = (x, y)
+        self.dragpos = [x, y]
+        spr = self.sprites.find_sprite((x, y))
+        if spr is None:
+            return True
+        if self.deck.spr_to_card(spr) is not None:
+            self.press = spr  # Make sure sprite is a card.
+        else:
+            self.press = None
         return True
+
+    def _mouse_move_cb(self, win, event):
+        """ Drag a card with the mouse. """
+        if self.press is None:
+            self.dragpos = [0, 0]
+            return True
+        win.grab_focus()
+        x, y = map(int, event.get_coords())
+        dx = x - self.dragpos[0]
+        dy = y - self.dragpos[1]
+        self.press.move_relative((dx, dy))
+        self.dragpos = [x, y]
 
     def _button_release_cb(self, win, event):
         ''' Select the sprite under the mouse and process the selection. '''
         win.grab_focus()
         x, y = map(int, event.get_coords())
-        spr = self.sprites.find_sprite((x, y))
+        spr = self.sprites.find_sprite((x, y), reverse=True)
         if spr is None:
+            self.press = None
             return True
+
+        if spr in self.match_display_area:
+            i = self.match_display_area.index(spr)
+            # Is it an empty slot?
+            if self.clicked[i] is None:
+                x, y = self.match_display_area[i].get_xy()
+                self.press.move((x, y))
+                self.clicked[i] = self.press
+            else:
+                self.press.move((self.startpos))
+
         if self._sharing():
             if self.deck.spr_to_card(spr) is not None:
                 self.activity._send_event(
@@ -307,6 +347,7 @@ class Game():
             i = self._selected(spr)
             if i is not -1:
                 self.activity._send_event('S:' + str(i))
+        self.press = None
         return self._process_selection(spr)
 
     def _selected(self, spr):
@@ -429,6 +470,8 @@ class Game():
                     self.set_label('status', '%s (%d:%02d)' %
                         (_('New record'), int(self.total_time / 60),
                          int(self.total_time % 60)))
+                self.all_scores.append(self.total_time)
+                _logger.debug(self.all_scores)
                 if not self.sugar:
                     self.activity.save_score()
                 return True

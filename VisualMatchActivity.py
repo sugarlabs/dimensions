@@ -39,7 +39,7 @@ import os.path
 import logging
 _logger = logging.getLogger('visualmatch-activity')
 try:
-    _old_sugar_system = False
+    _OLD_SUGAR_SYSTEM = False
     import json
     from json import load as jload
     from json import dump as jdump
@@ -49,7 +49,7 @@ except(ImportError, AttributeError):
         from simplejson import load as jload
         from simplejson import dump as jdump
     except ImportError:
-        _old_sugar_system = True
+        _OLD_SUGAR_SYSTEM = True
 
 from StringIO import StringIO
 
@@ -84,7 +84,6 @@ class VisualMatchActivity(activity.Activity):
         super(VisualMatchActivity, self).__init__(handle)
 
         self._read_journal_data()
-        self._old_sugar_system = _old_sugar_system
         datapath = self._find_datapath(activity)
         self._setup_toolbars(_NEW_SUGAR_SYSTEM)
         canvas = self._setup_canvas(datapath)
@@ -207,6 +206,8 @@ class VisualMatchActivity(activity.Activity):
                     'low_score_intermediate', -1)),
                            int(self._read_metadata('low_score_expert', -1)),
                            int(self._read_metadata('low_score_beginner', -1))]
+        self._all_scores = self._data_loader(
+            self._read_metadata('all_scores', '[]'))
         self._numberO = int(self._read_metadata('numberO', PRODUCT))
         self._numberC = int(self._read_metadata('numberC', HASH))
         self._matches = int(self._read_metadata('matches', 0))
@@ -234,6 +235,17 @@ class VisualMatchActivity(activity.Activity):
         for i in range(9):
             self._custom_jobject.append(self._read_metadata(
                     'custom_' + str(i), None))
+
+    def _write_scores_to_clipboard(self, button=None):
+        before = '{"chart_line_color": "#00588C", "title": \
+"%s", "x_label": "", "y_label": "", "chart_data": ' % (self.metadata['title'])
+        scores = []
+        for i, s in enumerate(self.vmw.all_scores):
+            scores.append(['%s' % str(i + 1), s])
+        jscores = self._data_dumper(scores)
+        after = ', "chart_color": "#00A0FF", "current_chart.type": "line"}'
+        _logger.debug(before + jscores + after)
+        gtk.Clipboard().set_text(before + jscores + after)
 
     def _find_datapath(self, activity):
         ''' Find the datapath for saving card files. '''
@@ -285,6 +297,11 @@ class VisualMatchActivity(activity.Activity):
             stop_button.props.accelerator = '<Ctrl>q'
             toolbox.toolbar.insert(stop_button, -1)
             stop_button.show()
+
+            export_scores = button_factory(
+                'score-copy', activity_button,
+                self._write_scores_to_clipboard,
+                tooltip=_('Export scores to clipboard'))
 
             self.set_toolbar_box(toolbox)
             toolbox.show()
@@ -489,6 +506,7 @@ class VisualMatchActivity(activity.Activity):
         self.vmw.robot = False
         self.vmw.robot_time = self._robot_time
         self.vmw.low_score = self._low_score
+        self.vmw.all_scores = self._all_scores
         self.vmw.numberO = self._numberO
         NUMBER_O_BUTTONS[self._numberO].set_active(True)
         self.vmw.numberC = self._numberC
@@ -519,6 +537,7 @@ class VisualMatchActivity(activity.Activity):
             self.metadata['low_score_intermediate'] = int(
                 self.vmw.low_score[1])
             self.metadata['low_score_expert'] = int(self.vmw.low_score[2])
+            self.metadata['all_scores'] = self._data_dumper(self.vmw.all_scores)
             self.metadata['robot_time'] = self.vmw.robot_time
             self.metadata['numberO'] = self.vmw.numberO
             self.metadata['numberC'] = self.vmw.numberC
@@ -569,8 +588,10 @@ class VisualMatchActivity(activity.Activity):
         for i in self.vmw.word_lists:
             for j in i:
                 data.append(j)
-
-        if self._old_sugar_system:
+        return self._data_dumper(data)
+                
+    def _data_dumper(self, data):
+        if _OLD_SUGAR_SYSTEM:
             return json.write(data)
         else:
             io = StringIO()
@@ -586,14 +607,17 @@ class VisualMatchActivity(activity.Activity):
 
     def _load(self, data):
         ''' Load game data from the journal. '''
-        if self._old_sugar_system:
-            saved_state = json.read(data)
-        else:
-            io = StringIO(data)
-            saved_state = jload(io)
+        saved_state = self._data_loader(data)
         if len(saved_state) > 0:
             self._saved_state = saved_state
 
+    def _data_loader(self, data):
+        if _OLD_SUGAR_SYSTEM:
+            return json.read(data)
+        else:
+            io = StringIO(data)
+            return jload(io)
+        
     def _setup_presence_service(self):
         ''' Setup the Presence Service. '''
         self.pservice = presenceservice.get_instance()
