@@ -83,6 +83,7 @@ import pango
 import pangocairo
 import cairo
 
+
 class Sprites:
     ''' A class for the list of sprites and everything they share in common '''
 
@@ -120,17 +121,23 @@ class Sprites:
         else:
             self.list.insert(i, spr)
 
+    def find_in_list(self, spr):
+        if spr in self.list:
+            return True
+        return False
+
     def remove_from_list(self, spr):
         ''' Remove a sprite from the list. '''
         if spr in self.list:
             self.list.remove(spr)
 
-    def find_sprite(self, pos):
+    def find_sprite(self, pos, region=False, reverse=False):
         ''' Search based on (x, y) position. Return the 'top/first' one. '''
         list = self.list[:]
-        list.reverse()
+        if not reverse:
+            list.reverse()
         for spr in list:
-            if spr.hit(pos):
+            if spr.hit(pos, readpixel=not region):
                 return spr
         return None
 
@@ -142,7 +149,7 @@ class Sprites:
         else:
             self.cr = cr
         if cr is None:
-            print 'sprites.redraw_sprites: no Cairo context'
+            # print 'sprites.redraw_sprites: no Cairo context'
             return
         for spr in self.list:
             if area == None:
@@ -187,7 +194,8 @@ class Sprite:
             self._dy.append(0)
         self._dx[i] = dx
         self._dy[i] = dy
-        if isinstance(image, gtk.gdk.Pixbuf):
+        if isinstance(image, gtk.gdk.Pixbuf) or \
+           isinstance(image, cairo.ImageSurface):
             w = image.get_width()
             h = image.get_height()
         else:
@@ -200,14 +208,17 @@ class Sprite:
                 self.rect.width = w + dx
             if h + dy > self.rect.height:
                 self.rect.height = h + dy
-        surface = cairo.ImageSurface(
-            cairo.FORMAT_ARGB32, self.rect.width, self.rect.height)
-        context = cairo.Context(surface)
-        context = gtk.gdk.CairoContext(context)
-        context.set_source_pixbuf(image, 0, 0)
-        context.rectangle(0, 0, self.rect.width, self.rect.height)
-        context.fill()
-        self.cached_surfaces[i] = surface
+        if isinstance(image, cairo.ImageSurface):
+            self.cached_surfaces[i] = image
+        else:  # Convert to Cairo surface
+            surface = cairo.ImageSurface(
+                cairo.FORMAT_ARGB32, self.rect.width, self.rect.height)
+            context = cairo.Context(surface)
+            context = gtk.gdk.CairoContext(context)
+            context.set_source_pixbuf(image, 0, 0)
+            context.rectangle(0, 0, self.rect.width, self.rect.height)
+            context.fill()
+            self.cached_surfaces[i] = surface
 
     def move(self, pos):
         ''' Move to new (x, y) position '''
@@ -327,7 +338,7 @@ class Sprite:
     def draw(self, cr=None):
         ''' Draw the sprite (and label) '''
         if cr is None:
-            print 'sprite.draw: no Cairo context.'
+            # print 'sprite.draw: no Cairo context.'
             return
         for i, surface in enumerate(self.cached_surfaces):
             cr.set_source_surface(surface,
@@ -341,7 +352,7 @@ class Sprite:
         if len(self.labels) > 0:
             self.draw_label(cr)
 
-    def hit(self, pos):
+    def hit(self, pos, readpixel=False):
         ''' Is (x, y) on top of the sprite? '''
         x, y = pos
         if x < self.rect.x:
@@ -352,7 +363,13 @@ class Sprite:
             return False
         if y > self.rect.y + self.rect.height:
             return False
-        return True
+        if readpixel:
+            r, g, b, a = self.get_pixel(pos)
+            if r == g == b == a == 0:
+                return False
+            if a == -1:
+                return False
+        return self._sprites.find_in_list(self)
 
     def draw_label(self, cr):
         ''' Draw the label based on its attributes '''
@@ -387,14 +404,14 @@ class Sprite:
                 x = int(self.rect.x + self._margins[0] + (my_width - w) / 2)
             elif self._horiz_align[i] == 'left':
                 x = int(self.rect.x + self._margins[0])
-            else: # right
+            else:  # right
                 x = int(self.rect.x + self.rect.width - w - self._margins[2])
             h = pl.get_size()[1] / pango.SCALE
             if self._vert_align[i] == "middle":
                 y = int(self.rect.y + self._margins[1] + (my_height - h) / 2)
             elif self._vert_align[i] == "top":
                 y = int(self.rect.y + self._margins[1])
-            else: # bottom
+            else:  # bottom
                 y = int(self.rect.y + self.rect.height - h - self._margins[3])
             cr.save()
             cr.translate(x, y)
@@ -439,16 +456,13 @@ class Sprite:
         if x < 0 or x > (self.rect.width - 1) or \
                 y < 0 or y > (self.rect.height - 1):
             return(-1, -1, -1, -1)
-
-        # create a new 1x1 cairo surface
-        cs = cairo.ImageSurface(cairo.FORMAT_RGB24, 1, 1);
+        # Create a new 1x1 cairo surface.
+        cs = cairo.ImageSurface(cairo.FORMAT_RGB24, 1, 1)
         cr = cairo.Context(cs)
         cr.set_source_surface(self.cached_surfaces[i], -x, -y)
-        cr.rectangle(0,0,1,1)
+        cr.rectangle(0, 0, 1, 1)
         cr.set_operator(cairo.OPERATOR_SOURCE)
         cr.fill()
-        cs.flush() # ensure all writing is done
-        # Read the pixel
-        pixels = cs.get_data()
+        cs.flush()  # Ensure all the writing is done.
+        pixels = cs.get_data()  # Read the pixel.
         return (ord(pixels[2]), ord(pixels[1]), ord(pixels[0]), 0)
-
