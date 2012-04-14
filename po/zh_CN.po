@@ -38,9 +38,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-02-15 00:33-0500\n"
-"PO-Revision-Date: 2011-12-09 18:44+0200\n"
-"Last-Translator: lite <litekok@gmail.com>\n"
+"POT-Creation-Date: 2012-04-11 00:34-0400\n"
+"PO-Revision-Date: 2012-04-14 05:13+0200\n"
+"Last-Translator: Xin <dram.wang@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: zh_CN\n"
 "MIME-Version: 1.0\n"
@@ -49,155 +49,159 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 "X-Generator: Pootle 2.0.5\n"
 
-#: activity/activity.info:2 game.py:544 visualmatch.py:35
+#: activity/activity.info:2 game.py:588 visualmatch.py:35
 msgid "Visual Match"
 msgstr "图案配对"
 
-#: VisualMatchActivity.py:68 VisualMatchActivity.py:446
+#: VisualMatchActivity.py:68 VisualMatchActivity.py:463
 msgid "intermediate"
 msgstr "中级"
 
-#: VisualMatchActivity.py:68 VisualMatchActivity.py:454
+#: VisualMatchActivity.py:68 VisualMatchActivity.py:471
 msgid "expert"
 msgstr "专家"
 
-#: VisualMatchActivity.py:68 VisualMatchActivity.py:438
+#: VisualMatchActivity.py:68 VisualMatchActivity.py:455
 msgid "beginner"
 msgstr "入门"
 
-#: VisualMatchActivity.py:129
+#: VisualMatchActivity.py:128
 msgid "Play with the computer."
 msgstr "和电脑玩。"
 
-#: VisualMatchActivity.py:134
+#: VisualMatchActivity.py:133
 msgid "Stop playing with the computer."
 msgstr "停止和电脑玩。"
 
-#: VisualMatchActivity.py:216 visualmatch.py:171
+#: VisualMatchActivity.py:217 visualmatch.py:171
 msgid "mouse"
 msgstr "老鼠"
 
-#: VisualMatchActivity.py:217 visualmatch.py:171
+#: VisualMatchActivity.py:218 visualmatch.py:171
 msgid "cat"
 msgstr "猫"
 
-#: VisualMatchActivity.py:218 visualmatch.py:171
+#: VisualMatchActivity.py:219 visualmatch.py:171
 msgid "dog"
 msgstr "狗"
 
-#: VisualMatchActivity.py:219 visualmatch.py:172
+#: VisualMatchActivity.py:220 visualmatch.py:172
 msgid "cheese"
 msgstr "奶酪"
 
-#: VisualMatchActivity.py:220 visualmatch.py:172
+#: VisualMatchActivity.py:221 visualmatch.py:172
 msgid "apple"
 msgstr "苹果"
 
-#: VisualMatchActivity.py:221 visualmatch.py:172
+#: VisualMatchActivity.py:222 visualmatch.py:172
 msgid "bread"
 msgstr "面包"
 
-#: VisualMatchActivity.py:222 visualmatch.py:173
+#: VisualMatchActivity.py:223 visualmatch.py:173
 msgid "moon"
 msgstr "月亮"
 
-#: VisualMatchActivity.py:223 visualmatch.py:173
+#: VisualMatchActivity.py:224 visualmatch.py:173
 msgid "sun"
 msgstr "太阳"
 
-#: VisualMatchActivity.py:224 visualmatch.py:173
+#: VisualMatchActivity.py:225 visualmatch.py:173
 msgid "earth"
 msgstr "地球"
 
-#: VisualMatchActivity.py:296
+#: VisualMatchActivity.py:304
+msgid "Export scores to clipboard"
+msgstr "导出得分到剪切板"
+
+#: VisualMatchActivity.py:313
 msgid "Game"
 msgstr "游戏"
 
-#: VisualMatchActivity.py:297
+#: VisualMatchActivity.py:314
 msgid "Numbers"
 msgstr "数字"
 
-#: VisualMatchActivity.py:298
+#: VisualMatchActivity.py:315
 msgid "Tools"
 msgstr "工具"
 
-#: VisualMatchActivity.py:304 visualmatch.py:49
+#: VisualMatchActivity.py:321 visualmatch.py:49
 msgid "New pattern game"
 msgstr "新的图案游戏"
 
-#: VisualMatchActivity.py:307 visualmatch.py:53
+#: VisualMatchActivity.py:324 visualmatch.py:53
 msgid "New number game"
 msgstr "新的数字游戏"
 
-#: VisualMatchActivity.py:310 visualmatch.py:57
+#: VisualMatchActivity.py:327 visualmatch.py:57
 msgid "New word game"
 msgstr "新的文字游戏"
 
-#: VisualMatchActivity.py:313 VisualMatchActivity.py:327
+#: VisualMatchActivity.py:330 VisualMatchActivity.py:344
 msgid "Import custom cards"
 msgstr "导入自定义的卡片"
 
-#: VisualMatchActivity.py:323
+#: VisualMatchActivity.py:340
 msgid "Edit word lists."
 msgstr "编辑字的列表。"
 
-#: VisualMatchActivity.py:334
+#: VisualMatchActivity.py:351
 msgid "product"
 msgstr "产品"
 
-#: VisualMatchActivity.py:342
+#: VisualMatchActivity.py:359
 msgid "Roman numerals"
 msgstr "罗马数字"
 
-#: VisualMatchActivity.py:350
+#: VisualMatchActivity.py:367
 msgid "word"
 msgstr "字"
 
-#: VisualMatchActivity.py:358 visualmatch.py:107
+#: VisualMatchActivity.py:375 visualmatch.py:107
 msgid "Chinese"
 msgstr "中文"
 
-#: VisualMatchActivity.py:366 visualmatch.py:111
+#: VisualMatchActivity.py:383 visualmatch.py:111
 msgid "Mayan"
 msgstr "玛雅"
 
-#: VisualMatchActivity.py:374
+#: VisualMatchActivity.py:391
 msgid "Quipu"
 msgstr "古秘鲁文"
 
-#: VisualMatchActivity.py:385
+#: VisualMatchActivity.py:402
 msgid "hash marks"
 msgstr "码标线"
 
-#: VisualMatchActivity.py:393
+#: VisualMatchActivity.py:410
 msgid "dots in a circle"
 msgstr "圆形中的点"
 
-#: VisualMatchActivity.py:401
+#: VisualMatchActivity.py:418
 msgid "points on a star"
 msgstr "星形上的点"
 
-#: VisualMatchActivity.py:409
+#: VisualMatchActivity.py:426
 msgid "dice"
 msgstr "骰子"
 
-#: VisualMatchActivity.py:417
+#: VisualMatchActivity.py:434
 msgid "dots in a line"
 msgstr "线条上的点"
 
-#: VisualMatchActivity.py:426
+#: VisualMatchActivity.py:443
 msgid "Play with the computer"
 msgstr "和电脑玩"
 
-#: VisualMatchActivity.py:466
+#: VisualMatchActivity.py:483
 msgid "Find a match."
 msgstr "查找配对。"
 
-#: VisualMatchActivity.py:470 game.py:419 game.py:514
+#: VisualMatchActivity.py:487 game.py:460 game.py:558
 msgid "cards"
 msgstr "卡片"
 
-#: VisualMatchActivity.py:472 game.py:527 game.py:529
+#: VisualMatchActivity.py:489 game.py:571 game.py:573
 msgid "matches"
 msgstr "配对"
 
@@ -237,31 +241,31 @@ msgstr "二十一"
 msgid "thirty three"
 msgstr "三十三"
 
-#: game.py:261
+#: game.py:267
 msgid "Edit the custom cards."
 msgstr "编辑自定义的卡片。"
 
-#: game.py:289
+#: game.py:295
 msgid "Edit the word cards."
 msgstr "编辑字的卡片。"
 
-#: game.py:383
+#: game.py:424
 msgid "Game over"
 msgstr "游戏结束"
 
-#: game.py:395
+#: game.py:436
 msgid "unsolvable"
 msgstr "不可解的"
 
-#: game.py:430
+#: game.py:471
 msgid "New record"
 msgstr "新的记录"
 
-#: game.py:520 game.py:522
+#: game.py:564 game.py:566
 msgid "match"
 msgstr "配对"
 
-#: game.py:732
+#: game.py:776
 msgid "New custom game"
 msgstr "新的自定义游戏"
 
