@@ -158,6 +158,7 @@ class VisualMatchActivity(activity.Activity):
     def image_import_cb(self, button=None):
         ''' Import custom cards from the Journal '''
         self.vmw.editing_custom_cards = True
+        self.vmw.editing_word_list = False
         self.vmw.edit_custom_card()
         if self.vmw.robot:
             self._robot_cb(button)
@@ -186,6 +187,7 @@ class VisualMatchActivity(activity.Activity):
     def _edit_words_cb(self, button):
         ''' Edit the word list. '''
         self.vmw.editing_word_list = True
+        self.vmw.editing_custom_cards = False
         self.vmw.edit_word_list()
         if self.vmw.robot:
             self._robot_cb(button)
@@ -237,6 +239,7 @@ class VisualMatchActivity(activity.Activity):
                     'custom_' + str(i), None))
 
     def _write_scores_to_clipboard(self, button=None):
+        '''
         before = '{"chart_line_color": "#00588C", "title": \
 "%s", "x_label": "", "y_label": "", "chart_data": ' % (self.metadata['title'])
         scores = []
@@ -245,6 +248,11 @@ class VisualMatchActivity(activity.Activity):
         jscores = self._data_dumper(scores)
         after = ', "chart_color": "#00A0FF", "current_chart.type": "line"}'
         _logger.debug(before + jscores + after)
+        gtk.Clipboard().set_text(before + jscores + after)
+        '''
+        jscores = ''
+        for i, s in enumerate(self.vmw.all_scores):
+            jscores += '%s: %s\n' % (str(i + 1), s)
         gtk.Clipboard().set_text(before + jscores + after)
 
     def _find_datapath(self, activity):
@@ -572,11 +580,14 @@ class VisualMatchActivity(activity.Activity):
             else:
                 data.append(i.index)
         for i in self.vmw.clicked:
-            if i is None or self.vmw.deck.spr_to_card(i) is None or \
+            _logger.debug('saving click %s %s' % (str(i),
+                str(self.vmw.deck.spr_to_card(i[0]))))
+            if i[0] is None or self.vmw.deck.spr_to_card(i[0]) is None or \
                self.vmw.editing_word_list:
                 data.append(None)
             else:
-                data.append(self.vmw.deck.spr_to_card(i).index)
+                _logger.debug(self.vmw.deck.spr_to_card(i[0]).index)
+                data.append(self.vmw.deck.spr_to_card(i[0]).index)
         for i in self.vmw.deck.cards:
             if i is None or self.vmw.editing_word_list:
                 data.append(None)
@@ -717,7 +728,7 @@ class VisualMatchActivity(activity.Activity):
             e, card_index = text.split(':')
             _logger.debug('receiving selection index: ' + card_index)
             self.vmw._process_selection(
-                self.vmw.selected[int(card_index)].spr)
+                self.vmw.clicked[int(card_index)][0].spr)
         elif text[0] == 'j':
             if self.initiating:  # Only the sharer 'shares'.
                 _logger.debug('serialize the project and send to joiner')

@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-#Copyright (c) 2009,10 Walter Bender
+#Copyright (c) 2009,12 Walter Bender
 #Copyright (c) 2009 Michele Pratusevich
 #Copyright (c) 2009 Vincent Le
 
@@ -20,6 +20,8 @@ import gobject
 
 from gettext import gettext as _
 
+from math import sqrt
+
 from sugar.graphics.objectchooser import ObjectChooser
 from sugar.datastore import datastore
 from sugar import mime
@@ -33,17 +35,27 @@ try:
 except ImportError:
     GRID_CELL_SIZE = 0
 
-from constants import LOW, MEDIUM, HIGH, SELECTMASK, MATCHMASK, ROW, COL, \
-    WORD_CARD_INDICIES, MATCH_POSITION, DEAD_DICTS, DEAD_KEYS, WHITE_SPACE, \
+from constants import LOW, MEDIUM, HIGH, MATCHMASK, ROW, COL, \
+    WORD_CARD_INDICIES, DEAD_DICTS, DEAD_KEYS, WHITE_SPACE, \
     NOISE_KEYS, WORD_CARD_MAP, KEYMAP, CARD_HEIGHT, CARD_WIDTH, DEAL, \
     DIFFICULTY_LEVEL, BACKGROUNDMASK, DECKSIZE, CUSTOM_CARD_INDICIES
+
+CURSOR = '█'
+
 
 from grid import Grid
 from deck import Deck
 from card import Card
 from sprites import Sprites, Sprite
-from gencards import generate_selected_card, generate_match_card, \
-    generate_smiley
+from gencards import generate_match_card, \
+    generate_smiley, generate_frowny_texture,  generate_frowny_shape, \
+    generate_frowny_color, generate_frowny_number
+
+
+def _distance(pos1, pos2):
+    ''' simple distance function '''
+    return sqrt((pos1[0] - pos2[0]) * (pos1[0] - pos2[0]) + \
+                (pos1[1] - pos2[1]) * (pos1[1] - pos2[1]))
 
 
 def _find_the_number_in_the_name(name):
@@ -81,7 +93,7 @@ class Game():
         if parent is None:  # Starting from command line
             self.sugar = False
             self.canvas = canvas
-        else:               # Starting from Sugar
+        else:  # Starting from Sugar
             self.sugar = True
             self.canvas = canvas
             parent.show_all()
@@ -103,13 +115,15 @@ class Game():
         self.custom_paths = [None, None, None, None, None, None, None, None,
                              None]
         self.sprites = Sprites(self.canvas)
-        self.selected = []
         self.press = None
         self.match_display_area = []
+        self._matches_on_display = False
         self.smiley = []
-        self.clicked = [None, None, None]
-        self.dragged_init_xy = [[None, None], [None, None], [None, None]]
+        self.frowny = []
+        self.failure = 0
+        self.clicked = [[None, 0, 0], [None, 0, 0], [None, 0, 0]]
         self.dragpos = [0, 0]
+        self.startpos = [0, 0]
         self.low_score = [-1, -1, -1]
         self.all_scores = []
         self.robot = False
@@ -120,6 +134,7 @@ class Game():
         self.editing_custom_cards = False
         self.edit_card = None
         self.dead_key = None
+        self._found_a_match = False
 
     def new_game(self, saved_state=None, deck_index=0):
         ''' Start a new game '''
@@ -138,24 +153,51 @@ class Game():
                              self.card_height)
 
             for i in range(0, 3):
-                self.selected.append(Card(self.sprites,
-                                          generate_selected_card(self.scale),
-                                          [SELECTMASK, 0, 0, 0]))
                 self.match_display_area.append(Card(self.sprites,
                                           generate_match_card(self.scale),
                                           [MATCHMASK, 0, 0, 0]))
-                self.grid.display_match(self.match_display_area[i].spr, i)
+                self.match_display_area[-1].spr.move(self.grid.match_to_xy(i))
+                # self.grid.display_match(self.match_display_area[i].spr, i)
 
             for i in range((ROW - 1)* COL):
                 self.smiley.append(
                     Card(self.sprites, generate_smiley(self.scale),
                          [BACKGROUNDMASK, 0, 0, 0]))
                 self.smiley[-1].spr.move(self.grid.grid_to_xy(i))
-        self._unselect()
+            self.smiley.append(Card(self.sprites, generate_smiley(self.scale),
+                                    [BACKGROUNDMASK, 0, 0, 0]))
+            self.smiley[-1].spr.move(self.grid.match_to_xy(3))
+            self.smiley[-1].spr.hide()
+
+            # A different frowny face for each type of error
+            self.frowny.append(
+                Card(self.sprites, generate_frowny_shape(self.scale),
+                         [BACKGROUNDMASK, 0, 0, 0]))
+            self.frowny[-1].spr.move(self.grid.match_to_xy(3))
+            self.frowny.append(
+                Card(self.sprites, generate_frowny_color(self.scale),
+                         [BACKGROUNDMASK, 0, 0, 0]))
+            self.frowny[-1].spr.move(self.grid.match_to_xy(3))
+            self.frowny.append(
+                Card(self.sprites, generate_frowny_texture(self.scale),
+                         [BACKGROUNDMASK, 0, 0, 0]))
+            self.frowny[-1].spr.move(self.grid.match_to_xy(3))
+            self.frowny.append(
+                Card(self.sprites, generate_frowny_number(self.scale),
+                         [BACKGROUNDMASK, 0, 0, 0]))
+            self.frowny[-1].spr.move(self.grid.match_to_xy(3))
+
+        self.clicked = [[None, 0, 0], [None, 0, 0], [None, 0, 0]]
 
         # Restore saved state on resume or share.
         if not hasattr(self, 'card_type'):
             return
+
+        self._matches_on_display = False
+        for c in self.frowny:
+            c.spr.hide()
+        self.smiley[-1].spr.hide()
+
         if saved_state is not None:
             _logger.debug('Restoring state: %s' % (str(saved_state)))
             if self.card_type == 'custom':
@@ -174,9 +216,10 @@ class Game():
                                                     3 * self.matches:])
             self.deck.restore(saved_state[_deck_start: _deck_stop])
             self.grid.restore(self.deck, saved_state[0: ROW * COL])
-            self._restore_selected(saved_state[ROW * COL: ROW * COL + 3])
             self._restore_matches(saved_state[_deck_stop: _deck_stop + \
                                                   3 * self.matches])
+            self._restore_clicked(saved_state[ROW * COL: ROW * COL + 3])
+
         elif not self.joiner():
             _logger.debug('Starting new game.')
             if self.card_type == 'custom':
@@ -240,6 +283,10 @@ class Game():
             return
 
         # Set the card type to custom, and generate a new deck.
+        for c in self.clicked:
+            if c[0] is not None:
+                c[0].hide()
+                c[0] = None
         self.deck.hide()
         self.card_type = 'custom'
         if len(self.custom_paths) < 3:
@@ -250,7 +297,6 @@ class Game():
                          self.custom_paths,
                          self.scale, DIFFICULTY_LEVEL.index(HIGH))
         self.deck.hide()
-        self._unselect()
         self.matches = 0
         self.robot_matches = 0
         self.match_list = []
@@ -259,6 +305,7 @@ class Game():
         self.dead_key = None
         if hasattr(self, 'timeout_id') and self.timeout_id is not None:
             gobject.source_remove(self.timeout_id)
+
         # Fill the grid with custom cards.
         self.grid.restore(self.deck, CUSTOM_CARD_INDICIES)
         self.set_label('deck', '')
@@ -272,13 +319,16 @@ class Game():
             return
 
         # Set the card type to words, and generate a new deck.
+        for c in self.clicked:
+            if c[0] is not None:
+                c[0].hide()
+                c[0] = None
         self.deck.hide()
         self.card_type = 'word'
         self.deck = Deck(self.sprites, self.card_type,
                          [self.numberO, self.numberC], self.word_lists,
                          self.scale, DIFFICULTY_LEVEL.index(HIGH))
         self.deck.hide()
-        self._unselect()
         self.matches = 0
         self.robot_matches = 0
         self.match_list = []
@@ -295,111 +345,208 @@ class Game():
         self.set_label('status', _('Edit the word cards.'))
 
     def _button_press_cb(self, win, event):
-        ''' Just grab focus on press. '''
+        ''' Look for a card under the button press and save its position. '''
         win.grab_focus()
+
+        # If there is a match showing, hide it.
+        if self._matches_on_display:
+            self.match_list[-1].hide()
+            self.match_list[-2].hide()
+            self.match_list[-3].hide()
+            # And unselect clicked cards
+            self.clicked = [[None, 0, 0], [None, 0, 0], [None, 0, 0]]
+            self.smiley[-1].spr.hide()
+            self._matches_on_display = False
+
+        # Keep track of starting drag position.
         x, y = map(int, event.get_coords())
-        self.statpos = (x, y)
         self.dragpos = [x, y]
+        self.startpos = [x, y]
+
+        # Find the sprite under the mouse.
         spr = self.sprites.find_sprite((x, y))
         if spr is None:
             return True
+
+        # We are only interested in cards in the deck.
         if self.deck.spr_to_card(spr) is not None:
-            self.press = spr  # Make sure sprite is a card.
+            self.press = spr
+            # Save its starting position so we can restore it if necessary
+            if self._where_in_clicked(spr) is None:
+                i = self._none_in_clicked()
+                if i is None:
+                    self.press = None
+                else:
+                    self.clicked[i][0] = spr
+                    self.clicked[i][1] = spr.get_xy()[0]
+                    self.clicked[i][2] = spr.get_xy()[1]
         else:
             self.press = None
         return True
 
     def _mouse_move_cb(self, win, event):
-        """ Drag a card with the mouse. """
-        if self.press is None:
+        ''' Drag the card with the mouse. '''
+        if self.press is None or \
+           self.editing_word_list or \
+           self.editing_custom_cards:
             self.dragpos = [0, 0]
             return True
         win.grab_focus()
         x, y = map(int, event.get_coords())
         dx = x - self.dragpos[0]
         dy = y - self.dragpos[1]
+        self.press.set_layer(5000)
         self.press.move_relative((dx, dy))
         self.dragpos = [x, y]
 
     def _button_release_cb(self, win, event):
-        ''' Select the sprite under the mouse and process the selection. '''
+        ''' Lots of possibilities here:
+        (1) We clicked on a card on the canvas, so move it to match area;
+        (2) We clicked on a card in the match area, so return it to the canvas;
+        (3) We dragged a card to the match area;
+        (4) We dragged a card from the match area;
+        (5) We dragged a card to a different position on the canvas;
+        (6) We dragged a card to a different position on the match area;
+        (7) We dragged a card and then changed our mind;
+        '''
         win.grab_focus()
-        x, y = map(int, event.get_coords())
-        spr = self.sprites.find_sprite((x, y), reverse=True)
-        if spr is None:
-            self.press = None
+
+        # Maybe there is nothing to do.
+        if self.press is None:
+            self.dragpos = [0, 0]
             return True
 
-        if spr in self.match_display_area:
-            i = self.match_display_area.index(spr)
-            # Is it an empty slot?
-            if self.clicked[i] is None:
-                x, y = self.match_display_area[i].get_xy()
-                self.press.move((x, y))
-                self.clicked[i] = self.press
+        self.press.set_layer(2000)
+
+        # Determine if it was a click, a drag, or an aborted drag
+        x, y = map(int, event.get_coords())
+        i = self._where_in_clicked(self.press)
+        d = _distance((x, y), (self.startpos[0], self.startpos[1]))
+        if d < self.card_width / 10:  # click
+            move = 'click'
+        elif d < self.card_width / 2:  # aborted drag
+            move = 'abort'
+        else:
+            move = 'drag'
+
+        # Determine status of card
+        status = self.grid.spr_to_grid(self.press)
+        if move == 'click':
+            if self.editing_word_list:
+                if self.editing_word_list:
+                    # Only edit one card at a time, so unselect other cards
+                    for i, a in enumerate(self.clicked):
+                        if a[0] is not None and a[0] != self.press:
+                            a[0].set_label(a[0].labels[0].replace(CURSOR, ''))
+                            a[0] = None  # Unselect
+            elif self.editing_custom_cards:
+                pass
+            elif status is None:  # Return card to grid
+                i = self.grid.find_an_empty_slot()
+                j = self._where_in_clicked(self.press)
+                if i is not None:
+                    self.grid.return_to_grid(self.press, i, j)
+                    self.grid.grid[i] = self.deck.spr_to_card(self.press)
+                    i = self._where_in_clicked(self.press)
+                    self.clicked[i][0] = None
+                else:
+                    self.press.move((self.clicked[i][1], self.clicked[i][2]))
+                for c in self.frowny:
+                    c.spr.hide()
             else:
-                self.press.move((self.startpos))
+                i = self._where_in_clicked(self.press)
+                if i is None:
+                    self.press.move((self.startpos))
+                else:
+                    self.press.set_layer(5000)
+                    self.grid.grid[self.grid.spr_to_grid(self.press)] = None
+                    self.grid.display_match(self.press, i)
+        elif move == 'abort':
+            self.press.move((self.clicked[i][1], self.clicked[i][2]))
+        else:  # move == 'drag'
+            if status is None:
+                if x > self.grid.left:  # Returning a card to the grid
+                    i = self.grid.xy_to_grid((x, y))
+                    if self.grid.grid[i] is not None:
+                        i = self.grid.find_an_empty_slot()
+                    self.press.move(self.grid.grid_to_xy(i))
+                    self.grid.grid[i] = self.deck.spr_to_card(self.press)
+                    i = self._where_in_clicked(self.press)
+                    self.clicked[i][0] = None
+                    for c in self.frowny:
+                        c.spr.hide()
+                else:  # Move a click to a different match slot
+                    j = self.grid.xy_to_match((x, y))
+                    if i == j:
+                        self.press.move((self.clicked[i][1],
+                                         self.clicked[i][2]))
+                    else:
+                        temp_spr = self.clicked[i][0]
+                        self.clicked[i][0] = self.clicked[j][0]
+                        self.clicked[j][0] = temp_spr
+                        if self.clicked[i][0] is not None:
+                            self.clicked[i][0].move(self.grid.match_to_xy(i))
+                        if self.clicked[j][0] is not None:
+                            self.clicked[j][0].move(self.grid.match_to_xy(j))
+                    move = 'abort'
+            else:
+                if x < self.grid.left:  # Moving a card to the match area
+                    self.grid.grid[self.grid.spr_to_grid(self.press)] = None
+                    self.press.move(self.match_display_area[i].spr.get_xy())
+                else:
+                    j = self.grid.xy_to_grid((x, y))
+                    k = self.grid.xy_to_grid((self.clicked[i][1],
+                                              self.clicked[i][2]))
+                    if j < 0 or k < 0 or j > 15 or k > 15 or j == k:
+                        self.press.move((self.clicked[i][1],
+                                         self.clicked[i][2]))
+                    else:
+                        tmp_card = self.grid.grid[k]
+                        if self.grid.grid[j] is not None:
+                            self.grid.grid[j].spr.move(self.grid.grid_to_xy(k))
+                            self.press.move(self.grid.grid_to_xy(j))
+                            self.grid.grid[k] = self.grid.grid[j]
+                            self.grid.grid[j] = tmp_card
+                        else:
+                            self.press.move(self.grid.grid_to_xy(j))
+                            self.grid.grid[j] = self.grid.grid[k]
+                            self.grid.grid[k] = None
+                    move = 'abort'
+                    self.clicked[i][0] = None
+
+        if move == 'abort':
+            self.press = None
+            return
+        else:
+            spr = self.press
 
         if self._sharing():
             if self.deck.spr_to_card(spr) is not None:
                 self.activity._send_event(
                     'B:' + str(self.deck.spr_to_card(spr).index))
-            i = self._selected(spr)
-            if i is not -1:
+            i = self._where_in_clicked()
+            if i is not None:
                 self.activity._send_event('S:' + str(i))
         self.press = None
         return self._process_selection(spr)
 
-    def _selected(self, spr):
-        ''' Mark the selected card '''
-        for i in range(3):
-            if self.selected[i].spr == spr:
-                return i
-        return -1
-
     def _process_selection(self, spr):
-        ''' Check for matches '''
-        # Make sure a card in the matched pile isn't selected.
-        x, y = spr.get_xy()
-        if x == MATCH_POSITION:
-            return True
+        ''' After a card has been selected:
+        (1) If three cards are in the match pile, check for a match
+        (2) If there is not a match, return the cards to the board
+        '''
 
-        # Make sure that the current card isn't already selected.
-        i = self._selected(spr)
-        if i is not -1:
-            # On a second click, unselect it.
-            self.clicked[i] = None
-            self.selected[i].hide_card()
-            return True
-
-        # Otherwise highlight the card with a selection mask.
-        for a in self.clicked:
-            if a is None:
-                i = self.clicked.index(a)
-                self.clicked[i] = spr
-                x, y = spr.get_xy()
-                self.selected[i].spr.move((x, y))
-                self.selected[i].show_card()
-                break
-
-        _logger.debug('selecting card %d' % (
-                self.deck.cards.index(self.deck.spr_to_card(spr))))
         if self.editing_word_list:
-            # Only edit one card at a time, so unselect other cards
-            for a in self.clicked:
-                if a is not None and a is not spr:
-                    i = self.clicked.index(a)
-                    self.clicked[i] = None
-                    self.selected[i].hide_card()
+            _logger.debug('editing word list')
             # Edit card label
             self.edit_card = self.deck.spr_to_card(spr)
+            spr.set_label(spr.labels[0] + CURSOR)
         elif self.editing_custom_cards:
+            _logger.debug('editing custom cards')
             # Only edit one card at a time, so unselect other cards
-            for a in self.clicked:
-                if a is not None and a is not spr:
-                    i = self.clicked.index(a)
-                    self.clicked[i] = None
-                    self.selected[i].hide_card()
+            for i, a in enumerate(self.clicked):
+                if a[0] is not None and a[0] != spr:
+                    a[0] = None
             # Choose an image from the Journal for a card
             self.edit_card = self.deck.spr_to_card(spr)
             self._choose_custom_card()
@@ -410,10 +557,27 @@ class Game():
                              DIFFICULTY_LEVEL[1])
             self.deck.hide()
             self.grid.restore(self.deck, CUSTOM_CARD_INDICIES)
-        elif None not in self.clicked:
+        elif self._none_in_clicked() == None:
             # If we have three cards selected, test for a match.
             self._test_for_a_match()
+            if self._matches_on_display:
+                self.smiley[-1].spr.set_layer(100)
+                _logger.debug('Found a match')
+            else:
+                self.frowny[self._failure].spr.set_layer(100)
         return True
+
+    def _none_in_clicked(self):
+        for i, a in enumerate(self.clicked):
+            if a[0] is None:
+                return i
+        return None
+
+    def _where_in_clicked(self, spr):
+        for i, a in enumerate(self.clicked):
+            if a[0] == spr:
+                return i
+        return None
 
     def _game_over(self):
         ''' Game is over when the deck is empty and no more matches. '''
@@ -439,30 +603,31 @@ class Game():
 
     def _test_for_a_match(self):
         ''' If we have a match, then we have work to do. '''
-        if self._match_check([self.deck.spr_to_card(self.clicked[0]),
-                              self.deck.spr_to_card(self.clicked[1]),
-                              self.deck.spr_to_card(self.clicked[2])],
+        if self._match_check([self.deck.spr_to_card(self.clicked[0][0]),
+                              self.deck.spr_to_card(self.clicked[1][0]),
+                              self.deck.spr_to_card(self.clicked[2][0])],
                              self.card_type):
 
             # Stop the timer.
-            if self.timeout_id is not None:
-                gobject.source_remove(self.timeout_id)
-            self.total_time += gobject.get_current_time() - self.start_time
+            if hasattr(self, 'timeout_id'):
+                if self.timeout_id is not None:
+                    gobject.source_remove(self.timeout_id)
+                self.total_time += gobject.get_current_time() - self.start_time
 
             # Increment the match counter and add the match to the match list.
             self.matches += 1
             for i in self.clicked:
-                self.match_list.append(i)
+                self.match_list.append(i[0])
 
-            # Remove the match and deal three new cards.
-            self.grid.remove_and_replace(self.clicked, self.deck)
+            # Deal three new cards.
+            self.grid.replace(self.clicked, self.deck)
+            self._matches_on_display = True
             self.set_label('deck', '%d %s' %
                            (self.deck.cards_remaining(), _('cards')))
 
             # Test to see if the game is over.
             if self._game_over():
                 gobject.source_remove(self.timeout_id)
-                self._unselect()
                 if self.low_score[self.level] == -1:
                     self.low_score[self.level] = self.total_time
                 elif self.total_time < self.low_score[self.level]:
@@ -471,7 +636,6 @@ class Game():
                         (_('New record'), int(self.total_time / 60),
                          int(self.total_time % 60)))
                 self.all_scores.append(self.total_time)
-                _logger.debug(self.all_scores)
                 if not self.sugar:
                     self.activity.save_score()
                 return True
@@ -487,14 +651,8 @@ class Game():
             self._update_labels()
             self._timer_reset()
 
-        # Whether or not there was a match, unselect all cards.
-        self._unselect()
-
-    def _unselect(self):
-        ''' Unselect the cards '''
-        self.clicked = [None, None, None]
-        for a in self.selected:
-            a.hide_card()
+        else:
+            self._matches_on_display = False
 
     def _keypress_cb(self, area, event):
         ''' Keypress: editing word cards or selecting cards to play '''
@@ -507,20 +665,62 @@ class Game():
             if k[0:5] == 'dead_':
                 self.dead_key = k
                 return True
+            label = self.edit_card.spr.labels[0]
+            if len(label) > 0:
+                c = label.count(CURSOR)
+                if c == 0:
+                    oldleft = label
+                    oldright = ''
+                elif len(label) == 1:  # Only CURSOR
+                    oldleft = ''
+                    oldright = ''
+                else:
+                    try:  # Why are getting a ValueError on occasion?
+                        oldleft, oldright = label.split(CURSOR)
+                    except ValueError:
+                        oldleft = label
+                        oldright = ''
+            else:
+                oldleft = ''
+                oldright = ''
+            newleft = oldleft
             if k == 'BackSpace':
-                self.edit_card.spr.labels[0] =\
-                self.edit_card.spr.labels[0][
-                    :len(self.edit_card.spr.labels[0]) - 1]
+                if len(oldleft) > 1:
+                    newleft = oldleft[:len(oldleft) - 1]
+                else:
+                    newleft = ''
+            elif k == 'Delete':
+                if len(oldright) > 0:
+                    oldright = oldright[1:]
+            elif k == 'Home':
+                oldright = oldleft + oldright
+                newleft = ''
+            elif k == 'Left':
+                if len(oldleft) > 0:
+                    oldright = oldleft[len(oldleft) - 1:] + oldright
+                    newleft = oldleft[:len(oldleft) - 1]
+            elif k == 'Right':
+                if len(oldright) > 0:
+                    newleft = oldleft + oldright[0]
+                    oldright = oldright[1:]
+            elif k == 'End':
+                newleft = oldleft + oldright
+                oldright = ''
+            elif k == 'Return':
+                newleft = oldleft + RETURN
             else:
                 if self.dead_key is not None:
                     u = DEAD_DICTS[DEAD_KEYS.index(self.dead_key[5:])][k]
                 if k in WHITE_SPACE:
                     u = 32
-                if unichr(u) is not '\x00':
-                    self.edit_card.spr.labels[0] += unichr(u)
-            self.edit_card.spr.draw()
+                if unichr(u) != '\x00':
+                    newleft = oldleft + unichr(u)
+                else:
+                    newleft = oldleft + k
+            label = newleft + CURSOR + oldright
+            self.edit_card.spr.set_label(label)
             (i, j) = WORD_CARD_MAP[self.edit_card.index]
-            self.word_lists[i][j] = self.edit_card.spr.labels[0]
+            self.word_lists[i][j] = label.replace(CURSOR, '')
             self.dead_key = None
         else:
             if k in KEYMAP:
@@ -587,19 +787,22 @@ class Game():
             if hasattr(self, 'win') and label is not 'clock':
                 self.win.set_title('%s: %s' % (_('Visual Match'), s))
 
-    def _restore_selected(self, saved_selected_indices):
+    def _restore_clicked(self, saved_selected_indices):
         ''' Restore the selected cards upon resume or share. '''
         j = 0
         for i in saved_selected_indices:
+            _logger.debug('restoring %s' % (str(i)))
             if i is None:
-                self.clicked[j] = None
+                self.clicked[j][0] = None
             else:
-                self.clicked[j] = self.deck.index_to_card(i).spr
-                k = self.grid.spr_to_grid(self.clicked[j])
-                self.selected[j].spr.move((self.grid.grid_to_xy(k)[0],
-                                           self.grid.grid_to_xy(k)[1]))
-                self.selected[j].show_card()
+                self.clicked[j][0] = self.deck.index_to_card(i).spr
+                k = self.grid.spr_to_grid(self.clicked[j][0])
+                self.clicked[j][0].move(self.grid.match_to_xy(j))
+                self.clicked[j][1] = self.grid.match_to_xy(j)[0]
+                self.clicked[j][2] = self.grid.match_to_xy(j)[1]
+                self.clicked[j][0].set_layer(2000)
             j += 1
+        self._process_selection(None)
 
     def _restore_matches(self, saved_match_list_indices):
         ''' Restore the match list upon resume or share. '''
@@ -608,10 +811,13 @@ class Game():
         for i in saved_match_list_indices:
             if i is not None:
                 self.match_list.append(self.deck.index_to_card(i).spr)
+        '''
         if self.matches > 0:
             l = len(self.match_list)
             for j in range(3):
                 self.grid.display_match(self.match_list[l - 3 + j], j)
+            self._matches_on_display = True
+        '''
 
     def _restore_word_list(self, saved_word_list):
         ''' Restore the word list upon resume or share. '''
@@ -625,7 +831,7 @@ class Game():
         seconds = int(gobject.get_current_time() - self.start_time)
         self.set_label('clock', str(seconds))
         if self.robot and self.robot_time < seconds:
-            self._find_a_match(True)
+            self._find_a_match(robot_match=True)
         else:
             self.timeout_id = gobject.timeout_add(1000, self._counter)
 
@@ -640,12 +846,32 @@ class Game():
         if i < self.matches:
             for j in range(3):
                 self.grid.display_match(self.match_list[i * 3 + j], j)
-            self.match_timeout_id = gobject.timeout_add(2000,
-                                                        self._show_matches,
-                                                        i + 1)
+            self.match_timeout_id = gobject.timeout_add(
+                2000, self._show_matches, i + 1)
 
     def _find_a_match(self, robot_match=False):
         ''' Check to see whether there are any matches on the board. '''
+        if robot_match:
+            # Before robot finds a match: restore any cards in match area
+            if self._matches_on_display:
+                self.match_list[-1].hide()
+                self.match_list[-2].hide()
+                self.match_list[-3].hide()
+                # And unselect clicked cards
+                self.clicked = [[None, 0, 0], [None, 0, 0], [None, 0, 0]]
+                self.smiley[-1].spr.hide()
+                self._matches_on_display = False
+            else:
+                for j in range(3):
+                    if self.clicked[j][0] is not None:
+                        k = self.grid.xy_to_grid((self.clicked[j][1],
+                                                  self.clicked[j][2]))
+                        self.clicked[j][0].move((self.clicked[j][1],
+                                                 self.clicked[j][2]))
+                        self.grid.grid[k] = self.deck.spr_to_card(
+                            self.clicked[j][0])
+                        self.clicked[j][0] = None
+
         a = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14]
         for i in Permutation(a):  # TODO: really should be combination
             cardarray = [self.grid.grid[i[0]],
@@ -653,10 +879,15 @@ class Game():
                          self.grid.grid[i[2]]]
             if self._match_check(cardarray, self.card_type):
                 if robot_match:
+                    # Move robot match to match area
                     for j in range(3):
-                        self.clicked[j] = self.grid.grid[i[j]].spr
+                        self.clicked[j][0] = self.grid.grid[i[j]].spr
+                        self.grid.grid[i[j]].spr.move(
+                            self.grid.match_to_xy(j))
+                        self.grid.grid[i[j]] = None
                     self.robot_matches += 1
                     self._test_for_a_match()
+                    self._matches_on_display = True
                 return True
         return False
 
@@ -668,12 +899,15 @@ class Game():
 
         if (cardarray[0].shape + cardarray[1].shape + cardarray[2].shape) % 3\
                != 0:
+            self._failure = 0
             return False
         if (cardarray[0].color + cardarray[1].color + cardarray[2].color) % 3\
                != 0:
+            self._failure = 1
             return False
         if (cardarray[0].fill + cardarray[1].fill + cardarray[2].fill) % 3\
                != 0:
+            self._failure = 2
             return False
         # Special case: only check number when shapes are the same
         if card_type == 'word':
@@ -685,6 +919,7 @@ class Game():
         else:
             if (cardarray[0].num + cardarray[1].num + cardarray[2].num) % 3\
                    != 0:
+                self._failure = 3
                 return False
         return True
 
@@ -735,15 +970,12 @@ class Game():
             if i >= 0:
                 dsobjects, nobjects = datastore.find(
                     {'mime_type': [str(jobject.metadata['mime_type'])]})
-                _logger.debug('%d' % nobjects)
                 self.custom_paths = []
                 if nobjects > 0:
                     for j in range(DECKSIZE):
                         for i in range(nobjects):
                             if dsobjects[i].metadata['title'] == \
                                     _construct_a_name(basename, j + 1, suffix):
-                                _logger.debug('result of find: %s' % \
-                                              dsobjects[i].metadata['title'])
                                 self.custom_paths.append(dsobjects[i])
                                 break
 
@@ -766,7 +998,6 @@ class Game():
 
         if not found_a_sequence:
             grid_index = self.grid.spr_to_grid(self.edit_card.spr)
-            _logger.debug('editing card %d' % (grid_index))
             self.custom_paths[grid_index] = jobject
             self.activity.metadata['custom_' + str(grid_index)] = \
                 jobject.object_id

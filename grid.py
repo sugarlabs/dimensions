@@ -62,15 +62,18 @@ class Grid:
             But only if there are still cards in the deck
             and only 12 cards in the grid
         '''
+        _logger.debug('testing for deck and grid status')
         if not deck.empty() and self.cards_in_grid() == DEAL:
             for c in range(0, COL):
                 i = self.grid.index(None)
                 self.grid[i] = deck.deal_next_card()
                 self.place_a_card(self.grid[i], self.grid_to_xy(i)[0],
                                   self.grid_to_xy(i)[1])
+                _logger.debug('placed a card in grid slot %d' % (i))
 
     def cards_in_grid(self):
         ''' How many cards are on the grid? '''
+        _logger.debug('%d cards in grid' % (ROW * COL - self.grid.count(None)))
         return ROW * COL - self.grid.count(None)
 
     def restore(self, deck, saved_card_index):
@@ -85,26 +88,26 @@ class Grid:
             j += 1
         self.show()
 
-    def remove_and_replace(self, clicked_set, deck):
-        ''' Remove a match from the grid and replace with new cards. '''
+    def find_an_empty_slot(self):
+        ''' Return the position of an empty slot in the grid '''
+        for i in range(len(self.grid)):
+            if self.grid[i] is None:
+                return i
+        return None  # No empty slots
+
+    def replace(self, clicked_set, deck):
+        ''' Deal new cards. '''
+        _logger.debug('in replace')
         for j, a in enumerate(clicked_set):
-            # Move the match to the match display area
-            self.display_match(a, clicked_set.index(a))
-            # Find the index into the grid of the match card
-            i = self.spr_to_grid(a)
             # Don't add new cards if bottom row is occupied
-            if self.cards_in_grid() == DEAL:
-                if deck.empty():
-                    self.grid[i] = None
-                else:
+            if self.cards_in_grid() < DEAL:
+                if not deck.empty():
+                    i = self.find_an_empty_slot()
                     # Put new card in grid position of card we are replacing.
                     self.grid[i] = deck.deal_next_card()
                     timeout_id = gobject.timeout_add(
                         1200, self.place_a_card, self.grid[i],
                         self.grid_to_xy(i)[0], self.grid_to_xy(i)[1], j)
-            else:
-                # Mark as empty the grid positions we are not refilling
-                self.grid[i] = None
 
     def display_match(self, spr, i):
         ''' Move card to the match area. '''
@@ -115,6 +118,16 @@ class Grid:
         self.dy[i] = int((self.ey[i] - spr.get_xy()[1]) / 10)
         timeout_id = gobject.timeout_add(
             100, self._move_to_position, spr, i)
+
+    def return_to_grid(self, spr, i, j):
+        ''' Move card to the match area. '''
+        spr.set_layer(2000)
+        self.ex[j] = self.grid_to_xy(i)[0]
+        self.ey[j] = self.grid_to_xy(i)[1]
+        self.dx[j] = int((self.ex[j] - spr.get_xy()[0]) / 10)
+        self.dy[j] = int((self.ey[j] - spr.get_xy()[1]) / 10)
+        timeout_id = gobject.timeout_add(
+            100, self._move_to_position, spr, j)
 
     def _move_to_position(self, spr, i):
         spr.move_relative((self.dx[i], self.dy[i]))
@@ -146,7 +159,7 @@ class Grid:
                 c.spr.move((x, y))
                 c.show_card()
             else:
-                c.spr.set_layer(1999)
+                c.spr.set_layer(3000)
                 self.ex[animate + 3] = x
                 self.ey[animate + 3] = y
                 self.dx[animate + 3] = int(
@@ -156,10 +169,18 @@ class Grid:
                 timeout_id = gobject.timeout_add(100, self._move_to_position,
                         c.spr, animate + 3)
 
-    def xy_to_grid(self, x, y):
+    def xy_to_match(self, pos):
+        ''' Convert from sprite x,y to match index. '''
+        return int((pos[1] - self.top) / self.yinc)
+
+    def match_to_xy(self, i):
+        ''' Convert from match index to x, y position. '''
+        return ((MATCH_POSITION, self.top + i * self.yinc))
+
+    def xy_to_grid(self, pos):
         ''' Convert from sprite x,y to grid index. '''
-        return int(COL * (y - self.top) / self.yinc)\
-            + int((x - self.left) / self.xinc)
+        return COL * int((pos[1] - self.top) / self.yinc)\
+            + int((pos[0] - self.left) / self.xinc)
 
     def grid_to_xy(self, i):
         ''' Convert from grid index to sprite x,y. '''

@@ -102,7 +102,7 @@ DEAD_DICTS = [{'A': 192, 'E': 200, 'I': 204, 'O': 210, 'U': 217, 'a': 224,
 NOISE_KEYS = ['Shift_L', 'Shift_R', 'Control_L', 'Caps_Lock', 'Pause',
               'Alt_L', 'Alt_R', 'KP_Enter', 'ISO_Level3_Shift', 'KP_Divide',
               'Escape', 'Return', 'KP_Page_Up', 'Up', 'Down', 'Menu',
-              'Left', 'Right', 'KP_Home', 'KP_End', 'KP_Up', 'Super_L',
+              'KP_Home', 'KP_End', 'KP_Up', 'Super_L',
               'KP_Down', 'KP_Left', 'KP_Right', 'KP_Page_Down', 'Scroll_Lock',
               'Page_Down', 'Page_Up']
 WHITE_SPACE = ['space', 'Tab']

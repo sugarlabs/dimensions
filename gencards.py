@@ -17,6 +17,7 @@ import os
 from gettext import gettext as _
 from math import sin, cos, pi
 from constants import *
+FROWN = '☹'
 
 
 class SVG:
@@ -273,6 +274,10 @@ class SVG:
     def _smiley(self):
         self._set_font("DejaVu")
         return self._svg_text(63.5, 63.5, 72, "", '☻')
+
+    def _frowny(self):
+        self._set_font("DejaVu")
+        return self._svg_text(117, 63.5, 72, "", '☹')
 
     def _number_incan(self, number):
         x = 20
@@ -593,6 +598,193 @@ def generate_smiley(scale):
     svg._set_colors([YELLOW, BLACK])
     svg_string = svg._header()
     svg_string += svg._smiley()
+    svg_string += svg._footer()
+    return svg_string
+
+
+def generate_frowny(scale):
+    svg = SVG()
+    svg._set_scale(scale)
+    svg._set_colors([BLACK, YELLOW])
+    svg_string = svg._header()
+    # svg_string += svg._frowny()
+    svg_string += svg._footer()
+    return svg_string
+
+
+def generate_frowny_shape(scale):
+    svg = SVG()
+    svg._set_scale(scale)
+    svg._set_colors([BLACK, YELLOW])
+    svg_string = svg._header()
+    svg_string += '\
+  <path\
+     d="m 40.725683,37.5 5.05,5.05 c 0.4,0.4 0.6,0.9 0.6,1.45 0,1.15 -0.95,2.05 -2.05,2.05 -0.55,0 -1.1,-0.25 -1.45,-0.6 l -5.05,-5.05 -5.05,5.05 c -0.4,0.4 -0.9,0.6 -1.45,0.6 -1.15,0 -2.05,-0.95 -2.05,-2.05 0,-0.55 0.25,-1.1 0.6,-1.45 l 5.05,-5.05 -5.05,-5.05 c -0.35,-0.35 -0.6,-0.9 -0.6,-1.45 0,-1.15 0.95,-2.05 2.05,-2.05 0.55,0 1.1,0.25 1.45,0.6 l 5.05,5.05 5.05,-5.05 c 0.4,-0.35 0.9,-0.6 1.45,-0.6 1.15,0 2.05,0.95 2.05,2.05 0,0.55 -0.25,1.1 -0.6,1.45 l -5.05,5.05 z"\
+     style="fill:%s;fill-opacity:1;stroke:%s;stroke-width:0.9;stroke-opacity:1" />\
+  <g\
+     transform="translate(0.26,0)">\
+    <circle\
+       cx="42.5"\
+       cy="38"\
+       r="16"\
+       transform="matrix(0.53254438,0,0,0.53254438,39.618381,17.263314)"\
+       style="fill:%s;fill-opacity:1;stroke:%s;stroke-width:1.8;stroke-opacity:1" />\
+    <circle\
+       cx="42.5"\
+       cy="38"\
+       r="8"\
+       transform="matrix(0.53254438,0,0,0.53254438,39.618381,17.263314)"\
+       style="fill:%s;fill-opacity:1;stroke:%s;stroke-width:1.8;stroke-opacity:1" />\
+  </g>\
+  <g\
+     transform="translate(1.4,0)">\
+    <circle\
+       cx="82.5"\
+       cy="38"\
+       r="16"\
+       transform="matrix(0.53254438,0,0,0.53254438,41.902464,17.263314)"\
+       style="fill:%s;fill-opacity:1;stroke:%s;stroke-width:1.8;stroke-opacity:1" />\
+    <circle\
+       cx="82.5"\
+       cy="38"\
+       r="8"\
+       transform="matrix(0.53254438,0,0,0.53254438,41.902464,17.263314)"\
+       style="fill:%s;fill-opacity:1;stroke:%s;stroke-width:1.8;stroke-opacity:1" />\
+  </g>\
+  <text\
+     x="3.1"\
+     y="44.1"\
+     style="font-size:18px;fill:%s;stroke:none;font-family:Sans"><tspan\
+       x="3.8"\
+       y="44.1"\
+       style="font-size:18px;fill:%s;fill-opacity:1;stroke:none">%s</tspan></text>\
+  <text\
+     x="102.5"\
+     y="44.1"\
+     style="font-size:18px;fill:%s;stroke:none;font-family:Sans"><tspan\
+       x="102.5"\
+       y="44.1"\
+       style="font-size:18px;fill:%s;fill-opacity:1;stroke:none">%s</tspan></text>\
+' % (
+        BLACK, BLACK, BLACK, BLACK, YELLOW, BLACK, BLACK, BLACK,
+        YELLOW, BLACK, BLACK, BLACK, FROWN, BLACK, BLACK, FROWN)
+    svg_string += svg._footer()
+    return svg_string
+
+
+def generate_frowny_color(scale):
+    svg = SVG()
+    svg._set_scale(scale)
+    svg._set_colors([BLACK, YELLOW])
+    svg_string = svg._header()
+    svg_string += '\
+  <path\
+     d="m 40.725683,37.5 5.05,5.05 c 0.4,0.4 0.6,0.9 0.6,1.45 0,1.15 -0.95,2.05 -2.05,2.05 -0.55,0 -1.1,-0.25 -1.45,-0.6 l -5.05,-5.05 -5.05,5.05 c -0.4,0.4 -0.9,0.6 -1.45,0.6 -1.15,0 -2.05,-0.95 -2.05,-2.05 0,-0.55 0.25,-1.1 0.6,-1.45 l 5.05,-5.05 -5.05,-5.05 c -0.35,-0.35 -0.6,-0.9 -0.6,-1.45 0,-1.15 0.95,-2.05 2.05,-2.05 0.55,0 1.1,0.25 1.45,0.6 l 5.05,5.05 5.05,-5.05 c 0.4,-0.35 0.9,-0.6 1.45,-0.6 1.15,0 2.05,0.95 2.05,2.05 0,0.55 -0.25,1.1 -0.6,1.45 l -5.05,5.05 z"\
+     style="fill:#ff6040;fill-opacity:1;stroke:#ff6040;stroke-width:0.89999998;stroke-opacity:1" />\
+  <path\
+     d="m 90.100682,37.5 5.05,5.05 c 0.4,0.4 0.6,0.9 0.6,1.45 0,1.15 -0.95,2.05 -2.05,2.05 -0.55,0 -1.1,-0.25 -1.45,-0.6 l -5.05,-5.05 -5.05,5.05 c -0.4,0.4 -0.9,0.6 -1.45,0.6 -1.15,0 -2.05,-0.95 -2.05,-2.05 0,-0.55 0.25,-1.1 0.6,-1.45 l 5.05,-5.05 -5.05,-5.05 c -0.35,-0.35 -0.6,-0.9 -0.6,-1.45 0,-1.15 0.95,-2.05 2.05,-2.05 0.55,0 1.1,0.25 1.45,0.6 l 5.05,5.05 5.05,-5.05 c 0.4,-0.35 0.9,-0.6 1.45,-0.6 1.15,0 2.05,0.95 2.05,2.05 0,0.55 -0.25,1.1 -0.6,1.45 l -5.05,5.05 z"\
+     style="fill:#00b418;fill-opacity:1;stroke:#00b418;stroke-width:0.89999998;stroke-opacity:1" />\
+  <path\
+     d="m 65.413182,37.5 5.05,5.05 c 0.4,0.4 0.6,0.9 0.6,1.45 0,1.15 -0.95,2.05 -2.05,2.05 -0.55,0 -1.1,-0.25 -1.45,-0.6 l -5.05,-5.05 -5.05,5.05 c -0.4,0.4 -0.9,0.6 -1.45,0.6 -1.15,0 -2.05,-0.95 -2.05,-2.05 0,-0.55 0.25,-1.1 0.6,-1.45 l 5.05,-5.05 -5.05,-5.05 c -0.35,-0.35 -0.6,-0.9 -0.6,-1.45 0,-1.15 0.95,-2.05 2.05,-2.05 0.55,0 1.1,0.25 1.45,0.6 l 5.05,5.05 5.05,-5.05 c 0.4,-0.35 0.9,-0.6 1.45,-0.6 1.15,0 2.05,0.95 2.05,2.05 0,0.55 -0.25,1.1 -0.6,1.45 l -5.05,5.05 z"\
+     style="fill:#ff6040;fill-opacity:1;stroke:#ff6040;stroke-width:0.89999998;stroke-opacity:1" />\
+  <text\
+     x="3.1"\
+     y="44.1"\
+     style="font-size:18px;fill:%s;stroke:none;font-family:Sans"><tspan\
+       x="3.8"\
+       y="44.1"\
+       style="font-size:18px;fill:%s;fill-opacity:1;stroke:none">%s</tspan></text>\
+  <text\
+     x="102.5"\
+     y="44.1"\
+     style="font-size:18px;fill:%s;stroke:none;font-family:Sans"><tspan\
+       x="102.5"\
+       y="44.1"\
+       style="font-size:18px;fill:%s;fill-opacity:1;stroke:none">%s</tspan></text>\
+' % (BLACK, BLACK, FROWN, BLACK, BLACK, FROWN)
+    svg_string += svg._footer()
+    return svg_string
+
+
+def generate_frowny_number(scale):
+    svg = SVG()
+    svg._set_scale(scale)
+    svg._set_colors([BLACK, YELLOW])
+    svg_string = svg._header()
+    svg_string += '\
+  <text\
+     x="28.9"\
+     y="46.2"\
+     style="font-size:24px;fill:#000000;stroke:none;font-family:Sans"><tspan\
+       x="28.9"\
+       y="46.2"\
+       style="font-size:24px;font-weight:bold;fill:%s;fill-opacity:1">1</tspan></text>\
+  <text\
+     x="53.6"\
+     y="46.2"\
+     style="font-size:24px;fill:#000000;fill-opacity:1;font-family:Sans"><tspan\
+       x="53.6"\
+       y="46.2"\
+       style="font-size:24px;font-weight:bold;fill:%s;fill-opacity:1">1</tspan></text>\
+  <text\
+     x="78.9"\
+     y="46.4"\
+     style="font-size:11px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"><tspan\
+       x="78.9"\
+       y="46.4"\
+       style="font-size:24px;font-weight:bold;fill:%s;fill-opacity:1">2</tspan></text>\
+  <text\
+     x="3.1"\
+     y="44.1"\
+     style="font-size:18px;fill:%s;stroke:none;font-family:Sans"><tspan\
+       x="3.8"\
+       y="44.1"\
+       style="font-size:18px;fill:%s;fill-opacity:1;stroke:none">%s</tspan></text>\
+  <text\
+     x="102.5"\
+     y="44.1"\
+     style="font-size:18px;fill:%s;stroke:none;font-family:Sans"><tspan\
+       x="102.5"\
+       y="44.1"\
+       style="font-size:18px;fill:%s;fill-opacity:1;stroke:none">%s</tspan></text>\
+' % (
+        BLACK, BLACK, BLACK, BLACK, BLACK, FROWN, BLACK, BLACK, FROWN)
+    svg_string += svg._footer()
+    return svg_string
+
+
+def generate_frowny_texture(scale):
+    svg = SVG()
+    svg._set_scale(scale)
+    svg._set_colors([BLACK, YELLOW])
+    svg_string = svg._header()
+    svg_string += '\
+  <path\
+     d="m 40.725683,37.5 5.05,5.05 c 0.4,0.4 0.6,0.9 0.6,1.45 0,1.15 -0.95,2.05 -2.05,2.05 -0.55,0 -1.1,-0.25 -1.45,-0.6 l -5.05,-5.05 -5.05,5.05 c -0.4,0.4 -0.9,0.6 -1.45,0.6 -1.15,0 -2.05,-0.95 -2.05,-2.05 0,-0.55 0.25,-1.1 0.6,-1.45 l 5.05,-5.05 -5.05,-5.05 c -0.35,-0.35 -0.6,-0.9 -0.6,-1.45 0,-1.15 0.95,-2.05 2.05,-2.05 0.55,0 1.1,0.25 1.45,0.6 l 5.05,5.05 5.05,-5.05 c 0.4,-0.35 0.9,-0.6 1.45,-0.6 1.15,0 2.05,0.95 2.05,2.05 0,0.55 -0.25,1.1 -0.6,1.45 l -5.05,5.05 z"\
+     style="fill:%s;fill-opacity:1;stroke:%s;stroke-width:0.9;stroke-opacity:1" />\
+  <path\
+     d="m 90.100682,37.5 5.05,5.05 c 0.4,0.4 0.6,0.9 0.6,1.45 0,1.15 -0.95,2.05 -2.05,2.05 -0.55,0 -1.1,-0.25 -1.45,-0.6 l -5.05,-5.05 -5.05,5.05 c -0.4,0.4 -0.9,0.6 -1.45,0.6 -1.15,0 -2.05,-0.95 -2.05,-2.05 0,-0.55 0.25,-1.1 0.6,-1.45 l 5.05,-5.05 -5.05,-5.05 c -0.35,-0.35 -0.6,-0.9 -0.6,-1.45 0,-1.15 0.95,-2.05 2.05,-2.05 0.55,0 1.1,0.25 1.45,0.6 l 5.05,5.05 5.05,-5.05 c 0.4,-0.35 0.9,-0.6 1.45,-0.6 1.15,0 2.05,0.95 2.05,2.05 0,0.55 -0.25,1.1 -0.6,1.45 l -5.05,5.05 z"\
+     style="fill:%s;fill-opacity:1;stroke:%s;stroke-width:0.9;stroke-opacity:1" />\
+  <path\
+     d="m 65.413182,37.5 5.05,5.05 c 0.4,0.4 0.6,0.9 0.6,1.45 0,1.15 -0.95,2.05 -2.05,2.05 -0.55,0 -1.1,-0.25 -1.45,-0.6 l -5.05,-5.05 -5.05,5.05 c -0.4,0.4 -0.9,0.6 -1.45,0.6 -1.15,0 -2.05,-0.95 -2.05,-2.05 0,-0.55 0.25,-1.1 0.6,-1.45 l 5.05,-5.05 -5.05,-5.05 c -0.35,-0.35 -0.6,-0.9 -0.6,-1.45 0,-1.15 0.95,-2.05 2.05,-2.05 0.55,0 1.1,0.25 1.45,0.6 l 5.05,5.05 5.05,-5.05 c 0.4,-0.35 0.9,-0.6 1.45,-0.6 1.15,0 2.05,0.95 2.05,2.05 0,0.55 -0.25,1.1 -0.6,1.45 l -5.05,5.05 z"\
+     style="fill:%s;fill-opacity:1;stroke:%s;stroke-width:0.9;stroke-opacity:1" />\
+  <text\
+     x="3.1"\
+     y="44.1"\
+     style="font-size:18px;fill:%s;stroke:none;font-family:Sans"><tspan\
+       x="3.8"\
+       y="44.1"\
+       style="font-size:18px;fill:%s;fill-opacity:1;stroke:none">%s</tspan></text>\
+  <text\
+     x="102.5"\
+     y="44.1"\
+     style="font-size:18px;fill:%s;stroke:none;font-family:Sans"><tspan\
+       x="102.5"\
+       y="44.1"\
+       style="font-size:18px;fill:%s;fill-opacity:1;stroke:none">%s</tspan></text>\
+' % (
+        BLACK, BLACK, YELLOW, BLACK, BLACK, BLACK,
+        BLACK, BLACK, FROWN, BLACK, BLACK, FROWN)
     svg_string += svg._footer()
     return svg_string
 
