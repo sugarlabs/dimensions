@@ -128,7 +128,7 @@ class Game():
         self._matches_on_display = False
         self.smiley = []
         self.frowny = []
-        self.failure = None
+        self._failure = None
         self.clicked = []
         self.dragpos = [0, 0]
         self.startpos = [0, 0]
@@ -444,7 +444,6 @@ class Game():
 
         # Determine if it was a click, a drag, or an aborted drag
         x, y = map(int, event.get_coords())
-        i = self._where_in_clicked(self.press)
         d = _distance((x, y), (self.startpos[0], self.startpos[1]))
         if d < self.card_width / 10:  # click
             move = 'click'
@@ -455,6 +454,7 @@ class Game():
 
         # Determine status of card
         status = self.grid.spr_to_grid(self.press)
+
         if move == 'click':
             if self.editing_word_list:
                 if self.editing_word_list:
@@ -465,75 +465,11 @@ class Game():
                             c.spr = None  # Unselect
             elif self.editing_custom_cards:
                 pass
-            elif status is None:  # Return card to grid
-                i = self.grid.find_an_empty_slot()
-                j = self._where_in_clicked(self.press)
-                if i is not None:
-                    self.grid.return_to_grid(self.press, i, j)
-                    self.grid.grid[i] = self.deck.spr_to_card(self.press)
-                    i = self._where_in_clicked(self.press)
-                    self.clicked[i].spr = None
-                else:
-                    self.press.move(self.clicked[i].pos)
-                for c in self.frowny:
-                    c.spr.hide()
-            else:
-                i = self._where_in_clicked(self.press)
-                if i is None:
-                    self.press.move((self.startpos))
-                else:
-                    self.press.set_layer(5000)
-                    self.grid.grid[self.grid.spr_to_grid(self.press)] = None
-                    self.grid.display_match(self.press, i)
+            self.process_click(self.press)
         elif move == 'abort':
             self.press.move(self.clicked[i].pos)
         else:  # move == 'drag'
-            if status is None:
-                if x > self.grid.left:  # Returning a card to the grid
-                    i = self.grid.xy_to_grid((x, y))
-                    if self.grid.grid[i] is not None:
-                        i = self.grid.find_an_empty_slot()
-                    self.press.move(self.grid.grid_to_xy(i))
-                    self.grid.grid[i] = self.deck.spr_to_card(self.press)
-                    i = self._where_in_clicked(self.press)
-                    self.clicked[i].spr = None
-                    for c in self.frowny:
-                        c.spr.hide()
-                else:  # Move a click to a different match slot
-                    j = self.grid.xy_to_match((x, y))
-                    if i == j:
-                        self.press.move(self.clicked[i].pos)
-                    else:
-                        temp_spr = self.clicked[i].spr
-                        self.clicked[i].spr = self.clicked[j].spr
-                        self.clicked[j].spr = temp_spr
-                        if self.clicked[i].spr is not None:
-                            self.clicked[i].spr.move(self.grid.match_to_xy(i))
-                        if self.clicked[j].spr is not None:
-                            self.clicked[j].spr.move(self.grid.match_to_xy(j))
-                    move = 'abort'
-            else:
-                if x < self.grid.left:  # Moving a card to the match area
-                    self.grid.grid[self.grid.spr_to_grid(self.press)] = None
-                    self.press.move(self.match_display_area[i].spr.get_xy())
-                else:
-                    j = self.grid.xy_to_grid((x, y))
-                    k = self.grid.xy_to_grid(self.clicked[i].pos)
-                    if j < 0 or k < 0 or j > 15 or k > 15 or j == k:
-                        self.press.move(self.clicked[i].pos)
-                    else:
-                        tmp_card = self.grid.grid[k]
-                        if self.grid.grid[j] is not None:
-                            self.grid.grid[j].spr.move(self.grid.grid_to_xy(k))
-                            self.press.move(self.grid.grid_to_xy(j))
-                            self.grid.grid[k] = self.grid.grid[j]
-                            self.grid.grid[j] = tmp_card
-                        else:
-                            self.press.move(self.grid.grid_to_xy(j))
-                            self.grid.grid[j] = self.grid.grid[k]
-                            self.grid.grid[k] = None
-                    move = 'abort'
-                    self.clicked[i].spr = None
+            move = self._process_drag(self.press, x, y)
 
         if move == 'abort':
             self.press = None
@@ -544,14 +480,93 @@ class Game():
         if self._sharing():
             if self.deck.spr_to_card(spr) is not None:
                 self.activity._send_event(
-                    'B:' + str(self.deck.spr_to_card(spr).index))
-            i = self._where_in_clicked()
+                    'B:%d' % (self.deck.spr_to_card(spr).index))
+            i = self._where_in_clicked(spr)
             if i is not None:
-                self.activity._send_event('S:' + str(i))
+                _logger.debug('sending event S:%d' % (i))
+                self.activity._send_event('S:%d' % (i))
         self.press = None
-        return self._process_selection(spr)
+        return self.process_selection(spr)
 
-    def _process_selection(self, spr):
+    def process_click(self, spr):
+        ''' Either move the card to the match area or back to the grid.'''
+        if self.grid.spr_to_grid(spr) is None:  # Return card to grid
+            i = self.grid.find_an_empty_slot()
+            j = self._where_in_clicked(spr)
+            if i is not None and j is not None:
+                self.grid.return_to_grid(spr, i, j)
+                self.grid.grid[i] = self.deck.spr_to_card(spr)
+                i = self._where_in_clicked(spr)
+                self.clicked[i].spr = None
+            else:
+                spr.move(self.clicked[i].pos)
+            for c in self.frowny:
+                c.spr.hide()
+        else:
+            i = self._where_in_clicked(spr)
+            if i is None:
+                spr.move((self.startpos))
+            else:
+                spr.set_layer(5000)
+                self.grid.grid[self.grid.spr_to_grid(spr)] = None
+                self.grid.display_match(spr, i)
+
+    def _process_drag(self, spr, x, y):
+        ''' Either drag to the match area, back to the grid, or to a
+        new slot. '''
+        move = 'drag'
+        if self.grid.spr_to_grid(spr) is None:
+            if x > self.grid.left:  # Returning a card to the grid
+                i = self.grid.xy_to_grid((x, y))
+                if self.grid.grid[i] is not None:
+                    i = self.grid.find_an_empty_slot()
+                _logger.debug('dragging to slot %d' % (i))
+                spr.move(self.grid.grid_to_xy(i))
+                self.grid.grid[i] = self.deck.spr_to_card(spr)
+                i = self._where_in_clicked(spr)
+                self.clicked[i].spr = None
+                for c in self.frowny:
+                    c.spr.hide()
+            else:  # Move a click to a different match slot
+                i = self._where_in_clicked(spr)
+                j = self.grid.xy_to_match((x, y))
+                if i == j:
+                    spr.move(self.clicked[i].pos)
+                else:
+                    temp_spr = self.clicked[i].spr
+                    self.clicked[i].spr = self.clicked[j].spr
+                    self.clicked[j].spr = temp_spr
+                    if self.clicked[i].spr is not None:
+                        self.clicked[i].spr.move(self.grid.match_to_xy(i))
+                    if self.clicked[j].spr is not None:
+                        self.clicked[j].spr.move(self.grid.match_to_xy(j))
+                move = 'abort'
+        else:
+            i = self._where_in_clicked(spr)
+            if x < self.grid.left:  # Moving a card to the match area
+                self.grid.grid[self.grid.spr_to_grid(spr)] = None
+                spr.move(self.match_display_area[i].spr.get_xy())
+            else:  # Shuffle positions in match area
+                j = self.grid.xy_to_grid((x, y))
+                k = self.grid.xy_to_grid(self.clicked[i].pos)
+                if j < 0 or k < 0 or j > 15 or k > 15 or j == k:
+                    spr.move(self.clicked[i].pos)
+                else:
+                    tmp_card = self.grid.grid[k]
+                    if self.grid.grid[j] is not None:
+                        self.grid.grid[j].spr.move(self.grid.grid_to_xy(k))
+                        spr.move(self.grid.grid_to_xy(j))
+                        self.grid.grid[k] = self.grid.grid[j]
+                        self.grid.grid[j] = tmp_card
+                    else:
+                        spr.move(self.grid.grid_to_xy(j))
+                        self.grid.grid[j] = self.grid.grid[k]
+                        self.grid.grid[k] = None
+                move = 'abort'
+                self.clicked[i].spr = None
+        return move
+
+    def process_selection(self, spr):
         ''' After a card has been selected:
         (1) If three cards are in the match pile, check for a match
         (2) If there is not a match, return the cards to the board
@@ -599,6 +614,17 @@ class Game():
             if c.spr == spr:
                 return i
         return None
+
+    def add_to_clicked(self, spr, pos=[0, 0]):
+        if self._where_in_clicked(spr) is not None:
+            _logger.debug('already in clicked')
+            return
+        i = self._none_in_clicked()
+        if i is None:
+            _logger.debug('no room in clicked')
+            return
+        self.clicked[i].spr = spr
+        self.clicked[i].pos = pos
 
     def _game_over(self):
         ''' Game is over when the deck is empty and no more matches. '''
@@ -745,7 +771,7 @@ class Game():
             self.dead_key = None
         else:
             if k in KEYMAP:
-                return self._process_selection(
+                return self.process_selection(
                            self.grid.grid_to_spr(KEYMAP.index(k)))
         return True
 
@@ -822,7 +848,7 @@ class Game():
                 self.clicked[j].pos = self.grid.match_to_xy(j)
                 self.clicked[j].spr.set_layer(2000)
             j += 1
-        self._process_selection(None)
+        self.process_selection(None)
 
     def _restore_matches(self, saved_match_list_indices):
         ''' Restore the match list upon resume or share. '''

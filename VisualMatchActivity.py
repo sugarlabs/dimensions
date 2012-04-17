@@ -719,13 +719,14 @@ class VisualMatchActivity(activity.Activity):
         if text[0] == 'B':
             e, card_index = text.split(':')
             _logger.debug('receiving card index: ' + card_index)
-            self.vmw._process_selection(
+            # Add spr to clicked...
+            self.vmw.add_to_clicked(
                 self.vmw.deck.index_to_card(int(card_index)).spr)
         elif text[0] == 'S':
             e, card_index = text.split(':')
             _logger.debug('receiving selection index: ' + card_index)
-            self.vmw._process_selection(
-                self.vmw.clicked[int(card_index)][0].spr)
+            self.vmw.process_click(self.vmw.clicked[int(card_index)].spr)
+            self.vmw.process_selection(self.vmw.clicked[int(card_index)].spr)
         elif text[0] == 'j':
             if self.initiating:  # Only the sharer 'shares'.
                 _logger.debug('serialize the project and send to joiner')
@@ -747,7 +748,7 @@ class VisualMatchActivity(activity.Activity):
             self.vmw.level = int(text)
             self.level_label.set_text(self.calc_level_label(
                 self.vmw.low_score, self.vmw.level))
-            self.level_button.set_icon(LEVEL_ICONS[self.vmw.level])
+            LEVEL_BUTTONS[self.vmw.level].set_active(True)
         elif text[0] == 'X':
             e, text = text.split(':')
             _logger.debug('receiving deck index from sharer ' + text)
