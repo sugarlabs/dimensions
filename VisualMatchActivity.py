@@ -722,15 +722,18 @@ class VisualMatchActivity(activity.Activity):
             self.vmw.add_to_clicked(
                 self.vmw.deck.index_to_card(int(card_index)).spr)
         elif text[0] == 'r':
-            e, card_index = text.split(':')
-            _logger.debug('receiving Remove index: ' + card_index)
-            i = int(card_index)
-            self.vmw.clicked[i].spr = None
+            _logger.debug('receiving Remove match')
+            for c in self.vmw.clicked:
+                c.spr.hide()
+                c.spr = None
+            self.vmw.smiley[-1].spr.hide()
         elif text[0] == 'R':
             e, card_index = text.split(':')
-            _logger.debug('receiving return index: ' + card_index)
+            _logger.debug('receiving return card index: ' + card_index)
             i = int(card_index)
             self.vmw.return_card_to_grid(i)
+            for c in self.vmw.frowny:
+                c.spr.hide()
         elif text[0] == 'S':
             e, card_index = text.split(':')
             _logger.debug('receiving selection index: ' + card_index)

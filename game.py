@@ -367,14 +367,14 @@ class Game():
             self.match_list[-2].hide()
             self.match_list[-3].hide()
             # And unselect clicked cards
-            for i, c in enumerate(self.clicked):
+            for c in self.clicked:
                 c.spr = None
                 c.pos = [0, 0]
-                if self._sharing():
-                    _logger.debug('sending event r:%d' % (i))
-                    self.activity._send_event('r:%d' % (i))
             self.smiley[-1].spr.hide()
             self._matches_on_display = False
+            if self._sharing():
+                _logger.debug('sending event r:')
+                self.activity._send_event('r:')
         elif self._failure is not None:  # Return last card clicked to grid
             if self.clicked[2].spr is not None:
                 self.return_card_to_grid(2)
