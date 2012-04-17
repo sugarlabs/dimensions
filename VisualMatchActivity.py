@@ -580,14 +580,11 @@ class VisualMatchActivity(activity.Activity):
             else:
                 data.append(i.index)
         for i in self.vmw.clicked:
-            _logger.debug('saving click %s %s' % (str(i),
-                str(self.vmw.deck.spr_to_card(i[0]))))
-            if i[0] is None or self.vmw.deck.spr_to_card(i[0]) is None or \
+            if i.spr is None or self.vmw.deck.spr_to_card(i.spr) is None or \
                self.vmw.editing_word_list:
                 data.append(None)
             else:
-                _logger.debug(self.vmw.deck.spr_to_card(i[0]).index)
-                data.append(self.vmw.deck.spr_to_card(i[0]).index)
+                data.append(self.vmw.deck.spr_to_card(i.spr).index)
         for i in self.vmw.deck.cards:
             if i is None or self.vmw.editing_word_list:
                 data.append(None)

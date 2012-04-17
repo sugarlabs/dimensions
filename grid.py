@@ -62,18 +62,15 @@ class Grid:
             But only if there are still cards in the deck
             and only 12 cards in the grid
         '''
-        _logger.debug('testing for deck and grid status')
         if not deck.empty() and self.cards_in_grid() == DEAL:
             for c in range(0, COL):
                 i = self.grid.index(None)
                 self.grid[i] = deck.deal_next_card()
                 self.place_a_card(self.grid[i], self.grid_to_xy(i)[0],
                                   self.grid_to_xy(i)[1])
-                _logger.debug('placed a card in grid slot %d' % (i))
 
     def cards_in_grid(self):
         ''' How many cards are on the grid? '''
-        _logger.debug('%d cards in grid' % (ROW * COL - self.grid.count(None)))
         return ROW * COL - self.grid.count(None)
 
     def restore(self, deck, saved_card_index):
@@ -97,7 +94,6 @@ class Grid:
 
     def replace(self, clicked_set, deck):
         ''' Deal new cards. '''
-        _logger.debug('in replace')
         for j, a in enumerate(clicked_set):
             # Don't add new cards if bottom row is occupied
             if self.cards_in_grid() < DEAL:
