@@ -130,6 +130,7 @@ class Game():
         self.frowny = []
         self._failure = None
         self.clicked = []
+        self.last_click = None
         self.dragpos = [0, 0]
         self.startpos = [0, 0]
         self.low_score = [-1, -1, -1]
@@ -366,19 +367,20 @@ class Game():
             self.match_list[-2].hide()
             self.match_list[-3].hide()
             # And unselect clicked cards
-            for c in self.clicked:
+            for i, c in enumerate(self.clicked):
                 c.spr = None
                 c.pos = [0, 0]
+                if self._sharing():
+                    _logger.debug('sending event r:%d' % (i))
+                    self.activity._send_event('r:%d' % (i))
             self.smiley[-1].spr.hide()
             self._matches_on_display = False
         elif self._failure is not None:  # Return last card clicked to grid
             if self.clicked[2].spr is not None:
-                i = self.grid.find_an_empty_slot()
-                if i is not None:
-                    self.grid.return_to_grid(self.clicked[2].spr, i, 2)
-                    self.grid.grid[i] = \
-                        self.deck.spr_to_card(self.clicked[2].spr)
-                    self.clicked[2].spr = None
+                self.return_card_to_grid(2)
+                if self._sharing():
+                    _logger.debug('sending event R:2')
+                    self.activity._send_event('R:2')
             for c in self.frowny:
                 c.spr.hide()
             self._failure = None
@@ -404,6 +406,7 @@ class Game():
                 else:
                     self.clicked[i].spr = spr
                     self.clicked[i].pos = spr.get_xy()
+                    self.last_click = i
         else:
             self.press = None
         return True
@@ -424,15 +427,7 @@ class Game():
         self.dragpos = [x, y]
 
     def _button_release_cb(self, win, event):
-        ''' Lots of possibilities here:
-        (1) We clicked on a card on the canvas, so move it to match area;
-        (2) We clicked on a card in the match area, so return it to the canvas;
-        (3) We dragged a card to the match area;
-        (4) We dragged a card from the match area;
-        (5) We dragged a card to a different position on the canvas;
-        (6) We dragged a card to a different position on the match area;
-        (7) We dragged a card and then changed our mind;
-        '''
+        ''' Lots of possibilities here between clicks and drags '''
         win.grab_focus()
 
         # Maybe there is nothing to do.
@@ -465,7 +460,8 @@ class Game():
                             c.spr = None  # Unselect
             elif self.editing_custom_cards:
                 pass
-            self.process_click(self.press)
+            else:
+                self.process_click(self.press)
         elif move == 'abort':
             self.press.move(self.clicked[i].pos)
         else:  # move == 'drag'
@@ -474,19 +470,22 @@ class Game():
         if move == 'abort':
             self.press = None
             return
-        else:
-            spr = self.press
 
         if self._sharing():
-            if self.deck.spr_to_card(spr) is not None:
+            if self.deck.spr_to_card(self.press) is not None:
+                # Tell everyone about the card we just clicked
                 self.activity._send_event(
-                    'B:%d' % (self.deck.spr_to_card(spr).index))
-            i = self._where_in_clicked(spr)
+                    'B:%d' % (self.deck.spr_to_card(self.press).index))
+            i = self._where_in_clicked(self.press)
             if i is not None:
                 _logger.debug('sending event S:%d' % (i))
                 self.activity._send_event('S:%d' % (i))
+            else:
+                _logger.debug('sending last click S:%d' % (self.last_click))
+                self.activity._send_event('S:%d' % (self.last_click))
+        self.process_selection(self.press)
         self.press = None
-        return self.process_selection(spr)
+        return
 
     def process_click(self, spr):
         ''' Either move the card to the match area or back to the grid.'''
@@ -567,18 +566,11 @@ class Game():
         return move
 
     def process_selection(self, spr):
-        ''' After a card has been selected:
-        (1) If three cards are in the match pile, check for a match
-        (2) If there is not a match, return the cards to the board
-        '''
-
-        if self.editing_word_list:
-            _logger.debug('editing word list')
-            # Edit card label
+        ''' After a card has been selected... '''
+        if self.editing_word_list:  # Edit label of selected card
             self.edit_card = self.deck.spr_to_card(spr)
             spr.set_label(spr.labels[0] + CURSOR)
         elif self.editing_custom_cards:
-            _logger.debug('editing custom cards')
             # Only edit one card at a time, so unselect other cards
             for i, c in enumerate(self.clicked):
                 if c.spr is not None and c.spr != spr:
@@ -601,7 +593,7 @@ class Game():
                 _logger.debug('Found a match')
             else:
                 self.frowny[self._failure].spr.set_layer(100)
-        return True
+        return
 
     def _none_in_clicked(self):
         for i, c in enumerate(self.clicked):
@@ -625,6 +617,14 @@ class Game():
             return
         self.clicked[i].spr = spr
         self.clicked[i].pos = pos
+        self.last_click = i
+
+    def return_card_to_grid(self, i):
+        j = self.grid.find_an_empty_slot()
+        if j is not None:
+            self.grid.return_to_grid(self.clicked[i].spr, j, i)
+            self.grid.grid[j] = self.deck.spr_to_card(self.clicked[i].spr)
+            self.clicked[i].spr = None
 
     def _game_over(self):
         ''' Game is over when the deck is empty and no more matches. '''
@@ -771,8 +771,7 @@ class Game():
             self.dead_key = None
         else:
             if k in KEYMAP:
-                return self.process_selection(
-                           self.grid.grid_to_spr(KEYMAP.index(k)))
+                self.process_selection(self.grid.grid_to_spr(KEYMAP.index(k)))
         return True
 
     def _expose_cb(self, win, event):

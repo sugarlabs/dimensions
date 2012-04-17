@@ -719,14 +719,27 @@ class VisualMatchActivity(activity.Activity):
         if text[0] == 'B':
             e, card_index = text.split(':')
             _logger.debug('receiving card index: ' + card_index)
-            # Add spr to clicked...
             self.vmw.add_to_clicked(
                 self.vmw.deck.index_to_card(int(card_index)).spr)
+        elif text[0] == 'r':
+            e, card_index = text.split(':')
+            _logger.debug('receiving Remove index: ' + card_index)
+            i = int(card_index)
+            self.vmw.clicked[i].spr = None
+        elif text[0] == 'R':
+            e, card_index = text.split(':')
+            _logger.debug('receiving return index: ' + card_index)
+            i = int(card_index)
+            self.vmw.return_card_to_grid(i)
         elif text[0] == 'S':
             e, card_index = text.split(':')
             _logger.debug('receiving selection index: ' + card_index)
-            self.vmw.process_click(self.vmw.clicked[int(card_index)].spr)
-            self.vmw.process_selection(self.vmw.clicked[int(card_index)].spr)
+            i = int(card_index) 
+            if i == -1:
+                _logger.debug('need to find last clicked')
+                i = self.vmw.last_click
+            self.vmw.process_click(self.vmw.clicked[i].spr)
+            self.vmw.process_selection(self.vmw.clicked[i].spr)
         elif text[0] == 'j':
             if self.initiating:  # Only the sharer 'shares'.
                 _logger.debug('serialize the project and send to joiner')
