@@ -360,6 +360,13 @@ class Game():
     def _button_press_cb(self, win, event):
         ''' Look for a card under the button press and save its position. '''
         win.grab_focus()
+        # Keep track of starting drag position.
+        x, y = map(int, event.get_coords())
+        self.dragpos = [x, y]
+        self.startpos = [x, y]
+
+        # Find the sprite under the mouse.
+        spr = self.sprites.find_sprite((x, y))
 
         # If there is a match showing, hide it.
         if self._matches_on_display:
@@ -376,7 +383,7 @@ class Game():
                 _logger.debug('sending event r:')
                 self.activity._send_event('r:')
         elif self._failure is not None:  # Return last card clicked to grid
-            if self.clicked[2].spr is not None:
+            if self.clicked[2].spr is not None and self.clicked[2].spr != spr:
                 self.return_card_to_grid(2)
                 if self._sharing():
                     _logger.debug('sending event R:2')
@@ -385,13 +392,6 @@ class Game():
                 c.spr.hide()
             self._failure = None
 
-        # Keep track of starting drag position.
-        x, y = map(int, event.get_coords())
-        self.dragpos = [x, y]
-        self.startpos = [x, y]
-
-        # Find the sprite under the mouse.
-        spr = self.sprites.find_sprite((x, y))
         if spr is None:
             return True
 
@@ -485,20 +485,14 @@ class Game():
                 self.activity._send_event('S:%d' % (self.last_click))
         self.process_selection(self.press)
         self.press = None
+        self.last_click = None
         return
 
     def process_click(self, spr):
         ''' Either move the card to the match area or back to the grid.'''
         if self.grid.spr_to_grid(spr) is None:  # Return card to grid
-            i = self.grid.find_an_empty_slot()
-            j = self._where_in_clicked(spr)
-            if i is not None and j is not None:
-                self.grid.return_to_grid(spr, i, j)
-                self.grid.grid[i] = self.deck.spr_to_card(spr)
-                i = self._where_in_clicked(spr)
-                self.clicked[i].spr = None
-            else:
-                spr.move(self.clicked[i].pos)
+            i = self._where_in_clicked(spr)
+            self.return_card_to_grid(i)
             for c in self.frowny:
                 c.spr.hide()
         else:
