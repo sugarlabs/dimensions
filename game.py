@@ -92,6 +92,16 @@ class Click():
         self.spr = None
         self.pos = [0, 0]
 
+    def reset(self):
+        self.spr = None
+        self.pos = [0, 0]
+
+    def hide(self):
+        if self.spr is not None:
+            self.spr.hide()
+            self.spr = None
+        self.pos = [0, 0]
+
 
 class Game():
     ''' The game play -- called from within Sugar or GNOME '''
@@ -212,8 +222,7 @@ class Game():
             self.help[-1].hide()
 
         for c in self.clicked:
-            c.spr = None
-            c.pos = [0, 0]
+            c.hide()
 
         # Restore saved state on resume or share.
         if not hasattr(self, 'card_type'):
@@ -310,9 +319,8 @@ class Game():
 
         # Set the card type to custom, and generate a new deck.
         for c in self.clicked:
-            if c.spr is not None:
-                c.spr.hide()
-                c.spr = None
+            c.hide()
+
         self.deck.hide()
         self.card_type = 'custom'
         if len(self.custom_paths) < 3:
@@ -347,8 +355,7 @@ class Game():
         # Set the card type to words, and generate a new deck.
         for c in self.clicked:
             if c.spr is not None:
-                c.spr.hide()
-                c.spr = None
+                c.hide()
         self.deck.hide()
         self.card_type = 'word'
         self.deck = Deck(self.sprites, self.card_type,
@@ -410,13 +417,9 @@ class Game():
         return True
 
     def clean_up_match(self, share=False):
-        self.match_list[-1].hide()
-        self.match_list[-2].hide()
-        self.match_list[-3].hide()
-        # And unselect clicked cards
+        # Unselect clicked cards
         for c in self.clicked:
-            c.spr = None
-            c.pos = [0, 0]
+            c.hide()
         self.smiley[-1].spr.hide()
         self._matches_on_display = False
         if share and self._sharing():
@@ -544,7 +547,7 @@ class Game():
                 spr.move(self.grid.grid_to_xy(i))
                 self.grid.grid[i] = self.deck.spr_to_card(spr)
                 i = self._where_in_clicked(spr)
-                self.clicked[i].spr = None
+                self.clicked[i].reset()
                 for c in self.frowny:
                     c.spr.hide()
             else:  # Move a click to a different match slot
@@ -583,7 +586,7 @@ class Game():
                         self.grid.grid[j] = self.grid.grid[k]
                         self.grid.grid[k] = None
                 move = 'abort'
-                self.clicked[i].spr = None
+                self.clicked[i].reset()
         return move
 
     def process_selection(self, spr):
@@ -644,10 +647,11 @@ class Game():
 
     def return_card_to_grid(self, i):
         j = self.grid.find_an_empty_slot()
+        _logger.debug('returning card %d to grid %d' % (i, j))
         if j is not None:
             self.grid.return_to_grid(self.clicked[i].spr, j, i)
             self.grid.grid[j] = self.deck.spr_to_card(self.clicked[i].spr)
-            self.clicked[i].spr = None
+            self.clicked[i].reset()
 
     def _game_over(self):
         ''' Game is over when the deck is empty and no more matches. '''
@@ -855,6 +859,7 @@ class Game():
                 self.activity.match_label.set_text(s)
         else:
             if hasattr(self, 'win') and label is not 'clock':
+                #TRANS: Please translate Visual Match as Dimensions
                 self.win.set_title('%s: %s' % (_('Visual Match'), s))
 
     def _restore_clicked(self, saved_selected_indices):
@@ -863,7 +868,7 @@ class Game():
         for i in saved_selected_indices:
             _logger.debug('restoring %s' % (str(i)))
             if i is None:
-                self.clicked[j].spr = None
+                self.clicked[j].reset()
             else:
                 self.clicked[j].spr = self.deck.index_to_card(i).spr
                 k = self.grid.spr_to_grid(self.clicked[j].spr)
@@ -923,13 +928,14 @@ class Game():
         if robot_match:
             # Before robot finds a match: restore any cards in match area
             if self._matches_on_display:
+                '''
                 self.match_list[-1].hide()
                 self.match_list[-2].hide()
                 self.match_list[-3].hide()
+                '''
                 # And unselect clicked cards
                 for c in self.clicked:
-                    c.spr = None
-                    c.pos = [0, 0]
+                    c.hide()
                 self.smiley[-1].spr.hide()
                 self._matches_on_display = False
             else:
@@ -939,7 +945,7 @@ class Game():
                         self.clicked[j].spr.move(self.clicked[j].pos)
                         self.grid.grid[k] = self.deck.spr_to_card(
                             self.clicked[j].spr)
-                        self.clicked[j].spr = None
+                        self.clicked[j].reset()
 
         a = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14]
         for i in Permutation(a):  # TODO: really should be combination
