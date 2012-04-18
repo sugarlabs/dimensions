@@ -44,8 +44,11 @@ class Grid:
         self.yinc = int(card_height * 1.33)
         self.dx = [0, 0, 0, 0, 0, 0]
         self.dy = [0, 0, 0, 0, 0, 0]
+        self.sx = [0, 0, 0, 0, 0, 0]
+        self.sy = [0, 0, 0, 0, 0, 0]
         self.ex = [0, 0, 0, 0, 0, 0]
         self.ey = [0, 0, 0, 0, 0, 0]
+        self.stop_animation = False
 
     def deal(self, deck):
         ''' Deal an initial set of cards. '''
@@ -107,27 +110,39 @@ class Grid:
 
     def display_match(self, spr, i):
         ''' Move card to the match area. '''
+        self.stop_animation = False
         spr.set_layer(2000)
         self.ex[i] = MATCH_POSITION
         self.ey[i] = self.top + i * self.yinc
-        self.dx[i] = int((self.ex[i] - spr.get_xy()[0]) / 10)
-        self.dy[i] = int((self.ey[i] - spr.get_xy()[1]) / 10)
+        self.sx[i] = spr.get_xy()[0]
+        self.sy[i] = spr.get_xy()[1]
+        self.dx[i] = int((self.ex[i] - self.sx[i]) / 10)
+        self.dy[i] = int((self.ey[i] - self.sy[i]) / 10)
         timeout_id = gobject.timeout_add(
             100, self._move_to_position, spr, i)
 
     def return_to_grid(self, spr, i, j):
         ''' Move card to the match area. '''
+        self.stop_animation = False
         spr.set_layer(2000)
         self.ex[j] = self.grid_to_xy(i)[0]
         self.ey[j] = self.grid_to_xy(i)[1]
+        self.sx[i] = spr.get_xy()[0]
+        self.sy[i] = spr.get_xy()[1]
+        self.dx[i] = int((self.ex[i] - self.sx[i]) / 10)
+        self.dy[i] = int((self.ey[i] - self.sy[i]) / 10)
+        '''
         self.dx[j] = int((self.ex[j] - spr.get_xy()[0]) / 10)
         self.dy[j] = int((self.ey[j] - spr.get_xy()[1]) / 10)
+        '''
         timeout_id = gobject.timeout_add(
             100, self._move_to_position, spr, j)
 
     def _move_to_position(self, spr, i):
         spr.move_relative((self.dx[i], self.dy[i]))
-        if _distance_squared(spr.get_xy(), (self.ex[i], self.ey[i])) < 200:
+        if self.stop_animation:
+            spr.move((self.sx[i], self.sy[i]))
+        elif _distance_squared(spr.get_xy(), (self.ex[i], self.ey[i])) < 200:
             spr.move((self.ex[i], self.ey[i]))
         else:
             timeout_id = gobject.timeout_add(
@@ -150,6 +165,7 @@ class Grid:
 
     def place_a_card(self, c, x, y, animate=-1):
         ''' Place a card at position x,y and display it. '''
+        self.stop_animation = False
         if c is not None:
             if animate == -1:
                 c.spr.move((x, y))

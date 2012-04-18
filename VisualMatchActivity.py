@@ -93,12 +93,7 @@ class VisualMatchActivity(activity.Activity):
             self._saved_state = None
         self.vmw.new_game(self._saved_state, self._deck_index)
         if self._saved_state == None:
-            '''
-            # Launch 'attract mode' by turning on Robot with 5 second delay
-            self.vmw.robot_time = 5
-            self._robot_time_spin.set_value(self.vmw.robot_time)
-            self._robot_cb()
-            '''
+            # Launch animated help
             self.vmw.help_animation()
 
         if self._editing_word_list:
@@ -116,12 +111,6 @@ class VisualMatchActivity(activity.Activity):
         if card_type == 'custom' and self.vmw.custom_paths[0] is None:
             self.image_import_cb()
         else:
-            if self.vmw.robot_time == 5:
-                # Turn off attract mode
-                if self.vmw.robot:
-                    self._robot_cb()
-                self.vmw.robot_time = 15
-                self._robot_time_spin.set_value(self.vmw.robot_time)
             self.vmw.new_game()
 
     def _robot_cb(self, button=None):
@@ -204,7 +193,7 @@ class VisualMatchActivity(activity.Activity):
 
     def _read_journal_data(self):
         ''' There may be data from a previous instance. '''
-        self._play_level = int(self._read_metadata('play_level', 1))
+        self._play_level = int(self._read_metadata('play_level', 2))
         self._robot_time = int(self._read_metadata('robot_time', 60))
         self._card_type = self._read_metadata('cardtype', 'pattern')
         self._low_score = [int(self._read_metadata(

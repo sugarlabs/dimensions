@@ -393,7 +393,7 @@ class Game():
         spr = self.sprites.find_sprite((x, y))
 
         # Turn off help animation
-        self.help_timeout_id = None
+        self.stop_help = True
 
         # If there is a match showing, hide it.
         if self._matches_on_display:
@@ -708,7 +708,8 @@ class Game():
 
             # Test to see if the game is over.
             if self._game_over():
-                gobject.source_remove(self.timeout_id)
+                if hasattr(self, 'timeout_id'):
+                    gobject.source_remove(self.timeout_id)
                 if self.low_score[self.level] == -1:
                     self.low_score[self.level] = self.total_time
                 elif self.total_time < self.low_score[self.level]:
@@ -958,17 +959,22 @@ class Game():
                          self.grid.grid[i[2]]]
             if self._match_check(cardarray, self.card_type):
                 if robot_match:
-                    # Move robot match to match area
-                    for j in range(3):
-                        self.clicked[j].spr = self.grid.grid[i[j]].spr
-                        self.grid.grid[i[j]].spr.move(
-                            self.grid.match_to_xy(j))
-                        self.grid.grid[i[j]] = None
-                    self.robot_matches += 1
-                    self._test_for_a_match()
-                    self._matches_on_display = True
+                    # Turn off any current animations
+                    self.grid.stop_animation = True
+                    # Wait to move robot match to match area
+                    timeout = gobject.timeout_add(200, self._robot_match, i)
                 return True
         return False
+
+    def _robot_match(self, i):
+        for j in range(3):
+            self.clicked[j].spr = self.grid.grid[i[j]].spr
+            self.grid.grid[i[j]].spr.move(
+                self.grid.match_to_xy(j))
+            self.grid.grid[i[j]] = None
+        self.robot_matches += 1
+        self._test_for_a_match()
+        self._matches_on_display = True
 
     def _match_check(self, cardarray, card_type):
         ''' For each attribute, either it is the same or different. '''
@@ -1088,18 +1094,23 @@ class Game():
 
     def help_animation(self):
         self.help_index = 0
-        self.help_timeout_id = gobject.timeout_add(1000, self._help_next)
+        self.stop_help = False
+        self.help[self.help_index].set_layer(5000)
+        self.help_timeout_id = gobject.timeout_add(2000, self._help_next)
         
     def _help_next(self):
-        if self.help_timeout_id == None:
-            self.help[self.help_index].hide()
-            return False
+        _logger.debug('in help next %d' % self.help_index)
         self.help[self.help_index].hide()
+        if self.stop_help:
+            return
         self.help_index += 1
         self.help_index %= len(self.help)
         self.help[self.help_index].set_layer(5000)
-        self.help_timeout_id = gobject.timeout_add(1000, self._help_next)
-        return True
+        if self.help_index == 0:
+            self.help_timeout_id = gobject.timeout_add(2000, self._help_next)
+        else:
+            self.help_timeout_id = gobject.timeout_add(1000, self._help_next)
+
 
 class Permutation:
     '''Permutaion class for checking for all possible matches on the grid '''
