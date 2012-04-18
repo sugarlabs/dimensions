@@ -206,20 +206,14 @@ class Game():
             path = os.path.join(activity.get_bundle_path(),
                                 'images', 'help-%d.svg' % i)
             svg_str = svg_from_file(path)
-            pixbuf = svg_str_to_pixbuf(svg_str)
-            pixbuf = pixbuf.scale_simple(int(self.card_width),
-                                         int(self.card_height),
-                                         gtk.gdk.INTERP_NEAREST)
-            self.help.append(Sprite(self.sprites,
-                                    self.grid.match_to_xy(3)[0],
-                                    self.grid.match_to_xy(3)[1],
-                                    pixbuf))
+            pixbuf = svg_str_to_pixbuf(svg_str, int(self.width),
+                                       int(self.height))
+            self.help.append(Sprite(self.sprites, 0, 0, pixbuf))
             self.help[-1].hide()
-        self.help.append(Sprite(self.sprites,
-                                    self.grid.match_to_xy(3)[0],
-                                    self.grid.match_to_xy(3)[1],
-                                    svg_str_to_pixbuf(
-                    generate_smiley(self.scale))))
+        self.help.append(Sprite(self.sprites, 0, 0,
+                                svg_str_to_pixbuf(
+                    generate_smiley(self.scale), int(self.width),
+                    int(self.height))))
         self.help[-1].hide()
 
         for c in self.clicked:
@@ -1134,9 +1128,10 @@ class Permutation:
                 self._sofar.pop()
 
 
-def svg_str_to_pixbuf(svg_string):
+def svg_str_to_pixbuf(svg_string, w, h):
     """ Load pixbuf from SVG string """
     pl = gtk.gdk.PixbufLoader('svg')
+    pl.set_size(w, h)
     pl.write(svg_string)
     pl.close()
     pixbuf = pl.get_pixbuf()
