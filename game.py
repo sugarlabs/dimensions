@@ -202,7 +202,7 @@ class Game():
                          [BACKGROUNDMASK, 0, 0, 0]))
             self.frowny[-1].spr.move(self.grid.match_to_xy(3))
 
-        for i in range(10):
+        for i in range(11):
             path = os.path.join(activity.get_bundle_path(),
                                 'images', 'help-%d.svg' % i)
             svg_str = svg_from_file(path)
@@ -210,11 +210,6 @@ class Game():
                                        int(self.height))
             self.help.append(Sprite(self.sprites, 0, 0, pixbuf))
             self.help[-1].hide()
-        self.help.append(Sprite(self.sprites, 0, 0,
-                                svg_str_to_pixbuf(
-                    generate_smiley(self.scale), int(self.width),
-                    int(self.height))))
-        self.help[-1].hide()
 
         for c in self.clicked:
             c.spr = None
@@ -1100,7 +1095,7 @@ class Game():
         self.help_index += 1
         self.help_index %= len(self.help)
         self.help[self.help_index].set_layer(5000)
-        if self.help_index == 0:
+        if self.help_index in [0, 9, 10]:
             self.help_timeout_id = gobject.timeout_add(2000, self._help_next)
         else:
             self.help_timeout_id = gobject.timeout_add(1000, self._help_next)
