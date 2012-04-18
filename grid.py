@@ -127,10 +127,10 @@ class Grid:
         spr.set_layer(2000)
         self.ex[j] = self.grid_to_xy(i)[0]
         self.ey[j] = self.grid_to_xy(i)[1]
-        self.sx[i] = spr.get_xy()[0]
-        self.sy[i] = spr.get_xy()[1]
-        self.dx[i] = int((self.ex[i] - self.sx[i]) / 10)
-        self.dy[i] = int((self.ey[i] - self.sy[i]) / 10)
+        self.sx[j] = spr.get_xy()[0]
+        self.sy[j] = spr.get_xy()[1]
+        self.dx[j] = int((self.ex[j] - self.sx[j]) / 10)
+        self.dy[j] = int((self.ey[j] - self.sy[j]) / 10)
         '''
         self.dx[j] = int((self.ex[j] - spr.get_xy()[0]) / 10)
         self.dy[j] = int((self.ey[j] - spr.get_xy()[1]) / 10)
