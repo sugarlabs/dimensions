@@ -18,6 +18,8 @@ pygtk.require('2.0')
 import gtk
 import gobject
 
+import os
+
 from gettext import gettext as _
 
 from math import sqrt
@@ -25,6 +27,7 @@ from math import sqrt
 from sugar.graphics.objectchooser import ObjectChooser
 from sugar.datastore import datastore
 from sugar import mime
+from sugar.activity import activity
 
 import logging
 _logger = logging.getLogger('visualmatch-activity')
@@ -128,6 +131,7 @@ class Game():
         self._matches_on_display = False
         self.smiley = []
         self.frowny = []
+        self.help = []
         self._failure = None
         self.clicked = []
         self.last_click = None
@@ -197,6 +201,26 @@ class Game():
                 Card(self.sprites, generate_frowny_number(self.scale),
                          [BACKGROUNDMASK, 0, 0, 0]))
             self.frowny[-1].spr.move(self.grid.match_to_xy(3))
+
+        for i in range(10):
+            path = os.path.join(activity.get_bundle_path(),
+                                'images', 'help-%d.svg' % i)
+            svg_str = svg_from_file(path)
+            pixbuf = svg_str_to_pixbuf(svg_str)
+            pixbuf = pixbuf.scale_simple(int(self.card_width),
+                                         int(self.card_height),
+                                         gtk.gdk.INTERP_NEAREST)
+            self.help.append(Sprite(self.sprites,
+                                    self.grid.match_to_xy(3)[0],
+                                    self.grid.match_to_xy(3)[1],
+                                    pixbuf))
+            self.help[-1].hide()
+        self.help.append(Sprite(self.sprites,
+                                    self.grid.match_to_xy(3)[0],
+                                    self.grid.match_to_xy(3)[1],
+                                    svg_str_to_pixbuf(
+                    generate_smiley(self.scale))))
+        self.help[-1].hide()
 
         for c in self.clicked:
             c.spr = None
@@ -368,29 +392,14 @@ class Game():
         # Find the sprite under the mouse.
         spr = self.sprites.find_sprite((x, y))
 
+        # Turn off help animation
+        self.help_timeout_id = None
+
         # If there is a match showing, hide it.
         if self._matches_on_display:
-            self.match_list[-1].hide()
-            self.match_list[-2].hide()
-            self.match_list[-3].hide()
-            # And unselect clicked cards
-            for c in self.clicked:
-                c.spr = None
-                c.pos = [0, 0]
-            self.smiley[-1].spr.hide()
-            self._matches_on_display = False
-            if self._sharing():
-                _logger.debug('sending event r:')
-                self.activity._send_event('r:')
+            self.clean_up_match(share=True)
         elif self._failure is not None:  # Return last card clicked to grid
-            if self.clicked[2].spr is not None and self.clicked[2].spr != spr:
-                self.return_card_to_grid(2)
-                if self._sharing():
-                    _logger.debug('sending event R:2')
-                    self.activity._send_event('R:2')
-            for c in self.frowny:
-                c.spr.hide()
-            self._failure = None
+            self.clean_up_no_match(spr, share=True)
 
         if spr is None:
             return True
@@ -410,6 +419,30 @@ class Game():
         else:
             self.press = None
         return True
+
+    def clean_up_match(self, share=False):
+        self.match_list[-1].hide()
+        self.match_list[-2].hide()
+        self.match_list[-3].hide()
+        # And unselect clicked cards
+        for c in self.clicked:
+            c.spr = None
+            c.pos = [0, 0]
+        self.smiley[-1].spr.hide()
+        self._matches_on_display = False
+        if share and self._sharing():
+            _logger.debug('sending event r:')
+            self.activity._send_event('r:')
+
+    def clean_up_no_match(self, spr, share=False):
+        if self.clicked[2].spr is not None and self.clicked[2].spr != spr:
+            self.return_card_to_grid(2)
+            if share and self._sharing():
+                _logger.debug('sending event R:2')
+                self.activity._send_event('R:2')
+        for c in self.frowny:
+            c.spr.hide()
+        self._failure = None
 
     def _mouse_move_cb(self, win, event):
         ''' Drag the card with the mouse. '''
@@ -480,26 +513,31 @@ class Game():
             if i is not None:
                 _logger.debug('sending event S:%d' % (i))
                 self.activity._send_event('S:%d' % (i))
-            else:
+            elif self.last_click is not None:
                 _logger.debug('sending last click S:%d' % (self.last_click))
                 self.activity._send_event('S:%d' % (self.last_click))
+            else:
+                _logger.debug('cannot find last click')
+            self.last_click = None
         self.process_selection(self.press)
         self.press = None
-        self.last_click = None
         return
 
     def process_click(self, spr):
         ''' Either move the card to the match area or back to the grid.'''
         if self.grid.spr_to_grid(spr) is None:  # Return card to grid
             i = self._where_in_clicked(spr)
-            self.return_card_to_grid(i)
+            if i is not None:
+                self.return_card_to_grid(i)
             for c in self.frowny:
                 c.spr.hide()
         else:
             i = self._where_in_clicked(spr)
             if i is None:
+                _logger.debug('i is None: not a slot')
                 spr.move((self.startpos))
             else:
+                _logger.debug('i is %d' % (i))
                 spr.set_layer(5000)
                 self.grid.grid[self.grid.spr_to_grid(spr)] = None
                 self.grid.display_match(spr, i)
@@ -602,12 +640,14 @@ class Game():
         return None
 
     def add_to_clicked(self, spr, pos=[0, 0]):
-        if self._where_in_clicked(spr) is not None:
+        i = self._where_in_clicked(spr)
+        if i is not None:
             _logger.debug('already in clicked')
-            return
+            self.last_click = i
         i = self._none_in_clicked()
         if i is None:
             _logger.debug('no room in clicked')
+            self.last_click = None
             return
         self.clicked[i].spr = spr
         self.clicked[i].pos = pos
@@ -1046,6 +1086,20 @@ class Game():
         self.activity.button_custom.set_tooltip(_('New custom game'))
         return
 
+    def help_animation(self):
+        self.help_index = 0
+        self.help_timeout_id = gobject.timeout_add(1000, self._help_next)
+        
+    def _help_next(self):
+        if self.help_timeout_id == None:
+            self.help[self.help_index].hide()
+            return False
+        self.help[self.help_index].hide()
+        self.help_index += 1
+        self.help_index %= len(self.help)
+        self.help[self.help_index].set_layer(5000)
+        self.help_timeout_id = gobject.timeout_add(1000, self._help_next)
+        return True
 
 class Permutation:
     '''Permutaion class for checking for all possible matches on the grid '''
@@ -1067,3 +1121,20 @@ class Permutation:
                     for v in self.next():
                         yield v
                 self._sofar.pop()
+
+
+def svg_str_to_pixbuf(svg_string):
+    """ Load pixbuf from SVG string """
+    pl = gtk.gdk.PixbufLoader('svg')
+    pl.write(svg_string)
+    pl.close()
+    pixbuf = pl.get_pixbuf()
+    return pixbuf
+
+
+def svg_from_file(pathname):
+    """ Read SVG string from a file """
+    f = file(pathname, 'r')
+    svg = f.read()
+    f.close()
+    return(svg)

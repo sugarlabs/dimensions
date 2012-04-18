@@ -229,7 +229,7 @@ class SVG:
         return svg_string
 
     def _background(self):
-        return self._svg_rect(124.5, 74.5, 11, 9, 0.25, 0.25)
+        return self._svg_rect(119.5, 69.5, 11, 9, 2.75, 2.75)
 
     def _header(self):
         svg_string = "<?xml version=\"1.0\" encoding=\"UTF-8\""
@@ -792,8 +792,8 @@ def generate_frowny_texture(scale):
 def generate_pattern_card(shape, color, number, fill, scale):
     svg = SVG()
     svg._set_scale(scale)
-    svg._set_stroke_width(0.5)
-    svg._set_colors([BLACK, COLOR_PAIRS[color][1]])
+    svg._set_colors(["#A0A0A0", COLOR_PAIRS[color][1]])
+    svg._set_stroke_width(3.0)
     svg_string = svg._header()
     svg_string += svg._pattern_card(CARD_TYPES[shape], COLOR_PAIRS[color],
                                     number + 1, FILL_STYLES[fill])
@@ -810,8 +810,8 @@ def generate_number_card(shape, color, number, fill, number_types, scale):
                svg._points_in_a_star, svg._number_hash, svg._dice]
     methodX = svg._number_arabic
     svg._set_scale(scale)
-    svg._set_stroke_width(0.5)
-    svg._set_colors([BLACK, COLOR_PAIRS[color][1]])
+    svg._set_stroke_width(3.0)
+    svg._set_colors(["#A0A0A0", COLOR_PAIRS[color][1]])
     svg_string = svg._header()
     svg_string += svg._number_card(shape, (number + 1) * stab[fill],
                                   COLOR_PAIRS[color][0],
@@ -824,7 +824,6 @@ def generate_number_card(shape, color, number, fill, number_types, scale):
 def generate_word_card(shape, color, number, fill, scale):
     svg = SVG()
     svg._set_scale(scale)
-    svg._set_stroke_width(0.5)
     if number == 0:
         _stroke = DARK_COLOR[color]
     elif number == 1:

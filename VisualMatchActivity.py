@@ -93,10 +93,13 @@ class VisualMatchActivity(activity.Activity):
             self._saved_state = None
         self.vmw.new_game(self._saved_state, self._deck_index)
         if self._saved_state == None:
+            '''
             # Launch 'attract mode' by turning on Robot with 5 second delay
             self.vmw.robot_time = 5
             self._robot_time_spin.set_value(self.vmw.robot_time)
             self._robot_cb()
+            '''
+            self.vmw.help_animation()
 
         if self._editing_word_list:
             self.vmw.editing_word_list = True
@@ -723,24 +726,14 @@ class VisualMatchActivity(activity.Activity):
                 self.vmw.deck.index_to_card(int(card_index)).spr)
         elif text[0] == 'r':
             _logger.debug('receiving Remove match')
-            for c in self.vmw.clicked:
-                c.spr.hide()
-                c.spr = None
-            self.vmw.smiley[-1].spr.hide()
+            self.vmw.clean_up_match()
         elif text[0] == 'R':
-            e, card_index = text.split(':')
             _logger.debug('receiving return card index: ' + card_index)
-            i = int(card_index)
-            self.vmw.return_card_to_grid(i)
-            for c in self.vmw.frowny:
-                c.spr.hide()
+            self.vmw.clean_up_frowny(None)
         elif text[0] == 'S':
             e, card_index = text.split(':')
             _logger.debug('receiving selection index: ' + card_index)
             i = int(card_index) 
-            if i == -1:
-                _logger.debug('need to find last clicked')
-                i = self.vmw.last_click
             self.vmw.process_click(self.vmw.clicked[i].spr)
             self.vmw.process_selection(self.vmw.clicked[i].spr)
         elif text[0] == 'j':
@@ -756,7 +749,7 @@ class VisualMatchActivity(activity.Activity):
             self.waiting_for_deck = True
         elif text[0] == 'C':
             e, text = text.split(':')
-            _logger.debug('receiving card_type from sharer ' + text)
+            _logger.debug('receiving card type from sharer ' + text)
             self.vmw.card_type = text
         elif text[0] == 'P':
             e, text = text.split(':')
