@@ -429,6 +429,7 @@ class Game():
     def clean_up_no_match(self, spr, share=False):
         if self.clicked[2].spr is not None and self.clicked[2].spr != spr:
             self.return_card_to_grid(2)
+            self.last_click = 2
             if share and self._sharing():
                 _logger.debug('sending event R:2')
                 self.activity._send_event('R:2')
@@ -521,6 +522,7 @@ class Game():
             i = self._where_in_clicked(spr)
             if i is not None:
                 self.return_card_to_grid(i)
+                self.last_click = i
             for c in self.frowny:
                 c.spr.hide()
         else:
@@ -547,6 +549,7 @@ class Game():
                 spr.move(self.grid.grid_to_xy(i))
                 self.grid.grid[i] = self.deck.spr_to_card(spr)
                 i = self._where_in_clicked(spr)
+                self.last_click = i
                 self.clicked[i].reset()
                 for c in self.frowny:
                     c.spr.hide()
@@ -636,14 +639,15 @@ class Game():
         if i is not None:
             _logger.debug('already in clicked')
             self.last_click = i
-        i = self._none_in_clicked()
-        if i is None:
-            _logger.debug('no room in clicked')
-            self.last_click = None
-            return
-        self.clicked[i].spr = spr
-        self.clicked[i].pos = pos
-        self.last_click = i
+        else:
+            i = self._none_in_clicked()
+            if i is None:
+                _logger.debug('no room in clicked')
+                self.last_click = None
+                return
+            self.clicked[i].spr = spr
+            self.clicked[i].pos = pos
+            self.last_click = i
 
     def return_card_to_grid(self, i):
         j = self.grid.find_an_empty_slot()

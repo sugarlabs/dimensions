@@ -717,8 +717,8 @@ class VisualMatchActivity(activity.Activity):
             _logger.debug('receiving Remove match')
             self.vmw.clean_up_match()
         elif text[0] == 'R':
-            _logger.debug('receiving return card index: ' + card_index)
-            self.vmw.clean_up_frowny(None)
+            _logger.debug('receiving return card index')
+            self.vmw.clean_up_no_match(None)
         elif text[0] == 'S':
             e, card_index = text.split(':')
             _logger.debug('receiving selection index: ' + card_index)
