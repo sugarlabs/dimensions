@@ -4,6 +4,7 @@ ENHANCEMENTS:
 * Support for dragging cards
 * Visual feedback on mismatches
 * Cursor when editing cards
+* New help animation on first load
 * Copy scores to clipboard (for import into Simple Graph)
 * New translations
 

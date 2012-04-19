@@ -1,4 +1,5 @@
 [Activity]
+#TRANS: Please translate Visual Match as Dimensions
 name = Visual Match
 activity_version = 36
 license = GPLv3
