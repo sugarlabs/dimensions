@@ -131,14 +131,11 @@ class Grid:
         self.sy[j] = spr.get_xy()[1]
         self.dx[j] = int((self.ex[j] - self.sx[j]) / 10)
         self.dy[j] = int((self.ey[j] - self.sy[j]) / 10)
-        '''
-        self.dx[j] = int((self.ex[j] - spr.get_xy()[0]) / 10)
-        self.dy[j] = int((self.ey[j] - spr.get_xy()[1]) / 10)
-        '''
         timeout_id = gobject.timeout_add(
             100, self._move_to_position, spr, j)
 
     def _move_to_position(self, spr, i):
+        ''' Piece-wise animation of card movement '''
         spr.move_relative((self.dx[i], self.dy[i]))
         if self.stop_animation:
             spr.move((self.sx[i], self.sy[i]))

@@ -518,19 +518,16 @@ class VisualMatchActivity(activity.Activity):
         self.vmw.word_lists = self._word_lists
         self.vmw.editing_word_list = self._editing_word_list
         if hasattr(self, '_custom_object') and self._custom_object is not None:
-            _logger.debug('restoring %s' % (self._custom_object))
             self.vmw._find_custom_paths(datastore.get(self._custom_object))
         for i in range(9):
             if hasattr(self, '_custom_jobject') and \
                self._custom_jobject[i] is not None:
                 self.vmw.custom_paths[i] = datastore.get(
                     self._custom_jobject[i])
-                _logger.debug('restoring %s' % (self._custom_jobject[i]))
         return canvas
 
     def write_file(self, file_path):
         ''' Write data to the Journal. '''
-        _logger.debug('Saving to: %s' % file_path)
         if hasattr(self, 'vmw'):
             self.metadata['play_level'] = self.vmw.level
             self.metadata['low_score_beginner'] = int(self.vmw.low_score[0])
@@ -600,7 +597,6 @@ class VisualMatchActivity(activity.Activity):
 
     def read_file(self, file_path):
         ''' Read data from the Journal. '''
-        _logger.debug('Resuming from: %s' % file_path)
         f = open(file_path, 'r')
         self._load(f.read())
         f.close()
@@ -710,24 +706,19 @@ class VisualMatchActivity(activity.Activity):
         ''' Data is passed as tuples: cmd:text '''
         if text[0] == 'B':
             e, card_index = text.split(':')
-            _logger.debug('receiving card index: ' + card_index)
             self.vmw.add_to_clicked(
                 self.vmw.deck.index_to_card(int(card_index)).spr)
         elif text[0] == 'r':
-            _logger.debug('receiving Remove match')
             self.vmw.clean_up_match()
         elif text[0] == 'R':
-            _logger.debug('receiving return card index')
             self.vmw.clean_up_no_match(None)
         elif text[0] == 'S':
             e, card_index = text.split(':')
-            _logger.debug('receiving selection index: ' + card_index)
             i = int(card_index) 
             self.vmw.process_click(self.vmw.clicked[i].spr)
             self.vmw.process_selection(self.vmw.clicked[i].spr)
         elif text[0] == 'j':
             if self.initiating:  # Only the sharer 'shares'.
-                _logger.debug('serialize the project and send to joiner')
                 self._send_event('P:' + str(self.vmw.level))
                 self._send_event('X:' + str(self.vmw.deck.index))
                 self._send_event('M:' + str(self.vmw.matches))
@@ -738,27 +729,22 @@ class VisualMatchActivity(activity.Activity):
             self.waiting_for_deck = True
         elif text[0] == 'C':
             e, text = text.split(':')
-            _logger.debug('receiving card type from sharer ' + text)
             self.vmw.card_type = text
         elif text[0] == 'P':
             e, text = text.split(':')
-            _logger.debug('receiving play level from sharer ' + text)
             self.vmw.level = int(text)
             self.level_label.set_text(self.calc_level_label(
                 self.vmw.low_score, self.vmw.level))
             LEVEL_BUTTONS[self.vmw.level].set_active(True)
         elif text[0] == 'X':
             e, text = text.split(':')
-            _logger.debug('receiving deck index from sharer ' + text)
             self.vmw.deck.index = int(text)
         elif text[0] == 'M':
             e, text = text.split(':')
-            _logger.debug('receiving matches from sharer ' + text)
             self.vmw.matches = int(text)
         elif text[0] == 'D':
             if self.waiting_for_deck:
                 e, text = text.split(':')
-                _logger.debug('receiving deck data from sharer')
                 self._load(text)
                 self.waiting_for_deck = False
             self.vmw.new_game(self._saved_state, self.vmw.deck.index)

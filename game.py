@@ -423,7 +423,6 @@ class Game():
         self.smiley[-1].spr.hide()
         self._matches_on_display = False
         if share and self._sharing():
-            _logger.debug('sending event r:')
             self.activity._send_event('r:')
 
     def clean_up_no_match(self, spr, share=False):
@@ -431,7 +430,6 @@ class Game():
             self.return_card_to_grid(2)
             self.last_click = 2
             if share and self._sharing():
-                _logger.debug('sending event R:2')
                 self.activity._send_event('R:2')
         for c in self.frowny:
             c.spr.hide()
@@ -504,13 +502,11 @@ class Game():
                     'B:%d' % (self.deck.spr_to_card(self.press).index))
             i = self._where_in_clicked(self.press)
             if i is not None:
-                _logger.debug('sending event S:%d' % (i))
                 self.activity._send_event('S:%d' % (i))
             elif self.last_click is not None:
-                _logger.debug('sending last click S:%d' % (self.last_click))
                 self.activity._send_event('S:%d' % (self.last_click))
             else:
-                _logger.debug('cannot find last click')
+                _logger.debug('WARNING: Cannot find last click')
             self.last_click = None
         self.process_selection(self.press)
         self.press = None
@@ -528,10 +524,8 @@ class Game():
         else:
             i = self._where_in_clicked(spr)
             if i is None:
-                _logger.debug('i is None: not a slot')
                 spr.move((self.startpos))
             else:
-                _logger.debug('i is %d' % (i))
                 spr.set_layer(5000)
                 self.grid.grid[self.grid.spr_to_grid(spr)] = None
                 self.grid.display_match(spr, i)
@@ -545,7 +539,6 @@ class Game():
                 i = self.grid.xy_to_grid((x, y))
                 if self.grid.grid[i] is not None:
                     i = self.grid.find_an_empty_slot()
-                _logger.debug('dragging to slot %d' % (i))
                 spr.move(self.grid.grid_to_xy(i))
                 self.grid.grid[i] = self.deck.spr_to_card(spr)
                 i = self._where_in_clicked(spr)
@@ -637,12 +630,11 @@ class Game():
     def add_to_clicked(self, spr, pos=[0, 0]):
         i = self._where_in_clicked(spr)
         if i is not None:
-            _logger.debug('already in clicked')
             self.last_click = i
         else:
             i = self._none_in_clicked()
             if i is None:
-                _logger.debug('no room in clicked')
+                _logger.debug('WARNING: No room in clicked')
                 self.last_click = None
                 return
             self.clicked[i].spr = spr
@@ -651,7 +643,6 @@ class Game():
 
     def return_card_to_grid(self, i):
         j = self.grid.find_an_empty_slot()
-        _logger.debug('returning card %d to grid %d' % (i, j))
         if j is not None:
             self.grid.return_to_grid(self.clicked[i].spr, j, i)
             self.grid.grid[j] = self.deck.spr_to_card(self.clicked[i].spr)
@@ -870,7 +861,6 @@ class Game():
         ''' Restore the selected cards upon resume or share. '''
         j = 0
         for i in saved_selected_indices:
-            _logger.debug('restoring %s' % (str(i)))
             if i is None:
                 self.clicked[j].reset()
             else:
@@ -1098,7 +1088,6 @@ class Game():
         self.help_timeout_id = gobject.timeout_add(2000, self._help_next)
         
     def _help_next(self):
-        _logger.debug('in help next %d' % self.help_index)
         self.help[self.help_index].hide()
         if self.stop_help:
             return
