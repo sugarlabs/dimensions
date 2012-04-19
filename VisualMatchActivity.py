@@ -326,7 +326,7 @@ class VisualMatchActivity(activity.Activity):
             'new-word-game', games_toolbar, self._select_game_cb,
             cb_arg='word', tooltip=_('New word game'))
         self.button_custom = button_factory(
-            'no-custom-game', games_toolbar, self._select_game_cb, 
+            'no-custom-game', games_toolbar, self._select_game_cb,
             cb_arg='custom', tooltip=_('Import custom cards'))
 
         if new_sugar_system:
@@ -534,7 +534,8 @@ class VisualMatchActivity(activity.Activity):
             self.metadata['low_score_intermediate'] = int(
                 self.vmw.low_score[1])
             self.metadata['low_score_expert'] = int(self.vmw.low_score[2])
-            self.metadata['all_scores'] = self._data_dumper(self.vmw.all_scores)
+            self.metadata['all_scores'] = \
+                self._data_dumper(self.vmw.all_scores)
             self.metadata['robot_time'] = self.vmw.robot_time
             self.metadata['numberO'] = self.vmw.numberO
             self.metadata['numberC'] = self.vmw.numberC
@@ -586,7 +587,7 @@ class VisualMatchActivity(activity.Activity):
             for j in i:
                 data.append(j)
         return self._data_dumper(data)
-                
+
     def _data_dumper(self, data):
         if _OLD_SUGAR_SYSTEM:
             return json.write(data)
@@ -613,7 +614,7 @@ class VisualMatchActivity(activity.Activity):
         else:
             io = StringIO(data)
             return jload(io)
-        
+
     def _setup_presence_service(self):
         ''' Setup the Presence Service. '''
         self.pservice = presenceservice.get_instance()
@@ -714,7 +715,7 @@ class VisualMatchActivity(activity.Activity):
             self.vmw.clean_up_no_match(None)
         elif text[0] == 'S':
             e, card_index = text.split(':')
-            i = int(card_index) 
+            i = int(card_index)
             self.vmw.process_click(self.vmw.clicked[i].spr)
             self.vmw.process_selection(self.vmw.clicked[i].spr)
         elif text[0] == 'j':

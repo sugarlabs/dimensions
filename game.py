@@ -184,7 +184,7 @@ class Game():
                                           [MATCHMASK, 0, 0, 0]))
                 self.match_display_area[-1].spr.move(self.grid.match_to_xy(i))
 
-            for i in range((ROW - 1)* COL):
+            for i in range((ROW - 1) * COL):
                 self.smiley.append(
                     Card(self.sprites, generate_smiley(self.scale),
                          [BACKGROUNDMASK, 0, 0, 0]))
@@ -480,7 +480,8 @@ class Game():
                     # Only edit one card at a time, so unselect other cards
                     for i, c in enumerate(self.clicked):
                         if c.spr is not None and c.spr != self.press:
-                            c.spr.set_label(c.spr.labels[0].replace(CURSOR, ''))
+                            c.spr.set_label(
+                                c.spr.labels[0].replace(CURSOR, ''))
                             c.spr = None  # Unselect
             elif self.editing_custom_cards:
                 pass
@@ -1086,7 +1087,7 @@ class Game():
         self.stop_help = False
         self.help[self.help_index].set_layer(5000)
         self.help_timeout_id = gobject.timeout_add(2000, self._help_next)
-        
+
     def _help_next(self):
         self.help[self.help_index].hide()
         if self.stop_help:
