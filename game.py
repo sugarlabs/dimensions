@@ -218,7 +218,7 @@ class Game():
                          [BACKGROUNDMASK, 0, 0, 0]))
             self._frowny[-1].spr.move(self.grid.match_to_xy(3))
 
-        for i in range(11):
+        for i in range(22):
             path = os.path.join(activity.get_bundle_path(),
                                 'images', 'help-%d.svg' % i)
             svg_str = svg_from_file(path)
@@ -1116,7 +1116,7 @@ class Game():
         self._help_index += 1
         self._help_index %= len(self._help)
         self._help[self._help_index].set_layer(5000)
-        if self._help_index in [0, 9, 10]:
+        if self._help_index in [0, 9, 10, 20, 21]:
             self._help_timeout_id = gobject.timeout_add(2000, self._help_next)
         else:
             self._help_timeout_id = gobject.timeout_add(1000, self._help_next)
