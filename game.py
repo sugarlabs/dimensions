@@ -397,7 +397,17 @@ class Game():
         elif self._failure is not None:  # Return last card clicked to grid
             self.clean_up_no_match(spr, share=True)
 
+        # Nothing else to do.
         if spr is None:
+            return True
+
+        # Don't grab cards in the match pile.
+        if spr in self.match_list:
+            return True
+
+        # Don't grab a card being animated.
+        if True in self.grid.animation_lock:
+            _logger.debug('waiting on animation lock')
             return True
 
         # We are only interested in cards in the deck.
@@ -488,6 +498,7 @@ class Game():
             else:
                 self.process_click(self.press)
         elif move == 'abort':
+            i = self._where_in_clicked(self.press)
             self.press.move(self.clicked[i].pos)
         else:  # move == 'drag'
             move = self._process_drag(self.press, x, y)
