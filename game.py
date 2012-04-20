@@ -218,14 +218,15 @@ class Game():
                          [BACKGROUNDMASK, 0, 0, 0]))
             self._frowny[-1].spr.move(self.grid.match_to_xy(3))
 
-        for i in range(22):
-            path = os.path.join(activity.get_bundle_path(),
-                                'images', 'help-%d.svg' % i)
-            svg_str = svg_from_file(path)
-            pixbuf = svg_str_to_pixbuf(svg_str, int(self._width),
-                                       int(self._height))
-            self._help.append(Sprite(self._sprites, 0, 0, pixbuf))
-            self._help[-1].hide()
+        if self._sugar:
+            for i in range(22):
+                path = os.path.join(activity.get_bundle_path(),
+                                    'images', 'help-%d.svg' % i)
+                svg_str = svg_from_file(path)
+                pixbuf = svg_str_to_pixbuf(svg_str, int(self._width),
+                                           int(self._height))
+                self._help.append(Sprite(self._sprites, 0, 0, pixbuf))
+                self._help[-1].hide()
 
         for c in self.clicked:
             c.hide()
@@ -1103,6 +1104,8 @@ class Game():
 
     def help_animation(self):
         ''' Simple explanatory animation at start of play '''
+        if not self._sugar:
+            return
         self._help_index = 0
         self._stop_help = False
         self._help[self._help_index].set_layer(5000)
