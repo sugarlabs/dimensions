@@ -685,7 +685,7 @@ class VisualMatchActivity(activity.Activity):
         add_paragraph(help_box, PROMPT_DICT['word'], icon='new-word-game')
         add_paragraph(help_box, PROMPT_DICT['custom'], icon='new-custom-game')
         add_paragraph(help_box, _('Play with the computer'), icon='robot-off')
-        add_paragraph(help_box, _('Robot pause time'))
+        add_paragraph(help_box, _('robot pause time'))
         add_paragraph(help_box, _('beginner'), icon='beginner')
         add_paragraph(help_box, _('intermediate'), icon='intermediate')
         add_paragraph(help_box, _('expert'), icon='expert')
