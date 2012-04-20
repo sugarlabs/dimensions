@@ -707,12 +707,10 @@ class Game():
             self.matches += 1
             for c in self.clicked:
                 self.match_list.append(c.spr)
-
-            # Deal three new cards.
-            self.grid.replace(self.clicked, self.deck)
             self._matches_on_display = True
-            self.set_label('deck', '%d %s' %
-                           (self.deck.cards_remaining(), _('cards')))
+
+            # Wait a few seconds before dealing new cards.
+            gobject.timeout_add(2000, self._deal_new_cards)
 
             # Test to see if the game is over.
             if self._game_over():
@@ -744,6 +742,14 @@ class Game():
 
         else:
             self._matches_on_display = False
+
+    def _deal_new_cards(self):
+        ''' Deal three new cards. '''
+        self.grid.replace(self.clicked, self.deck)
+        self.set_label('deck', '%d %s' %
+                       (self.deck.cards_remaining(), _('cards')))
+
+
 
     def _keypress_cb(self, area, event):
         ''' Keypress: editing word cards or selecting cards to play '''
@@ -943,11 +949,6 @@ class Game():
         if robot_match:
             # Before robot finds a match: restore any cards in match area
             if self._matches_on_display:
-                '''
-                self.match_list[-1].hide()
-                self.match_list[-2].hide()
-                self.match_list[-3].hide()
-                '''
                 # And unselect clicked cards
                 for c in self.clicked:
                     c.hide()
