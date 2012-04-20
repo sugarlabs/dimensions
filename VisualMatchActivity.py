@@ -94,9 +94,8 @@ class VisualMatchActivity(activity.Activity):
 
         self._prompt = ''
         self._read_journal_data()
-        datapath = self._find_datapath(activity)
         self._setup_toolbars(_NEW_SUGAR_SYSTEM)
-        canvas = self._setup_canvas(datapath)
+        canvas = self._setup_canvas()
         self._setup_presence_service()
 
         if not hasattr(self, '_saved_state'):
@@ -260,15 +259,7 @@ class VisualMatchActivity(activity.Activity):
         jscores = ''
         for i, s in enumerate(self.vmw.all_scores):
             jscores += '%s: %s\n' % (str(i + 1), s)
-        gtk.Clipboard().set_text(before + jscores + after)
-
-    def _find_datapath(self, activity):
-        ''' Find the datapath for saving card files. '''
-        if hasattr(activity, 'get_activity_root'):
-            return os.path.join(activity.get_activity_root(), 'data')
-        else:
-            return os.path.join(os.environ['HOME'], '.sugar', 'default',
-                                SERVICE, 'data')
+        gtk.Clipboard().set_text(jscores)
 
     def _setup_toolbars(self, new_sugar_system):
         ''' Setup the toolbars.. '''
@@ -510,7 +501,7 @@ class VisualMatchActivity(activity.Activity):
         separator_factory(toolbar, False, True)
         self.clock_label = label_factory(toolbar, '-')
 
-    def _setup_canvas(self, datapath):
+    def _setup_canvas(self):
         ''' Create a canvas.. '''
         canvas = gtk.DrawingArea()
         canvas.set_size_request(gtk.gdk.screen_width(),
@@ -519,7 +510,7 @@ class VisualMatchActivity(activity.Activity):
         canvas.show()
         self.show_all()
 
-        self.vmw = Game(canvas, datapath, self)
+        self.vmw = Game(canvas, self)
         self.vmw.level = self._play_level
         LEVEL_BUTTONS[self._play_level].set_active(True)
         self.vmw.card_type = self._card_type
