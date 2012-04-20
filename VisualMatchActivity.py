@@ -619,7 +619,7 @@ class VisualMatchActivity(activity.Activity):
     def _notify_new_game(self, prompt):
         ''' Called from New Game button since loading a new game can
         be slooow!! '''
-        alert = NotifyAlert()
+        alert = NotifyAlert(3)
         alert.props.title = prompt
         alert.props.msg = _('A new game is loading.')
 
