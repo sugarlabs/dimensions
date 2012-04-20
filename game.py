@@ -383,6 +383,10 @@ class Game():
     def _button_press_cb(self, win, event):
         ''' Look for a card under the button press and save its position. '''
         win.grab_focus()
+
+        # Turn off help animation
+        self._stop_help = True
+
         # Keep track of starting drag position.
         x, y = map(int, event.get_coords())
         self._drag_pos = [x, y]
@@ -390,9 +394,6 @@ class Game():
 
         # Find the sprite under the mouse.
         spr = self._sprites.find_sprite((x, y))
-
-        # Turn off help animation
-        self.stop_help = True
 
         # If there is a match showing, hide it.
         if self._matches_on_display:
@@ -627,7 +628,7 @@ class Game():
             if self._matches_on_display:
                 self._smiley[-1].spr.set_layer(100)
                 _logger.debug('Found a match')
-            else:
+            elif self._failure is not None:
                 self._frowny[self._failure].spr.set_layer(100)
         return
 
@@ -709,9 +710,6 @@ class Game():
                 self.match_list.append(c.spr)
             self._matches_on_display = True
 
-            # Wait a few seconds before dealing new cards.
-            gobject.timeout_add(2000, self._deal_new_cards)
-
             # Test to see if the game is over.
             if self._game_over():
                 if hasattr(self, 'timeout_id'):
@@ -727,14 +725,12 @@ class Game():
                 self.all_scores.append(int(self.total_time + 0.5))
                 if not self._sugar:
                     self.activity.save_score()
+                else:
+                    self._auto_increase_difficulty()
                 return True
-
-            # Consolidate the grid.
-            self.grid.consolidate()
-
-            # Test to see if we need to deal extra cards.
-            if not self._find_a_match():
-                self.grid.deal_extra_cards(self.deck)
+            else:
+                # Wait a few seconds before dealing new cards.
+                gobject.timeout_add(2000, self._deal_new_cards)
 
             # Keep playing.
             self._update_labels()
@@ -743,13 +739,33 @@ class Game():
         else:
             self._matches_on_display = False
 
+    def _auto_increase_difficulty(self):
+        ''' Auto advance levels '''
+        if self.level == 2 and len(self.all_scores) > 3:
+            sum = 0
+            for i in range(3):
+                sum += self.all_scores[-i - 1]
+            if sum < 120:
+                self.level = 0
+                self.activity.intermediate_button.set_active(True)
+        elif self.level == 0 and len(self.all_scores) > 8:
+            sum = 0
+            for i in range(3):
+                sum += self.all_scores[-i - 1]
+            if sum < 240:
+                self.level = 1
+                self.activity.expert_button.set_active(True)
+
     def _deal_new_cards(self):
         ''' Deal three new cards. '''
         self.grid.replace(self.clicked, self.deck)
         self.set_label('deck', '%d %s' %
                        (self.deck.cards_remaining(), _('cards')))
-
-
+        # Consolidate the grid.
+        self.grid.consolidate()
+        # Test to see if we need to deal extra cards.
+        if not self._find_a_match():
+            self.grid.deal_extra_cards(self.deck)
 
     def _keypress_cb(self, area, event):
         ''' Keypress: editing word cards or selecting cards to play '''
@@ -1106,8 +1122,6 @@ class Game():
 
     def help_animation(self):
         ''' Simple explanatory animation at start of play '''
-        if not self._sugar:
-            return
         self._help_index = 0
         self._stop_help = False
         self._help[self._help_index].set_layer(5000)

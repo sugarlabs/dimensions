@@ -1,3 +1,11 @@
+37
+
+BUG FIX:
+* Fixed typo that prevented help animation from terminating
+
+ENHANCEMENT:
+* Autoadvance levels when play improves
+
 36
 
 ENHANCEMENTS:

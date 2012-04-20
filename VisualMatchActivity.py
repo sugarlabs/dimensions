@@ -141,12 +141,12 @@ class VisualMatchActivity(activity.Activity):
         if self.vmw.joiner():  # joiner cannot change level
             return
         self.vmw.level = level
+        self._notify_new_game(self._prompt)
         self.set_level_label()
 
     def set_level_label(self):
         self.level_label.set_text(self.calc_level_label(self.vmw.low_score,
                                                         self.vmw.level))
-        self._notify_new_game(self._prompt)
         self.vmw.new_game()
 
     def calc_level_label(self, low_score, play_level):
