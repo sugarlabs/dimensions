@@ -245,17 +245,7 @@ class VisualMatchActivity(activity.Activity):
                     'custom_' + str(i), None))
 
     def _write_scores_to_clipboard(self, button=None):
-        '''
-        before = '{"chart_line_color": "#00588C", "title": \
-"%s", "x_label": "", "y_label": "", "chart_data": ' % (self.metadata['title'])
-        scores = []
-        for i, s in enumerate(self.vmw.all_scores):
-            scores.append(['%s' % str(i + 1), s])
-        jscores = self._data_dumper(scores)
-        after = ', "chart_color": "#00A0FF", "current_chart.type": "line"}'
-        _logger.debug(before + jscores + after)
-        gtk.Clipboard().set_text(before + jscores + after)
-        '''
+        ''' SimpleGraph will plot the cululative results '''
         jscores = ''
         for i, s in enumerate(self.vmw.all_scores):
             jscores += '%s: %s\n' % (str(i + 1), s)

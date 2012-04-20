@@ -725,7 +725,8 @@ class Game():
                     self.set_label('status', '%s (%d:%02d)' %
                         (_('New record'), int(self.total_time / 60),
                          int(self.total_time % 60)))
-                self.all_scores.append(self.total_time)
+                # Round to nearest second
+                self.all_scores.append(int(self.total_time + 0.5))
                 if not self._sugar:
                     self.activity.save_score()
                 return True
