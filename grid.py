@@ -49,6 +49,7 @@ class Grid:
         self.ex = [0, 0, 0, 0, 0, 0]
         self.ey = [0, 0, 0, 0, 0, 0]
         self.stop_animation = False
+        self.animation_lock = [False, False, False, False, False, False]
 
     def deal(self, deck):
         ''' Deal an initial set of cards. '''
@@ -124,6 +125,7 @@ class Grid:
     def return_to_grid(self, spr, i, j):
         ''' Move card to the match area. '''
         self.stop_animation = False
+        self.animation_lock[j] = True
         spr.set_layer(2000)
         self.ex[j] = self.grid_to_xy(i)[0]
         self.ey[j] = self.grid_to_xy(i)[1]
@@ -139,8 +141,10 @@ class Grid:
         spr.move_relative((self.dx[i], self.dy[i]))
         if self.stop_animation:
             spr.move((self.sx[i], self.sy[i]))
+            self.animation_lock[i] = False
         elif _distance_squared(spr.get_xy(), (self.ex[i], self.ey[i])) < 200:
             spr.move((self.ex[i], self.ey[i]))
+            self.animation_lock[i] = False
         else:
             timeout_id = gobject.timeout_add(
                 100, self._move_to_position, spr, i)
@@ -175,6 +179,7 @@ class Grid:
                     (self.ex[animate + 3] - c.spr.get_xy()[0]) / 10)
                 self.dy[animate + 3] = int(
                     (self.ey[animate + 3] - c.spr.get_xy()[1]) / 10)
+                self.animation_lock[animate + 3] = True
                 timeout_id = gobject.timeout_add(100, self._move_to_position,
                         c.spr, animate + 3)
 

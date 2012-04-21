@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-#Copyright (c) 2009,10 Walter Bender
+#Copyright (c) 2009-12 Walter Bender
 
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -21,7 +21,7 @@ import os
 
 from game import Game
 from constants import PRODUCT, HASH, ROMAN, WORD, CHINESE, MAYAN, DICE, DOTS, \
-                      STAR, LINES
+                      STAR, LINES, INCAN
 
 
 class VisualMatchMain:
@@ -112,6 +112,10 @@ class VisualMatchMain:
         menu3.append(menu_items)
         menu_items.connect("activate", self._number_card_O_cb, MAYAN)
         menu_items.show()
+        menu_items = gtk.MenuItem(_("Quipu"))
+        menu3.append(menu_items)
+        menu_items.connect("activate", self._number_card_O_cb, INCAN)
+        menu_items.show()
         menu_items = gtk.MenuItem(_("Hash"))
         menu3.append(menu_items)
         menu_items.connect("activate", self._number_card_C_cb, HASH)
@@ -156,7 +160,7 @@ class VisualMatchMain:
         self.win.show_all()
 
         # Join the activity
-        self.vmw = Game(canvas, os.path.join(os.path.abspath('.'), 'images/'))
+        self.vmw = Game(canvas)
         self.vmw.win = self.win
         self.vmw.activity = self
         self.vmw.card_type = 'pattern'

@@ -1,3 +1,11 @@
+37
+
+BUG FIX:
+* Fixed typo that prevented help animation from terminating
+
+ENHANCEMENT:
+* Autoadvance levels when play improves
+
 36
 
 ENHANCEMENTS:
@@ -6,7 +14,14 @@ ENHANCEMENTS:
 * Cursor when editing cards
 * New help animation on first load
 * Copy scores to clipboard (for import into Simple Graph)
+* Notification when loading new games
+* Slight delay after match before dealing new cards to allow for some
+  scrutiny of results
+* Addition of toolbar help menus
+* Rebranding as Dimensions (a more apt name)
+* Updated wiki page (See http://wiki.sugarlabs.org/go/Activities/Dimensions)
 * New translations
+(Tip of the hat to Mark Battley for great feedback and suggestions.)
 
 35
 

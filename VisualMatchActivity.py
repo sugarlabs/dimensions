@@ -1,4 +1,4 @@
-#Copyright (c) 2009,10 Walter Bender
+#Copyright (c) 2009-12 Walter Bender
 
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -25,7 +25,7 @@ if _NEW_SUGAR_SYSTEM:
     from sugar.activity.widgets import ActivityToolbarButton
     from sugar.activity.widgets import StopButton
     from sugar.graphics.toolbarbox import ToolbarButton
-
+from sugar.graphics.alert import NotifyAlert
 from sugar.datastore import datastore
 
 import telepathy
@@ -33,6 +33,7 @@ from dbus.service import signal
 from dbus.gobject_service import ExportedGObject
 from sugar.presence import presenceservice
 from sugar.presence.tubeconn import TubeConnection
+from sugar.graphics import style
 
 from gettext import gettext as _
 import os.path
@@ -58,9 +59,12 @@ from toolbar_utils import radio_factory, button_factory, label_factory, \
 
 from constants import DECKSIZE, PRODUCT, HASH, ROMAN, WORD, CHINESE, MAYAN, \
                       INCAN, DOTS, STAR, DICE, LINES, DEAL
-
+from helpbutton import HelpButton, add_section, add_paragraph, help_windows, \
+    help_buttons
 from game import Game
 
+
+help_palettes = {}
 
 BEGINNER = 2
 INTERMEDIATE = 0
@@ -76,6 +80,11 @@ SERVICE = 'org.sugarlabs.VisualMatchActivity'
 IFACE = SERVICE
 PATH = '/org/augarlabs/VisualMatchActivity'
 
+PROMPT_DICT = {'pattern': _('New pattern game'),
+               'number': _('New number game'),
+               'word': _('New word game'),
+               'custom': _('Import custom cards')}
+
 
 class VisualMatchActivity(activity.Activity):
     ''' Dimension matching game '''
@@ -83,10 +92,10 @@ class VisualMatchActivity(activity.Activity):
         ''' Initialize the Sugar activity '''
         super(VisualMatchActivity, self).__init__(handle)
 
+        self._prompt = ''
         self._read_journal_data()
-        datapath = self._find_datapath(activity)
         self._setup_toolbars(_NEW_SUGAR_SYSTEM)
-        canvas = self._setup_canvas(datapath)
+        canvas = self._setup_canvas()
         self._setup_presence_service()
 
         if not hasattr(self, '_saved_state'):
@@ -108,6 +117,8 @@ class VisualMatchActivity(activity.Activity):
         if self.vmw.joiner():  # joiner cannot change level
             return
         self.vmw.card_type = card_type
+        self._prompt = PROMPT_DICT[card_type]
+        self._notify_new_game(self._prompt)
         if card_type == 'custom' and self.vmw.custom_paths[0] is None:
             self.image_import_cb()
         else:
@@ -130,6 +141,7 @@ class VisualMatchActivity(activity.Activity):
         if self.vmw.joiner():  # joiner cannot change level
             return
         self.vmw.level = level
+        self._notify_new_game(self._prompt)
         self.set_level_label()
 
     def set_level_label(self):
@@ -161,6 +173,7 @@ class VisualMatchActivity(activity.Activity):
             return
         self.vmw.numberO = numberO
         self.vmw.card_type = 'number'
+        self._notify_new_game(self._prompt)
         self.vmw.new_game()
 
     def _number_card_C_cb(self, button, numberC):
@@ -169,6 +182,7 @@ class VisualMatchActivity(activity.Activity):
             return
         self.vmw.numberC = numberC
         self.vmw.card_type = 'number'
+        self._notify_new_game(self._prompt)
         self.vmw.new_game()
 
     def _robot_time_spin_cb(self, button):
@@ -231,29 +245,11 @@ class VisualMatchActivity(activity.Activity):
                     'custom_' + str(i), None))
 
     def _write_scores_to_clipboard(self, button=None):
-        '''
-        before = '{"chart_line_color": "#00588C", "title": \
-"%s", "x_label": "", "y_label": "", "chart_data": ' % (self.metadata['title'])
-        scores = []
-        for i, s in enumerate(self.vmw.all_scores):
-            scores.append(['%s' % str(i + 1), s])
-        jscores = self._data_dumper(scores)
-        after = ', "chart_color": "#00A0FF", "current_chart.type": "line"}'
-        _logger.debug(before + jscores + after)
-        gtk.Clipboard().set_text(before + jscores + after)
-        '''
+        ''' SimpleGraph will plot the cululative results '''
         jscores = ''
         for i, s in enumerate(self.vmw.all_scores):
             jscores += '%s: %s\n' % (str(i + 1), s)
-        gtk.Clipboard().set_text(before + jscores + after)
-
-    def _find_datapath(self, activity):
-        ''' Find the datapath for saving card files. '''
-        if hasattr(activity, 'get_activity_root'):
-            return os.path.join(activity.get_activity_root(), 'data')
-        else:
-            return os.path.join(os.environ['HOME'], '.sugar', 'default',
-                                SERVICE, 'data')
+        gtk.Clipboard().set_text(jscores)
 
     def _setup_toolbars(self, new_sugar_system):
         ''' Setup the toolbars.. '''
@@ -264,34 +260,39 @@ class VisualMatchActivity(activity.Activity):
         if new_sugar_system:
             toolbox = ToolbarBox()
 
-            activity_button = ActivityToolbarButton(self)
+            self.activity_toolbar_button = ActivityToolbarButton(self)
 
-            toolbox.toolbar.insert(activity_button, 0)
-            activity_button.show()
+            toolbox.toolbar.insert(self.activity_toolbar_button, 0)
+            self.activity_toolbar_button.show()
 
-            games_toolbar_button = ToolbarButton(
+            self.game_toolbar_button = ToolbarButton(
                     page=games_toolbar,
                     icon_name='new-game')
             games_toolbar.show()
-            toolbox.toolbar.insert(games_toolbar_button, -1)
-            games_toolbar_button.show()
+            toolbox.toolbar.insert(self.game_toolbar_button, -1)
+            self.game_toolbar_button.show()
 
-            numbers_toolbar_button = ToolbarButton(
+            self.numbers_toolbar_button = ToolbarButton(
                     page=numbers_toolbar,
                     icon_name='number-tools')
             numbers_toolbar.show()
-            toolbox.toolbar.insert(numbers_toolbar_button, -1)
-            numbers_toolbar_button.show()
+            toolbox.toolbar.insert(self.numbers_toolbar_button, -1)
+            self.numbers_toolbar_button.show()
 
-            tools_toolbar_button = ToolbarButton(
+            self.tools_toolbar_button = ToolbarButton(
                     page=tools_toolbar,
                     icon_name='view-source')
             tools_toolbar.show()
-            toolbox.toolbar.insert(tools_toolbar_button, -1)
-            tools_toolbar_button.show()
+            toolbox.toolbar.insert(self.tools_toolbar_button, -1)
+            self.tools_toolbar_button.show()
 
             self._set_labels(toolbox.toolbar)
             separator_factory(toolbox.toolbar, True, False)
+
+            help_button = HelpButton(self)
+            toolbox.toolbar.insert(help_button, -1)
+            help_button.show()
+            self._setup_toolbar_help()
 
             stop_button = StopButton(self)
             stop_button.props.accelerator = '<Ctrl>q'
@@ -299,14 +300,14 @@ class VisualMatchActivity(activity.Activity):
             stop_button.show()
 
             export_scores = button_factory(
-                'score-copy', activity_button,
+                'score-copy', self.activity_toolbar_button,
                 self._write_scores_to_clipboard,
                 tooltip=_('Export scores to clipboard'))
 
             self.set_toolbar_box(toolbox)
             toolbox.show()
 
-            games_toolbar_button.set_expanded(True)
+            self.game_toolbar_button.set_expanded(True)
         else:
             toolbox = activity.ActivityToolbox(self)
             self.set_toolbox(toolbox)
@@ -318,16 +319,16 @@ class VisualMatchActivity(activity.Activity):
 
         self.button_pattern = button_factory(
             'new-pattern-game', games_toolbar, self._select_game_cb,
-            cb_arg='pattern', tooltip=_('New pattern game'))
+            cb_arg='pattern', tooltip=PROMPT_DICT['pattern'])
         self.button_number = button_factory(
             'new-number-game', games_toolbar, self._select_game_cb,
-            cb_arg='number', tooltip=_('New number game'))
+            cb_arg='number', tooltip=PROMPT_DICT['number'])
         self.button_word = button_factory(
             'new-word-game', games_toolbar, self._select_game_cb,
-            cb_arg='word', tooltip=_('New word game'))
+            cb_arg='word', tooltip=PROMPT_DICT['word'])
         self.button_custom = button_factory(
             'no-custom-game', games_toolbar, self._select_game_cb,
-            cb_arg='custom', tooltip=_('Import custom cards'))
+            cb_arg='custom', tooltip=PROMPT_DICT['custom'])
 
         if new_sugar_system:
             self._set_extras(games_toolbar, games_toolbar=True)
@@ -490,7 +491,7 @@ class VisualMatchActivity(activity.Activity):
         separator_factory(toolbar, False, True)
         self.clock_label = label_factory(toolbar, '-')
 
-    def _setup_canvas(self, datapath):
+    def _setup_canvas(self):
         ''' Create a canvas.. '''
         canvas = gtk.DrawingArea()
         canvas.set_size_request(gtk.gdk.screen_width(),
@@ -499,7 +500,7 @@ class VisualMatchActivity(activity.Activity):
         canvas.show()
         self.show_all()
 
-        self.vmw = Game(canvas, datapath, self)
+        self.vmw = Game(canvas, self)
         self.vmw.level = self._play_level
         LEVEL_BUTTONS[self._play_level].set_active(True)
         self.vmw.card_type = self._card_type
@@ -614,6 +615,85 @@ class VisualMatchActivity(activity.Activity):
         else:
             io = StringIO(data)
             return jload(io)
+
+    def _notify_new_game(self, prompt):
+        ''' Called from New Game button since loading a new game can
+        be slooow!! '''
+        alert = NotifyAlert(3)
+        alert.props.title = prompt
+        alert.props.msg = _('A new game is loading.')
+
+        def _notification_alert_response_cb(alert, response_id, self):
+            self.remove_alert(alert)
+
+        alert.connect('response', _notification_alert_response_cb, self)
+        self.add_alert(alert)
+        alert.show()
+
+    def _new_help_box(self, name, button=None):
+        help_box = gtk.VBox()
+        help_box.set_homogeneous(False)
+        help_palettes[name] = help_box
+        if button is not None:
+            help_buttons[name] = button
+        help_windows[name] = gtk.ScrolledWindow()
+        help_windows[name].set_size_request(
+            int(gtk.gdk.screen_width() / 3),
+            gtk.gdk.screen_height() - style.GRID_CELL_SIZE * 3)
+        help_windows[name].set_policy(gtk.POLICY_NEVER, gtk.POLICY_AUTOMATIC)
+        help_windows[name].add_with_viewport(help_palettes[name])
+        help_palettes[name].show()
+        return help_box
+
+    def _setup_toolbar_help(self):
+        ''' Set up a help palette for the main toolbars '''
+        help_box = self._new_help_box('custom-toolbar',
+                                      self.tools_toolbar_button)
+        add_section(help_box, _('Tools'), icon='view-source')
+        add_section(help_box, _('Edit word lists.'), icon='word-tools')
+        add_section(help_box, _('Import image cards'), icon='image-tools')
+
+        help_box = self._new_help_box('activity-toolbar',
+                                      self.activity_toolbar_button)
+        add_section(help_box, _('Visual Match'), icon='activity-visualmatch')
+        add_paragraph(help_box, _('Export scores to clipboard'), icon='score-copy')
+
+        help_box = self._new_help_box('game-toolbar',
+                                      self.game_toolbar_button)
+        add_section(help_box, _('Game'), icon='new-game')
+        add_paragraph(help_box, PROMPT_DICT['pattern'], icon='new-pattern-game')
+        add_paragraph(help_box, PROMPT_DICT['number'], icon='new-number-game')
+        add_paragraph(help_box, PROMPT_DICT['word'], icon='new-word-game')
+        add_paragraph(help_box, PROMPT_DICT['custom'], icon='new-custom-game')
+        add_paragraph(help_box, _('Play with the computer'), icon='robot-off')
+        add_paragraph(help_box, _('robot pause time'))
+        add_paragraph(help_box, _('beginner'), icon='beginner')
+        add_paragraph(help_box, _('intermediate'), icon='intermediate')
+        add_paragraph(help_box, _('expert'), icon='expert')
+
+        help_box = self._new_help_box('numbers-toolbar',
+                                      self.numbers_toolbar_button)
+        add_section(help_box, _('Numbers'), icon='number-tools')
+        add_paragraph(help_box, _('product'), icon='product')
+        add_paragraph(help_box, _('Roman numerals'), icon='roman')
+        add_paragraph(help_box, _('word'), icon='word')
+        add_paragraph(help_box, _('Chinese'), icon='chinese')
+        add_paragraph(help_box, _('Mayan'), icon='mayan')
+        add_paragraph(help_box, _('Quipu'), icon='incan')
+        add_paragraph(help_box, _('hash marks'), icon='hash')
+        add_paragraph(help_box, _('dots in a circle'), icon='dots')
+        add_paragraph(help_box, _('points on a star'), icon='star')
+        add_paragraph(help_box, _('dice'), icon='dice')
+        add_paragraph(help_box, _('dots in a line'), icon='lines')
+
+        help_box = self._new_help_box('main-toolbar')
+        add_section(help_box, _('Visual Match'), icon='activity-visualmatch')
+        add_paragraph(help_box, _('Game'), icon='new-game')
+        add_paragraph(help_box, _('Numbers'), icon='number-tools')
+        add_paragraph(help_box, _('Tools'), icon='view-source')
+        add_paragraph(help_box, _('number of cards remaining in deck'))
+        add_paragraph(help_box, _('number of matches'))
+        add_paragraph(help_box, _('elapsed time'))
 
     def _setup_presence_service(self):
         ''' Setup the Presence Service. '''
