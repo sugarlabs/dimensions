@@ -1,9 +1,11 @@
 38
 
-ENHANCEMENT:
+ENHANCEMENTS:
 * New translations
+* Add stop button to help animation
 
 BUG FIX:
+http://dev.laptop.org/ticket/11804
 * Refactoring of animation to use less memory
 * Refactoring of deck to use less memory
 
