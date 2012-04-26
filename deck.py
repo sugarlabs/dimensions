@@ -25,11 +25,16 @@ from gencards import generate_pattern_card, generate_number_card, \
 class Deck:
     """ Class for defining deck of card """
 
-    def __init__(self, sprites, card_type, numbers_type, lists, scale,
-                 level=HIGH):
-        """ Create the deck of cards.
-            'lists' is either a list of words or paths """
-        self.cards = []
+    def __init__(self, cards, scale=1.0):
+        self.cards = cards
+        self.index = 0
+        self._scale = scale
+        self._number_of_cards = 0
+
+    def create(self, sprites, card_type, numbers_type, lists, level=HIGH):
+        """ Create the deck of cards. 'lists' is either a list of
+            words or paths"""
+
         # If level is 'simple', only generate one fill type
         shape_range = SHAPES
         color_range = COLORS
@@ -40,6 +45,7 @@ class Deck:
         elif level == LOW:
             fill_range = 1
             shape_range = 1
+
         # Initialize the deck of cards by looping through all the patterns
         i = 0
         for shape in range(0, shape_range):
@@ -47,46 +53,46 @@ class Deck:
                 for color in range(0, color_range):
                     for num in range(0, number_range):
                         i = self._make(sprites, card_type, numbers_type, i,
-                                       lists, scale, shape, color, num, fill)
+                                       lists, shape, color, num, fill)
+        self._number_of_cards = i
 
         # Remember the current position in the deck.
         self.index = 0
 
-    def _make(self, sprites, card_type, numbers_type, i, lists, scale, shape,
+    def _make(self, sprites, card_type, numbers_type, i, lists, shape,
               color, num, fill):
         if card_type == 'pattern':
-            self.cards.append(Card(sprites, generate_pattern_card(shape, color,
-                num, fill, scale), [shape, color, num, fill]))
+            self.cards[i].create(
+                generate_pattern_card(shape, color, num, fill, self._scale),
+                sprites=sprites, attributes=[shape, color, num, fill])
         elif card_type == 'number':
-            self.cards.append(Card(sprites, generate_number_card(shape, color,
-                num, fill, numbers_type, scale), [shape, color, num, fill]))
+            self.cards[i].create(
+                generate_number_card(
+                    shape, color, num, fill, numbers_type, self._scale),
+                sprites=sprites, attributes=[shape, color, num, fill])
         elif card_type == 'custom':
             if len(lists) == 9:
                 index = shape * 3 + num
             else:
                 index = i
-            self.cards.append(Card(sprites, generate_word_card(shape, color,
-                 num, fill, scale), [shape, color, num, fill],
-                file_path=lists[index], scale=scale))
-            i += 1
+            self.cards[i].create(
+                generate_word_card(shape, color, num, fill, self._scale),
+                sprites=sprites, attributes=[shape, color, num, fill],
+                file_path=lists[index])
         else:
-            self.cards.append(Card(sprites, generate_word_card(shape, color,
-                num, fill, scale), [shape, color, num, fill]))
-            self.cards[len(self.cards) - 1].spr.set_label(lists[shape][num])
-            self.cards[len(self.cards) - 1].spr.set_label_attributes(
-                scale * 24)
+            self.cards[i].create(
+                generate_word_card(shape, color, num, fill, self._scale),
+                sprites=sprites, attributes=[shape, color, num, fill])
+            self.cards[i].spr.set_label(lists[shape][num])
             if fill == 0:
-                self.cards[len(self.cards) - 1].spr.set_font('Sans Bold')
-                self.cards[len(self.cards) - 1].spr.set_label_color(
-                    COLOR_PAIRS[color][0])
+                self.cards[i].spr.set_font('Sans Bold')
+                self.cards[i].spr.set_label_color(COLOR_PAIRS[color][0])
             elif fill == 1:
-                self.cards[len(self.cards) - 1].spr.set_label_color(
-                    COLOR_PAIRS[color][1])
+                self.cards[i].spr.set_label_color(COLOR_PAIRS[color][1])
             elif fill == 2:
-                self.cards[len(self.cards) - 1].spr.set_font('Sans Italic')
-                self.cards[len(self.cards) - 1].spr.set_label_color(
-                    COLOR_PAIRS[color][1])
-        return i
+                self.cards[i].spr.set_font('Sans Italic')
+                self.cards[i].spr.set_label_color(COLOR_PAIRS[color][1])
+        return i + 1
 
     def shuffle(self):
         """ Shuffle the deck (Knuth algorithm). """
@@ -163,4 +169,4 @@ class Deck:
 
     def count(self):
         """ Return the length of the deck. """
-        return len(self.cards)
+        return self._number_of_cards

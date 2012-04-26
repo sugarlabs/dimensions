@@ -91,7 +91,7 @@ class VisualMatchActivity(activity.Activity):
     def __init__(self, handle):
         ''' Initialize the Sugar activity '''
         super(VisualMatchActivity, self).__init__(handle)
-
+        self.ready_to_play = False
         self._prompt = ''
         self._read_journal_data()
         self._setup_toolbars(_NEW_SUGAR_SYSTEM)
@@ -101,6 +101,7 @@ class VisualMatchActivity(activity.Activity):
         if not hasattr(self, '_saved_state'):
             self._saved_state = None
         self.vmw.new_game(self._saved_state, self._deck_index)
+        self.ready_to_play = True
         if self._saved_state == None:
             # Launch animated help
             self.vmw.help_animation()
@@ -117,12 +118,13 @@ class VisualMatchActivity(activity.Activity):
         if self.vmw.joiner():  # joiner cannot change level
             return
         self.vmw.card_type = card_type
-        self._prompt = PROMPT_DICT[card_type]
-        self._notify_new_game(self._prompt)
-        if card_type == 'custom' and self.vmw.custom_paths[0] is None:
-            self.image_import_cb()
-        else:
-            self.vmw.new_game()
+        if self.ready_to_play:
+            self._prompt = PROMPT_DICT[card_type]
+            self._notify_new_game(self._prompt)
+            if card_type == 'custom' and self.vmw.custom_paths[0] is None:
+                self.image_import_cb()
+            else:
+                self.vmw.new_game()
 
     def _robot_cb(self, button=None):
         ''' Toggle robot assist on/off '''
@@ -141,13 +143,15 @@ class VisualMatchActivity(activity.Activity):
         if self.vmw.joiner():  # joiner cannot change level
             return
         self.vmw.level = level
-        self._notify_new_game(self._prompt)
+        if self.ready_to_play:
+            self._notify_new_game(self._prompt)
         self.set_level_label()
 
     def set_level_label(self):
         self.level_label.set_text(self.calc_level_label(self.vmw.low_score,
                                                         self.vmw.level))
-        self.vmw.new_game()
+        if self.ready_to_play:
+            self.vmw.new_game()
 
     def calc_level_label(self, low_score, play_level):
         ''' Show the score. '''
@@ -173,8 +177,9 @@ class VisualMatchActivity(activity.Activity):
             return
         self.vmw.numberO = numberO
         self.vmw.card_type = 'number'
-        self._notify_new_game(self._prompt)
-        self.vmw.new_game()
+        if self.ready_to_play:
+            self._notify_new_game(self._prompt)
+            self.vmw.new_game()
 
     def _number_card_C_cb(self, button, numberC):
         ''' Choose between C-card list for numbers game. '''
@@ -182,8 +187,9 @@ class VisualMatchActivity(activity.Activity):
             return
         self.vmw.numberC = numberC
         self.vmw.card_type = 'number'
-        self._notify_new_game(self._prompt)
-        self.vmw.new_game()
+        if self.ready_to_play:
+            self._notify_new_game(self._prompt)
+            self.vmw.new_game()
 
     def _robot_time_spin_cb(self, button):
         ''' Set delay for robot. '''

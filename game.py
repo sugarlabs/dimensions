@@ -41,7 +41,8 @@ except ImportError:
 from constants import LOW, MEDIUM, HIGH, MATCHMASK, ROW, COL, \
     WORD_CARD_INDICIES, DEAD_DICTS, DEAD_KEYS, WHITE_SPACE, \
     NOISE_KEYS, WORD_CARD_MAP, KEYMAP, CARD_HEIGHT, CARD_WIDTH, DEAL, \
-    DIFFICULTY_LEVEL, BACKGROUNDMASK, DECKSIZE, CUSTOM_CARD_INDICIES
+    DIFFICULTY_LEVEL, BACKGROUNDMASK, DECKSIZE, CUSTOM_CARD_INDICIES, \
+    SHAPES, COLORS, NUMBER, FILLS, CARDS_IN_A_MATCH
 
 from grid import Grid
 from deck import Deck
@@ -137,7 +138,7 @@ class Game():
         self._press = None
         self.matches = 0
         self.robot_matches = 0
-        self._match_display_area = []
+        self._match_area = []
         self._matches_on_display = False
         self._smiley = []
         self._frowny = []
@@ -163,70 +164,69 @@ class Game():
         self.level = 0
         self.card_type = 'pattern'
         self.buddies = []
+        self._the_game_is_over = False
+
+        self.grid = Grid(self._width, self._height, self._card_width,
+                         self._card_height)
+
+        self._cards = []
+        for i in range(DECKSIZE):
+            self._cards.append(Card(scale=self._scale))
+
+        self.deck = Deck(self._cards, scale=self._scale)
+
+        for i in range(CARDS_IN_A_MATCH):
+            self.clicked.append(Click())
+            self._match_area.append(Card(scale=self._scale))
+            self._match_area[-1].create(
+                generate_match_card(self._scale), sprites=self._sprites)
+            self._match_area[-1].spr.move(self.grid.match_to_xy(i))
+
+        for i in range((ROW - 1) * COL):
+            self._smiley.append(Card(scale=self._scale))
+            self._smiley[-1].create(
+                generate_smiley(self._scale), sprites=self._sprites)
+            self._smiley[-1].spr.move(self.grid.grid_to_xy(i))
+        self._smiley.append(Card(scale=self._scale))
+        self._smiley[-1].create(
+            generate_smiley(self._scale), sprites=self._sprites)
+        self._smiley[-1].spr.move(self.grid.match_to_xy(3))
+        self._smiley[-1].spr.hide()
+
+        # A different frowny face for each type of error
+        self._frowny.append(Card(self._scale))
+        self._frowny[-1].create(
+            generate_frowny_shape(self._scale), sprites=self._sprites)
+        self._frowny[-1].spr.move(self.grid.match_to_xy(3))
+        self._frowny.append(Card(self._scale))
+        self._frowny[-1].create(
+            generate_frowny_color(self._scale), sprites=self._sprites)
+        self._frowny[-1].spr.move(self.grid.match_to_xy(3))
+        self._frowny.append(Card(self._scale))
+        self._frowny[-1].create(
+            generate_frowny_texture(self._scale), sprites=self._sprites)
+        self._frowny[-1].spr.move(self.grid.match_to_xy(3))
+        self._frowny.append(Card(self._scale))
+        self._frowny[-1].create(
+            generate_frowny_number(self._scale), sprites=self._sprites)
+        self._frowny[-1].spr.move(self.grid.match_to_xy(3))
 
     def new_game(self, saved_state=None, deck_index=0):
         ''' Start a new game '''
         # If we were editing the word list, time to stop
+        self.grid.stop_animation = True
         self.editing_word_list = False
         self.editing_custom_cards = False
         self._edit_card = None
+        self._saved_state = saved_state
+        self._deck_index = deck_index
+        # Wait for any animations to stop before starting new game
+        timeout = gobject.timeout_add(200, self._prepare_new_game)
 
+    def _prepare_new_game(self):
         # If there is already a deck, hide it.
         if hasattr(self, 'deck'):
             self.deck.hide()
-
-        # The first time through, initialize the grid, and overlays.
-        if not hasattr(self, 'grid'):
-            self.grid = Grid(self._width, self._height, self._card_width,
-                             self._card_height)
-
-            for i in range(3):
-                self.clicked.append(Click())
-
-            for i in range(3):
-                self._match_display_area.append(Card(self._sprites,
-                                          generate_match_card(self._scale),
-                                          [MATCHMASK, 0, 0, 0]))
-                self._match_display_area[-1].spr.move(self.grid.match_to_xy(i))
-
-            for i in range((ROW - 1) * COL):
-                self._smiley.append(
-                    Card(self._sprites, generate_smiley(self._scale),
-                         [BACKGROUNDMASK, 0, 0, 0]))
-                self._smiley[-1].spr.move(self.grid.grid_to_xy(i))
-            self._smiley.append(Card(self._sprites,
-                                     generate_smiley(self._scale),
-                                    [BACKGROUNDMASK, 0, 0, 0]))
-            self._smiley[-1].spr.move(self.grid.match_to_xy(3))
-            self._smiley[-1].spr.hide()
-
-            # A different frowny face for each type of error
-            self._frowny.append(
-                Card(self._sprites, generate_frowny_shape(self._scale),
-                         [BACKGROUNDMASK, 0, 0, 0]))
-            self._frowny[-1].spr.move(self.grid.match_to_xy(3))
-            self._frowny.append(
-                Card(self._sprites, generate_frowny_color(self._scale),
-                         [BACKGROUNDMASK, 0, 0, 0]))
-            self._frowny[-1].spr.move(self.grid.match_to_xy(3))
-            self._frowny.append(
-                Card(self._sprites, generate_frowny_texture(self._scale),
-                         [BACKGROUNDMASK, 0, 0, 0]))
-            self._frowny[-1].spr.move(self.grid.match_to_xy(3))
-            self._frowny.append(
-                Card(self._sprites, generate_frowny_number(self._scale),
-                         [BACKGROUNDMASK, 0, 0, 0]))
-            self._frowny[-1].spr.move(self.grid.match_to_xy(3))
-
-        if self._sugar:
-            for i in range(22):
-                path = os.path.join(activity.get_bundle_path(),
-                                    'images', 'help-%d.svg' % i)
-                svg_str = svg_from_file(path)
-                pixbuf = svg_str_to_pixbuf(svg_str, int(self._width),
-                                           int(self._height))
-                self._help.append(Sprite(self._sprites, 0, 0, pixbuf))
-                self._help[-1].hide()
 
         for c in self.clicked:
             c.hide()
@@ -236,39 +236,40 @@ class Game():
             c.spr.hide()
         self._smiley[-1].spr.hide()
 
-        if saved_state is not None:
-            _logger.debug('Restoring state: %s' % (str(saved_state)))
+        if self._saved_state is not None:
+            _logger.debug('Restoring state: %s' % (str(self._saved_state)))
             if self.card_type == 'custom':
-                self.deck = Deck(self._sprites, self.card_type,
-                             [self.numberO, self.numberC], self.custom_paths,
-                             self._scale, DIFFICULTY_LEVEL[self.level])
+                self.deck.create(self._sprites, self.card_type,
+                                 [self.numberO, self.numberC],
+                                 self.custom_paths,
+                                 DIFFICULTY_LEVEL[self.level])
             else:
-                self.deck = Deck(self._sprites, self.card_type,
-                             [self.numberO, self.numberC], self.word_lists,
-                             self._scale, DIFFICULTY_LEVEL[self.level])
+                self.deck.create(self._sprites, self.card_type,
+                                 [self.numberO, self.numberC], self.word_lists,
+                                 DIFFICULTY_LEVEL[self.level])
             self.deck.hide()
-            self.deck.index = deck_index
+            self.deck.index = self._deck_index
             deck_start = ROW * COL + 3
             deck_stop = deck_start + self.deck.count()
-            self._restore_word_list(saved_state[deck_stop + \
-                                                    3 * self.matches:])
-            self.deck.restore(saved_state[deck_start: deck_stop])
-            self.grid.restore(self.deck, saved_state[0: ROW * COL])
-            self._restore_matches(saved_state[deck_stop: deck_stop + \
+            self._restore_word_list(self._saved_state[deck_stop + \
+                                                          3 * self.matches:])
+            self.deck.restore(self._saved_state[deck_start: deck_stop])
+            self.grid.restore(self.deck, self._saved_state[0: ROW * COL])
+            self._restore_matches(self._saved_state[deck_stop: deck_stop + \
                                                   3 * self.matches])
-            self._restore_clicked(saved_state[ROW * COL: ROW * COL + 3])
+            self._restore_clicked(self._saved_state[ROW * COL: ROW * COL + 3])
 
         elif not self.joiner():
             _logger.debug('Starting new game.')
             if self.card_type == 'custom':
-                self.deck = Deck(self._sprites, self.card_type,
+                self.deck.create(self._sprites, self.card_type,
                                  [self.numberO, self.numberC],
-                                 self.custom_paths, self._scale,
+                                 self.custom_paths,
                                  DIFFICULTY_LEVEL[self.level])
             else:
-                self.deck = Deck(self._sprites, self.card_type,
+                self.deck.create(self._sprites, self.card_type,
                                  [self.numberO, self.numberC], self.word_lists,
-                                 self._scale, DIFFICULTY_LEVEL[self.level])
+                                 DIFFICULTY_LEVEL[self.level])
             self.deck.hide()
             self.deck.shuffle()
             self.grid.deal(self.deck)
@@ -284,6 +285,9 @@ class Game():
             self.activity._send_event('J')
 
         self._update_labels()
+
+        self._the_game_is_over = False
+
         if self._game_over():
             if hasattr(self, 'timeout_id') and self.timeout_id is not None:
                 gobject.source_remove(self.timeout_id)
@@ -329,10 +333,9 @@ class Game():
         if len(self.custom_paths) < 3:
             for i in range(len(self.custom_paths), 81):
                 self.custom_paths.append(None)
-        self.deck = Deck(self._sprites, self.card_type,
-                         [self.numberO, self.numberC],
-                         self.custom_paths,
-                         self._scale, DIFFICULTY_LEVEL.index(HIGH))
+        self.deck.create(self._sprites, self.card_type,
+                         [self.numberO, self.numberC], self.custom_paths,
+                         DIFFICULTY_LEVEL.index(HIGH))
         self.deck.hide()
         self.matches = 0
         self.robot_matches = 0
@@ -361,9 +364,9 @@ class Game():
                 c.hide()
         self.deck.hide()
         self.card_type = 'word'
-        self.deck = Deck(self._sprites, self.card_type,
+        self.deck.create(self._sprites, self.card_type,
                          [self.numberO, self.numberC], self.word_lists,
-                         self._scale, DIFFICULTY_LEVEL.index(HIGH))
+                         DIFFICULTY_LEVEL.index(HIGH))
         self.deck.hide()
         self.matches = 0
         self.robot_matches = 0
@@ -386,6 +389,10 @@ class Game():
 
         # Turn off help animation
         self._stop_help = True
+
+        # Don't do anything if the game is over
+        if self._the_game_is_over:
+            return
 
         # Keep track of starting drag position.
         x, y = map(int, event.get_coords())
@@ -581,7 +588,7 @@ class Game():
             i = self._where_in_clicked(spr)
             if x < self.grid.left:  # Moving a card to the match area
                 self.grid.grid[self.grid.spr_to_grid(spr)] = None
-                spr.move(self._match_display_area[i].spr.get_xy())
+                spr.move(self._match_area[i].spr.get_xy())
             else:  # Shuffle positions in match area
                 j = self.grid.xy_to_grid((x, y))
                 k = self.grid.xy_to_grid(self.clicked[i].pos)
@@ -616,10 +623,9 @@ class Game():
             self._edit_card = self.deck.spr_to_card(spr)
             self._choose_custom_card()
             # Regenerate the deck with the new card definitions
-            self.deck = Deck(self._sprites, self.card_type,
+            self.deck.create(self._sprites, self.card_type,
                              [self.numberO, self.numberC],
-                             self.custom_paths, self._scale,
-                             DIFFICULTY_LEVEL[1])
+                             self.custom_paths, DIFFICULTY_LEVEL[1])
             self.deck.hide()
             self.grid.restore(self.deck, CUSTOM_CARD_INDICIES)
         elif self._none_in_clicked() == None:
@@ -682,14 +688,14 @@ class Game():
                     self._smiley[i].show_card()
             self.match_timeout_id = gobject.timeout_add(
                 2000, self._show_matches, 0)
-            return True
+            self._the_game_is_over = True
         elif self.grid.cards_in_grid() == DEAL + 3 \
                 and not self._find_a_match():
             self.set_label('deck', '')
             self.set_label('clock', '')
             self.set_label('status', _('unsolvable'))
-            return True
-        return False
+            self._the_game_is_over = True
+        return self._the_game_is_over
 
     def _test_for_a_match(self):
         ''' If we have a match, then we have work to do. '''
@@ -922,13 +928,6 @@ class Game():
         for i in saved_match_list_indices:
             if i is not None:
                 self.match_list.append(self.deck.index_to_card(i).spr)
-        '''
-        if self.matches > 0:
-            l = len(self.match_list)
-            for j in range(3):
-                self.grid.display_match(self.match_list[l - 3 + j], j)
-            self._matches_on_display = True
-        '''
 
     def _restore_word_list(self, saved_word_list):
         ''' Restore the word list upon resume or share. '''
@@ -954,9 +953,11 @@ class Game():
 
     def _show_matches(self, i):
         ''' Show all the matches as a simple animation. '''
-        if i < self.matches:
-            for j in range(3):
-                self.grid.display_match(self.match_list[i * 3 + j], j)
+        if i < self.matches and \
+           i * CARDS_IN_A_MATCH < len(self.match_list):
+            for j in range(CARDS_IN_A_MATCH):
+                self.grid.display_match(
+                    self.match_list[i * CARDS_IN_A_MATCH + j], j)
             self.match_timeout_id = gobject.timeout_add(
                 2000, self._show_matches, i + 1)
 
@@ -971,13 +972,12 @@ class Game():
                 self._smiley[-1].spr.hide()
                 self._matches_on_display = False
             else:
-                for j in range(3):
-                    if self.clicked[j].spr is not None:
-                        k = self.grid.xy_to_grid(self.clicked[j].pos)
-                        self.clicked[j].spr.move(self.clicked[j].pos)
-                        self.grid.grid[k] = self.deck.spr_to_card(
-                            self.clicked[j].spr)
-                        self.clicked[j].reset()
+                for c in self.clicked:
+                    if c.spr is not None:
+                        i = self.grid.xy_to_grid(c.pos)
+                        c.spr.move(c.pos)
+                        self.grid.grid[i] = self.deck.spr_to_card(c.spr)
+                        c.reset()
 
         a = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14]
         for i in Permutation(a):  # TODO: really should be combination
@@ -986,22 +986,26 @@ class Game():
                          self.grid.grid[i[2]]]
             if self._match_check(cardarray, self.card_type):
                 if robot_match:
-                    # Turn off any current animations
+                    # Stop animations before moving robot match
                     self.grid.stop_animation = True
-                    # Wait to move robot match to match area
-                    timeout = gobject.timeout_add(200, self._robot_match, i)
+                    self._robot_match(i)
                 return True
         return False
 
     def _robot_match(self, i):
         ''' Robot finds a match '''
-        for j in range(3):
-            self.clicked[j].spr = self.grid.grid[i[j]].spr
-            self.grid.grid[i[j]].spr.move(
-                self.grid.match_to_xy(j))
+        for j in range(CARDS_IN_A_MATCH):
+            # WARNING: Sometimes there is a race condition between the
+            # robot delay and shoing a robot match.
+            if self.grid.grid[i[j]] is not None:
+                self.clicked[j].spr = self.grid.grid[i[j]].spr
+                self.grid.grid[i[j]].spr.move(self.grid.match_to_xy(j))
+            else:
+                _logger.debug('in robot match, grid[%d] is None' % (i[j]))
             self.grid.grid[i[j]] = None
         self.robot_matches += 1
         self._test_for_a_match()
+        self._smiley[-1].spr.set_layer(100)
         self._matches_on_display = True
 
     def _match_check(self, cardarray, card_type):
@@ -1122,6 +1126,16 @@ class Game():
 
     def help_animation(self):
         ''' Simple explanatory animation at start of play '''
+        for i in range(22):
+            path = os.path.join(activity.get_bundle_path(),
+                                'images', 'help-%d.svg' % i)
+            svg_str = svg_from_file(path)
+            pixbuf = svg_str_to_pixbuf(svg_str, int(self._width / 2),
+                                       int(self._height / 2))
+            self._help.append(Sprite(self._sprites, int(self._width / 4),
+                                     int(self._height / 4), pixbuf))
+            self._help[-1].hide()
+
         self._help_index = 0
         self._stop_help = False
         self._help[self._help_index].set_layer(5000)
@@ -1131,6 +1145,7 @@ class Game():
         ''' Load the next frame in the animation '''
         self._help[self._help_index].hide()
         if self._stop_help:
+            self._help = []
             return
         self._help_index += 1
         self._help_index %= len(self._help)

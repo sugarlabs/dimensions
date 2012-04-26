@@ -26,16 +26,19 @@ from sprites import Sprite
 
 class Card:
     ''' Individual cards '''
-
-    def __init__(self, sprites, string, attributes, file_path=None,
-                 scale=1.0):
+    def __init__(self, scale=1.0):
         ''' Create the card and store its attributes '''
-        if attributes[0] == SELECTMASK:
-            self.spr = Sprite(sprites, 0, 0, svg_str_to_pixbuf(string))
-            self.index = SELECTMASK
-        elif attributes[0] == MATCHMASK:
-            self.spr = Sprite(sprites, 0, 0, svg_str_to_pixbuf(string))
-            self.index = MATCHMASK
+        self.spr = None
+        self.index = None  # Calculated index
+        self._scale = scale
+
+    def create(self, string, attributes=None, sprites=None, file_path=None):
+        if attributes is None:
+            if self.spr is None:
+                self.spr = Sprite(sprites, 0, 0, svg_str_to_pixbuf(string))
+            else:
+                self.spr.set_image(svg_str_to_pixbuf(string))
+            self.index = None
         else:
             self.shape = attributes[0]
             self.color = attributes[1]
@@ -45,20 +48,28 @@ class Card:
                          self.color * NUMBER * FILLS + \
                          self.num * FILLS + \
                          self.fill
-            self.spr = Sprite(sprites, 0, 0, svg_str_to_pixbuf(string))
+            if self.spr is None:
+                self.spr = Sprite(sprites, 0, 0, svg_str_to_pixbuf(string))
+            else:
+                self.spr.set_image(svg_str_to_pixbuf(string))
+
             if file_path is not None:
-                self.spr.set_image(load_image(file_path, scale), i=1,
-                                   dx=int(scale * CARD_WIDTH * .125),
-                                   dy=int(scale * CARD_HEIGHT * .125))
+                self.spr.set_image(load_image(file_path, self._scale), i=1,
+                                   dx=int(self._scale * CARD_WIDTH * .125),
+                                   dy=int(self._scale * CARD_HEIGHT * .125))
+        self.spr.set_label_attributes(self._scale * 24)
+        self.spr.set_label('')
 
     def show_card(self):
         ''' Show the card '''
-        self.spr.set_layer(2000)
-        self.spr.draw()
+        if self.spr is not None:
+            self.spr.set_layer(2000)
+            self.spr.draw()
 
     def hide_card(self):
         ''' Hide a card '''
-        self.spr.hide()
+        if self.spr is not None:
+            self.spr.hide()
 
 
 def svg_str_to_pixbuf(string):
