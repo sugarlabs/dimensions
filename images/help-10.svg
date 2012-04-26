@@ -216,4 +216,13 @@
        y="21.517578"
        id="tspan3017-9"
        style="fill:#ffff00;fill-opacity:1">☻</tspan></text>
+  <g
+     transform="matrix(0.16667778,0,0,0.16667778,113.16628,2.666111)"
+     id="activity-stop"
+     style="fill:#000000;fill-opacity:1;stroke:none;display:block">
+    <path
+       d="M 36.822,5 H 18.181 L 5.002,18.182 V 36.82 L 18.181,50 H 36.823 L 49.999,36.82 V 18.182 L 36.822,5 z M 35.75,35.414 h -15.5 v -15.5 h 15.5 v 15.5 z"
+       id="path3082"
+       style="fill:#000000;fill-opacity:1;stroke:none;display:inline" />
+  </g>
 </svg>
