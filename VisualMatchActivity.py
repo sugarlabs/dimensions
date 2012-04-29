@@ -14,6 +14,7 @@
 import pygtk
 pygtk.require('2.0')
 import gtk
+import gobject
 
 from sugar.activity import activity
 try:
@@ -118,13 +119,21 @@ class VisualMatchActivity(activity.Activity):
         if self.vmw.joiner():  # joiner cannot change level
             return
         self.vmw.card_type = card_type
-        if self.ready_to_play:
-            self._prompt = PROMPT_DICT[card_type]
-            self._notify_new_game(self._prompt)
-            if card_type == 'custom' and self.vmw.custom_paths[0] is None:
-                self.image_import_cb()
-            else:
-                self.vmw.new_game()
+        self._prompt = PROMPT_DICT[card_type]
+        self._load_new_game(card_type)
+
+    def _load_new_game(self, card_type=None):
+        if not self.ready_to_play:
+            return
+        self._notify_new_game(self._prompt)
+        # a brief pause to give alert time to load
+        timeout = gobject.timeout_add(200, self._new_game, card_type)
+
+    def _new_game(self, card_type):
+        if card_type == 'custom' and self.vmw.custom_paths[0] is None:
+            self.image_import_cb()
+        else:
+            self.vmw.new_game()
 
     def _robot_cb(self, button=None):
         ''' Toggle robot assist on/off '''
@@ -143,15 +152,9 @@ class VisualMatchActivity(activity.Activity):
         if self.vmw.joiner():  # joiner cannot change level
             return
         self.vmw.level = level
-        if self.ready_to_play:
-            self._notify_new_game(self._prompt)
-        self.set_level_label()
-
-    def set_level_label(self):
         self.level_label.set_text(self.calc_level_label(self.vmw.low_score,
                                                         self.vmw.level))
-        if self.ready_to_play:
-            self.vmw.new_game()
+        self._load_new_game()
 
     def calc_level_label(self, low_score, play_level):
         ''' Show the score. '''
@@ -177,9 +180,7 @@ class VisualMatchActivity(activity.Activity):
             return
         self.vmw.numberO = numberO
         self.vmw.card_type = 'number'
-        if self.ready_to_play:
-            self._notify_new_game(self._prompt)
-            self.vmw.new_game()
+        self._load_new_game()
 
     def _number_card_C_cb(self, button, numberC):
         ''' Choose between C-card list for numbers game. '''
@@ -187,9 +188,7 @@ class VisualMatchActivity(activity.Activity):
             return
         self.vmw.numberC = numberC
         self.vmw.card_type = 'number'
-        if self.ready_to_play:
-            self._notify_new_game(self._prompt)
-            self.vmw.new_game()
+        self._load_new_game()
 
     def _robot_time_spin_cb(self, button):
         ''' Set delay for robot. '''
