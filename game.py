@@ -388,7 +388,9 @@ class Game():
         win.grab_focus()
 
         # Turn off help animation
-        self._stop_help = True
+        if not self._stop_help:
+            self._stop_help = True
+            return
 
         # Don't do anything if the game is over
         if self._the_game_is_over:
