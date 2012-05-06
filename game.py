@@ -143,6 +143,7 @@ class Game():
         self._smiley = []
         self._frowny = []
         self._help = []
+        self._stop_help = True
         self._failure = None
         self.clicked = []
         self.last_click = None
