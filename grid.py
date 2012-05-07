@@ -187,9 +187,25 @@ class Grid:
         ''' Convert from sprite x,y to match index. '''
         return int((pos[1] - self.top) / self.yinc)
 
+    def xy_in_match(self, pos):
+        ''' Is a position at one of the match points? '''
+        for i in range(3):
+            x, y = self.match_to_xy(i)
+            if pos[0] == x and pos[1] == y:
+                return True
+        return False
+
     def match_to_xy(self, i):
         ''' Convert from match index to x, y position. '''
         return ((MATCH_POSITION, self.top + i * self.yinc))
+
+    def xy_in_grid(self, pos):
+        ''' Is a position at one of the grid points? '''
+        for i in range(ROW * COL):
+            x, y = self.grid_to_xy(i)
+            if pos[0] == x and pos[1] == y:
+                return True
+        return False
 
     def xy_to_grid(self, pos):
         ''' Convert from sprite x,y to grid index. '''

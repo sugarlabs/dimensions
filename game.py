@@ -233,8 +233,11 @@ class Game():
             c.hide()
 
         self._matches_on_display = False
+        self._failure = None
+
         for c in self._frowny:
             c.spr.hide()
+
         self._smiley[-1].spr.hide()
 
         if self._saved_state is not None:
@@ -397,19 +400,13 @@ class Game():
         if self._the_game_is_over:
             return
 
-        # Keep track of starting drag position.
-        x, y = map(int, event.get_coords())
-        self._drag_pos = [x, y]
-        self._start_pos = [x, y]
-
         # Find the sprite under the mouse.
+        x, y = map(int, event.get_coords())
         spr = self._sprites.find_sprite((x, y))
 
         # If there is a match showing, hide it.
         if self._matches_on_display:
             self.clean_up_match(share=True)
-        elif self._failure is not None:  # Return last card clicked to grid
-            self.clean_up_no_match(spr, share=True)
 
         # Nothing else to do.
         if spr is None:
@@ -421,8 +418,20 @@ class Game():
 
         # Don't grab a card being animated.
         if True in self.grid.animation_lock:
-            _logger.debug('waiting on animation lock')
             return True
+
+        # Don't do anything if a card is already in motion
+        if self._in_motion(spr):
+            return
+
+        # Keep track of starting drag position.
+        self._drag_pos = [x, y]
+        self._start_pos = [x, y]
+
+        # If the match area is full, we need to move a card back to the grid
+        if self._failure is not None:
+            if not self.grid.xy_in_match(spr.get_xy()):
+                return
 
         # We are only interested in cards in the deck.
         if self.deck.spr_to_card(spr) is not None:
@@ -548,6 +557,7 @@ class Game():
                 self.last_click = i
             for c in self._frowny:
                 c.spr.hide()
+            self._failure = None
         else:
             i = self._where_in_clicked(spr)
             if i is None:
@@ -573,6 +583,7 @@ class Game():
                 self.clicked[i].reset()
                 for c in self._frowny:
                     c.spr.hide()
+                self._failure = None
             else:  # Move a click to a different match slot
                 i = self._where_in_clicked(spr)
                 j = self.grid.xy_to_match((x, y))
@@ -589,7 +600,9 @@ class Game():
                 move = 'abort'
         else:
             i = self._where_in_clicked(spr)
-            if x < self.grid.left:  # Moving a card to the match area
+            if i is None:
+                move = 'abort'
+            elif x < self.grid.left:  # Moving a card to the match area
                 self.grid.grid[self.grid.spr_to_grid(spr)] = None
                 spr.move(self._match_area[i].spr.get_xy())
             else:  # Shuffle positions in match area
@@ -636,7 +649,6 @@ class Game():
             self._test_for_a_match()
             if self._matches_on_display:
                 self._smiley[-1].spr.set_layer(100)
-                _logger.debug('Found a match')
             elif self._failure is not None:
                 self._frowny[self._failure].spr.set_layer(100)
         return
@@ -739,7 +751,7 @@ class Game():
                 return True
             else:
                 # Wait a few seconds before dealing new cards.
-                gobject.timeout_add(2000, self._deal_new_cards)
+                gobject.timeout_add(3000, self._deal_new_cards)
 
             # Keep playing.
             self._update_labels()
@@ -966,19 +978,19 @@ class Game():
 
     def _find_a_match(self, robot_match=False):
         ''' Check to see whether there are any matches on the board. '''
-        if robot_match:
-            # Before robot finds a match: restore any cards in match area
-            if self._matches_on_display:
-                # And unselect clicked cards
-                for c in self.clicked:
-                    c.hide()
-                self._smiley[-1].spr.hide()
-                self._matches_on_display = False
-            else:
-                for c in self.clicked:
-                    if c.spr is not None:
-                        i = self.grid.xy_to_grid(c.pos)
-                        c.spr.move(c.pos)
+        # Before finding a match, return any cards from the match area
+        if self._matches_on_display:
+            # And unselect clicked cards
+            for c in self.clicked:
+                c.hide()
+            self._smiley[-1].spr.hide()
+            self._matches_on_display = False
+        else:
+            for c in self.clicked:
+                if c.spr is not None:
+                    i = self.grid.find_an_empty_slot()
+                    if i is not None:
+                        c.spr.move(self.grid.grid_to_xy(i))
                         self.grid.grid[i] = self.deck.spr_to_card(c.spr)
                         c.reset()
 
@@ -1041,6 +1053,7 @@ class Game():
                    != 0:
                 self._failure = 3
                 return False
+        self._failure = None
         return True
 
     def _choose_custom_card(self):
@@ -1126,6 +1139,15 @@ class Game():
         self.activity.button_custom.set_icon('new-custom-game')
         self.activity.button_custom.set_tooltip(_('New custom game'))
         return
+
+    def _in_motion(self, spr):
+        ''' Is the sprite in a grid or match position or in motion? '''
+        x, y = spr.get_xy()
+        if self.grid.xy_in_match((x, y)):
+            return False
+        if self.grid.xy_in_grid((x, y)):
+            return False
+        return True
 
     def help_animation(self):
         ''' Simple explanatory animation at start of play '''
