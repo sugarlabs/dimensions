@@ -99,8 +99,7 @@ class Click():
     def hide(self):
         if self.spr is not None:
             self.spr.hide()
-            self.spr = None
-        self.pos = [0, 0]
+            self.reset()
 
 
 class Game():
@@ -165,6 +164,7 @@ class Game():
         self.level = 0
         self.card_type = 'pattern'
         self.buddies = []
+        self._dealing = False
         self._the_game_is_over = False
 
         self.grid = Grid(self._width, self._height, self._card_width,
@@ -228,6 +228,8 @@ class Game():
         # If there is already a deck, hide it.
         if hasattr(self, 'deck'):
             self.deck.hide()
+
+        self._dealing = False
 
         for c in self.clicked:
             c.hide()
@@ -394,11 +396,18 @@ class Game():
         # Turn off help animation
         if not self._stop_help:
             self._stop_help = True
-            return
+            # _logger.debug('stop help')
+            return True
 
         # Don't do anything if the game is over
         if self._the_game_is_over:
-            return
+            # _logger.debug('game over')
+            return True
+
+        # Don't do anything during a deal
+        if self._dealing:
+            # _logger.debug('dealing')
+            return True
 
         # Find the sprite under the mouse.
         x, y = map(int, event.get_coords())
@@ -407,22 +416,27 @@ class Game():
         # If there is a match showing, hide it.
         if self._matches_on_display:
             self.clean_up_match(share=True)
+            # _logger.debug('clean up match before click')
 
         # Nothing else to do.
         if spr is None:
+            # _logger.debug('spr is None')
             return True
 
         # Don't grab cards in the match pile.
         if spr in self.match_list:
+            # _logger.debug('spr is None')
             return True
 
         # Don't grab a card being animated.
         if True in self.grid.animation_lock:
+            # _logger.debug('animation lock')            
             return True
 
         # Don't do anything if a card is already in motion
         if self._in_motion(spr):
-            return
+            # _logger.debug('in motion')
+            return True
 
         # Keep track of starting drag position.
         self._drag_pos = [x, y]
@@ -431,10 +445,12 @@ class Game():
         # If the match area is full, we need to move a card back to the grid
         if self._failure is not None:
             if not self.grid.xy_in_match(spr.get_xy()):
-                return
+                # _logger.debug('match area is full (failure)')
+                return True
 
         # We are only interested in cards in the deck.
         if self.deck.spr_to_card(spr) is not None:
+            # _logger.debug('>>>>>>>> processing click on card in deck')
             self._press = spr
             # Save its starting position so we can restore it if necessary
             if self._where_in_clicked(spr) is None:
@@ -453,8 +469,8 @@ class Game():
         ''' Unselect clicked cards that are now in the match pile '''
         for c in self.clicked:
             c.hide()
-        self._smiley[-1].spr.hide()
         self._matches_on_display = False
+        self._smiley[-1].spr.hide()
         if share and self._sharing():
             self.activity._send_event('r:')
 
@@ -710,6 +726,8 @@ class Game():
             self.set_label('clock', '')
             self.set_label('status', _('unsolvable'))
             self._the_game_is_over = True
+        for c in self._frowny:
+            c.spr.hide()
         return self._the_game_is_over
 
     def _test_for_a_match(self):
@@ -751,7 +769,8 @@ class Game():
                 return True
             else:
                 # Wait a few seconds before dealing new cards.
-                gobject.timeout_add(3000, self._deal_new_cards)
+                self._dealing = True
+                gobject.timeout_add(2000, self._deal_new_cards)
 
             # Keep playing.
             self._update_labels()
@@ -787,6 +806,7 @@ class Game():
         # Test to see if we need to deal extra cards.
         if not self._find_a_match():
             self.grid.deal_extra_cards(self.deck)
+        self._dealing = False
 
     def _keypress_cb(self, area, event):
         ''' Keypress: editing word cards or selecting cards to play '''
@@ -980,12 +1000,11 @@ class Game():
         ''' Check to see whether there are any matches on the board. '''
         # Before finding a match, return any cards from the match area
         if self._matches_on_display:
-            # And unselect clicked cards
-            for c in self.clicked:
-                c.hide()
-            self._smiley[-1].spr.hide()
+            # _logger.debug('clean up match in find_a_match')
             self._matches_on_display = False
+            gobject.timeout_add(1000, self.clean_up_match)
         else:
+            # _logger.debug('clean up clicked')
             for c in self.clicked:
                 if c.spr is not None:
                     i = self.grid.find_an_empty_slot()
