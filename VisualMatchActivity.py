@@ -67,10 +67,10 @@ from game import Game
 
 help_palettes = {}
 
-BEGINNER = 2
-INTERMEDIATE = 0
-EXPERT = 1
-LEVEL_LABELS = [_('intermediate'), _('expert'), _('beginner')]
+BEGINNER = 0
+INTERMEDIATE = 1
+EXPERT = 2
+LEVEL_LABELS = [_('beginner'),_('intermediate'), _('expert')]
 LEVEL_DECKSIZE = [DECKSIZE / 3, DECKSIZE, DECKSIZE / 9]
 
 NUMBER_O_BUTTONS = {}
@@ -215,10 +215,11 @@ class VisualMatchActivity(activity.Activity):
         self._play_level = int(self._read_metadata('play_level', 2))
         self._robot_time = int(self._read_metadata('robot_time', 60))
         self._card_type = self._read_metadata('cardtype', 'pattern')
-        self._low_score = [int(self._read_metadata(
-                    'low_score_intermediate', -1)),
-                           int(self._read_metadata('low_score_expert', -1)),
-                           int(self._read_metadata('low_score_beginner', -1))]
+        self._low_score = [int(self._read_metadata('low_score_beginner', -1)),
+                           int(self._read_metadata('low_score_intermediate',
+                                                   -1)),
+                           int(self._read_metadata('low_score_expert', -1))]
+
         self._all_scores = self._data_loader(
             self._read_metadata('all_scores', '[]'))
         self._numberO = int(self._read_metadata('numberO', PRODUCT))

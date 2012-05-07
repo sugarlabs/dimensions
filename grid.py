@@ -96,9 +96,9 @@ class Grid:
                 return i
         return None  # No empty slots
 
-    def replace(self, clicked_set, deck):
+    def replace(self, deck):
         ''' Deal new cards. '''
-        for j, a in enumerate(clicked_set):
+        for j in range(3):
             # Don't add new cards if bottom row is occupied
             if self.cards_in_grid() < DEAL:
                 if not deck.empty():
