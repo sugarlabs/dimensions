@@ -231,14 +231,12 @@ class Game():
 
         self._dealing = False
 
-        for c in self.clicked:
-            c.hide()
+        self._hide_clicked()
 
         self._matches_on_display = False
         self._failure = None
 
-        for c in self._frowny:
-            c.spr.hide()
+        self._hide_frowny()
 
         self._smiley[-1].spr.hide()
 
@@ -331,8 +329,7 @@ class Game():
             return
 
         # Set the card type to custom, and generate a new deck.
-        for c in self.clicked:
-            c.hide()
+        self._hide_clicked()
 
         self.deck.hide()
         self.card_type = 'custom'
@@ -365,9 +362,7 @@ class Game():
             return
 
         # Set the card type to words, and generate a new deck.
-        for c in self.clicked:
-            if c.spr is not None:
-                c.hide()
+        self._hide_clicked()
         self.deck.hide()
         self.card_type = 'word'
         self.deck.create(self._sprites, self.card_type,
@@ -396,17 +391,14 @@ class Game():
         # Turn off help animation
         if not self._stop_help:
             self._stop_help = True
-            # _logger.debug('stop help')
             return True
 
         # Don't do anything if the game is over
         if self._the_game_is_over:
-            # _logger.debug('game over')
             return True
 
         # Don't do anything during a deal
         if self._dealing:
-            # _logger.debug('dealing')
             return True
 
         # Find the sprite under the mouse.
@@ -416,26 +408,21 @@ class Game():
         # If there is a match showing, hide it.
         if self._matches_on_display:
             self.clean_up_match(share=True)
-            # _logger.debug('clean up match before click')
 
         # Nothing else to do.
         if spr is None:
-            # _logger.debug('spr is None')
             return True
 
         # Don't grab cards in the match pile.
         if spr in self.match_list:
-            # _logger.debug('spr is None')
             return True
 
         # Don't grab a card being animated.
         if True in self.grid.animation_lock:
-            # _logger.debug('animation lock')            
             return True
 
         # Don't do anything if a card is already in motion
         if self._in_motion(spr):
-            # _logger.debug('in motion')
             return True
 
         # Keep track of starting drag position.
@@ -445,12 +432,10 @@ class Game():
         # If the match area is full, we need to move a card back to the grid
         if self._failure is not None:
             if not self.grid.xy_in_match(spr.get_xy()):
-                # _logger.debug('match area is full (failure)')
                 return True
 
         # We are only interested in cards in the deck.
         if self.deck.spr_to_card(spr) is not None:
-            # _logger.debug('>>>>>>>> processing click on card in deck')
             self._press = spr
             # Save its starting position so we can restore it if necessary
             if self._where_in_clicked(spr) is None:
@@ -467,9 +452,8 @@ class Game():
 
     def clean_up_match(self, share=False):
         ''' Unselect clicked cards that are now in the match pile '''
-        for c in self.clicked:
-            c.hide()
         self._matches_on_display = False
+        self._hide_clicked()
         self._smiley[-1].spr.hide()
         if share and self._sharing():
             self.activity._send_event('r:')
@@ -481,8 +465,7 @@ class Game():
             self.last_click = 2
             if share and self._sharing():
                 self.activity._send_event('R:2')
-        for c in self._frowny:
-            c.spr.hide()
+        self._hide_frowny()
         self._failure = None
 
     def _mouse_move_cb(self, win, event):
@@ -558,7 +541,7 @@ class Game():
             elif self.last_click is not None:
                 self.activity._send_event('S:%d' % (self.last_click))
             else:
-                _logger.debug('WARNING: Cannot find last click')
+                _logger.error('WARNING: Cannot find last click')
             self.last_click = None
         self.process_selection(self._press)
         self._press = None
@@ -571,8 +554,7 @@ class Game():
             if i is not None:
                 self.return_card_to_grid(i)
                 self.last_click = i
-            for c in self._frowny:
-                c.spr.hide()
+            self._hide_frowny()
             self._failure = None
         else:
             i = self._where_in_clicked(spr)
@@ -597,8 +579,7 @@ class Game():
                 i = self._where_in_clicked(spr)
                 self.last_click = i
                 self.clicked[i].reset()
-                for c in self._frowny:
-                    c.spr.hide()
+                self._hide_frowny()
                 self._failure = None
             else:  # Move a click to a different match slot
                 i = self._where_in_clicked(spr)
@@ -665,7 +646,7 @@ class Game():
             self._test_for_a_match()
             if self._matches_on_display:
                 self._smiley[-1].spr.set_layer(100)
-            elif self._failure is not None:
+            elif not self._the_game_is_over and self._failure is not None:
                 self._frowny[self._failure].spr.set_layer(100)
         return
 
@@ -691,12 +672,23 @@ class Game():
         else:
             i = self._none_in_clicked()
             if i is None:
-                _logger.debug('WARNING: No room in clicked')
+                _logger.error('WARNING: No room in clicked')
                 self.last_click = None
                 return
             self.clicked[i].spr = spr
             self.clicked[i].pos = pos
             self.last_click = i
+
+    def _hide_clicked(self):
+        ''' Hide the clicked cards '''
+        for c in self.clicked:
+            if c is not None:
+                c.hide()
+
+    def _hide_frowny(self):
+        ''' Hide the frowny cards '''
+        for c in self._frowny:
+            c.spr.hide()
 
     def return_card_to_grid(self, i):
         ''' "Unclick" '''
@@ -709,6 +701,7 @@ class Game():
     def _game_over(self):
         ''' Game is over when the deck is empty and no more matches. '''
         if self.deck.empty() and not self._find_a_match():
+            self._hide_frowny()
             self.set_label('deck', '')
             self.set_label('clock', '')
             self.set_label('status', '%s (%d:%02d)' %
@@ -722,12 +715,11 @@ class Game():
             self._the_game_is_over = True
         elif self.grid.cards_in_grid() == DEAL + 3 \
                 and not self._find_a_match():
+            self._hide_frowny()
             self.set_label('deck', '')
             self.set_label('clock', '')
             self.set_label('status', _('unsolvable'))
             self._the_game_is_over = True
-        for c in self._frowny:
-            c.spr.hide()
         return self._the_game_is_over
 
     def _test_for_a_match(self):
@@ -736,7 +728,6 @@ class Game():
                               self.deck.spr_to_card(self.clicked[1].spr),
                               self.deck.spr_to_card(self.clicked[2].spr)],
                              self.card_type):
-
             # Stop the timer.
             if hasattr(self, 'timeout_id'):
                 if self.timeout_id is not None:
@@ -798,7 +789,7 @@ class Game():
 
     def _deal_new_cards(self):
         ''' Deal three new cards. '''
-        self.grid.replace(self.clicked, self.deck)
+        self.grid.replace(self.deck)
         self.set_label('deck', '%d %s' %
                        (self.deck.cards_remaining(), _('cards')))
         # Consolidate the grid.
@@ -1000,11 +991,10 @@ class Game():
         ''' Check to see whether there are any matches on the board. '''
         # Before finding a match, return any cards from the match area
         if self._matches_on_display:
-            # _logger.debug('clean up match in find_a_match')
-            self._matches_on_display = False
-            gobject.timeout_add(1000, self.clean_up_match)
+            if not self.deck.empty():
+                self._matches_on_display = False
+                gobject.timeout_add(1000, self.clean_up_match)
         else:
-            # _logger.debug('clean up clicked')
             for c in self.clicked:
                 if c.spr is not None:
                     i = self.grid.find_an_empty_slot()
@@ -1035,7 +1025,7 @@ class Game():
                 self.clicked[j].spr = self.grid.grid[i[j]].spr
                 self.grid.grid[i[j]].spr.move(self.grid.match_to_xy(j))
             else:
-                _logger.debug('in robot match, grid[%d] is None' % (i[j]))
+                _logger.error('in robot match, grid[%d] is None' % (i[j]))
             self.grid.grid[i[j]] = None
         self.robot_matches += 1
         self._test_for_a_match()
