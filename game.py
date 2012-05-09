@@ -620,7 +620,19 @@ class Game():
                         self.grid.grid[k] = None
                 move = 'abort'
                 self.clicked[i].reset()
+        self._consistency_check()
         return move
+
+    def _consistency_check(self):
+        ''' Make sure that the cards in the grid are really in the grid '''
+        # Root cause: a race condition?
+        for i in range(3):
+            spr = self.clicked[i].spr
+            if spr is not None:
+                if not self.grid.xy_in_match(spr.get_xy()):
+                    _logger.debug('card in both the grid and \
+match area (%d)' % (i))
+                    spr.move(self.grid.match_to_xy(i))
 
     def process_selection(self, spr):
         ''' After a card has been selected... '''
@@ -953,7 +965,10 @@ class Game():
         self.match_list = []
         for i in saved_match_list_indices:
             if i is not None:
-                self.match_list.append(self.deck.index_to_card(i).spr)
+                try:
+                    self.match_list.append(self.deck.index_to_card(i).spr)
+                except AttributeError:
+                    _logger.debug('index %s was not found in deck' % (str(i)))
 
     def _restore_word_list(self, saved_word_list):
         ''' Restore the word list upon resume or share. '''
