@@ -1,3 +1,11 @@
+39
+
+BUG FIX:
+* Closing the Welcome message clicks on a card too (#3567)
+* Sometimes cards disappear (#3568)
+* Detect and correct race condition (#3579)
+(Thanks to Manuel Kaufmann for help tracking down these bugs)
+
 38
 
 ENHANCEMENTS:
