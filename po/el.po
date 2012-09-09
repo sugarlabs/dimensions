@@ -38,168 +38,204 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-09-27 00:32-0400\n"
-"PO-Revision-Date: 2011-02-24 23:39+0200\n"
-"Last-Translator: John Sarlis <sarlis@sch.gr>\n"
+"POT-Creation-Date: 2012-04-21 00:33-0400\n"
+"PO-Revision-Date: 2012-09-09 10:15+0200\n"
+"Last-Translator: Yannis <kiolalis@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
-"Language: \n"
+"Language: el\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Pootle 2.0.1\n"
+"X-Generator: Pootle 2.0.5\n"
 
-#: activity/activity.info:2 game.py:532 visualmatch.py:35
+#. TRANS: Please translate Visual Match as Dimensions
+#: activity/activity.info:2 VisualMatchActivity.py:658
+#: VisualMatchActivity.py:690 game.py:901 visualmatch.py:35
 msgid "Visual Match"
 msgstr "Βρες τα τρίδυμα!"
 
-#: VisualMatchActivity.py:66 VisualMatchActivity.py:510
+#: VisualMatchActivity.py:72 VisualMatchActivity.py:464
+#: VisualMatchActivity.py:671
 msgid "intermediate"
 msgstr "μέτριος"
 
-#: VisualMatchActivity.py:66 VisualMatchActivity.py:518
+#: VisualMatchActivity.py:72 VisualMatchActivity.py:472
+#: VisualMatchActivity.py:672
 msgid "expert"
 msgstr "προχωρημένος"
 
-#: VisualMatchActivity.py:66 VisualMatchActivity.py:502
+#: VisualMatchActivity.py:72 VisualMatchActivity.py:456
+#: VisualMatchActivity.py:670
 msgid "beginner"
 msgstr "αρχάριος"
 
-#: VisualMatchActivity.py:199
-msgid "Play with the computer."
-msgstr "Αναπαραγωγή με τον υπολογιστή."
-
-#: VisualMatchActivity.py:204
-msgid "Stop playing with the computer."
-msgstr "Διακοπή αναπαραγωγής με τον υπολογιστή."
-
-#: VisualMatchActivity.py:286 visualmatch.py:171
-msgid "mouse"
-msgstr "ποντίκι"
-
-#: VisualMatchActivity.py:287 visualmatch.py:171
-msgid "cat"
-msgstr "γάτα"
-
-#: VisualMatchActivity.py:288 visualmatch.py:171
-msgid "dog"
-msgstr "σκύλος"
-
-#: VisualMatchActivity.py:289 visualmatch.py:172
-msgid "cheese"
-msgstr "τυρί"
-
-#: VisualMatchActivity.py:290 visualmatch.py:172
-msgid "apple"
-msgstr "μήλο"
-
-#: VisualMatchActivity.py:291 visualmatch.py:172
-msgid "bread"
-msgstr "ψωμί"
-
-#: VisualMatchActivity.py:292 visualmatch.py:173
-msgid "moon"
-msgstr "φεγγάρι"
-
-#: VisualMatchActivity.py:293 visualmatch.py:173
-msgid "sun"
-msgstr "ήλιος"
-
-#: VisualMatchActivity.py:294 visualmatch.py:173
-msgid "earth"
-msgstr "γη"
-
-#: VisualMatchActivity.py:366
-msgid "Game"
-msgstr "Παιχνίδι"
-
-#: VisualMatchActivity.py:367
-msgid "Numbers"
-msgstr "Αριθμοί"
-
-#: VisualMatchActivity.py:368
-msgid "Tools"
-msgstr "Εργαλεία"
-
-#: VisualMatchActivity.py:373 visualmatch.py:49
+#: VisualMatchActivity.py:83 visualmatch.py:49
 msgid "New pattern game"
 msgstr "Νέο πρότυπο παιχνιδιού"
 
-#: VisualMatchActivity.py:376 visualmatch.py:53
+#: VisualMatchActivity.py:84 visualmatch.py:53
 msgid "New number game"
 msgstr "Νέο παιχνίδι με αριθμούς"
 
-#: VisualMatchActivity.py:377 visualmatch.py:57
+#: VisualMatchActivity.py:85 visualmatch.py:57
 msgid "New word game"
 msgstr "Νέο παιχνίδι με λέξεις"
 
-#: VisualMatchActivity.py:380 VisualMatchActivity.py:394
+#: VisualMatchActivity.py:86 VisualMatchActivity.py:345
 msgid "Import custom cards"
 msgstr "Εισαγωγή καρτών χρήστη"
 
-#: VisualMatchActivity.py:390
+#: VisualMatchActivity.py:131
+msgid "Play with the computer."
+msgstr "Αναπαραγωγή με τον υπολογιστή."
+
+#: VisualMatchActivity.py:136
+msgid "Stop playing with the computer."
+msgstr "Διακοπή αναπαραγωγής με τον υπολογιστή."
+
+#: VisualMatchActivity.py:225 visualmatch.py:175
+msgid "mouse"
+msgstr "ποντίκι"
+
+#: VisualMatchActivity.py:226 visualmatch.py:175
+msgid "cat"
+msgstr "γάτα"
+
+#: VisualMatchActivity.py:227 visualmatch.py:175
+msgid "dog"
+msgstr "σκύλος"
+
+#: VisualMatchActivity.py:228 visualmatch.py:176
+msgid "cheese"
+msgstr "τυρί"
+
+#: VisualMatchActivity.py:229 visualmatch.py:176
+msgid "apple"
+msgstr "μήλο"
+
+#: VisualMatchActivity.py:230 visualmatch.py:176
+msgid "bread"
+msgstr "ψωμί"
+
+#: VisualMatchActivity.py:231 visualmatch.py:177
+msgid "moon"
+msgstr "φεγγάρι"
+
+#: VisualMatchActivity.py:232 visualmatch.py:177
+msgid "sun"
+msgstr "ήλιος"
+
+#: VisualMatchActivity.py:233 visualmatch.py:177
+msgid "earth"
+msgstr "γη"
+
+#: VisualMatchActivity.py:305 VisualMatchActivity.py:659
+msgid "Export scores to clipboard"
+msgstr "Εξαγωγή των βαθμολογιών στο πρόχειρο"
+
+#: VisualMatchActivity.py:314 VisualMatchActivity.py:663
+#: VisualMatchActivity.py:691
+msgid "Game"
+msgstr "Παιχνίδι"
+
+#: VisualMatchActivity.py:315 VisualMatchActivity.py:676
+#: VisualMatchActivity.py:692
+msgid "Numbers"
+msgstr "Αριθμοί"
+
+#: VisualMatchActivity.py:316 VisualMatchActivity.py:652
+#: VisualMatchActivity.py:693
+msgid "Tools"
+msgstr "Εργαλεία"
+
+#: VisualMatchActivity.py:341 VisualMatchActivity.py:653
 msgid "Edit word lists."
 msgstr "Επεξεργασία καταλόγου λέξεων."
 
-#: VisualMatchActivity.py:399
+#: VisualMatchActivity.py:352 VisualMatchActivity.py:677
 msgid "product"
 msgstr "προϊόν"
 
-#: VisualMatchActivity.py:407
+#: VisualMatchActivity.py:360 VisualMatchActivity.py:678
 msgid "Roman numerals"
 msgstr "Ρωμαϊκή αρίθμηση"
 
-#: VisualMatchActivity.py:415
+#: VisualMatchActivity.py:368 VisualMatchActivity.py:679
 msgid "word"
 msgstr "λέξη"
 
-#: VisualMatchActivity.py:423 visualmatch.py:107
+#: VisualMatchActivity.py:376 VisualMatchActivity.py:680 visualmatch.py:107
 msgid "Chinese"
 msgstr "Κινέζικο"
 
-#: VisualMatchActivity.py:431 visualmatch.py:111
+#: VisualMatchActivity.py:384 VisualMatchActivity.py:681 visualmatch.py:111
 msgid "Mayan"
 msgstr "Μάγια"
 
-#: VisualMatchActivity.py:439
+#: VisualMatchActivity.py:392 VisualMatchActivity.py:682 visualmatch.py:115
 msgid "Quipu"
 msgstr "Κουίπου"
 
-#: VisualMatchActivity.py:450
+#: VisualMatchActivity.py:403 VisualMatchActivity.py:683
 msgid "hash marks"
 msgstr "σημεία δίεσης"
 
-#: VisualMatchActivity.py:458
+#: VisualMatchActivity.py:411 VisualMatchActivity.py:684
 msgid "dots in a circle"
 msgstr "τελείες σε κύκλο"
 
-#: VisualMatchActivity.py:466
+#: VisualMatchActivity.py:419 VisualMatchActivity.py:685
 msgid "points on a star"
 msgstr "σημεία σε αστέρι"
 
-#: VisualMatchActivity.py:474
+#: VisualMatchActivity.py:427 VisualMatchActivity.py:686
 msgid "dice"
 msgstr "κύβος"
 
-#: VisualMatchActivity.py:482
+#: VisualMatchActivity.py:435 VisualMatchActivity.py:687
 msgid "dots in a line"
 msgstr "τελείες σε γραμμή"
 
-#: VisualMatchActivity.py:493
+#: VisualMatchActivity.py:444 VisualMatchActivity.py:668
 msgid "Play with the computer"
 msgstr "Αναπαραγωγή με τον υπολογιστή."
 
-#: VisualMatchActivity.py:533
+#: VisualMatchActivity.py:484
 msgid "Find a match."
 msgstr "Βρες το ταίρι."
 
-#: VisualMatchActivity.py:537 game.py:421 game.py:502
+#: VisualMatchActivity.py:488 game.py:763 game.py:870
 msgid "cards"
 msgstr "κάρτες"
 
-#: VisualMatchActivity.py:539 game.py:515 game.py:517
+#: VisualMatchActivity.py:490 game.py:883 game.py:885
 msgid "matches"
 msgstr "συνδυάζεται"
+
+#: VisualMatchActivity.py:624
+msgid "A new game is loading."
+msgstr "Ένα νέο παιχνίδι φορτώνεται."
+
+#: VisualMatchActivity.py:654
+msgid "Import image cards"
+msgstr "Εισαγωγή καρτών εικόνων"
+
+#: VisualMatchActivity.py:669
+msgid "robot pause time"
+msgstr "χρόνος παύσης του ρομπότ"
+
+#: VisualMatchActivity.py:694
+msgid "number of cards remaining in deck"
+msgstr "αριθμός καρτών που απομένουν στο τραπέζι"
+
+#: VisualMatchActivity.py:695
+msgid "number of matches"
+msgstr "αριθμός συνδυασμών"
+
+#: VisualMatchActivity.py:696
+msgid "elapsed time"
+msgstr "χρόνος που πέρασε"
 
 #: constants.py:70
 msgid "five"
@@ -237,33 +273,37 @@ msgstr "είκοσι ένα"
 msgid "thirty three"
 msgstr "τριάντα τρία"
 
-#: game.py:267
+#: game.py:351
 msgid "Edit the custom cards."
 msgstr "Επεξεργασία των καρτών χρήστη."
 
-#: game.py:295
+#: game.py:381
 msgid "Edit the word cards."
 msgstr "Επεξεργασία των καρτών με τις λέξεις."
 
-#: game.py:388
+#: game.py:678
 msgid "Game over"
 msgstr "Τέλος παιχνιδιού"
 
-#: game.py:397
+#: game.py:690
 msgid "unsolvable"
 msgstr "δεν έχει λύση"
 
-#: game.py:432
+#: game.py:722
 msgid "New record"
 msgstr "Νέα εγγραφή"
 
-#: game.py:508 game.py:510
+#: game.py:876 game.py:878
 msgid "match"
 msgstr "συνδυάζεται"
 
-#: game.py:720
+#: game.py:1120
 msgid "New custom game"
 msgstr "Νέο παιχνίδι χρήστη"
+
+#: helpbutton.py:46
+msgid "Help"
+msgstr "Βοήθεια"
 
 #: visualmatch.py:36
 msgid "Click on cards to create sets of three."
@@ -309,23 +349,23 @@ msgstr "Ρωμαϊκό"
 msgid "Word"
 msgstr "Λέξη"
 
-#: visualmatch.py:115
+#: visualmatch.py:119
 msgid "Hash"
 msgstr "Δίεση"
 
-#: visualmatch.py:119
+#: visualmatch.py:123
 msgid "Dice"
 msgstr "Κύβος"
 
-#: visualmatch.py:123
+#: visualmatch.py:127
 msgid "Dots"
 msgstr "Τελείες"
 
-#: visualmatch.py:127
+#: visualmatch.py:131
 msgid "Star"
 msgstr "Αστέρι"
 
-#: visualmatch.py:131
+#: visualmatch.py:135
 msgid "Lines"
 msgstr "Γραμμές"
 
