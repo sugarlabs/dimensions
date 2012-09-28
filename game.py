@@ -13,30 +13,27 @@
 # Foundation, 51 Franklin Street, Suite 500 Boston, MA 02110-1335 USA
 
 
-import pygtk
-pygtk.require('2.0')
-import gtk
-import gobject
-
+import gi
+from gi.repository import Gtk
+from gi.repository import Gdk
+from gi.repository import GdkPixbuf
+from gi.repository import GObject
 import os
 
 from gettext import gettext as _
 
 from math import sqrt
 
-from sugar.graphics.objectchooser import ObjectChooser
-from sugar.datastore import datastore
-from sugar import mime
-from sugar.activity import activity
+from sugar3.graphics.objectchooser import ObjectChooser
+from sugar3.datastore import datastore
+from sugar3 import mime
+from sugar3.activity import activity
 
 import logging
 _logger = logging.getLogger('visualmatch-activity')
 
-try:
-    from sugar.graphics import style
-    GRID_CELL_SIZE = style.GRID_CELL_SIZE
-except ImportError:
-    GRID_CELL_SIZE = 0
+from sugar3.graphics import style
+GRID_CELL_SIZE = style.GRID_CELL_SIZE
 
 from constants import LOW, MEDIUM, HIGH, MATCHMASK, ROW, COL, \
     WORD_CARD_INDICIES, DEAD_DICTS, DEAD_KEYS, WHITE_SPACE, \
@@ -117,17 +114,17 @@ class Game():
             self._canvas = canvas
             parent.show_all()
 
-        self._canvas.set_flags(gtk.CAN_FOCUS)
-        self._canvas.connect('expose-event', self._expose_cb)
-        self._canvas.add_events(gtk.gdk.BUTTON_PRESS_MASK)
+        self._canvas.set_can_focus(True)
+        self._canvas.add_events(Gdk.EventMask.BUTTON_PRESS_MASK)
+        self._canvas.add_events(Gdk.EventMask.BUTTON_RELEASE_MASK)
+        self._canvas.add_events(Gdk.EventMask.POINTER_MOTION_MASK)
+        self._canvas.connect('draw', self.__draw_cb)
         self._canvas.connect('button-press-event', self._button_press_cb)
-        self._canvas.add_events(gtk.gdk.BUTTON_RELEASE_MASK)
         self._canvas.connect('button-release-event', self._button_release_cb)
-        self._canvas.add_events(gtk.gdk.POINTER_MOTION_MASK)
         self._canvas.connect("motion-notify-event", self._mouse_move_cb)
         self._canvas.connect('key_press_event', self._keypress_cb)
-        self._width = gtk.gdk.screen_width()
-        self._height = gtk.gdk.screen_height() - GRID_CELL_SIZE
+        self._width = Gdk.Screen.width()
+        self._height = Gdk.Screen.height() - GRID_CELL_SIZE
         self._scale = 0.8 * self._height / (CARD_HEIGHT * 5.5)
         self._card_width = CARD_WIDTH * self._scale
         self._card_height = CARD_HEIGHT * self._scale
@@ -222,7 +219,7 @@ class Game():
         self._saved_state = saved_state
         self._deck_index = deck_index
         # Wait for any animations to stop before starting new game
-        timeout = gobject.timeout_add(200, self._prepare_new_game)
+        timeout = GObject.timeout_add(200, self._prepare_new_game)
 
     def _prepare_new_game(self):
         # If there is already a deck, hide it.
@@ -294,11 +291,11 @@ class Game():
 
         if self._game_over():
             if hasattr(self, 'timeout_id') and self.timeout_id is not None:
-                gobject.source_remove(self.timeout_id)
+                GObject.source_remove(self.timeout_id)
         else:
             if hasattr(self, 'match_timeout_id') and \
                self.match_timeout_id is not None:
-                gobject.source_remove(self.match_timeout_id)
+                GObject.source_remove(self.match_timeout_id)
             self._timer_reset()
 
         for i in range((ROW - 1) * COL):
@@ -347,7 +344,7 @@ class Game():
         self._edit_card = None
         self._dead_key = None
         if hasattr(self, 'timeout_id') and self.timeout_id is not None:
-            gobject.source_remove(self.timeout_id)
+            GObject.source_remove(self.timeout_id)
 
         # Fill the grid with custom cards.
         self.grid.restore(self.deck, CUSTOM_CARD_INDICIES)
@@ -376,7 +373,7 @@ class Game():
         self._edit_card = None
         self._dead_key = None
         if hasattr(self, 'timeout_id') and self.timeout_id is not None:
-            gobject.source_remove(self.timeout_id)
+            GObject.source_remove(self.timeout_id)
         # Fill the grid with word cards.
         self.grid.restore(self.deck, WORD_CARD_INDICIES)
         self.set_label('deck', '')
@@ -722,7 +719,7 @@ match area (%d)' % (i))
             for i in range((ROW - 1) * COL):
                 if self.grid.grid[i] == None:
                     self._smiley[i].show_card()
-            self.match_timeout_id = gobject.timeout_add(
+            self.match_timeout_id = GObject.timeout_add(
                 2000, self._show_matches, 0)
             self._the_game_is_over = True
         elif self.grid.cards_in_grid() == DEAL + 3 \
@@ -743,8 +740,8 @@ match area (%d)' % (i))
             # Stop the timer.
             if hasattr(self, 'timeout_id'):
                 if self.timeout_id is not None:
-                    gobject.source_remove(self.timeout_id)
-                self.total_time += gobject.get_current_time() - self.start_time
+                    GObject.source_remove(self.timeout_id)
+                self.total_time += GObject.get_current_time() - self.start_time
 
             # Increment the match counter and add the match to the match list.
             self.matches += 1
@@ -755,7 +752,7 @@ match area (%d)' % (i))
             # Test to see if the game is over.
             if self._game_over():
                 if hasattr(self, 'timeout_id'):
-                    gobject.source_remove(self.timeout_id)
+                    GObject.source_remove(self.timeout_id)
                 if self.low_score[self.level] == -1:
                     self.low_score[self.level] = self.total_time
                 elif self.total_time < self.low_score[self.level]:
@@ -773,7 +770,7 @@ match area (%d)' % (i))
             else:
                 # Wait a few seconds before dealing new cards.
                 self._dealing = True
-                gobject.timeout_add(2000, self._deal_new_cards)
+                GObject.timeout_add(2000, self._deal_new_cards)
 
             # Keep playing.
             self._update_labels()
@@ -813,8 +810,8 @@ match area (%d)' % (i))
 
     def _keypress_cb(self, area, event):
         ''' Keypress: editing word cards or selecting cards to play '''
-        k = gtk.gdk.keyval_name(event.keyval)
-        u = gtk.gdk.keyval_to_unicode(event.keyval)
+        k = Gdk.keyval_name(event.keyval)
+        u = Gdk.keyval_to_unicode(event.keyval)
         if self.editing_word_list and self._edit_card is not None:
             if k in NOISE_KEYS:
                 self._dead_key = None
@@ -884,6 +881,9 @@ match area (%d)' % (i))
                 self.process_selection(self.grid.grid_to_spr(KEYMAP.index(k)))
         return True
 
+    def __draw_cb(self, canvas, cr):
+        self._sprites.redraw_sprites(cr=cr)
+
     def _expose_cb(self, win, event):
         ''' Callback to handle window expose events '''
         self.do_expose_event(event)
@@ -906,7 +906,7 @@ match area (%d)' % (i))
 
     def _destroy_cb(self, win, event):
         ''' This is the end '''
-        gtk.main_quit()
+        Gtk.main_quit()
 
     def _update_labels(self):
         ''' Write strings to a label in the toolbar. '''
@@ -979,16 +979,16 @@ match area (%d)' % (i))
 
     def _counter(self):
         ''' Display of seconds since start_time. '''
-        seconds = int(gobject.get_current_time() - self.start_time)
+        seconds = int(GObject.get_current_time() - self.start_time)
         self.set_label('clock', str(seconds))
         if self.robot and self.robot_time < seconds:
             self._find_a_match(robot_match=True)
         else:
-            self.timeout_id = gobject.timeout_add(1000, self._counter)
+            self.timeout_id = GObject.timeout_add(1000, self._counter)
 
     def _timer_reset(self):
         ''' Reset the timer for the robot '''
-        self.start_time = gobject.get_current_time()
+        self.start_time = GObject.get_current_time()
         self.timeout_id = None
         self._counter()
 
@@ -999,7 +999,7 @@ match area (%d)' % (i))
             for j in range(CARDS_IN_A_MATCH):
                 self.grid.display_match(
                     self.match_list[i * CARDS_IN_A_MATCH + j], j)
-            self.match_timeout_id = gobject.timeout_add(
+            self.match_timeout_id = GObject.timeout_add(
                 2000, self._show_matches, i + 1)
 
     def _find_a_match(self, robot_match=False):
@@ -1008,7 +1008,7 @@ match area (%d)' % (i))
         if self._matches_on_display:
             if not self.deck.empty():
                 self._matches_on_display = False
-                gobject.timeout_add(1000, self.clean_up_match)
+                GObject.timeout_add(1000, self.clean_up_match)
         else:
             for c in self.clicked:
                 if c.spr is not None:
@@ -1096,13 +1096,14 @@ match area (%d)' % (i))
             try:
                 chooser = ObjectChooser(parent=self, what_filter=None)
             except TypeError:
-                chooser = ObjectChooser(None, self.activity,
-                    gtk.DIALOG_MODAL | gtk.DIALOG_DESTROY_WITH_PARENT)
+                chooser = ObjectChooser(
+                    None, self.activity,
+                    Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT)
 
         if chooser is not None:
             try:
                 result = chooser.run()
-                if result == gtk.RESPONSE_ACCEPT:
+                if result == Gtk.ResponseType.ACCEPT:
                     jobject = chooser.get_selected_object()
                     if jobject and jobject.file_path:
                         name = jobject.metadata['title']
@@ -1188,7 +1189,7 @@ match area (%d)' % (i))
         self._help_index = 0
         self._stop_help = False
         self._help[self._help_index].set_layer(5000)
-        self._help_timeout_id = gobject.timeout_add(2000, self._help_next)
+        self._help_timeout_id = GObject.timeout_add(2000, self._help_next)
 
     def _help_next(self):
         ''' Load the next frame in the animation '''
@@ -1200,9 +1201,9 @@ match area (%d)' % (i))
         self._help_index %= len(self._help)
         self._help[self._help_index].set_layer(5000)
         if self._help_index in [0, 9, 10, 20, 21]:
-            self._help_timeout_id = gobject.timeout_add(2000, self._help_next)
+            self._help_timeout_id = GObject.timeout_add(2000, self._help_next)
         else:
-            self._help_timeout_id = gobject.timeout_add(1000, self._help_next)
+            self._help_timeout_id = GObject.timeout_add(1000, self._help_next)
 
 
 class Permutation:
@@ -1229,7 +1230,7 @@ class Permutation:
 
 def svg_str_to_pixbuf(svg_string, w, h):
     """ Load pixbuf from SVG string """
-    pl = gtk.gdk.PixbufLoader('svg')
+    pl = GdkPixbuf.PixbufLoader.new_with_type('svg')
     pl.set_size(w, h)
     pl.write(svg_string)
     pl.close()

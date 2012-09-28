@@ -10,10 +10,7 @@
 # along with this library; if not, write to the Free Software
 # Foundation, 51 Franklin Street, Suite 500 Boston, MA 02110-1335 USA
 
-
-import pygtk
-pygtk.require('2.0')
-import gtk
+from gi.repository import Gdk, GdkPixbuf
 
 import logging
 _logger = logging.getLogger('visualmatch-activity')
@@ -74,7 +71,7 @@ class Card:
 
 def svg_str_to_pixbuf(string):
     ''' Load pixbuf from SVG string '''
-    pl = gtk.gdk.PixbufLoader('svg')
+    pl = GdkPixbuf.PixbufLoader.new_with_type('svg')
     pl.write(string)
     pl.close()
     pixbuf = pl.get_pixbuf()
@@ -83,6 +80,6 @@ def svg_str_to_pixbuf(string):
 
 def load_image(object, scale):
     ''' Load pixbuf from file '''
-    return gtk.gdk.pixbuf_new_from_file_at_size(object.file_path,
-                                                int(scale * CARD_WIDTH * .75),
-                                                int(scale * CARD_HEIGHT * .75))
+    return GdkPixbuf.Pixbuf.new_from_file_at_size(
+        object.file_path, int(scale * CARD_WIDTH * .75),
+        int(scale * CARD_HEIGHT * .75))

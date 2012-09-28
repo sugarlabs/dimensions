@@ -10,9 +10,6 @@
 # Foundation, 51 Franklin Street, Suite 500 Boston, MA 02110-1335 USA
 
 
-import pygtk
-pygtk.require('2.0')
-import gtk
 from random import randrange
 
 from constants import HIGH, MEDIUM, LOW, FILLS, SHAPES, NUMBER, COLORS, \
