@@ -81,7 +81,7 @@ class VisualMatchActivity(activity.Activity):
         self.ready_to_play = False
         self._prompt = ''
         self._read_journal_data()
-        self._setup_toolbars(_NEW_SUGAR_SYSTEM)
+        self._setup_toolbars()
         canvas = self._setup_canvas()
         self._setup_presence_service()
 
@@ -243,7 +243,7 @@ class VisualMatchActivity(activity.Activity):
             jscores += '%s: %s\n' % (str(i + 1), s)
         Gtk.Clipboard().set_text(jscores)
 
-    def _setup_toolbars(self, new_sugar_system):
+    def _setup_toolbars(self):
         ''' Setup the toolbars.. '''
 
         games_toolbar = Gtk.Toolbar()
@@ -451,25 +451,25 @@ class VisualMatchActivity(activity.Activity):
             group=self.beginner_button)
         LEVEL_BUTTONS[EXPERT] = self.expert_button
 
-        self.level_label = label_factory(toolbar, self.calc_level_label(
-                self._low_score, self._play_level))
+        self.level_label = label_factory(self.calc_level_label(
+                self._low_score, self._play_level), toolbar)
 
     def _set_labels(self, toolbar):
         ''' Add labels to toolbar toolbar '''
-        self.status_label = label_factory(toolbar, _('Find a match.'))
+        self.status_label = label_factory(_('Find a match.'), toolbar)
         separator_factory(toolbar, False, True)
         self.deck_label = label_factory(
-            toolbar, '%d %s' % (LEVEL_DECKSIZE[self._play_level] - DEAL,
-                                _('cards')))
+            '%d %s' % (LEVEL_DECKSIZE[self._play_level] - DEAL, _('cards')),
+            toolbar)
         separator_factory(toolbar, False, True)
-        self.match_label = label_factory(toolbar, '%d %s' % (0, _('matches')))
+        self.match_label = label_factory('%d %s' % (0, _('matches')), toolbar)
         separator_factory(toolbar, False, True)
-        self.clock_label = label_factory(toolbar, '-')
+        self.clock_label = label_factory('-', toolbar)
 
     def _setup_canvas(self):
         ''' Create a canvas.. '''
         canvas = Gtk.DrawingArea()
-        canvas.set_size_request(Gdk.screen.width(), Gdk.screen.height())
+        canvas.set_size_request(Gdk.Screen.width(), Gdk.Screen.height())
         self.set_canvas(canvas)
         canvas.show()
         self.show_all()
@@ -564,12 +564,9 @@ class VisualMatchActivity(activity.Activity):
         return self._data_dumper(data)
 
     def _data_dumper(self, data):
-        if _OLD_SUGAR_SYSTEM:
-            return json.write(data)
-        else:
-            io = StringIO()
-            jdump(data, io)
-            return io.getvalue()
+        io = StringIO()
+        jdump(data, io)
+        return io.getvalue()
 
     def read_file(self, file_path):
         ''' Read data from the Journal. '''
@@ -584,11 +581,8 @@ class VisualMatchActivity(activity.Activity):
             self._saved_state = saved_state
 
     def _data_loader(self, data):
-        if _OLD_SUGAR_SYSTEM:
-            return json.read(data)
-        else:
-            io = StringIO(data)
-            return jload(io)
+        io = StringIO(data)
+        return jload(io)
 
     def _notify_new_game(self, prompt):
         ''' Called from New Game button since loading a new game can
@@ -612,8 +606,8 @@ class VisualMatchActivity(activity.Activity):
             help_buttons[name] = button
         help_windows[name] = Gtk.ScrolledWindow()
         help_windows[name].set_size_request(
-            int(Gdk.screen.width() / 3),
-            Gdk.screen.height() - style.GRID_CELL_SIZE * 3)
+            int(Gdk.Screen.width() / 3),
+            Gdk.Screen.height() - style.GRID_CELL_SIZE * 3)
         help_windows[name].set_policy(Gtk.PolicyType.NEVER,
                                       Gtk.PolicyType.AUTOMATIC)
         help_windows[name].add_with_viewport(help_palettes[name])

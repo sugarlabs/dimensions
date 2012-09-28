@@ -29,7 +29,7 @@ def button_factory(icon_name, toolbar, callback, cb_arg=None, tooltip=None,
     if cb_arg is None:
         button.connect('clicked', callback)
     else:
-        button.connect('clicked', cb_arg)
+        button.connect('clicked', callback, cb_arg)
     if hasattr(toolbar, 'insert'):  # the main toolbar
         toolbar.insert(button, -1)
     else:  # or a secondary toolbar

@@ -86,7 +86,7 @@ class HelpButton(Gtk.ToolItem):
 def add_section(help_box, section_text, icon=None):
     ''' Add a section to the help palette. From helpbutton.py by
     Gonzalo Odiard '''
-    max_text_width = int(Gdk.screen.width() / 3) - 20
+    max_text_width = int(Gdk.Screen.width() / 3) - 20
     hbox = Gtk.HBox()
     label = Gtk.Label()
     label.set_use_markup(True)
@@ -108,7 +108,7 @@ def add_section(help_box, section_text, icon=None):
 def add_paragraph(help_box, text, icon=None):
     ''' Add an entry to the help palette. From helpbutton.py by
     Gonzalo Odiard '''
-    max_text_width = int(Gdk.screen.width() / 3) - 20
+    max_text_width = int(Gdk.Screen.width() / 3) - 20
     hbox = Gtk.HBox()
     label = Gtk.Label(label=text)
     label.set_justify(Gtk.Justification.LEFT)
