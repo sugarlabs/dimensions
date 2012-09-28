@@ -86,6 +86,7 @@ class Sprites:
 
     def __init__(self, widget):
         ''' Initialize an empty array of sprites '''
+        self.cr = None
         self.widget = widget
         self.list = []
 

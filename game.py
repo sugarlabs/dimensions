@@ -115,14 +115,16 @@ class Game():
             parent.show_all()
 
         self._canvas.set_can_focus(True)
+
+        self._canvas.add_events(Gdk.EventMask.TOUCH_MASK)
         self._canvas.add_events(Gdk.EventMask.BUTTON_PRESS_MASK)
         self._canvas.add_events(Gdk.EventMask.BUTTON_RELEASE_MASK)
-        self._canvas.add_events(Gdk.EventMask.POINTER_MOTION_MASK)
+        self._canvas.add_events(Gdk.EventMask.BUTTON_MOTION_MASK)
+        self._canvas.add_events(Gdk.EventMask.KEY_PRESS_MASK)
+
+        self._canvas.connect('event', self.__event_cb)
         self._canvas.connect('draw', self.__draw_cb)
-        self._canvas.connect('button-press-event', self._button_press_cb)
-        self._canvas.connect('button-release-event', self._button_release_cb)
-        self._canvas.connect("motion-notify-event", self._mouse_move_cb)
-        self._canvas.connect('key_press_event', self._keypress_cb)
+
         self._width = Gdk.Screen.width()
         self._height = Gdk.Screen.height() - GRID_CELL_SIZE
         self._scale = 0.8 * self._height / (CARD_HEIGHT * 5.5)
@@ -381,9 +383,38 @@ class Game():
         self.set_label('clock', '')
         self.set_label('status', _('Edit the word cards.'))
 
+    def __event_cb(self, widget, event):
+        ''' Handle touch events '''
+        if event.type in (Gdk.EventType.TOUCH_BEGIN,
+                          Gdk.EventType.TOUCH_END,
+                          Gdk.EventType.TOUCH_UPDATE,
+                          Gdk.EventType.BUTTON_PRESS,
+                          Gdk.EventType.BUTTON_RELEASE,
+                          Gdk.EventType.MOTION_NOTIFY):
+            x = event.get_coords()[1]
+            y = event.get_coords()[2]
+            if event.type == Gdk.EventType.TOUCH_BEGIN or \
+               event.type == Gdk.EventType.BUTTON_PRESS:
+                self._button_press(x, y)
+            elif event.type == Gdk.EventType.TOUCH_UPDATE or \
+                 event.type == Gdk.EventType.MOTION_NOTIFY:
+                self._drag_event(x, y)
+            elif event.type == Gdk.EventType.TOUCH_END or \
+                 event.type == Gdk.EventType.BUTTON_RELEASE:
+                self._button_release(x, y)
+        elif event.type == Gdk.EventType.KEY_PRESS:
+            k = Gdk.keyval_name(event.keyval)
+            u = Gdk.keyval_to_unicode(event.keyval)
+            self._keypress(k, u)
+
     def _button_press_cb(self, win, event):
         ''' Look for a card under the button press and save its position. '''
         win.grab_focus()
+
+        x, y = map(int, event.get_coords())
+        self._button_press(x, y)
+
+    def _button_press(self, x, y):
 
         # Turn off help animation
         if not self._stop_help:
@@ -399,7 +430,6 @@ class Game():
             return True
 
         # Find the sprite under the mouse.
-        x, y = map(int, event.get_coords())
         spr = self._sprites.find_sprite((x, y))
 
         # If there is a match showing, hide it.
@@ -467,13 +497,16 @@ class Game():
 
     def _mouse_move_cb(self, win, event):
         ''' Drag the card with the mouse. '''
+        win.grab_focus()
+        x, y = map(int, event.get_coords())
+        self._drag_event(x, y)
+
+    def _drag_event(self, x, y):
         if self._press is None or \
            self.editing_word_list or \
            self.editing_custom_cards:
             self._drag_pos = [0, 0]
             return True
-        win.grab_focus()
-        x, y = map(int, event.get_coords())
         dx = x - self._drag_pos[0]
         dy = y - self._drag_pos[1]
         self._press.set_layer(5000)
@@ -483,7 +516,10 @@ class Game():
     def _button_release_cb(self, win, event):
         ''' Lots of possibilities here between clicks and drags '''
         win.grab_focus()
+        x, y = map(int, event.get_coords())
+        self._button_release(x, y)
 
+    def _button_release(self, x, y):
         # Maybe there is nothing to do.
         if self._press is None:
             self._drag_pos = [0, 0]
@@ -492,7 +528,6 @@ class Game():
         self._press.set_layer(2000)
 
         # Determine if it was a click, a drag, or an aborted drag
-        x, y = map(int, event.get_coords())
         d = _distance((x, y), (self._start_pos[0], self._start_pos[1]))
         if d < self._card_width / 10:  # click
             move = 'click'
@@ -812,6 +847,9 @@ match area (%d)' % (i))
         ''' Keypress: editing word cards or selecting cards to play '''
         k = Gdk.keyval_name(event.keyval)
         u = Gdk.keyval_to_unicode(event.keyval)
+        self._keypress(k, u)
+
+    def _keypress(self, k, u):
         if self.editing_word_list and self._edit_card is not None:
             if k in NOISE_KEYS:
                 self._dead_key = None
