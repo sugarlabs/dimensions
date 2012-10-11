@@ -1,7 +1,7 @@
 [Activity]
 #TRANS: Please translate Visual Match as Dimensions
 name = Visual Match
-activity_version = 41
+activity_version = 43
 license = GPLv3
 bundle_id = org.sugarlabs.VisualMatchActivity
 exec = sugar-activity VisualMatchActivity.VisualMatchActivity
