@@ -34,7 +34,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-02-15 00:33-0500\n"
+"POT-Creation-Date: 2012-04-21 00:33-0400\n"
 "PO-Revision-Date: 2012-03-12 11:34+0200\n"
 "Last-Translator: Meechai <malaku38@hotmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -45,157 +45,193 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 "X-Generator: Pootle 2.0.5\n"
 
-#: activity/activity.info:2 game.py:544 visualmatch.py:35
+#. TRANS: Please translate Visual Match as Dimensions
+#: activity/activity.info:2 VisualMatchActivity.py:658
+#: VisualMatchActivity.py:690 game.py:901 visualmatch.py:35
 msgid "Visual Match"
 msgstr "Visual Match"
 
-#: VisualMatchActivity.py:68 VisualMatchActivity.py:446
+#: VisualMatchActivity.py:72 VisualMatchActivity.py:464
+#: VisualMatchActivity.py:671
 msgid "intermediate"
 msgstr "ระดับปานกลาง"
 
-#: VisualMatchActivity.py:68 VisualMatchActivity.py:454
+#: VisualMatchActivity.py:72 VisualMatchActivity.py:472
+#: VisualMatchActivity.py:672
 msgid "expert"
 msgstr "ระดับผู้เชี่ยวชาญ"
 
-#: VisualMatchActivity.py:68 VisualMatchActivity.py:438
+#: VisualMatchActivity.py:72 VisualMatchActivity.py:456
+#: VisualMatchActivity.py:670
 msgid "beginner"
 msgstr "ระดับผู้เริ่มต้น"
 
-#: VisualMatchActivity.py:129
-msgid "Play with the computer."
-msgstr "เล่นกับคอมพิวเตอร์"
-
-#: VisualMatchActivity.py:134
-msgid "Stop playing with the computer."
-msgstr "หยุดเล่นกับคอมพิวเตอร์"
-
-#: VisualMatchActivity.py:216 visualmatch.py:171
-msgid "mouse"
-msgstr "หนู"
-
-#: VisualMatchActivity.py:217 visualmatch.py:171
-msgid "cat"
-msgstr "แมว"
-
-#: VisualMatchActivity.py:218 visualmatch.py:171
-msgid "dog"
-msgstr "หมา"
-
-#: VisualMatchActivity.py:219 visualmatch.py:172
-msgid "cheese"
-msgstr "เนยแข็ง"
-
-#: VisualMatchActivity.py:220 visualmatch.py:172
-msgid "apple"
-msgstr "แอปเปิล"
-
-#: VisualMatchActivity.py:221 visualmatch.py:172
-msgid "bread"
-msgstr "ขนมปัง"
-
-#: VisualMatchActivity.py:222 visualmatch.py:173
-msgid "moon"
-msgstr "พระจันทร์"
-
-#: VisualMatchActivity.py:223 visualmatch.py:173
-msgid "sun"
-msgstr "พระอาทิตย์"
-
-#: VisualMatchActivity.py:224 visualmatch.py:173
-msgid "earth"
-msgstr "โลก"
-
-#: VisualMatchActivity.py:296
-msgid "Game"
-msgstr "เกม"
-
-#: VisualMatchActivity.py:297
-msgid "Numbers"
-msgstr "ตัวเลข"
-
-#: VisualMatchActivity.py:298
-msgid "Tools"
-msgstr "เครื่องมือ"
-
-#: VisualMatchActivity.py:304 visualmatch.py:49
+#: VisualMatchActivity.py:83 visualmatch.py:49
 msgid "New pattern game"
 msgstr "เริ่มเกมรูปแบบใหม่"
 
-#: VisualMatchActivity.py:307 visualmatch.py:53
+#: VisualMatchActivity.py:84 visualmatch.py:53
 msgid "New number game"
 msgstr "เริ่มเกมตัวเลขเลขใหม่"
 
-#: VisualMatchActivity.py:310 visualmatch.py:57
+#: VisualMatchActivity.py:85 visualmatch.py:57
 msgid "New word game"
 msgstr "เริ่มเกมคำใหม่"
 
-#: VisualMatchActivity.py:313 VisualMatchActivity.py:327
+#: VisualMatchActivity.py:86 VisualMatchActivity.py:345
 msgid "Import custom cards"
 msgstr "นำการ์ดที่กำหนดเองเข้ามาใหม่"
 
-#: VisualMatchActivity.py:323
+#: VisualMatchActivity.py:131
+msgid "Play with the computer."
+msgstr "เล่นกับคอมพิวเตอร์"
+
+#: VisualMatchActivity.py:136
+msgid "Stop playing with the computer."
+msgstr "หยุดเล่นกับคอมพิวเตอร์"
+
+#: VisualMatchActivity.py:225 visualmatch.py:175
+msgid "mouse"
+msgstr "หนู"
+
+#: VisualMatchActivity.py:226 visualmatch.py:175
+msgid "cat"
+msgstr "แมว"
+
+#: VisualMatchActivity.py:227 visualmatch.py:175
+msgid "dog"
+msgstr "หมา"
+
+#: VisualMatchActivity.py:228 visualmatch.py:176
+msgid "cheese"
+msgstr "เนยแข็ง"
+
+#: VisualMatchActivity.py:229 visualmatch.py:176
+msgid "apple"
+msgstr "แอปเปิล"
+
+#: VisualMatchActivity.py:230 visualmatch.py:176
+msgid "bread"
+msgstr "ขนมปัง"
+
+#: VisualMatchActivity.py:231 visualmatch.py:177
+msgid "moon"
+msgstr "พระจันทร์"
+
+#: VisualMatchActivity.py:232 visualmatch.py:177
+msgid "sun"
+msgstr "พระอาทิตย์"
+
+#: VisualMatchActivity.py:233 visualmatch.py:177
+msgid "earth"
+msgstr "โลก"
+
+#: VisualMatchActivity.py:305 VisualMatchActivity.py:659
+msgid "Export scores to clipboard"
+msgstr ""
+
+#: VisualMatchActivity.py:314 VisualMatchActivity.py:663
+#: VisualMatchActivity.py:691
+msgid "Game"
+msgstr "เกม"
+
+#: VisualMatchActivity.py:315 VisualMatchActivity.py:676
+#: VisualMatchActivity.py:692
+msgid "Numbers"
+msgstr "ตัวเลข"
+
+#: VisualMatchActivity.py:316 VisualMatchActivity.py:652
+#: VisualMatchActivity.py:693
+msgid "Tools"
+msgstr "เครื่องมือ"
+
+#: VisualMatchActivity.py:341 VisualMatchActivity.py:653
 msgid "Edit word lists."
 msgstr "แก้ไข้ รายชื่อคำ"
 
-#: VisualMatchActivity.py:334
+#: VisualMatchActivity.py:352 VisualMatchActivity.py:677
 msgid "product"
 msgstr "ผลิตภัณฑ์"
 
-#: VisualMatchActivity.py:342
+#: VisualMatchActivity.py:360 VisualMatchActivity.py:678
 msgid "Roman numerals"
 msgstr "เลขโรมัน"
 
-#: VisualMatchActivity.py:350
+#: VisualMatchActivity.py:368 VisualMatchActivity.py:679
 msgid "word"
 msgstr "คำ"
 
-#: VisualMatchActivity.py:358 visualmatch.py:107
+#: VisualMatchActivity.py:376 VisualMatchActivity.py:680 visualmatch.py:107
 msgid "Chinese"
 msgstr "ภาษาจีน"
 
-#: VisualMatchActivity.py:366 visualmatch.py:111
+#: VisualMatchActivity.py:384 VisualMatchActivity.py:681 visualmatch.py:111
 msgid "Mayan"
 msgstr "ภาษามะยัน(อินเดีย)"
 
-#: VisualMatchActivity.py:374
+#: VisualMatchActivity.py:392 VisualMatchActivity.py:682 visualmatch.py:115
 msgid "Quipu"
 msgstr "ภาษากีปู(ชาวอินคา)"
 
-#: VisualMatchActivity.py:385
+#: VisualMatchActivity.py:403 VisualMatchActivity.py:683
 msgid "hash marks"
 msgstr "สัญลักษณ์ขีด"
 
-#: VisualMatchActivity.py:393
+#: VisualMatchActivity.py:411 VisualMatchActivity.py:684
 msgid "dots in a circle"
 msgstr "จุดในวงกลม"
 
-#: VisualMatchActivity.py:401
+#: VisualMatchActivity.py:419 VisualMatchActivity.py:685
 msgid "points on a star"
 msgstr "จุดบนดาว"
 
-#: VisualMatchActivity.py:409
+#: VisualMatchActivity.py:427 VisualMatchActivity.py:686
 msgid "dice"
 msgstr "ลูกเต๋า"
 
-#: VisualMatchActivity.py:417
+#: VisualMatchActivity.py:435 VisualMatchActivity.py:687
 msgid "dots in a line"
 msgstr "จุดที่เรียงเป็นเส้นตรง"
 
-#: VisualMatchActivity.py:426
+#: VisualMatchActivity.py:444 VisualMatchActivity.py:668
 msgid "Play with the computer"
 msgstr "เล่นกับคอมพิวเตอร์"
 
-#: VisualMatchActivity.py:466
+#: VisualMatchActivity.py:484
 msgid "Find a match."
 msgstr "จับคู่"
 
-#: VisualMatchActivity.py:470 game.py:419 game.py:514
+#: VisualMatchActivity.py:488 game.py:763 game.py:870
 msgid "cards"
 msgstr "การ์ด"
 
-#: VisualMatchActivity.py:472 game.py:527 game.py:529
+#: VisualMatchActivity.py:490 game.py:883 game.py:885
 msgid "matches"
 msgstr "คู่เหมือน"
+
+#: VisualMatchActivity.py:624
+msgid "A new game is loading."
+msgstr ""
+
+#: VisualMatchActivity.py:654
+msgid "Import image cards"
+msgstr ""
+
+#: VisualMatchActivity.py:669
+msgid "robot pause time"
+msgstr ""
+
+#: VisualMatchActivity.py:694
+msgid "number of cards remaining in deck"
+msgstr ""
+
+#: VisualMatchActivity.py:695
+msgid "number of matches"
+msgstr ""
+
+#: VisualMatchActivity.py:696
+msgid "elapsed time"
+msgstr ""
 
 #: constants.py:70
 msgid "five"
@@ -233,113 +269,101 @@ msgstr "ยี่สิบเอ็ด"
 msgid "thirty three"
 msgstr "สามสิบสาม"
 
-#: game.py:261
+#: game.py:351
 msgid "Edit the custom cards."
 msgstr "แก้ไขการ์ดที่กำหนดเอง"
 
-#: game.py:289
+#: game.py:381
 msgid "Edit the word cards."
 msgstr "แก้ไขคำที่การ์ด"
 
-#: game.py:383
+#: game.py:678
 msgid "Game over"
 msgstr "จบเกม"
 
-#: game.py:395
+#: game.py:690
 msgid "unsolvable"
 msgstr "ไม่สามารถแก้ได้"
 
-#: game.py:430
+#: game.py:722
 msgid "New record"
-msgstr "สถิติใหม่"
+msgstr "ส"
 
-#: game.py:520 game.py:522
+#: game.py:876 game.py:878
 msgid "match"
-msgstr "จับคู่"
+msgstr ""
 
-#: game.py:732
+#: game.py:1120
 msgid "New custom game"
-msgstr "เริ่มเกมที่กำหนดเอง"
+msgstr ""
+
+#: helpbutton.py:46
+msgid "Help"
+msgstr ""
 
 #: visualmatch.py:36
 msgid "Click on cards to create sets of three."
-msgstr "คลิีกที่การ์ดเพื่อสร้าง ชุดของการ์ดที่มี 3 อัน"
+msgstr ""
 
 #: visualmatch.py:40
 msgid "Toggle level"
-msgstr "สลักระดับ"
+msgstr ""
 
 #: visualmatch.py:66
 msgid "Robot on/off"
-msgstr "หุ่นยนต์ เปิด/ปิด"
+msgstr ""
 
 #: visualmatch.py:70
 msgid "90 sec."
-msgstr "90 วินาที"
+msgstr ""
 
 #: visualmatch.py:74
 msgid "60 sec."
-msgstr "60 วินาที"
+msgstr ""
 
 #: visualmatch.py:78
 msgid "45 sec."
-msgstr "45 วินาที"
+msgstr ""
 
 #: visualmatch.py:82
 msgid "30 sec."
-msgstr "30 วินาที"
+msgstr ""
 
 #: visualmatch.py:86
 msgid "15 sec."
-msgstr "15 วินาที"
+msgstr ""
 
 #: visualmatch.py:95
+#, fuzzy
 msgid "Product"
 msgstr "ผลิตภัณฑ์"
 
 #: visualmatch.py:99
 msgid "Roman"
-msgstr "โรมัน"
+msgstr ""
 
 #: visualmatch.py:103
+#, fuzzy
 msgid "Word"
 msgstr "คำ"
 
-#: visualmatch.py:115
-msgid "Hash"
-msgstr "ขีด"
-
 #: visualmatch.py:119
+msgid "Hash"
+msgstr ""
+
+#: visualmatch.py:123
+#, fuzzy
 msgid "Dice"
 msgstr "ลูกเต๋า"
 
-#: visualmatch.py:123
-msgid "Dots"
-msgstr "จุด"
-
 #: visualmatch.py:127
-msgid "Star"
-msgstr "ดาว"
+msgid "Dots"
+msgstr ""
 
 #: visualmatch.py:131
+msgid "Star"
+msgstr ""
+
+#: visualmatch.py:135
 msgid "Lines"
-msgstr "เส้น"
-
-#~ msgid "Set difficulty level."
-#~ msgstr "ตั้งค่าในระดับที่ยาก"
-
-#~ msgid "Describe your activity"
-#~ msgstr "อธิบายกิจกรรมของคุณ"
-
-#~ msgid "Keep"
-#~ msgstr "คงไว้"
-
-#, fuzzy
-#~ msgid "Untitled"
-#~ msgstr "ไม่มีชื่อ"
-
-#~ msgid "Description:"
-#~ msgstr "รายละเอียด:"
-
-#~ msgid "Tags:"
-#~ msgstr "ป้ายกำกับ:"
+msgstr ""

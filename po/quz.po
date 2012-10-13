@@ -1,9 +1,13 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-08-03 10:26-0400\n"
-"PO-Revision-Date: 2011-11-26 09:26+0200\n"
+"POT-Creation-Date: 2012-04-21 00:33-0400\n"
+"PO-Revision-Date: 2012-04-25 07:24+0200\n"
 "Last-Translator: Chris <cjl@laptop.org>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: quz\n"
@@ -13,382 +17,341 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n % 10 == 1 && n % 100 != 11) ? 0 : 1;\n"
 "X-Generator: Pootle 2.0.5\n"
 
-#  "Coincidencia visual"
-#: activity/activity.info:2 visualmatch.py:35 game.py:525
+#. TRANS: Please translate Visual Match as Dimensions
+#: activity/activity.info:2 VisualMatchActivity.py:658
+#: VisualMatchActivity.py:690 game.py:901 visualmatch.py:35
 msgid "Visual Match"
 msgstr ""
 
-#  "cinco"
-#: constants.py:70
-msgid "five"
-msgstr ""
-
-#  "siete"
-#: constants.py:70
-msgid "seven"
-msgstr ""
-
-#  "once"
-#: constants.py:70
-msgid "eleven"
-msgstr ""
-
-#  "diez"
-#: constants.py:70
-msgid "ten"
-msgstr ""
-
-#  "catorce"
-#: constants.py:71
-msgid "fourteen"
-msgstr ""
-
-#  "quince"
-#: constants.py:71
-msgid "fifteen"
-msgstr ""
-
-#  "veintidós"
-#: constants.py:71
-msgid "twenty two"
-msgstr ""
-
-#  "veintiuno"
-#: constants.py:72
-msgid "twenty one"
-msgstr ""
-
-#  "treinta y tres"
-#: constants.py:72
-msgid "thirty three"
-msgstr ""
-
-#  "Haga clic en las tarjetas para crear grupos de tres."
-#: visualmatch.py:36
-msgid "Click on cards to create sets of three."
-msgstr ""
-
-#  "Cambiar nivel"
-#: visualmatch.py:40
-msgid "Toggle level"
-msgstr ""
-
-#  "Nuevo juego de diseños"
-#: visualmatch.py:49 VisualMatchActivity.py:350
-msgid "New pattern game"
-msgstr ""
-
-#  "Nuevo juego de números"
-#: visualmatch.py:53 VisualMatchActivity.py:353
-msgid "New number game"
-msgstr ""
-
-#  "Nuevo juego de palabras"
-#: visualmatch.py:57 VisualMatchActivity.py:354
-msgid "New word game"
-msgstr ""
-
-#  "Encender/Apagar Robot"
-#: visualmatch.py:66
-msgid "Robot on/off"
-msgstr ""
-
-#  "90 seg."
-#: visualmatch.py:70
-msgid "90 sec."
-msgstr ""
-
-#  "60 seg."
-#: visualmatch.py:74
-msgid "60 sec."
-msgstr ""
-
-#  "45 seg."
-#: visualmatch.py:78
-msgid "45 sec."
-msgstr ""
-
-#  "30 seg."
-#: visualmatch.py:82
-msgid "30 sec."
-msgstr ""
-
-#  "15 seg."
-#: visualmatch.py:86
-msgid "15 sec."
-msgstr ""
-
-#  "Producto"
-#: visualmatch.py:95
-msgid "Product"
-msgstr ""
-
-#  "Romano"
-#: visualmatch.py:99
-msgid "Roman"
-msgstr ""
-
-#  "Palabras"
-#: visualmatch.py:103
-msgid "Word"
-msgstr ""
-
-#  "Chino"
-#: visualmatch.py:107 VisualMatchActivity.py:384
-msgid "Chinese"
-msgstr ""
-
-#  "Maya"
-#: visualmatch.py:111 VisualMatchActivity.py:388
-msgid "Mayan"
-msgstr ""
-
-#  "Barras"
-#: visualmatch.py:115
-msgid "Hash"
-msgstr ""
-
-#  "Dados"
-#: visualmatch.py:119
-msgid "Dice"
-msgstr "Wayrukuna"
-
-#  "Puntos"
-#: visualmatch.py:123
-msgid "Dots"
-msgstr ""
-
-#  "Estrella"
-#: visualmatch.py:127
-msgid "Star"
-msgstr "Ch'aska"
-
-#  "Líneas"
-#: visualmatch.py:131
-msgid "Lines"
-msgstr ""
-
-#  "ratón"
-#: visualmatch.py:171 VisualMatchActivity.py:263
-msgid "mouse"
-msgstr ""
-
-#  "gato"
-#: visualmatch.py:171 VisualMatchActivity.py:264
-msgid "cat"
-msgstr ""
-
-#  "perro"
-#: visualmatch.py:171 VisualMatchActivity.py:265
-msgid "dog"
-msgstr ""
-
-#  "queso"
-#: visualmatch.py:172 VisualMatchActivity.py:266
-msgid "cheese"
-msgstr ""
-
-#  "manzana"
-#: visualmatch.py:172 VisualMatchActivity.py:267
-msgid "apple"
-msgstr ""
-
-#  "pan"
-#: visualmatch.py:172 VisualMatchActivity.py:268
-msgid "bread"
-msgstr ""
-
-#  "luna"
-#: visualmatch.py:173 VisualMatchActivity.py:269
-msgid "moon"
-msgstr ""
-
-#  "sol"
-#: visualmatch.py:173 VisualMatchActivity.py:270
-msgid "sun"
-msgstr ""
-
-#  "tierra"
-#: visualmatch.py:173 VisualMatchActivity.py:271
-msgid "earth"
-msgstr ""
-
-#  "Editar tarjetas personalizadas"
-#: game.py:260
-msgid "Edit the custom cards."
-msgstr ""
-
-#  "Editar las tarjetas de palabras."
-#: game.py:288
-msgid "Edit the word cards."
-msgstr ""
-
-#  "Fin del juego"
-#: game.py:381
-msgid "Game over"
-msgstr ""
-
-#  "Sin solución"
-#: game.py:390
-msgid "unsolvable"
-msgstr ""
-
-#  "tarjetas"
-#: game.py:414 game.py:495 VisualMatchActivity.py:442
-msgid "cards"
-msgstr ""
-
-#  "Nuevo récord"
-#: game.py:425
-msgid "New record"
-msgstr ""
-
-#  "partido"
-#: game.py:501 game.py:503
-msgid "match"
-msgstr ""
-
-#  "partidos"
-#: game.py:508 game.py:510 VisualMatchActivity.py:444
-msgid "matches"
-msgstr ""
-
-#  "Nuevo juego a medida"
-#: game.py:713
-msgid "New custom game"
-msgstr ""
-
-#  "Intermedio"
-#: VisualMatchActivity.py:62
+#: VisualMatchActivity.py:72 VisualMatchActivity.py:464
+#: VisualMatchActivity.py:671
 msgid "intermediate"
 msgstr ""
 
-#  "experto"
-#: VisualMatchActivity.py:62
+#: VisualMatchActivity.py:72 VisualMatchActivity.py:472
+#: VisualMatchActivity.py:672
 msgid "expert"
 msgstr ""
 
-#  "principiante"
-#: VisualMatchActivity.py:62
+#: VisualMatchActivity.py:72 VisualMatchActivity.py:456
+#: VisualMatchActivity.py:670
 msgid "beginner"
 msgstr ""
 
-#  "Jugar con la computadora."
-#: VisualMatchActivity.py:173
+#: VisualMatchActivity.py:83 visualmatch.py:49
+msgid "New pattern game"
+msgstr ""
+
+#: VisualMatchActivity.py:84 visualmatch.py:53
+msgid "New number game"
+msgstr ""
+
+#: VisualMatchActivity.py:85 visualmatch.py:57
+msgid "New word game"
+msgstr ""
+
+#: VisualMatchActivity.py:86 VisualMatchActivity.py:345
+msgid "Import custom cards"
+msgstr ""
+
+#: VisualMatchActivity.py:131
 msgid "Play with the computer."
 msgstr ""
 
-#  "Parar de jugar con la computadora."
-#: VisualMatchActivity.py:178
+#: VisualMatchActivity.py:136
 msgid "Stop playing with the computer."
 msgstr ""
 
+#: VisualMatchActivity.py:225 visualmatch.py:175
+msgid "mouse"
+msgstr ""
+
+#: VisualMatchActivity.py:226 visualmatch.py:175
+msgid "cat"
+msgstr ""
+
+#: VisualMatchActivity.py:227 visualmatch.py:175
+msgid "dog"
+msgstr ""
+
+#: VisualMatchActivity.py:228 visualmatch.py:176
+msgid "cheese"
+msgstr ""
+
+#: VisualMatchActivity.py:229 visualmatch.py:176
+msgid "apple"
+msgstr ""
+
+#: VisualMatchActivity.py:230 visualmatch.py:176
+msgid "bread"
+msgstr ""
+
+#: VisualMatchActivity.py:231 visualmatch.py:177
+#, fuzzy
+msgid "moon"
+msgstr "killa"
+
+#: VisualMatchActivity.py:232 visualmatch.py:177
+#, fuzzy
+msgid "sun"
+msgstr "inti"
+
+#: VisualMatchActivity.py:233 visualmatch.py:177
+msgid "earth"
+msgstr ""
+
+#: VisualMatchActivity.py:305 VisualMatchActivity.py:659
+msgid "Export scores to clipboard"
+msgstr ""
+
 #  "Juego"
-#: VisualMatchActivity.py:343
+#: VisualMatchActivity.py:314 VisualMatchActivity.py:663
+#: VisualMatchActivity.py:691
 msgid "Game"
 msgstr "Puqllay"
 
-#  "Números"
-#: VisualMatchActivity.py:344
+#: VisualMatchActivity.py:315 VisualMatchActivity.py:676
+#: VisualMatchActivity.py:692
 msgid "Numbers"
 msgstr ""
 
 #  "Herramientas"
-#: VisualMatchActivity.py:345
+#: VisualMatchActivity.py:316 VisualMatchActivity.py:652
+#: VisualMatchActivity.py:693
 msgid "Tools"
 msgstr "Llamk'anakuna"
 
-#  "Importar tarjetas personalizadas"
-#: VisualMatchActivity.py:357 VisualMatchActivity.py:371
-msgid "Import custom cards"
-msgstr ""
-
-#  "Editar listas de palabras."
-#: VisualMatchActivity.py:367
+#: VisualMatchActivity.py:341 VisualMatchActivity.py:653
 msgid "Edit word lists."
 msgstr ""
 
-#  "Producto"
-#: VisualMatchActivity.py:372
+#: VisualMatchActivity.py:352 VisualMatchActivity.py:677
 msgid "product"
 msgstr ""
 
-#  "Números romanos"
-#: VisualMatchActivity.py:376
+#: VisualMatchActivity.py:360 VisualMatchActivity.py:678
 msgid "Roman numerals"
 msgstr ""
 
-#  "Palabras"
-#: VisualMatchActivity.py:380
+#: VisualMatchActivity.py:368 VisualMatchActivity.py:679
 msgid "word"
 msgstr ""
 
-#  "Quipu"
-#: VisualMatchActivity.py:392
+#: VisualMatchActivity.py:376 VisualMatchActivity.py:680 visualmatch.py:107
+msgid "Chinese"
+msgstr ""
+
+#: VisualMatchActivity.py:384 VisualMatchActivity.py:681 visualmatch.py:111
+msgid "Mayan"
+msgstr ""
+
+#: VisualMatchActivity.py:392 VisualMatchActivity.py:682 visualmatch.py:115
 msgid "Quipu"
 msgstr ""
 
-#  "Barras"
-#: VisualMatchActivity.py:397
+#: VisualMatchActivity.py:403 VisualMatchActivity.py:683
 msgid "hash marks"
 msgstr ""
 
-#  "Puntos en círculos"
-#: VisualMatchActivity.py:401
+#: VisualMatchActivity.py:411 VisualMatchActivity.py:684
 msgid "dots in a circle"
 msgstr ""
 
-#  "Puntas de estrellas"
-#: VisualMatchActivity.py:405
+#: VisualMatchActivity.py:419 VisualMatchActivity.py:685
 msgid "points on a star"
 msgstr ""
 
 #  "Dados"
-#: VisualMatchActivity.py:409
+#: VisualMatchActivity.py:427 VisualMatchActivity.py:686
 msgid "dice"
 msgstr "wayrukuna"
 
-#  "Puntos en líneas"
-#: VisualMatchActivity.py:413
+#: VisualMatchActivity.py:435 VisualMatchActivity.py:687
 msgid "dots in a line"
 msgstr ""
 
-#  "Jugar con la computadora."
-#: VisualMatchActivity.py:422
+#: VisualMatchActivity.py:444 VisualMatchActivity.py:668
 msgid "Play with the computer"
 msgstr ""
 
-#  "Elegir nivel de dificultad."
-#: VisualMatchActivity.py:429
-msgid "Set difficulty level."
-msgstr ""
-
-#  "Emparejar"
-#: VisualMatchActivity.py:438
+#: VisualMatchActivity.py:484
 msgid "Find a match."
 msgstr ""
 
-#  "Describa su actividad"
-#: namingalert.py:82
-msgid "Describe your activity"
+#: VisualMatchActivity.py:488 game.py:763 game.py:870
+msgid "cards"
+msgstr ""
+
+#: VisualMatchActivity.py:490 game.py:883 game.py:885
+msgid "matches"
+msgstr ""
+
+#: VisualMatchActivity.py:624
+msgid "A new game is loading."
+msgstr ""
+
+#: VisualMatchActivity.py:654
+msgid "Import image cards"
+msgstr ""
+
+#: VisualMatchActivity.py:669
+msgid "robot pause time"
+msgstr ""
+
+#: VisualMatchActivity.py:694
+msgid "number of cards remaining in deck"
+msgstr ""
+
+#: VisualMatchActivity.py:695
+msgid "number of matches"
+msgstr ""
+
+#: VisualMatchActivity.py:696
+msgid "elapsed time"
+msgstr ""
+
+#: constants.py:70
+msgid "five"
+msgstr "pichqa"
+
+#: constants.py:70
+msgid "seven"
+msgstr ""
+
+#: constants.py:70
+msgid "eleven"
+msgstr ""
+
+#: constants.py:70
+msgid "ten"
+msgstr "chunka"
+
+#: constants.py:71
+msgid "fourteen"
+msgstr ""
+
+#: constants.py:71
+msgid "fifteen"
+msgstr ""
+
+#: constants.py:71
+msgid "twenty two"
+msgstr ""
+
+#: constants.py:72
+msgid "twenty one"
+msgstr ""
+
+#: constants.py:72
+msgid "thirty three"
+msgstr ""
+
+#: game.py:351
+msgid "Edit the custom cards."
+msgstr ""
+
+#: game.py:381
+msgid "Edit the word cards."
+msgstr ""
+
+#: game.py:678
+msgid "Game over"
+msgstr ""
+
+#: game.py:690
+msgid "unsolvable"
+msgstr ""
+
+#: game.py:722
+msgid "New record"
+msgstr ""
+
+#: game.py:876 game.py:878
+msgid "match"
+msgstr ""
+
+#: game.py:1120
+msgid "New custom game"
+msgstr ""
+
+#: helpbutton.py:46
+msgid "Help"
+msgstr ""
+
+#: visualmatch.py:36
+msgid "Click on cards to create sets of three."
+msgstr ""
+
+#: visualmatch.py:40
+msgid "Toggle level"
+msgstr ""
+
+#: visualmatch.py:66
+msgid "Robot on/off"
+msgstr ""
+
+#: visualmatch.py:70
+msgid "90 sec."
+msgstr ""
+
+#: visualmatch.py:74
+msgid "60 sec."
+msgstr ""
+
+#: visualmatch.py:78
+msgid "45 sec."
+msgstr ""
+
+#: visualmatch.py:82
+msgid "30 sec."
+msgstr ""
+
+#: visualmatch.py:86
+msgid "15 sec."
+msgstr ""
+
+#: visualmatch.py:95
+msgid "Product"
+msgstr ""
+
+#: visualmatch.py:99
+msgid "Roman"
+msgstr ""
+
+#: visualmatch.py:103
+msgid "Word"
+msgstr ""
+
+#: visualmatch.py:119
+msgid "Hash"
+msgstr ""
+
+#  "Dados"
+#: visualmatch.py:123
+msgid "Dice"
+msgstr "Wayrukuna"
+
+#: visualmatch.py:127
+msgid "Dots"
+msgstr ""
+
+#  "Estrella"
+#: visualmatch.py:131
+msgid "Star"
+msgstr "Ch'aska"
+
+#: visualmatch.py:135
+msgid "Lines"
 msgstr ""
 
 #  "Guardar"
-#: namingalert.py:87
-msgid "Keep"
-msgstr "Kikinchata waqaychay"
-
-#  "Sin título"
-#: namingalert.py:283
-msgid "Untitled"
-msgstr ""
+#~ msgid "Keep"
+#~ msgstr "Kikinchata waqaychay"
 
 #  "Descripción:"
-#: namingalert.py:290
-msgid "Description:"
-msgstr "Imamanta:"
+#~ msgid "Description:"
+#~ msgstr "Imamanta:"
 
 #  "Etiquetas:"
-#: namingalert.py:314
-msgid "Tags:"
-msgstr "Sutichaq:"
+#~ msgid "Tags:"
+#~ msgstr "Sutichaq:"

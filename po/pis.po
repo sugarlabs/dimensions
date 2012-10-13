@@ -2,151 +2,329 @@
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-12-07 18:05+0000\n"
+"POT-Creation-Date: 2012-02-15 00:33-0500\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: Translate Toolkit 1.3.0\n"
 
-#: activity/activity.info:2 /home/walter/Desktop/set/window.py:265
-#: /home/walter/Desktop/set/visualmatch.py:42
+#: activity/activity.info:2 game.py:544 visualmatch.py:35
 msgid "Visual Match"
 msgstr ""
 
-#: /home/walter/Desktop/set/window.py:124
-#: /home/walter/Desktop/set/window.py:185
-#: /home/walter/Desktop/set/VisualMatchActivity.py:112
-msgid "cards remaining"
+#: VisualMatchActivity.py:68 VisualMatchActivity.py:446
+msgid "intermediate"
 msgstr ""
 
-#: /home/walter/Desktop/set/window.py:125
-#: /home/walter/Desktop/set/window.py:212
-#: /home/walter/Desktop/set/VisualMatchActivity.py:123
-#: /home/walter/Desktop/set/VisualMatchActivity.py:293
-msgid "matches"
+#: VisualMatchActivity.py:68 VisualMatchActivity.py:454
+msgid "expert"
 msgstr ""
 
-#: /home/walter/Desktop/set/window.py:192
-msgid "Game over"
+#: VisualMatchActivity.py:68 VisualMatchActivity.py:438
+msgid "beginner"
 msgstr ""
 
-#: /home/walter/Desktop/set/window.py:192
-#: /home/walter/Desktop/set/window.py:200
-msgid "seconds"
+#: VisualMatchActivity.py:129
+msgid "Play with the computer."
 msgstr ""
 
-#: /home/walter/Desktop/set/window.py:200
-msgid "New record"
+#: VisualMatchActivity.py:134
+msgid "Stop playing with the computer."
 msgstr ""
 
-#: /home/walter/Desktop/set/window.py:208
-#: /home/walter/Desktop/set/window.py:210
-msgid "match"
-msgstr ""
-
-#: /home/walter/Desktop/set/window.py:218
-msgid "no match"
-msgstr ""
-
-#: /home/walter/Desktop/set/visualmatch.py:43
-msgid "Click on cards to create sets of three."
-msgstr ""
-
-#: /home/walter/Desktop/set/visualmatch.py:49
-#: /home/walter/Desktop/set/VisualMatchActivity.py:81
-#: /home/walter/Desktop/set/VisualMatchActivity.py:248
-msgid "New pattern game"
-msgstr ""
-
-#: /home/walter/Desktop/set/visualmatch.py:53
-#: /home/walter/Desktop/set/VisualMatchActivity.py:90
-#: /home/walter/Desktop/set/VisualMatchActivity.py:257
-msgid "New number game"
-msgstr ""
-
-#: /home/walter/Desktop/set/visualmatch.py:57
-#: /home/walter/Desktop/set/VisualMatchActivity.py:99
-#: /home/walter/Desktop/set/VisualMatchActivity.py:266
-msgid "New word game"
-msgstr ""
-
-#: /home/walter/Desktop/set/gencards.py:212
-msgid "dog"
-msgstr ""
-
-#: /home/walter/Desktop/set/gencards.py:212
-msgid "cat"
-msgstr ""
-
-#: /home/walter/Desktop/set/gencards.py:212
+#: VisualMatchActivity.py:216 visualmatch.py:171
 msgid "mouse"
 msgstr ""
 
-#: /home/walter/Desktop/set/gencards.py:214
-msgid "apple"
+#: VisualMatchActivity.py:217 visualmatch.py:171
+msgid "cat"
 msgstr ""
 
-#: /home/walter/Desktop/set/gencards.py:214
-msgid "bread"
+#: VisualMatchActivity.py:218 visualmatch.py:171
+msgid "dog"
 msgstr ""
 
-#: /home/walter/Desktop/set/gencards.py:214
+#: VisualMatchActivity.py:219 visualmatch.py:172
 msgid "cheese"
 msgstr ""
 
-#: /home/walter/Desktop/set/gencards.py:216
-msgid "sun"
+#: VisualMatchActivity.py:220 visualmatch.py:172
+msgid "apple"
 msgstr ""
 
-#: /home/walter/Desktop/set/gencards.py:216
+#: VisualMatchActivity.py:221 visualmatch.py:172
+msgid "bread"
+msgstr ""
+
+#: VisualMatchActivity.py:222 visualmatch.py:173
 msgid "moon"
 msgstr ""
 
-#: /home/walter/Desktop/set/gencards.py:216
+#: VisualMatchActivity.py:223 visualmatch.py:173
+msgid "sun"
+msgstr ""
+
+#: VisualMatchActivity.py:224 visualmatch.py:173
 msgid "earth"
 msgstr ""
 
-#: /home/walter/Desktop/set/VisualMatchActivity.py:145
-#: /home/walter/Desktop/set/VisualMatchActivity.py:319
+#: VisualMatchActivity.py:296
+msgid "Game"
+msgstr ""
+
+#: VisualMatchActivity.py:297
+msgid "Numbers"
+msgstr ""
+
+#: VisualMatchActivity.py:298
+msgid "Tools"
+msgstr ""
+
+#: VisualMatchActivity.py:304 visualmatch.py:49
+msgid "New pattern game"
+msgstr ""
+
+#: VisualMatchActivity.py:307 visualmatch.py:53
+msgid "New number game"
+msgstr ""
+
+#: VisualMatchActivity.py:310 visualmatch.py:57
+msgid "New word game"
+msgstr ""
+
+#: VisualMatchActivity.py:313 VisualMatchActivity.py:327
+msgid "Import custom cards"
+msgstr ""
+
+#: VisualMatchActivity.py:323
+msgid "Edit word lists."
+msgstr ""
+
+#: VisualMatchActivity.py:334
+msgid "product"
+msgstr ""
+
+#: VisualMatchActivity.py:342
+msgid "Roman numerals"
+msgstr ""
+
+#: VisualMatchActivity.py:350
+msgid "word"
+msgstr ""
+
+#: VisualMatchActivity.py:358 visualmatch.py:107
+msgid "Chinese"
+msgstr ""
+
+#: VisualMatchActivity.py:366 visualmatch.py:111
+msgid "Mayan"
+msgstr ""
+
+#: VisualMatchActivity.py:374
+msgid "Quipu"
+msgstr ""
+
+#: VisualMatchActivity.py:385
+msgid "hash marks"
+msgstr ""
+
+#: VisualMatchActivity.py:393
+msgid "dots in a circle"
+msgstr ""
+
+#: VisualMatchActivity.py:401
+msgid "points on a star"
+msgstr ""
+
+#: VisualMatchActivity.py:409
+msgid "dice"
+msgstr ""
+
+#: VisualMatchActivity.py:417
+msgid "dots in a line"
+msgstr ""
+
+#: VisualMatchActivity.py:426
+msgid "Play with the computer"
+msgstr ""
+
+#: VisualMatchActivity.py:466
 msgid "Find a match."
 msgstr ""
 
-#: /home/walter/Desktop/set/VisualMatchActivity.py:159
-msgid "Write in Journal"
+#: VisualMatchActivity.py:470 game.py:419 game.py:514
+msgid "cards"
 msgstr ""
 
-#: /home/walter/Desktop/set/VisualMatchActivity.py:181
-msgid "Project"
+#: VisualMatchActivity.py:472 game.py:527 game.py:529
+msgid "matches"
 msgstr ""
 
-#: /home/walter/Desktop/set/VisualMatchActivity.py:280
-msgid "cards remain in the deck"
+#: constants.py:70
+msgid "five"
 msgstr ""
 
-#: /home/walter/Desktop/set/namingalert.py:82
-msgid "Describe your activity"
+#: constants.py:70
+msgid "seven"
 msgstr ""
 
-#: /home/walter/Desktop/set/namingalert.py:87
-msgid "Keep"
+#: constants.py:70
+msgid "eleven"
 msgstr ""
 
-#: /home/walter/Desktop/set/namingalert.py:283
-msgid "Untitled"
+#: constants.py:70
+msgid "ten"
 msgstr ""
 
-#: /home/walter/Desktop/set/namingalert.py:290
-msgid "Description:"
+#: constants.py:71
+msgid "fourteen"
 msgstr ""
 
-#: /home/walter/Desktop/set/namingalert.py:314
-msgid "Tags:"
+#: constants.py:71
+msgid "fifteen"
+msgstr ""
+
+#: constants.py:71
+msgid "twenty two"
+msgstr ""
+
+#: constants.py:72
+msgid "twenty one"
+msgstr ""
+
+#: constants.py:72
+msgid "thirty three"
+msgstr ""
+
+#: game.py:261
+msgid "Edit the custom cards."
+msgstr ""
+
+#: game.py:289
+msgid "Edit the word cards."
+msgstr ""
+
+#: game.py:383
+msgid "Game over"
+msgstr ""
+
+#: game.py:395
+msgid "unsolvable"
+msgstr ""
+
+#: game.py:430
+msgid "New record"
+msgstr ""
+
+#: game.py:520 game.py:522
+msgid "match"
+msgstr ""
+
+#: game.py:732
+msgid "New custom game"
+msgstr ""
+
+#: visualmatch.py:36
+msgid "Click on cards to create sets of three."
+msgstr ""
+
+#: visualmatch.py:40
+msgid "Toggle level"
+msgstr ""
+
+#: visualmatch.py:66
+msgid "Robot on/off"
+msgstr ""
+
+#: visualmatch.py:70
+msgid "90 sec."
+msgstr ""
+
+#: visualmatch.py:74
+msgid "60 sec."
+msgstr ""
+
+#: visualmatch.py:78
+msgid "45 sec."
+msgstr ""
+
+#: visualmatch.py:82
+msgid "30 sec."
+msgstr ""
+
+#: visualmatch.py:86
+msgid "15 sec."
+msgstr ""
+
+#: visualmatch.py:95
+msgid "Product"
+msgstr ""
+
+#: visualmatch.py:99
+msgid "Roman"
+msgstr ""
+
+#: visualmatch.py:103
+msgid "Word"
+msgstr ""
+
+#: visualmatch.py:115
+msgid "Hash"
+msgstr ""
+
+#: visualmatch.py:119
+msgid "Dice"
+msgstr ""
+
+#: visualmatch.py:123
+msgid "Dots"
+msgstr ""
+
+#: visualmatch.py:127
+msgid "Star"
+msgstr ""
+
+#: visualmatch.py:131
+msgid "Lines"
 msgstr ""

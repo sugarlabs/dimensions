@@ -2,129 +2,100 @@
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-# SOME DESCRIPTIVE TITLE.
-# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
-# This file is distributed under the same license as the PACKAGE package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-# SOME DESCRIPTIVE TITLE.
-# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
-# This file is distributed under the same license as the PACKAGE package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-# SOME DESCRIPTIVE TITLE.
-# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
-# This file is distributed under the same license as the PACKAGE package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-# SOME DESCRIPTIVE TITLE.
-# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
-# This file is distributed under the same license as the PACKAGE package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-# SOME DESCRIPTIVE TITLE.
-# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
-# This file is distributed under the same license as the PACKAGE package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-# SOME DESCRIPTIVE TITLE.
-# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
-# This file is distributed under the same license as the PACKAGE package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-# SOME DESCRIPTIVE TITLE.
-# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
-# This file is distributed under the same license as the PACKAGE package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2012-04-21 00:33-0400\n"
-"PO-Revision-Date: 2011-06-13 12:10+0200\n"
-"Last-Translator: <aman.maharjan@olenepal.org>\n"
+"PO-Revision-Date: 2012-02-27 03:05+0200\n"
+"Last-Translator: Chris <cjl@laptop.org>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
-"Language: \n"
+"Language: to\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Pootle 2.0.1\n"
+"X-Generator: Pootle 2.0.5\n"
 
 #. TRANS: Please translate Visual Match as Dimensions
 #: activity/activity.info:2 VisualMatchActivity.py:658
 #: VisualMatchActivity.py:690 game.py:901 visualmatch.py:35
 msgid "Visual Match"
-msgstr "दृष्टि जोडा"
+msgstr ""
 
 #: VisualMatchActivity.py:72 VisualMatchActivity.py:464
 #: VisualMatchActivity.py:671
 msgid "intermediate"
-msgstr "माध्यमिक"
+msgstr ""
 
 #: VisualMatchActivity.py:72 VisualMatchActivity.py:472
 #: VisualMatchActivity.py:672
 msgid "expert"
-msgstr "विशेषज्ञ"
+msgstr ""
 
 #: VisualMatchActivity.py:72 VisualMatchActivity.py:456
 #: VisualMatchActivity.py:670
 msgid "beginner"
-msgstr "सिकारु"
+msgstr ""
 
 #: VisualMatchActivity.py:83 visualmatch.py:49
 msgid "New pattern game"
-msgstr "नँया बान्कीको खेल"
+msgstr ""
 
 #: VisualMatchActivity.py:84 visualmatch.py:53
 msgid "New number game"
-msgstr "नँया संख्या खेल"
+msgstr ""
 
 #: VisualMatchActivity.py:85 visualmatch.py:57
 msgid "New word game"
-msgstr "नँया शब्द खेल"
+msgstr ""
 
 #: VisualMatchActivity.py:86 VisualMatchActivity.py:345
 msgid "Import custom cards"
-msgstr "अनुकूलन कार्ड आयात गर"
+msgstr ""
 
 #: VisualMatchActivity.py:131
 msgid "Play with the computer."
-msgstr "कम्प्युटरसँग खेल"
+msgstr ""
 
 #: VisualMatchActivity.py:136
 msgid "Stop playing with the computer."
-msgstr "कम्प्युटरसँग खेल रोक"
+msgstr ""
 
 #: VisualMatchActivity.py:225 visualmatch.py:175
 msgid "mouse"
-msgstr "मुसा"
+msgstr ""
 
 #: VisualMatchActivity.py:226 visualmatch.py:175
 msgid "cat"
-msgstr "बिरालो"
+msgstr ""
 
 #: VisualMatchActivity.py:227 visualmatch.py:175
 msgid "dog"
-msgstr "कुकुर"
+msgstr ""
 
 #: VisualMatchActivity.py:228 visualmatch.py:176
 msgid "cheese"
-msgstr "चिज"
+msgstr ""
 
 #: VisualMatchActivity.py:229 visualmatch.py:176
 msgid "apple"
-msgstr "स्याउ"
+msgstr ""
 
 #: VisualMatchActivity.py:230 visualmatch.py:176
 msgid "bread"
-msgstr "रोटि"
+msgstr ""
 
 #: VisualMatchActivity.py:231 visualmatch.py:177
 msgid "moon"
-msgstr "चन्द्रमा"
+msgstr ""
 
 #: VisualMatchActivity.py:232 visualmatch.py:177
 msgid "sun"
-msgstr "सुर्य"
+msgstr ""
 
 #: VisualMatchActivity.py:233 visualmatch.py:177
 msgid "earth"
-msgstr "प्रथिवी"
+msgstr ""
 
 #: VisualMatchActivity.py:305 VisualMatchActivity.py:659
 msgid "Export scores to clipboard"
@@ -132,82 +103,83 @@ msgstr ""
 
 #: VisualMatchActivity.py:314 VisualMatchActivity.py:663
 #: VisualMatchActivity.py:691
+#, fuzzy
 msgid "Game"
-msgstr "खेल"
+msgstr "Keimi"
 
 #: VisualMatchActivity.py:315 VisualMatchActivity.py:676
 #: VisualMatchActivity.py:692
 msgid "Numbers"
-msgstr "संख्या"
+msgstr ""
 
 #: VisualMatchActivity.py:316 VisualMatchActivity.py:652
 #: VisualMatchActivity.py:693
 msgid "Tools"
-msgstr "उपकरण"
+msgstr ""
 
 #: VisualMatchActivity.py:341 VisualMatchActivity.py:653
 msgid "Edit word lists."
-msgstr "शब्द सूची सम्पादन गर"
+msgstr ""
 
 #: VisualMatchActivity.py:352 VisualMatchActivity.py:677
 msgid "product"
-msgstr "परिणाम"
+msgstr ""
 
 #: VisualMatchActivity.py:360 VisualMatchActivity.py:678
 msgid "Roman numerals"
-msgstr "रोमन संख्या"
+msgstr ""
 
 #: VisualMatchActivity.py:368 VisualMatchActivity.py:679
 msgid "word"
-msgstr "शब्द"
+msgstr ""
 
 #: VisualMatchActivity.py:376 VisualMatchActivity.py:680 visualmatch.py:107
 msgid "Chinese"
-msgstr "चाईनिज"
+msgstr ""
 
 #: VisualMatchActivity.py:384 VisualMatchActivity.py:681 visualmatch.py:111
 msgid "Mayan"
-msgstr "मायान"
+msgstr ""
 
 #: VisualMatchActivity.py:392 VisualMatchActivity.py:682 visualmatch.py:115
 msgid "Quipu"
-msgstr "किपु"
+msgstr ""
 
 #: VisualMatchActivity.py:403 VisualMatchActivity.py:683
 msgid "hash marks"
-msgstr "ह्यास चिन्हहरु"
+msgstr ""
 
 #: VisualMatchActivity.py:411 VisualMatchActivity.py:684
 msgid "dots in a circle"
-msgstr "वृत्तमा थोप्लाहरु"
+msgstr ""
 
 #: VisualMatchActivity.py:419 VisualMatchActivity.py:685
 msgid "points on a star"
-msgstr "तारामा थोप्लाहरु"
+msgstr ""
 
 #: VisualMatchActivity.py:427 VisualMatchActivity.py:686
 msgid "dice"
-msgstr "पासा"
+msgstr ""
 
 #: VisualMatchActivity.py:435 VisualMatchActivity.py:687
 msgid "dots in a line"
-msgstr "लाइनमा थोप्लाहरु"
+msgstr ""
 
 #: VisualMatchActivity.py:444 VisualMatchActivity.py:668
 msgid "Play with the computer"
-msgstr "कम्प्युटरसँग खेल"
+msgstr ""
 
 #: VisualMatchActivity.py:484
 msgid "Find a match."
-msgstr "जोडा खोज"
+msgstr ""
 
 #: VisualMatchActivity.py:488 game.py:763 game.py:870
 msgid "cards"
-msgstr "कार्डहरु"
+msgstr ""
 
 #: VisualMatchActivity.py:490 game.py:883 game.py:885
 msgid "matches"
-msgstr "जोडाहरु"
+msgstr ""
 
 #: VisualMatchActivity.py:624
 msgid "A new game is loading."
@@ -235,67 +207,67 @@ msgstr ""
 
 #: constants.py:70
 msgid "five"
-msgstr "पाँच"
+msgstr ""
 
 #: constants.py:70
 msgid "seven"
-msgstr "सात"
+msgstr ""
 
 #: constants.py:70
 msgid "eleven"
-msgstr "एघार"
+msgstr ""
 
 #: constants.py:70
 msgid "ten"
-msgstr "दस"
+msgstr ""
 
 #: constants.py:71
 msgid "fourteen"
-msgstr "चौध"
+msgstr ""
 
 #: constants.py:71
 msgid "fifteen"
-msgstr "पन्ध्र"
+msgstr ""
 
 #: constants.py:71
 msgid "twenty two"
-msgstr "बाइस"
+msgstr ""
 
 #: constants.py:72
 msgid "twenty one"
-msgstr "एक्काइस्"
+msgstr ""
 
 #: constants.py:72
 msgid "thirty three"
-msgstr "तेत्तिस"
+msgstr ""
 
 #: game.py:351
 msgid "Edit the custom cards."
-msgstr "अनुकूलन कार्ड सम्पादन गर्नुहोस्"
+msgstr ""
 
 #: game.py:381
 msgid "Edit the word cards."
-msgstr "शब्द कार्ड सम्पादन गर्नुहोस्"
+msgstr ""
 
 #: game.py:678
 msgid "Game over"
-msgstr "गेम सकियो"
+msgstr ""
 
 #: game.py:690
 msgid "unsolvable"
-msgstr "हल गर्न नसकिने"
+msgstr ""
 
 #: game.py:722
 msgid "New record"
-msgstr "नँया रेकर्ड"
+msgstr ""
 
 #: game.py:876 game.py:878
 msgid "match"
-msgstr "म्याच"
+msgstr ""
 
 #: game.py:1120
 msgid "New custom game"
-msgstr "नँया अनुकूलनको गेम"
+msgstr ""
 
 #: helpbutton.py:46
 msgid "Help"
@@ -303,82 +275,64 @@ msgstr ""
 
 #: visualmatch.py:36
 msgid "Click on cards to create sets of three."
-msgstr "तिनवटाको समुहको बनाउन कार्डमा क्लिक गर्नुहोस्"
+msgstr ""
 
 #: visualmatch.py:40
 msgid "Toggle level"
-msgstr "टगल लेभल"
+msgstr ""
 
 #: visualmatch.py:66
 msgid "Robot on/off"
-msgstr "रोबोट अन/अफ"
+msgstr ""
 
 #: visualmatch.py:70
 msgid "90 sec."
-msgstr "९० सेकेन्ड"
+msgstr ""
 
 #: visualmatch.py:74
 msgid "60 sec."
-msgstr "६० सेकेन्ड"
+msgstr ""
 
 #: visualmatch.py:78
 msgid "45 sec."
-msgstr "४५ सेकेन्ड"
+msgstr ""
 
 #: visualmatch.py:82
 msgid "30 sec."
-msgstr "३० सेकेन्ड"
+msgstr ""
 
 #: visualmatch.py:86
 msgid "15 sec."
-msgstr "१५ सेकेन्ड"
+msgstr ""
 
 #: visualmatch.py:95
 msgid "Product"
-msgstr "गुणनफल"
+msgstr ""
 
 #: visualmatch.py:99
 msgid "Roman"
-msgstr "रोमन"
+msgstr ""
 
 #: visualmatch.py:103
 msgid "Word"
-msgstr "शब्द"
+msgstr ""
 
 #: visualmatch.py:119
 msgid "Hash"
-msgstr "ह्यास्"
+msgstr ""
 
 #: visualmatch.py:123
 msgid "Dice"
-msgstr "पासा"
+msgstr ""
 
 #: visualmatch.py:127
 msgid "Dots"
-msgstr "थोप्लाहरु"
+msgstr ""
 
 #: visualmatch.py:131
 msgid "Star"
-msgstr "तारा"
+msgstr ""
 
 #: visualmatch.py:135
 msgid "Lines"
-msgstr "धर्काहरु"
-
-#~ msgid "Set difficulty level."
-#~ msgstr "कठिनाई स्तर मिलाऊ"
-
-#~ msgid "Describe your activity"
-#~ msgstr "क्रियाकलापको बर्णन गर"
-
-#~ msgid "Keep"
-#~ msgstr "राख"
-
-#~ msgid "Untitled"
-#~ msgstr "शीर्षक नभएको"
-
-#~ msgid "Description:"
-#~ msgstr "ब्याख्या:"
-
-#~ msgid "Tags:"
-#~ msgstr "ट्यागहरु:"
+msgstr ""
