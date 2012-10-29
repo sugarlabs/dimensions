@@ -1,3 +1,15 @@
+43
+
+BUG FIX:
+* Fixed name change in radio button (#4028)
+
+41
+
+ENHANCEMENTS:
+* GTK-3 version
+* Added summary to activity.info
+* Added support for touch
+
 39
 
 BUG FIX:

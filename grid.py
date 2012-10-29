@@ -10,10 +10,7 @@
 # Foundation, 51 Franklin Street, Suite 500 Boston, MA 02110-1335 USA
 
 
-import pygtk
-pygtk.require('2.0')
-import gtk
-import gobject
+from gi.repository import GObject
 
 import random
 
@@ -105,7 +102,7 @@ class Grid:
                     i = self.find_an_empty_slot()
                     # Put new card in grid position of card we are replacing.
                     self.grid[i] = deck.deal_next_card()
-                    timeout_id = gobject.timeout_add(
+                    timeout_id = GObject.timeout_add(
                         1200, self.place_a_card, self.grid[i],
                         self.grid_to_xy(i)[0], self.grid_to_xy(i)[1], j)
 
@@ -119,7 +116,7 @@ class Grid:
         self.sy[i] = spr.get_xy()[1]
         self.dx[i] = int((self.ex[i] - self.sx[i]) / 10)
         self.dy[i] = int((self.ey[i] - self.sy[i]) / 10)
-        timeout_id = gobject.timeout_add(
+        timeout_id = GObject.timeout_add(
             100, self._move_to_position, spr, i)
 
     def return_to_grid(self, spr, i, j):
@@ -133,7 +130,7 @@ class Grid:
         self.sy[j] = spr.get_xy()[1]
         self.dx[j] = int((self.ex[j] - self.sx[j]) / 10)
         self.dy[j] = int((self.ey[j] - self.sy[j]) / 10)
-        timeout_id = gobject.timeout_add(
+        timeout_id = GObject.timeout_add(
             100, self._move_to_position, spr, j)
 
     def _move_to_position(self, spr, i):
@@ -146,7 +143,7 @@ class Grid:
             spr.move((self.ex[i], self.ey[i]))
             self.animation_lock[i] = False
         else:
-            timeout_id = gobject.timeout_add(
+            timeout_id = GObject.timeout_add(
                 100, self._move_to_position, spr, i)
 
     def consolidate(self):
@@ -180,7 +177,7 @@ class Grid:
                 self.dy[animate + 3] = int(
                     (self.ey[animate + 3] - c.spr.get_xy()[1]) / 10)
                 self.animation_lock[animate + 3] = True
-                timeout_id = gobject.timeout_add(100, self._move_to_position,
+                timeout_id = GObject.timeout_add(100, self._move_to_position,
                         c.spr, animate + 3)
 
     def xy_to_match(self, pos):

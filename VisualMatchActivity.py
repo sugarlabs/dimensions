@@ -11,47 +11,33 @@
 # Foundation, 51 Franklin Street, Suite 500 Boston, MA 02110-1335 USA
 
 
-import pygtk
-pygtk.require('2.0')
-import gtk
-import gobject
+from gi.repository import Gtk
+from gi.repository import Gdk
+from gi.repository import GObject
 
-from sugar.activity import activity
-try:
-    from sugar.graphics.toolbarbox import ToolbarBox
-    _NEW_SUGAR_SYSTEM = True
-except ImportError:
-    _NEW_SUGAR_SYSTEM = False
-if _NEW_SUGAR_SYSTEM:
-    from sugar.activity.widgets import ActivityToolbarButton
-    from sugar.activity.widgets import StopButton
-    from sugar.graphics.toolbarbox import ToolbarButton
-from sugar.graphics.alert import NotifyAlert
-from sugar.datastore import datastore
+from sugar3.activity import activity
+from sugar3 import profile
+from sugar3.graphics.toolbarbox import ToolbarBox
+from sugar3.activity.widgets import ActivityToolbarButton
+from sugar3.activity.widgets import StopButton
+from sugar3.graphics.toolbarbox import ToolbarButton
+from sugar3.graphics.alert import NotifyAlert
+from sugar3.graphics import style
+from sugar3.datastore import datastore
 
 import telepathy
 from dbus.service import signal
 from dbus.gobject_service import ExportedGObject
-from sugar.presence import presenceservice
-from sugar.presence.tubeconn import TubeConnection
-from sugar.graphics import style
+from sugar3.presence import presenceservice
+from sugar3.presence.tubeconn import TubeConnection
 
 from gettext import gettext as _
 import os.path
 import logging
 _logger = logging.getLogger('visualmatch-activity')
-try:
-    _OLD_SUGAR_SYSTEM = False
-    import json
-    from json import load as jload
-    from json import dump as jdump
-except(ImportError, AttributeError):
-    try:
-        import simplejson as json
-        from simplejson import load as jload
-        from simplejson import dump as jdump
-    except ImportError:
-        _OLD_SUGAR_SYSTEM = True
+import json
+from json import load as jload
+from json import dump as jdump
 
 from StringIO import StringIO
 
@@ -95,7 +81,7 @@ class VisualMatchActivity(activity.Activity):
         self.ready_to_play = False
         self._prompt = ''
         self._read_journal_data()
-        self._setup_toolbars(_NEW_SUGAR_SYSTEM)
+        self._setup_toolbars()
         canvas = self._setup_canvas()
         self._setup_presence_service()
 
@@ -127,7 +113,7 @@ class VisualMatchActivity(activity.Activity):
             return
         self._notify_new_game(self._prompt)
         # a brief pause to give alert time to load
-        timeout = gobject.timeout_add(200, self._new_game, card_type)
+        timeout = GObject.timeout_add(200, self._new_game, card_type)
 
     def _new_game(self, card_type):
         if card_type == 'custom' and self.vmw.custom_paths[0] is None:
@@ -255,73 +241,64 @@ class VisualMatchActivity(activity.Activity):
         jscores = ''
         for i, s in enumerate(self.vmw.all_scores):
             jscores += '%s: %s\n' % (str(i + 1), s)
-        gtk.Clipboard().set_text(jscores)
+        Gtk.Clipboard().set_text(jscores)
 
-    def _setup_toolbars(self, new_sugar_system):
+    def _setup_toolbars(self):
         ''' Setup the toolbars.. '''
 
-        games_toolbar = gtk.Toolbar()
-        tools_toolbar = gtk.Toolbar()
-        numbers_toolbar = gtk.Toolbar()
-        if new_sugar_system:
-            toolbox = ToolbarBox()
+        games_toolbar = Gtk.Toolbar()
+        tools_toolbar = Gtk.Toolbar()
+        numbers_toolbar = Gtk.Toolbar()
+        toolbox = ToolbarBox()
 
-            self.activity_toolbar_button = ActivityToolbarButton(self)
+        self.activity_toolbar_button = ActivityToolbarButton(self)
 
-            toolbox.toolbar.insert(self.activity_toolbar_button, 0)
-            self.activity_toolbar_button.show()
+        toolbox.toolbar.insert(self.activity_toolbar_button, 0)
+        self.activity_toolbar_button.show()
 
-            self.game_toolbar_button = ToolbarButton(
-                    page=games_toolbar,
-                    icon_name='new-game')
-            games_toolbar.show()
-            toolbox.toolbar.insert(self.game_toolbar_button, -1)
-            self.game_toolbar_button.show()
+        self.game_toolbar_button = ToolbarButton(
+            page=games_toolbar,
+            icon_name='new-game')
+        games_toolbar.show()
+        toolbox.toolbar.insert(self.game_toolbar_button, -1)
+        self.game_toolbar_button.show()
 
-            self.numbers_toolbar_button = ToolbarButton(
-                    page=numbers_toolbar,
-                    icon_name='number-tools')
-            numbers_toolbar.show()
-            toolbox.toolbar.insert(self.numbers_toolbar_button, -1)
-            self.numbers_toolbar_button.show()
+        self.numbers_toolbar_button = ToolbarButton(
+            page=numbers_toolbar,
+            icon_name='number-tools')
+        numbers_toolbar.show()
+        toolbox.toolbar.insert(self.numbers_toolbar_button, -1)
+        self.numbers_toolbar_button.show()
 
-            self.tools_toolbar_button = ToolbarButton(
-                    page=tools_toolbar,
-                    icon_name='view-source')
-            tools_toolbar.show()
-            toolbox.toolbar.insert(self.tools_toolbar_button, -1)
-            self.tools_toolbar_button.show()
+        self.tools_toolbar_button = ToolbarButton(
+            page=tools_toolbar,
+            icon_name='view-source')
+        tools_toolbar.show()
+        toolbox.toolbar.insert(self.tools_toolbar_button, -1)
+        self.tools_toolbar_button.show()
 
-            self._set_labels(toolbox.toolbar)
-            separator_factory(toolbox.toolbar, True, False)
+        self._set_labels(toolbox.toolbar)
+        separator_factory(toolbox.toolbar, True, False)
 
-            help_button = HelpButton(self)
-            toolbox.toolbar.insert(help_button, -1)
-            help_button.show()
-            self._setup_toolbar_help()
+        help_button = HelpButton(self)
+        toolbox.toolbar.insert(help_button, -1)
+        help_button.show()
+        self._setup_toolbar_help()
 
-            stop_button = StopButton(self)
-            stop_button.props.accelerator = '<Ctrl>q'
-            toolbox.toolbar.insert(stop_button, -1)
-            stop_button.show()
+        stop_button = StopButton(self)
+        stop_button.props.accelerator = '<Ctrl>q'
+        toolbox.toolbar.insert(stop_button, -1)
+        stop_button.show()
 
-            export_scores = button_factory(
-                'score-copy', self.activity_toolbar_button,
-                self._write_scores_to_clipboard,
-                tooltip=_('Export scores to clipboard'))
+        export_scores = button_factory(
+            'score-copy', self.activity_toolbar_button,
+            self._write_scores_to_clipboard,
+            tooltip=_('Export scores to clipboard'))
 
-            self.set_toolbar_box(toolbox)
-            toolbox.show()
+        self.set_toolbar_box(toolbox)
+        toolbox.show()
 
-            self.game_toolbar_button.set_expanded(True)
-        else:
-            toolbox = activity.ActivityToolbox(self)
-            self.set_toolbox(toolbox)
-            toolbox.add_toolbar(_('Game'), games_toolbar)
-            toolbox.add_toolbar(_('Numbers'), numbers_toolbar)
-            toolbox.add_toolbar(_('Tools'), tools_toolbar)
-            toolbox.show()
-            toolbox.set_current_toolbar(1)
+        self.game_toolbar_button.set_expanded(True)
 
         self.button_pattern = button_factory(
             'new-pattern-game', games_toolbar, self._select_game_cb,
@@ -336,11 +313,7 @@ class VisualMatchActivity(activity.Activity):
             'no-custom-game', games_toolbar, self._select_game_cb,
             cb_arg='custom', tooltip=PROMPT_DICT['custom'])
 
-        if new_sugar_system:
-            self._set_extras(games_toolbar, games_toolbar=True)
-        else:
-            self._set_labels(games_toolbar)
-            self._set_extras(tools_toolbar, games_toolbar=False)
+        self._set_extras(games_toolbar)
 
         self.words_tool_button = button_factory(
             'word-tools', tools_toolbar, self._edit_words_cb,
@@ -442,9 +415,8 @@ class VisualMatchActivity(activity.Activity):
             group=self.hash_button)
         NUMBER_C_BUTTONS[LINES] = self.lines_button
 
-    def _set_extras(self, toolbar, games_toolbar=True):
-        if games_toolbar:
-            separator_factory(toolbar, False, True)
+    def _set_extras(self, toolbar):
+        separator_factory(toolbar, False, True)
         self.robot_button = button_factory(
             'robot-off', toolbar, self._robot_cb,
             tooltip=_('Play with the computer'))
@@ -479,29 +451,25 @@ class VisualMatchActivity(activity.Activity):
             group=self.beginner_button)
         LEVEL_BUTTONS[EXPERT] = self.expert_button
 
-        self.level_label = label_factory(toolbar, self.calc_level_label(
-                self._low_score, self._play_level))
-
-        if not games_toolbar:
-            separator_factory(toolbar, False, True)
+        self.level_label = label_factory(self.calc_level_label(
+                self._low_score, self._play_level), toolbar)
 
     def _set_labels(self, toolbar):
         ''' Add labels to toolbar toolbar '''
-        self.status_label = label_factory(toolbar, _('Find a match.'))
+        self.status_label = label_factory(_('Find a match.'), toolbar)
         separator_factory(toolbar, False, True)
         self.deck_label = label_factory(
-            toolbar, '%d %s' % (LEVEL_DECKSIZE[self._play_level] - DEAL,
-                                _('cards')))
+            '%d %s' % (LEVEL_DECKSIZE[self._play_level] - DEAL, _('cards')),
+            toolbar)
         separator_factory(toolbar, False, True)
-        self.match_label = label_factory(toolbar, '%d %s' % (0, _('matches')))
+        self.match_label = label_factory('%d %s' % (0, _('matches')), toolbar)
         separator_factory(toolbar, False, True)
-        self.clock_label = label_factory(toolbar, '-')
+        self.clock_label = label_factory('-', toolbar)
 
     def _setup_canvas(self):
         ''' Create a canvas.. '''
-        canvas = gtk.DrawingArea()
-        canvas.set_size_request(gtk.gdk.screen_width(),
-                                gtk.gdk.screen_height())
+        canvas = Gtk.DrawingArea()
+        canvas.set_size_request(Gdk.Screen.width(), Gdk.Screen.height())
         self.set_canvas(canvas)
         canvas.show()
         self.show_all()
@@ -596,12 +564,9 @@ class VisualMatchActivity(activity.Activity):
         return self._data_dumper(data)
 
     def _data_dumper(self, data):
-        if _OLD_SUGAR_SYSTEM:
-            return json.write(data)
-        else:
-            io = StringIO()
-            jdump(data, io)
-            return io.getvalue()
+        io = StringIO()
+        jdump(data, io)
+        return io.getvalue()
 
     def read_file(self, file_path):
         ''' Read data from the Journal. '''
@@ -616,11 +581,8 @@ class VisualMatchActivity(activity.Activity):
             self._saved_state = saved_state
 
     def _data_loader(self, data):
-        if _OLD_SUGAR_SYSTEM:
-            return json.read(data)
-        else:
-            io = StringIO(data)
-            return jload(io)
+        io = StringIO(data)
+        return jload(io)
 
     def _notify_new_game(self, prompt):
         ''' Called from New Game button since loading a new game can
@@ -637,16 +599,17 @@ class VisualMatchActivity(activity.Activity):
         alert.show()
 
     def _new_help_box(self, name, button=None):
-        help_box = gtk.VBox()
+        help_box = Gtk.VBox()
         help_box.set_homogeneous(False)
         help_palettes[name] = help_box
         if button is not None:
             help_buttons[name] = button
-        help_windows[name] = gtk.ScrolledWindow()
+        help_windows[name] = Gtk.ScrolledWindow()
         help_windows[name].set_size_request(
-            int(gtk.gdk.screen_width() / 3),
-            gtk.gdk.screen_height() - style.GRID_CELL_SIZE * 3)
-        help_windows[name].set_policy(gtk.POLICY_NEVER, gtk.POLICY_AUTOMATIC)
+            int(Gdk.Screen.width() / 3),
+            Gdk.Screen.height() - style.GRID_CELL_SIZE * 3)
+        help_windows[name].set_policy(Gtk.PolicyType.NEVER,
+                                      Gtk.PolicyType.AUTOMATIC)
         help_windows[name].add_with_viewport(help_palettes[name])
         help_palettes[name].show()
         return help_box
