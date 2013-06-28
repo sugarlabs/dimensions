@@ -34,7 +34,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-04-21 00:33-0400\n"
+"POT-Creation-Date: 2012-10-30 00:33-0400\n"
 "PO-Revision-Date: 2012-05-19 16:42+0200\n"
 "Last-Translator: Yuan <yuanchao@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -45,324 +45,327 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 "X-Generator: Pootle 2.0.5\n"
 
+#. TRANS: "name" option from activity.info file
 #. TRANS: Please translate Visual Match as Dimensions
-#: activity/activity.info:2 VisualMatchActivity.py:658
-#: VisualMatchActivity.py:690 game.py:901 visualmatch.py:35
+#: VisualMatchActivity.py:627 VisualMatchActivity.py:659 game.py:983
+#: visualmatch.py:33
 msgid "Visual Match"
 msgstr "圖樣對照"
 
-#: VisualMatchActivity.py:72 VisualMatchActivity.py:464
-#: VisualMatchActivity.py:671
-msgid "intermediate"
-msgstr "中階"
+#. TRANS: "summary" option from activity.info file
+#. TRANS: "description" option from activity.info file
+msgid "a pattern-matching game"
+msgstr ""
 
-#: VisualMatchActivity.py:72 VisualMatchActivity.py:472
-#: VisualMatchActivity.py:672
-msgid "expert"
-msgstr "高階"
-
-#: VisualMatchActivity.py:72 VisualMatchActivity.py:456
-#: VisualMatchActivity.py:670
+#: VisualMatchActivity.py:59 VisualMatchActivity.py:434
+#: VisualMatchActivity.py:639
 msgid "beginner"
 msgstr "初階"
 
-#: VisualMatchActivity.py:83 visualmatch.py:49
+#: VisualMatchActivity.py:59 VisualMatchActivity.py:442
+#: VisualMatchActivity.py:640
+msgid "intermediate"
+msgstr "中階"
+
+#: VisualMatchActivity.py:59 VisualMatchActivity.py:450
+#: VisualMatchActivity.py:641
+msgid "expert"
+msgstr "高階"
+
+#: VisualMatchActivity.py:70 visualmatch.py:47
 msgid "New pattern game"
 msgstr "新的圖樣遊戲"
 
-#: VisualMatchActivity.py:84 visualmatch.py:53
+#: VisualMatchActivity.py:71 visualmatch.py:51
 msgid "New number game"
 msgstr "新的數字遊戲"
 
-#: VisualMatchActivity.py:85 visualmatch.py:57
+#: VisualMatchActivity.py:72 visualmatch.py:55
 msgid "New word game"
 msgstr "新的文字遊戲"
 
-#: VisualMatchActivity.py:86 VisualMatchActivity.py:345
+#: VisualMatchActivity.py:73 VisualMatchActivity.py:324
 msgid "Import custom cards"
 msgstr "輸入自定卡片"
 
-#: VisualMatchActivity.py:131
+#: VisualMatchActivity.py:128
 msgid "Play with the computer."
 msgstr "跟電腦玩"
 
-#: VisualMatchActivity.py:136
+#: VisualMatchActivity.py:133
 msgid "Stop playing with the computer."
 msgstr "結束電腦遊戲"
 
-#: VisualMatchActivity.py:225 visualmatch.py:175
+#: VisualMatchActivity.py:217 visualmatch.py:173
 msgid "mouse"
 msgstr "老鼠"
 
-#: VisualMatchActivity.py:226 visualmatch.py:175
+#: VisualMatchActivity.py:218 visualmatch.py:173
 msgid "cat"
 msgstr "貓咪"
 
-#: VisualMatchActivity.py:227 visualmatch.py:175
+#: VisualMatchActivity.py:219 visualmatch.py:173
 msgid "dog"
 msgstr "狗兒"
 
-#: VisualMatchActivity.py:228 visualmatch.py:176
+#: VisualMatchActivity.py:220 visualmatch.py:174
 msgid "cheese"
 msgstr "起司"
 
-#: VisualMatchActivity.py:229 visualmatch.py:176
+#: VisualMatchActivity.py:221 visualmatch.py:174
 msgid "apple"
 msgstr "蘋果"
 
-#: VisualMatchActivity.py:230 visualmatch.py:176
+#: VisualMatchActivity.py:222 visualmatch.py:174
 msgid "bread"
 msgstr "麵包"
 
-#: VisualMatchActivity.py:231 visualmatch.py:177
+#: VisualMatchActivity.py:223 visualmatch.py:175
 msgid "moon"
 msgstr "月亮"
 
-#: VisualMatchActivity.py:232 visualmatch.py:177
+#: VisualMatchActivity.py:224 visualmatch.py:175
 msgid "sun"
 msgstr "太陽"
 
-#: VisualMatchActivity.py:233 visualmatch.py:177
+#: VisualMatchActivity.py:225 visualmatch.py:175
 msgid "earth"
 msgstr "地球"
 
-#: VisualMatchActivity.py:305 VisualMatchActivity.py:659
+#: VisualMatchActivity.py:296 VisualMatchActivity.py:628
 msgid "Export scores to clipboard"
 msgstr "將分數匯出到剪貼簿"
 
-#: VisualMatchActivity.py:314 VisualMatchActivity.py:663
-#: VisualMatchActivity.py:691
-msgid "Game"
-msgstr "遊戲"
-
-#: VisualMatchActivity.py:315 VisualMatchActivity.py:676
-#: VisualMatchActivity.py:692
-msgid "Numbers"
-msgstr "數字"
-
-#: VisualMatchActivity.py:316 VisualMatchActivity.py:652
-#: VisualMatchActivity.py:693
-msgid "Tools"
-msgstr "工具"
-
-#: VisualMatchActivity.py:341 VisualMatchActivity.py:653
+#: VisualMatchActivity.py:320 VisualMatchActivity.py:622
 msgid "Edit word lists."
 msgstr "編輯單字表"
 
-#: VisualMatchActivity.py:352 VisualMatchActivity.py:677
+#: VisualMatchActivity.py:331 VisualMatchActivity.py:646
 msgid "product"
 msgstr "產品"
 
-#: VisualMatchActivity.py:360 VisualMatchActivity.py:678
+#: VisualMatchActivity.py:339 VisualMatchActivity.py:647
 msgid "Roman numerals"
 msgstr "羅馬數字"
 
-#: VisualMatchActivity.py:368 VisualMatchActivity.py:679
+#: VisualMatchActivity.py:347 VisualMatchActivity.py:648
 msgid "word"
 msgstr "單字"
 
-#: VisualMatchActivity.py:376 VisualMatchActivity.py:680 visualmatch.py:107
+#: VisualMatchActivity.py:355 VisualMatchActivity.py:649 visualmatch.py:105
 msgid "Chinese"
 msgstr "中文"
 
-#: VisualMatchActivity.py:384 VisualMatchActivity.py:681 visualmatch.py:111
+#: VisualMatchActivity.py:363 VisualMatchActivity.py:650 visualmatch.py:109
 msgid "Mayan"
 msgstr "瑪雅文"
 
-#: VisualMatchActivity.py:392 VisualMatchActivity.py:682 visualmatch.py:115
+#: VisualMatchActivity.py:371 VisualMatchActivity.py:651 visualmatch.py:113
 msgid "Quipu"
 msgstr "結繩"
 
-#: VisualMatchActivity.py:403 VisualMatchActivity.py:683
+#: VisualMatchActivity.py:382 VisualMatchActivity.py:652
 msgid "hash marks"
 msgstr "定位標記"
 
-#: VisualMatchActivity.py:411 VisualMatchActivity.py:684
+#: VisualMatchActivity.py:390 VisualMatchActivity.py:653
 msgid "dots in a circle"
 msgstr "圓圈裡的點"
 
-#: VisualMatchActivity.py:419 VisualMatchActivity.py:685
+#: VisualMatchActivity.py:398 VisualMatchActivity.py:654
 msgid "points on a star"
 msgstr "星星上的點"
 
-#: VisualMatchActivity.py:427 VisualMatchActivity.py:686
+#: VisualMatchActivity.py:406 VisualMatchActivity.py:655
 msgid "dice"
 msgstr "骰子"
 
-#: VisualMatchActivity.py:435 VisualMatchActivity.py:687
+#: VisualMatchActivity.py:414 VisualMatchActivity.py:656
 msgid "dots in a line"
 msgstr "線上的點"
 
-#: VisualMatchActivity.py:444 VisualMatchActivity.py:668
+#: VisualMatchActivity.py:422 VisualMatchActivity.py:637
 msgid "Play with the computer"
 msgstr "電腦遊戲開始"
 
-#: VisualMatchActivity.py:484
+#: VisualMatchActivity.py:459
 msgid "Find a match."
 msgstr "尋找挑戰"
 
-#: VisualMatchActivity.py:488 game.py:763 game.py:870
+#: VisualMatchActivity.py:462 game.py:838 game.py:952
 msgid "cards"
 msgstr "卡片"
 
-#: VisualMatchActivity.py:490 game.py:883 game.py:885
+#: VisualMatchActivity.py:465 game.py:965 game.py:967
 msgid "matches"
 msgstr "挑戰"
 
-#: VisualMatchActivity.py:624
+#: VisualMatchActivity.py:592
 msgid "A new game is loading."
 msgstr "載入新遊戲中。"
 
-#: VisualMatchActivity.py:654
+#: VisualMatchActivity.py:621 VisualMatchActivity.py:662
+msgid "Tools"
+msgstr "工具"
+
+#: VisualMatchActivity.py:623
 msgid "Import image cards"
 msgstr "匯入紙牌圖案"
 
-#: VisualMatchActivity.py:669
+#: VisualMatchActivity.py:632 VisualMatchActivity.py:660
+msgid "Game"
+msgstr "遊戲"
+
+#: VisualMatchActivity.py:638
 msgid "robot pause time"
 msgstr "機器人暫停時間"
 
-#: VisualMatchActivity.py:694
+#: VisualMatchActivity.py:645 VisualMatchActivity.py:661
+msgid "Numbers"
+msgstr "數字"
+
+#: VisualMatchActivity.py:663
 msgid "number of cards remaining in deck"
 msgstr "牌墩剩餘紙牌數目"
 
-#: VisualMatchActivity.py:695
+#: VisualMatchActivity.py:664
 msgid "number of matches"
 msgstr "配對數目"
 
-#: VisualMatchActivity.py:696
+#: VisualMatchActivity.py:665
 msgid "elapsed time"
 msgstr "經過時間"
 
-#: constants.py:70
+#: constants.py:71
 msgid "five"
 msgstr "五"
 
-#: constants.py:70
+#: constants.py:71
 msgid "seven"
 msgstr "七"
 
-#: constants.py:70
+#: constants.py:71
 msgid "eleven"
 msgstr "十一"
 
-#: constants.py:70
+#: constants.py:71
 msgid "ten"
 msgstr "十"
 
-#: constants.py:71
+#: constants.py:72
 msgid "fourteen"
 msgstr "十四"
 
-#: constants.py:71
+#: constants.py:72
 msgid "fifteen"
 msgstr "十五"
 
-#: constants.py:71
+#: constants.py:72
 msgid "twenty two"
 msgstr "二十二"
 
-#: constants.py:72
+#: constants.py:73
 msgid "twenty one"
 msgstr "二十一"
 
-#: constants.py:72
+#: constants.py:73
 msgid "thirty three"
 msgstr "三十三"
 
-#: game.py:351
+#: game.py:356
 msgid "Edit the custom cards."
 msgstr "編輯自定卡片"
 
-#: game.py:381
+#: game.py:384
 msgid "Edit the word cards."
 msgstr "編輯單字卡"
 
-#: game.py:678
+#: game.py:752
 msgid "Game over"
 msgstr "遊戲結束"
 
-#: game.py:690
+#: game.py:765
 msgid "unsolvable"
 msgstr "無解"
 
-#: game.py:722
+#: game.py:796
 msgid "New record"
 msgstr "新紀錄"
 
-#: game.py:876 game.py:878
+#: game.py:958 game.py:960
 msgid "match"
 msgstr "挑戰"
 
-#: game.py:1120
+#: game.py:1203
 msgid "New custom game"
 msgstr "新的自定遊戲"
 
-#: helpbutton.py:46
+#: helpbutton.py:47
 msgid "Help"
 msgstr "輔助說明"
 
-#: visualmatch.py:36
+#: visualmatch.py:34
 msgid "Click on cards to create sets of three."
 msgstr "點選卡片創立三個組別"
 
-#: visualmatch.py:40
+#: visualmatch.py:38
 msgid "Toggle level"
 msgstr "切換難易度"
 
-#: visualmatch.py:66
+#: visualmatch.py:64
 msgid "Robot on/off"
 msgstr "機器人 開/關"
 
-#: visualmatch.py:70
+#: visualmatch.py:68
 msgid "90 sec."
 msgstr "90 秒"
 
-#: visualmatch.py:74
+#: visualmatch.py:72
 msgid "60 sec."
 msgstr "60 秒"
 
-#: visualmatch.py:78
+#: visualmatch.py:76
 msgid "45 sec."
 msgstr "45 秒"
 
-#: visualmatch.py:82
+#: visualmatch.py:80
 msgid "30 sec."
 msgstr "30 秒"
 
-#: visualmatch.py:86
+#: visualmatch.py:84
 msgid "15 sec."
 msgstr "15 秒"
 
-#: visualmatch.py:95
+#: visualmatch.py:93
 msgid "Product"
 msgstr "產品"
 
-#: visualmatch.py:99
+#: visualmatch.py:97
 msgid "Roman"
 msgstr "羅馬"
 
-#: visualmatch.py:103
+#: visualmatch.py:101
 msgid "Word"
 msgstr "單字"
 
-#: visualmatch.py:119
+#: visualmatch.py:117
 msgid "Hash"
 msgstr "雜湊值"
 
-#: visualmatch.py:123
+#: visualmatch.py:121
 msgid "Dice"
 msgstr "骰子"
 
-#: visualmatch.py:127
+#: visualmatch.py:125
 msgid "Dots"
 msgstr "點"
 
-#: visualmatch.py:131
+#: visualmatch.py:129
 msgid "Star"
 msgstr "星星"
 
 # 簡化點現面
-#: visualmatch.py:135
+#: visualmatch.py:133
 msgid "Lines"
 msgstr "線"
 
