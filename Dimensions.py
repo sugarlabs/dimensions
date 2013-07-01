@@ -1,4 +1,4 @@
-#Copyright (c) 2009-12 Walter Bender
+#Copyright (c) 2009-13 Walter Bender
 
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -34,7 +34,7 @@ from sugar3.presence.tubeconn import TubeConnection
 from gettext import gettext as _
 import os.path
 import logging
-_logger = logging.getLogger('visualmatch-activity')
+_logger = logging.getLogger('dimensions-activity')
 import json
 from json import load as jload
 from json import dump as jdump
@@ -63,9 +63,9 @@ NUMBER_O_BUTTONS = {}
 NUMBER_C_BUTTONS = {}
 LEVEL_BUTTONS = {}
 
-SERVICE = 'org.sugarlabs.VisualMatchActivity'
+SERVICE = 'org.sugarlabs.Dimensions'
 IFACE = SERVICE
-PATH = '/org/augarlabs/VisualMatchActivity'
+PATH = '/org/augarlabs/Dimensions'
 
 PROMPT_DICT = {'pattern': _('New pattern game'),
                'number': _('New number game'),
@@ -73,11 +73,11 @@ PROMPT_DICT = {'pattern': _('New pattern game'),
                'custom': _('Import custom cards')}
 
 
-class VisualMatchActivity(activity.Activity):
+class Dimensions(activity.Activity):
     ''' Dimension matching game '''
     def __init__(self, handle):
         ''' Initialize the Sugar activity '''
-        super(VisualMatchActivity, self).__init__(handle)
+        super(Dimensions, self).__init__(handle)
         self.ready_to_play = False
         self._prompt = ''
         self._read_journal_data()
@@ -266,9 +266,9 @@ class VisualMatchActivity(activity.Activity):
         self.numbers_toolbar_button = ToolbarButton(
             page=numbers_toolbar,
             icon_name='number-tools')
-        numbers_toolbar.show()
-        toolbox.toolbar.insert(self.numbers_toolbar_button, -1)
-        self.numbers_toolbar_button.show()
+        # numbers_toolbar.show()
+        # toolbox.toolbar.insert(self.numbers_toolbar_button, -1)
+        # self.numbers_toolbar_button.show()
 
         self.tools_toolbar_button = ToolbarButton(
             page=tools_toolbar,
@@ -303,21 +303,25 @@ class VisualMatchActivity(activity.Activity):
         self.button_pattern = button_factory(
             'new-pattern-game', games_toolbar, self._select_game_cb,
             cb_arg='pattern', tooltip=PROMPT_DICT['pattern'])
+        '''
         self.button_number = button_factory(
             'new-number-game', games_toolbar, self._select_game_cb,
             cb_arg='number', tooltip=PROMPT_DICT['number'])
         self.button_word = button_factory(
             'new-word-game', games_toolbar, self._select_game_cb,
             cb_arg='word', tooltip=PROMPT_DICT['word'])
+        '''
         self.button_custom = button_factory(
             'no-custom-game', games_toolbar, self._select_game_cb,
             cb_arg='custom', tooltip=PROMPT_DICT['custom'])
 
         self._set_extras(games_toolbar)
 
+        '''
         self.words_tool_button = button_factory(
             'word-tools', tools_toolbar, self._edit_words_cb,
             tooltip=_('Edit word lists.'))
+        '''
 
         self.import_button = button_factory(
             'image-tools', tools_toolbar, self.image_import_cb,
@@ -624,7 +628,7 @@ class VisualMatchActivity(activity.Activity):
 
         help_box = self._new_help_box('activity-toolbar',
                                       self.activity_toolbar_button)
-        add_section(help_box, _('Visual Match'), icon='activity-visualmatch')
+        add_section(help_box, _('Dimensions'), icon='activity-dimensions')
         add_paragraph(help_box, _('Export scores to clipboard'), icon='score-copy')
 
         help_box = self._new_help_box('game-toolbar',
@@ -656,7 +660,7 @@ class VisualMatchActivity(activity.Activity):
         add_paragraph(help_box, _('dots in a line'), icon='lines')
 
         help_box = self._new_help_box('main-toolbar')
-        add_section(help_box, _('Visual Match'), icon='activity-visualmatch')
+        add_section(help_box, _('Dimensions'), icon='activity-dimensions')
         add_paragraph(help_box, _('Game'), icon='new-game')
         add_paragraph(help_box, _('Numbers'), icon='number-tools')
         add_paragraph(help_box, _('Tools'), icon='view-source')

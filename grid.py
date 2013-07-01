@@ -17,7 +17,7 @@ import random
 from constants import ROW, COL, MATCH_POSITION, DEAL
 
 import logging
-_logger = logging.getLogger('visualmatch-activity')
+_logger = logging.getLogger('dimensions-activity')
 
 
 def _distance_squared(pos1, pos2):
@@ -35,10 +35,16 @@ class Grid:
         for i in range(ROW * COL):
             self.grid.append(None)
         # Card spacing
-        self.left = int((width - (card_width * 2)) / 2)
+        if width < height:
+            self.left = MATCH_POSITION
+            self.portrait = True
+        else:
+            self.left = int((width - (card_width * 2)) / 2)
+            self.portrait = False
         self.xinc = int(card_width * 1.2)
         self.top = 10
         self.yinc = int(card_height * 1.33)
+        self.bottom = int(self.top + 5 * self.yinc)
         self.dx = [0, 0, 0, 0, 0, 0]
         self.dy = [0, 0, 0, 0, 0, 0]
         self.sx = [0, 0, 0, 0, 0, 0]
@@ -47,6 +53,17 @@ class Grid:
         self.ey = [0, 0, 0, 0, 0, 0]
         self.stop_animation = False
         self.animation_lock = [False, False, False, False, False, False]
+
+    def rotate(self, width, height):
+        if width < height:
+            self.left = MATCH_POSITION
+            self.portrait = True
+        else:
+            self.left = int((width - (card_width * 2)) / 2)
+            self.portrait = False
+        for i in range(ROW * COL):
+            self.place_a_card(self.grid[i], self.grid_to_xy(i)[0],
+                              self.grid_to_xy(i)[1])
 
     def deal(self, deck):
         ''' Deal an initial set of cards. '''
@@ -110,8 +127,12 @@ class Grid:
         ''' Move card to the match area. '''
         self.stop_animation = False
         spr.set_layer(2000)
-        self.ex[i] = MATCH_POSITION
-        self.ey[i] = self.top + i * self.yinc
+        if not self.portrait:
+            self.ex[i] = MATCH_POSITION
+            self.ey[i] = self.top + i * self.yinc
+        else:
+            self.ex[i] = self.left + i * self.xinc
+            self.ey[i] = self.bottom
         self.sx[i] = spr.get_xy()[0]
         self.sy[i] = spr.get_xy()[1]
         self.dx[i] = int((self.ex[i] - self.sx[i]) / 10)
@@ -120,7 +141,7 @@ class Grid:
             100, self._move_to_position, spr, i)
 
     def return_to_grid(self, spr, i, j):
-        ''' Move card to the match area. '''
+        ''' Move card from the match area. '''
         self.stop_animation = False
         self.animation_lock[j] = True
         spr.set_layer(2000)
@@ -182,7 +203,10 @@ class Grid:
 
     def xy_to_match(self, pos):
         ''' Convert from sprite x,y to match index. '''
-        return int((pos[1] - self.top) / self.yinc)
+        if self.portrait:
+            return int((pos[0] - self.left) / self.xinc)
+        else:
+            return int((pos[1] - self.top) / self.yinc)
 
     def xy_in_match(self, pos):
         ''' Is a position at one of the match points? '''
@@ -194,7 +218,13 @@ class Grid:
 
     def match_to_xy(self, i):
         ''' Convert from match index to x, y position. '''
-        return ((MATCH_POSITION, self.top + i * self.yinc))
+        if self.portrait:
+            if i > 2:
+                return ((self.left + self.xinc, self.bottom + self.yinc))
+            else:
+                return ((self.left + i * self.xinc, self.bottom))
+        else:
+            return ((MATCH_POSITION, self.top + i * self.yinc))
 
     def xy_in_grid(self, pos):
         ''' Is a position at one of the grid points? '''

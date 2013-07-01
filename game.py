@@ -30,7 +30,7 @@ from sugar3 import mime
 from sugar3.activity import activity
 
 import logging
-_logger = logging.getLogger('visualmatch-activity')
+_logger = logging.getLogger('dimensions-activity')
 
 from sugar3.graphics import style
 GRID_CELL_SIZE = style.GRID_CELL_SIZE
@@ -126,8 +126,14 @@ class Game():
         self._canvas.connect('draw', self.__draw_cb)
 
         self._width = Gdk.Screen.width()
-        self._height = Gdk.Screen.height() - GRID_CELL_SIZE
-        self._scale = 0.8 * self._height / (CARD_HEIGHT * 5.5)
+        self._height = Gdk.Screen.height() - GRID_CELL_SIZE * 2
+        if self._width < self._height:
+            self.portrait = True
+            self._scale = 0.8 * self._width / (CARD_HEIGHT * 5.5)
+        else:
+            self.portrait = False
+            self._scale = 0.8 * self._height / (CARD_HEIGHT * 5.5)
+
         self._card_width = CARD_WIDTH * self._scale
         self._card_height = CARD_HEIGHT * self._scale
         self.custom_paths = [None, None, None, None, None, None, None, None,
@@ -210,6 +216,26 @@ class Game():
         self._frowny[-1].create(
             generate_frowny_number(self._scale), sprites=self._sprites)
         self._frowny[-1].spr.move(self.grid.match_to_xy(3))
+
+        Gdk.Screen.get_default().connect('size-changed', self._configure_cb)
+
+    def _configure_cb(self, event):
+        self._width = Gdk.Screen.width()
+        self._height = Gdk.Screen.height() - GRID_CELL_SIZE * 2
+
+        if self._width < self._height:
+            self.portrait = True
+        else:
+            self.portrait = False
+
+        self.grid.rotate(self._width, self._height)
+
+        for i in range(CARDS_IN_A_MATCH):
+            self._match_area[i].spr.move(self.grid.match_to_xy(i))
+
+        for i, c in enumerate(self.clicked):
+            if c.spr is not None:
+                c.spr.move(self.grid.match_to_xy(i))
 
     def new_game(self, saved_state=None, deck_index=0):
         ''' Start a new game '''
@@ -575,6 +601,7 @@ class Game():
             else:
                 _logger.error('WARNING: Cannot find last click')
             self.last_click = None
+
         self.process_selection(self._press)
         self._press = None
         return
@@ -602,7 +629,9 @@ class Game():
         new slot. '''
         move = 'drag'
         if self.grid.spr_to_grid(spr) is None:
-            if x > self.grid.left:  # Returning a card to the grid
+            # Returning a card to the grid
+            if (self.portrait and y < self.grid.bottom) or \
+                    (not self.portrait and x > self.grid.left):
                 i = self.grid.xy_to_grid((x, y))
                 if self.grid.grid[i] is not None:
                     i = self.grid.find_an_empty_slot()
@@ -613,7 +642,8 @@ class Game():
                 self.clicked[i].reset()
                 self._hide_frowny()
                 self._failure = None
-            else:  # Move a click to a different match slot
+            # Move a click to a different match slot
+            else:
                 i = self._where_in_clicked(spr)
                 j = self.grid.xy_to_match((x, y))
                 if i == j:
@@ -631,7 +661,9 @@ class Game():
             i = self._where_in_clicked(spr)
             if i is None:
                 move = 'abort'
-            elif x < self.grid.left:  # Moving a card to the match area
+            # Moving a card to the match area
+            elif (self.portrait and y > self.grid.bottom) or \
+                    (not self.portrait and x < self.grid.left):
                 self.grid.grid[self.grid.spr_to_grid(spr)] = None
                 spr.move(self._match_area[i].spr.get_xy())
             else:  # Shuffle positions in match area
@@ -652,6 +684,7 @@ class Game():
                         self.grid.grid[k] = None
                 move = 'abort'
                 self.clicked[i].reset()
+
         self._consistency_check()
         return move
 
