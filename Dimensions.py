@@ -106,6 +106,9 @@ class Dimensions(activity.Activity):
             self.vmw.editing_custom_cards = True
             self.vmw.edit_custom_card()
 
+        Gdk.Screen.get_default().connect('size-changed', self._configure_cb)
+        self._configure_cb(None)
+
     def _select_game_cb(self, button, card_type):
         ''' Choose which game we are playing. '''
         if self.vmw.joiner():  # joiner cannot change level
@@ -421,9 +424,6 @@ class Dimensions(activity.Activity):
             group=self.hash_button)
         NUMBER_C_BUTTONS[LINES] = self.lines_button
         '''
-
-        Gdk.Screen.get_default().connect('size-changed', self._configure_cb)
-        self._configure_cb(None)
 
     def _configure_cb(self, event):
         if Gdk.Screen.width() < Gdk.Screen.height():
