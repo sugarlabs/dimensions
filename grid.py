@@ -32,6 +32,7 @@ class Grid:
     def __init__(self, width, height, card_width, card_height):
         ''' Initialize the playing surface '''
         self.grid = []
+        self.card_width = card_width
         for i in range(ROW * COL):
             self.grid.append(None)
         # Card spacing
@@ -59,7 +60,7 @@ class Grid:
             self.left = MATCH_POSITION
             self.portrait = True
         else:
-            self.left = int((width - (card_width * 2)) / 2)
+            self.left = int((width - (self.card_width * 2)) / 2)
             self.portrait = False
         for i in range(ROW * COL):
             self.place_a_card(self.grid[i], self.grid_to_xy(i)[0],
@@ -81,6 +82,7 @@ class Grid:
             and only 12 cards in the grid
         '''
         if not deck.empty() and self.cards_in_grid() == DEAL:
+            logging.debug('DEAL EXTRA CARDS')
             for c in range(0, COL):
                 i = self.grid.index(None)
                 self.grid[i] = deck.deal_next_card()

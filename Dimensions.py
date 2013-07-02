@@ -126,12 +126,12 @@ class Dimensions(activity.Activity):
         if self.vmw.robot:
             self.vmw.robot = False
             self.robot_button.set_tooltip(_('Play with the computer.'))
-            self.robot_button.set_icon('robot-off')
+            self.robot_button.set_icon_name('robot-off')
         elif not self.vmw.editing_word_list:
             self.vmw.robot = True
             self.robot_button.set_tooltip(
                 _('Stop playing with the computer.'))
-            self.robot_button.set_icon('robot-on')
+            self.robot_button.set_icon_name('robot-on')
 
     def _level_cb(self, button, level):
         ''' Cycle between levels '''
@@ -461,12 +461,15 @@ class Dimensions(activity.Activity):
     def _set_labels(self, toolbar):
         ''' Add labels to toolbar toolbar '''
         self.status_label = label_factory(_('Find a match.'), toolbar)
+        self.status_label.set_width_chars(6)
         separator_factory(toolbar, False, True)
         self.deck_label = label_factory(
             '%d %s' % (LEVEL_DECKSIZE[self._play_level] - DEAL, _('cards')),
             toolbar)
+        self.deck_label.set_width_chars(7)
         separator_factory(toolbar, False, True)
         self.match_label = label_factory('%d %s' % (0, _('matches')), toolbar)
+        self.match_label.set_width_chars(14)
         separator_factory(toolbar, False, True)
         self.clock_label = label_factory('-', toolbar)
 

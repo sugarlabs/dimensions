@@ -35,26 +35,27 @@ _logger = logging.getLogger('dimensions-activity')
 from sugar3.graphics import style
 GRID_CELL_SIZE = style.GRID_CELL_SIZE
 
-from constants import LOW, MEDIUM, HIGH, MATCHMASK, ROW, COL, \
-    WORD_CARD_INDICIES, DEAD_DICTS, DEAD_KEYS, WHITE_SPACE, \
-    NOISE_KEYS, WORD_CARD_MAP, KEYMAP, CARD_HEIGHT, CARD_WIDTH, DEAL, \
-    DIFFICULTY_LEVEL, BACKGROUNDMASK, DECKSIZE, CUSTOM_CARD_INDICIES, \
-    SHAPES, COLORS, NUMBER, FILLS, CARDS_IN_A_MATCH
+from constants import (LOW, MEDIUM, HIGH, MATCHMASK, ROW, COL, CARD_WIDTH,
+                       WORD_CARD_INDICIES, DEAD_DICTS, DEAD_KEYS, WHITE_SPACE,
+                       NOISE_KEYS, WORD_CARD_MAP, KEYMAP, CARD_HEIGHT, DEAL,
+                       DIFFICULTY_LEVEL, BACKGROUNDMASK, DECKSIZE,
+                       CUSTOM_CARD_INDICIES, SHAPES, COLORS, NUMBER, FILLS,
+                       CARDS_IN_A_MATCH)
 
 from grid import Grid
 from deck import Deck
 from card import Card
 from sprites import Sprites, Sprite
-from gencards import generate_match_card, \
-    generate_smiley, generate_frowny_texture,  generate_frowny_shape, \
-    generate_frowny_color, generate_frowny_number
+from gencards import (generate_match_card, generate_frowny_shape,
+                      generate_smiley, generate_frowny_texture,
+                      generate_frowny_color, generate_frowny_number)
 
 CURSOR = '█'
 
 
 def _distance(pos1, pos2):
     ''' simple distance function '''
-    return sqrt((pos1[0] - pos2[0]) * (pos1[0] - pos2[0]) + \
+    return sqrt((pos1[0] - pos2[0]) * (pos1[0] - pos2[0]) +
                 (pos1[1] - pos2[1]) * (pos1[1] - pos2[1]))
 
 
@@ -220,6 +221,8 @@ class Game():
         Gdk.Screen.get_default().connect('size-changed', self._configure_cb)
 
     def _configure_cb(self, event):
+        self.grid.stop_animation = True
+
         self._width = Gdk.Screen.width()
         self._height = Gdk.Screen.height() - GRID_CELL_SIZE * 2
 
@@ -232,6 +235,9 @@ class Game():
 
         for i in range(CARDS_IN_A_MATCH):
             self._match_area[i].spr.move(self.grid.match_to_xy(i))
+        self._smiley[-1].spr.move(self.grid.match_to_xy(3))
+        for c in self._frowny:
+            c.spr.move(self.grid.match_to_xy(3))
 
         for i, c in enumerate(self.clicked):
             if c.spr is not None:
@@ -280,12 +286,12 @@ class Game():
             self.deck.index = self._deck_index
             deck_start = ROW * COL + 3
             deck_stop = deck_start + self.deck.count()
-            self._restore_word_list(self._saved_state[deck_stop + \
-                                                          3 * self.matches:])
+            self._restore_word_list(self._saved_state[deck_stop +
+                                                      3 * self.matches:])
             self.deck.restore(self._saved_state[deck_start: deck_stop])
             self.grid.restore(self.deck, self._saved_state[0: ROW * COL])
-            self._restore_matches(self._saved_state[deck_stop: deck_stop + \
-                                                  3 * self.matches])
+            self._restore_matches(self._saved_state[deck_stop: deck_stop +
+                                                    3 * self.matches])
             self._restore_clicked(self._saved_state[ROW * COL: ROW * COL + 3])
 
         elif not self.joiner():
@@ -322,7 +328,7 @@ class Game():
                 GObject.source_remove(self.timeout_id)
         else:
             if hasattr(self, 'match_timeout_id') and \
-               self.match_timeout_id is not None:
+                    self.match_timeout_id is not None:
                 GObject.source_remove(self.match_timeout_id)
             self._timer_reset()
 
@@ -332,7 +338,7 @@ class Game():
     def _sharing(self):
         ''' Are we sharing? '''
         if self._sugar and hasattr(self.activity, 'chattube') and \
-            self.activity.chattube is not None:
+                self.activity.chattube is not None:
             return True
         return False
 
@@ -420,13 +426,13 @@ class Game():
             x = event.get_coords()[1]
             y = event.get_coords()[2]
             if event.type == Gdk.EventType.TOUCH_BEGIN or \
-               event.type == Gdk.EventType.BUTTON_PRESS:
+                    event.type == Gdk.EventType.BUTTON_PRESS:
                 self._button_press(x, y)
             elif event.type == Gdk.EventType.TOUCH_UPDATE or \
-                 event.type == Gdk.EventType.MOTION_NOTIFY:
+                    event.type == Gdk.EventType.MOTION_NOTIFY:
                 self._drag_event(x, y)
             elif event.type == Gdk.EventType.TOUCH_END or \
-                 event.type == Gdk.EventType.BUTTON_RELEASE:
+                    event.type == Gdk.EventType.BUTTON_RELEASE:
                 self._button_release(x, y)
         elif event.type == Gdk.EventType.KEY_PRESS:
             k = Gdk.keyval_name(event.keyval)
@@ -441,7 +447,6 @@ class Game():
         self._button_press(x, y)
 
     def _button_press(self, x, y):
-
         # Turn off help animation
         if not self._stop_help:
             self._stop_help = True
@@ -528,9 +533,8 @@ class Game():
         self._drag_event(x, y)
 
     def _drag_event(self, x, y):
-        if self._press is None or \
-           self.editing_word_list or \
-           self.editing_custom_cards:
+        if self._press is None or self.editing_word_list or \
+                self.editing_custom_cards:
             self._drag_pos = [0, 0]
             return True
         dx = x - self._drag_pos[0]
@@ -695,8 +699,8 @@ class Game():
             spr = self.clicked[i].spr
             if spr is not None:
                 if not self.grid.xy_in_match(spr.get_xy()):
-                    _logger.debug('card in both the grid and \
-match area (%d)' % (i))
+                    _logger.debug('card in both the grid and '
+                                  'match area (%d)' % (i))
                     spr.move(self.grid.match_to_xy(i))
 
     def process_selection(self, spr):
@@ -874,6 +878,7 @@ match area (%d)' % (i))
         # Test to see if we need to deal extra cards.
         if not self._find_a_match():
             self.grid.deal_extra_cards(self.deck)
+            self._failure = None
         self._dealing = False
 
     def _keypress_cb(self, area, event):
@@ -1066,7 +1071,7 @@ match area (%d)' % (i))
     def _show_matches(self, i):
         ''' Show all the matches as a simple animation. '''
         if i < self.matches and \
-           i * CARDS_IN_A_MATCH < len(self.match_list):
+                i * CARDS_IN_A_MATCH < len(self.match_list):
             for j in range(CARDS_IN_A_MATCH):
                 self.grid.display_match(
                     self.match_list[i * CARDS_IN_A_MATCH + j], j)
@@ -1124,16 +1129,16 @@ match area (%d)' % (i))
             if a is None:
                 return False
 
-        if (cardarray[0].shape + cardarray[1].shape + cardarray[2].shape) % 3\
-               != 0:
+        if (cardarray[0].shape + cardarray[1].shape +
+            cardarray[2].shape) % 3 != 0:
             self._failure = 0
             return False
-        if (cardarray[0].color + cardarray[1].color + cardarray[2].color) % 3\
-               != 0:
+        if (cardarray[0].color + cardarray[1].color +
+            cardarray[2].color) % 3 != 0:
             self._failure = 1
             return False
-        if (cardarray[0].fill + cardarray[1].fill + cardarray[2].fill) % 3\
-               != 0:
+        if (cardarray[0].fill + cardarray[1].fill +
+            cardarray[2].fill) % 3 != 0:
             self._failure = 2
             return False
         # Special case: only check number when shapes are the same
@@ -1144,8 +1149,8 @@ match area (%d)' % (i))
                   != 0:
                 return False
         else:
-            if (cardarray[0].num + cardarray[1].num + cardarray[2].num) % 3\
-                   != 0:
+            if (cardarray[0].num + cardarray[1].num +
+                cardarray[2].num) % 3 != 0:
                 self._failure = 3
                 return False
         self._failure = None
@@ -1169,7 +1174,8 @@ match area (%d)' % (i))
             except TypeError:
                 chooser = ObjectChooser(
                     None, self.activity,
-                    Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT)
+                    Gtk.DialogFlags.MODAL |
+                    Gtk.DialogFlags.DESTROY_WITH_PARENT)
 
         if chooser is not None:
             try:
@@ -1179,8 +1185,8 @@ match area (%d)' % (i))
                     if jobject and jobject.file_path:
                         name = jobject.metadata['title']
                         mime_type = jobject.metadata['mime_type']
-                        _logger.debug('result of choose: %s (%s)' % \
-                                          (name, str(mime_type)))
+                        _logger.debug('result of choose: %s (%s)' %
+                                      (name, str(mime_type)))
             finally:
                 chooser.destroy()
                 del chooser
