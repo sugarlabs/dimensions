@@ -12,6 +12,7 @@
 
 
 from gettext import gettext as _
+LABELH = 32
 MATCH_POSITION = 10
 SHAPES = 3
 COLORS = 3

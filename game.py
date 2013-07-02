@@ -40,7 +40,7 @@ from constants import (LOW, MEDIUM, HIGH, MATCHMASK, ROW, COL, CARD_WIDTH,
                        NOISE_KEYS, WORD_CARD_MAP, KEYMAP, CARD_HEIGHT, DEAL,
                        DIFFICULTY_LEVEL, BACKGROUNDMASK, DECKSIZE,
                        CUSTOM_CARD_INDICIES, SHAPES, COLORS, NUMBER, FILLS,
-                       CARDS_IN_A_MATCH)
+                       CARDS_IN_A_MATCH, LABELH)
 
 from grid import Grid
 from deck import Deck
@@ -48,7 +48,8 @@ from card import Card
 from sprites import Sprites, Sprite
 from gencards import (generate_match_card, generate_frowny_shape,
                       generate_smiley, generate_frowny_texture,
-                      generate_frowny_color, generate_frowny_number)
+                      generate_frowny_color, generate_frowny_number,
+                      generate_label)
 
 CURSOR = '█'
 
@@ -217,6 +218,15 @@ class Game():
         self._frowny[-1].create(
             generate_frowny_number(self._scale), sprites=self._sprites)
         self._frowny[-1].spr.move(self.grid.match_to_xy(3))
+
+        self._label = Card()
+        self._label.create(generate_label(min(self._width, self._height),
+                                          LABELH),
+                           sprites=self._sprites)
+        self._label.spr.move((0, 0))
+        self._label.spr.set_label_attributes(24, horiz_align="left")
+
+        self._labels = {'deck': '', 'match': '', 'clock': '', 'status': ''}
 
         Gdk.Screen.get_default().connect('size-changed', self._configure_cb)
 
@@ -1006,19 +1016,15 @@ class Game():
 
     def set_label(self, label, s):
         ''' Update the toolbar labels '''
-        if self._sugar:
-            if label == 'deck':
-                self.activity.deck_label.set_text(s)
-            elif label == 'status':
-                self.activity.status_label.set_text(s)
-            elif label == 'clock':
-                self.activity.clock_label.set_text(s)
-            elif label == 'match':
-                self.activity.match_label.set_text(s)
-        else:
-            if hasattr(self, 'win') and label is not 'clock':
-                #TRANS: Please translate Visual Match as Dimensions
-                self.win.set_title('%s: %s' % (_('Visual Match'), s))
+        if label in self._labels:
+            self._labels[label] = s
+
+        msg = "%s - %s - %s - %s" % (self._labels['deck'],
+                                     self._labels['match'],
+                                     self._labels['clock'],
+                                     self._labels['status'])
+
+        self._label.spr.set_label(msg)
 
     def _restore_clicked(self, saved_selected_indices):
         ''' Restore the selected cards upon resume or share. '''

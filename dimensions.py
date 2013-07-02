@@ -24,7 +24,7 @@ from constants import PRODUCT, HASH, ROMAN, WORD, CHINESE, MAYAN, DICE, DOTS, \
                       STAR, LINES, INCAN
 
 
-class VisualMatchMain:
+class DimensionsMain:
 
     def __init__(self):
         # create a new window
@@ -232,5 +232,5 @@ def main():
 
 
 if __name__ == "__main__":
-    VisualMatchMain()
+    DimensionsMain()
     main()

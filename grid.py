@@ -14,7 +14,7 @@ from gi.repository import GObject
 
 import random
 
-from constants import ROW, COL, MATCH_POSITION, DEAL
+from constants import ROW, COL, MATCH_POSITION, DEAL, LABELH
 
 import logging
 _logger = logging.getLogger('dimensions-activity')
@@ -43,7 +43,7 @@ class Grid:
             self.left = int((width - (card_width * 2)) / 2)
             self.portrait = False
         self.xinc = int(card_width * 1.2)
-        self.top = 10
+        self.top = int(LABELH * 1.25)
         self.yinc = int(card_height * 1.33)
         self.bottom = int(self.top + 5 * self.yinc)
         self.dx = [0, 0, 0, 0, 0, 0]

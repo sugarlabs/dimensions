@@ -21,6 +21,7 @@ from sugar3.graphics.toolbarbox import ToolbarBox
 from sugar3.activity.widgets import ActivityToolbarButton
 from sugar3.activity.widgets import StopButton
 from sugar3.graphics.toolbarbox import ToolbarButton
+from sugar3.graphics.menuitem import MenuItem
 from sugar3.graphics.alert import NotifyAlert
 from sugar3.graphics import style
 from sugar3.datastore import datastore
@@ -41,13 +42,12 @@ from json import dump as jdump
 
 from StringIO import StringIO
 
-from toolbar_utils import radio_factory, button_factory, label_factory, \
-    spin_factory, separator_factory
+from toolbar_utils import (radio_factory, button_factory, separator_factory)
 
-from constants import DECKSIZE, PRODUCT, HASH, ROMAN, WORD, CHINESE, MAYAN, \
-                      INCAN, DOTS, STAR, DICE, LINES, DEAL
-from helpbutton import HelpButton, add_section, add_paragraph, help_windows, \
-    help_buttons
+from constants import (DECKSIZE, PRODUCT, HASH, ROMAN, WORD, CHINESE, MAYAN,
+                       INCAN, DOTS, STAR, DICE, LINES, DEAL)
+from helpbutton import (HelpButton, add_section, add_paragraph, help_windows,
+                        help_buttons)
 from game import Game
 
 
@@ -71,6 +71,11 @@ PROMPT_DICT = {'pattern': _('New pattern game'),
                'number': _('New number game'),
                'word': _('New word game'),
                'custom': _('Import custom cards')}
+
+ROBOT_TIMER_VALUES = [15, 30, 60, 120, 300]
+ROBOT_TIMER_LABELS = {15: _('15 seconds'), 30: _('30 seconds'),
+                      60: _('1 minute'), 120: _('2 minutes'),
+                      300: _('5 minutes')}
 
 
 class Dimensions(activity.Activity):
@@ -138,8 +143,8 @@ class Dimensions(activity.Activity):
         if self.vmw.joiner():  # joiner cannot change level
             return
         self.vmw.level = level
-        self.level_label.set_text(self.calc_level_label(self.vmw.low_score,
-                                                        self.vmw.level))
+        # self.level_label.set_text(self.calc_level_label(self.vmw.low_score,
+        #                                                 self.vmw.level))
         self._load_new_game()
 
     def calc_level_label(self, low_score, play_level):
@@ -175,11 +180,6 @@ class Dimensions(activity.Activity):
         self.vmw.numberC = numberC
         self.vmw.card_type = 'number'
         self._load_new_game()
-
-    def _robot_time_spin_cb(self, button):
-        ''' Set delay for robot. '''
-        self.vmw.robot_time = self._robot_time_spin.get_value_as_int()
-        return
 
     def _edit_words_cb(self, button):
         ''' Edit the word list. '''
@@ -256,13 +256,6 @@ class Dimensions(activity.Activity):
         toolbox.toolbar.insert(self.activity_toolbar_button, 0)
         self.activity_toolbar_button.show()
 
-        self.game_toolbar_button = ToolbarButton(
-            page=games_toolbar,
-            icon_name='new-game')
-        games_toolbar.show()
-        toolbox.toolbar.insert(self.game_toolbar_button, -1)
-        self.game_toolbar_button.show()
-
         self.numbers_toolbar_button = ToolbarButton(
             page=numbers_toolbar,
             icon_name='number-tools')
@@ -277,7 +270,12 @@ class Dimensions(activity.Activity):
         toolbox.toolbar.insert(self.tools_toolbar_button, -1)
         self.tools_toolbar_button.show()
 
-        self._set_labels(toolbox.toolbar)
+        self.button_pattern = button_factory(
+            'new-pattern-game', toolbox.toolbar, self._select_game_cb,
+            cb_arg='pattern', tooltip=PROMPT_DICT['pattern'])
+
+        self._set_extras(toolbox.toolbar)
+
         separator_factory(toolbox.toolbar, True, False)
 
         help_button = HelpButton(self)
@@ -298,26 +296,22 @@ class Dimensions(activity.Activity):
         self.set_toolbar_box(toolbox)
         toolbox.show()
 
-        self.game_toolbar_button.set_expanded(True)
-
+        '''
         self.button_pattern = button_factory(
             'new-pattern-game', games_toolbar, self._select_game_cb,
             cb_arg='pattern', tooltip=PROMPT_DICT['pattern'])
-        '''
         self.button_number = button_factory(
             'new-number-game', games_toolbar, self._select_game_cb,
             cb_arg='number', tooltip=PROMPT_DICT['number'])
         self.button_word = button_factory(
             'new-word-game', games_toolbar, self._select_game_cb,
             cb_arg='word', tooltip=PROMPT_DICT['word'])
-        '''
         self.button_custom = button_factory(
             'no-custom-game', games_toolbar, self._select_game_cb,
             cb_arg='custom', tooltip=PROMPT_DICT['custom'])
 
         self._set_extras(games_toolbar)
 
-        '''
         self.words_tool_button = button_factory(
             'word-tools', tools_toolbar, self._edit_words_cb,
             tooltip=_('Edit word lists.'))
@@ -326,6 +320,10 @@ class Dimensions(activity.Activity):
         self.import_button = button_factory(
             'image-tools', tools_toolbar, self.image_import_cb,
             tooltip=_('Import custom cards'))
+
+        self.button_custom = button_factory(
+            'no-custom-game', tools_toolbar, self._select_game_cb,
+            cb_arg='custom', tooltip=PROMPT_DICT['custom'])
 
         self.product_button = radio_factory(
             'product',
@@ -419,15 +417,45 @@ class Dimensions(activity.Activity):
             group=self.hash_button)
         NUMBER_C_BUTTONS[LINES] = self.lines_button
 
+    def _robot_selection_cb(self, widget):
+        if self._robot_palette:
+            if not self._robot_palette.is_up():
+                self._robot_palette.popup(immediate=True,
+                                          state=self._robot_palette.SECONDARY)
+            else:
+                self._robot_palette.popdown(immediate=True)
+            return
+
+    def _setup_robot_palette(self):
+        self._robot_palette = self._robot_time_button.get_palette()
+
+        for seconds in ROBOT_TIMER_VALUES:
+            text = ROBOT_TIMER_LABELS[seconds]
+            menu_item = MenuItem(icon_name='timer-%d' % (seconds),
+                                 text_label=text)
+            menu_item.connect('activate', self._robot_selected_cb, seconds)
+            self._robot_palette.menu.append(menu_item)
+            menu_item.show()
+
+    def _robot_selected_cb(self, button, seconds):
+        self.vmw.robot_time = seconds
+        if hasattr(self, '_robot_time_button') and \
+                seconds in ROBOT_TIMER_VALUES:
+            self._robot_time_button.set_icon_name('timer-%d' % seconds)
+
     def _set_extras(self, toolbar):
         separator_factory(toolbar, False, True)
         self.robot_button = button_factory(
             'robot-off', toolbar, self._robot_cb,
             tooltip=_('Play with the computer'))
 
-        self._robot_time_spin = spin_factory(self._robot_time, 5, 180,
-                                              self._robot_time_spin_cb,
-                                              toolbar)
+        self._robot_time_button = button_factory(
+            'timer-60',
+            toolbar,
+            self._robot_selection_cb,
+            tooltip=_('robot pause time'))
+        self._setup_robot_palette()
+
         separator_factory(toolbar, False, True)
 
         self.beginner_button = radio_factory(
@@ -454,24 +482,6 @@ class Dimensions(activity.Activity):
             tooltip=_('expert'),
             group=self.beginner_button)
         LEVEL_BUTTONS[EXPERT] = self.expert_button
-
-        self.level_label = label_factory(self.calc_level_label(
-                self._low_score, self._play_level), toolbar)
-
-    def _set_labels(self, toolbar):
-        ''' Add labels to toolbar toolbar '''
-        self.status_label = label_factory(_('Find a match.'), toolbar)
-        self.status_label.set_width_chars(6)
-        separator_factory(toolbar, False, True)
-        self.deck_label = label_factory(
-            '%d %s' % (LEVEL_DECKSIZE[self._play_level] - DEAL, _('cards')),
-            toolbar)
-        self.deck_label.set_width_chars(7)
-        separator_factory(toolbar, False, True)
-        self.match_label = label_factory('%d %s' % (0, _('matches')), toolbar)
-        self.match_label.set_width_chars(14)
-        separator_factory(toolbar, False, True)
-        self.clock_label = label_factory('-', toolbar)
 
     def _setup_canvas(self):
         ''' Create a canvas.. '''
@@ -623,32 +633,29 @@ class Dimensions(activity.Activity):
 
     def _setup_toolbar_help(self):
         ''' Set up a help palette for the main toolbars '''
-        help_box = self._new_help_box('custom-toolbar',
-                                      self.tools_toolbar_button)
-        add_section(help_box, _('Tools'), icon='view-source')
-        add_section(help_box, _('Edit word lists.'), icon='word-tools')
-        add_section(help_box, _('Import image cards'), icon='image-tools')
-
-        help_box = self._new_help_box('activity-toolbar',
-                                      self.activity_toolbar_button)
+        help_box = self._new_help_box('main-toolbar')
         add_section(help_box, _('Dimensions'), icon='activity-dimensions')
-        add_paragraph(help_box, _('Export scores to clipboard'), icon='score-copy')
-
-        help_box = self._new_help_box('game-toolbar',
-                                      self.game_toolbar_button)
-        add_section(help_box, _('Game'), icon='new-game')
-        add_paragraph(help_box, PROMPT_DICT['pattern'], icon='new-pattern-game')
-        add_paragraph(help_box, PROMPT_DICT['number'], icon='new-number-game')
-        add_paragraph(help_box, PROMPT_DICT['word'], icon='new-word-game')
-        add_paragraph(help_box, PROMPT_DICT['custom'], icon='new-custom-game')
+        add_paragraph(help_box, _('Tools'), icon='view-source')
+        add_paragraph(help_box, _('Game'), icon='new-pattern-game')
+        # add_paragraph(help_box, PROMPT_DICT['number'], icon='new-number-game')
+        # add_paragraph(help_box, PROMPT_DICT['word'], icon='new-word-game')
+        # add_paragraph(help_box, _('Numbers'), icon='number-tools')
         add_paragraph(help_box, _('Play with the computer'), icon='robot-off')
-        add_paragraph(help_box, _('robot pause time'))
+        add_paragraph(help_box, _('robot pause time'), icon='timer-60')
         add_paragraph(help_box, _('beginner'), icon='beginner')
         add_paragraph(help_box, _('intermediate'), icon='intermediate')
         add_paragraph(help_box, _('expert'), icon='expert')
 
-        help_box = self._new_help_box('numbers-toolbar',
-                                      self.numbers_toolbar_button)
+        add_section(help_box, _('Dimensions'), icon='activity-dimensions')
+        add_paragraph(help_box, _('Export scores to clipboard'),
+                      icon='score-copy')
+
+        add_section(help_box, _('Tools'), icon='view-source')
+        add_section(help_box, _('Import image cards'), icon='image-tools')
+        add_paragraph(help_box, PROMPT_DICT['custom'], icon='new-custom-game')
+        # add_section(help_box, _('Edit word lists.'), icon='word-tools')
+
+        '''
         add_section(help_box, _('Numbers'), icon='number-tools')
         add_paragraph(help_box, _('product'), icon='product')
         add_paragraph(help_box, _('Roman numerals'), icon='roman')
@@ -661,15 +668,7 @@ class Dimensions(activity.Activity):
         add_paragraph(help_box, _('points on a star'), icon='star')
         add_paragraph(help_box, _('dice'), icon='dice')
         add_paragraph(help_box, _('dots in a line'), icon='lines')
-
-        help_box = self._new_help_box('main-toolbar')
-        add_section(help_box, _('Dimensions'), icon='activity-dimensions')
-        add_paragraph(help_box, _('Game'), icon='new-game')
-        add_paragraph(help_box, _('Numbers'), icon='number-tools')
-        add_paragraph(help_box, _('Tools'), icon='view-source')
-        add_paragraph(help_box, _('number of cards remaining in deck'))
-        add_paragraph(help_box, _('number of matches'))
-        add_paragraph(help_box, _('elapsed time'))
+        '''
 
     def _setup_presence_service(self):
         ''' Setup the Presence Service. '''
@@ -790,8 +789,8 @@ class Dimensions(activity.Activity):
         elif text[0] == 'P':
             e, text = text.split(':')
             self.vmw.level = int(text)
-            self.level_label.set_text(self.calc_level_label(
-                self.vmw.low_score, self.vmw.level))
+            # self.level_label.set_text(self.calc_level_label(
+            #     self.vmw.low_score, self.vmw.level))
             LEVEL_BUTTONS[self.vmw.level].set_active(True)
         elif text[0] == 'X':
             e, text = text.split(':')
