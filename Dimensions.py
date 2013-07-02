@@ -86,6 +86,7 @@ class Dimensions(activity.Activity):
         self.ready_to_play = False
         self._prompt = ''
         self._read_journal_data()
+        self._sep = []
         self._setup_toolbars()
         canvas = self._setup_canvas()
         self._setup_presence_service()
@@ -276,12 +277,14 @@ class Dimensions(activity.Activity):
 
         self._set_extras(toolbox.toolbar)
 
-        separator_factory(toolbox.toolbar, True, False)
+        self._sep.append(separator_factory(toolbox.toolbar, False, True))
 
         help_button = HelpButton(self)
         toolbox.toolbar.insert(help_button, -1)
         help_button.show()
         self._setup_toolbar_help()
+
+        self._sep.append(separator_factory(toolbox.toolbar, True, False))
 
         stop_button = StopButton(self)
         stop_button.props.accelerator = '<Ctrl>q'
@@ -325,6 +328,7 @@ class Dimensions(activity.Activity):
             'no-custom-game', tools_toolbar, self._select_game_cb,
             cb_arg='custom', tooltip=PROMPT_DICT['custom'])
 
+        '''
         self.product_button = radio_factory(
             'product',
             numbers_toolbar,
@@ -416,6 +420,18 @@ class Dimensions(activity.Activity):
             tooltip=_('dots in a line'),
             group=self.hash_button)
         NUMBER_C_BUTTONS[LINES] = self.lines_button
+        '''
+
+        Gdk.Screen.get_default().connect('size-changed', self._configure_cb)
+        self._configure_cb(None)
+
+    def _configure_cb(self, event):
+        if Gdk.Screen.width() < Gdk.Screen.height():
+            for sep in self._sep:
+                sep.hide()
+        else:
+            for sep in self._sep:
+                sep.show()
 
     def _robot_selection_cb(self, widget):
         if self._robot_palette:
@@ -444,7 +460,6 @@ class Dimensions(activity.Activity):
             self._robot_time_button.set_icon_name('timer-%d' % seconds)
 
     def _set_extras(self, toolbar):
-        separator_factory(toolbar, False, True)
         self.robot_button = button_factory(
             'robot-off', toolbar, self._robot_cb,
             tooltip=_('Play with the computer'))
@@ -456,7 +471,7 @@ class Dimensions(activity.Activity):
             tooltip=_('robot pause time'))
         self._setup_robot_palette()
 
-        separator_factory(toolbar, False, True)
+        self._sep.append(separator_factory(toolbar, False, True))
 
         self.beginner_button = radio_factory(
             'beginner',
