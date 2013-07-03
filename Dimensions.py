@@ -202,7 +202,7 @@ class Dimensions(activity.Activity):
 
     def _read_journal_data(self):
         ''' There may be data from a previous instance. '''
-        self._play_level = int(self._read_metadata('play_level', 2))
+        self._play_level = int(self._read_metadata('play_level', 0))
         self._robot_time = int(self._read_metadata('robot_time', 60))
         self._card_type = self._read_metadata('cardtype', 'pattern')
         self._low_score = [int(self._read_metadata('low_score_beginner', -1)),
@@ -515,9 +515,7 @@ class Dimensions(activity.Activity):
         self.vmw.low_score = self._low_score
         self.vmw.all_scores = self._all_scores
         self.vmw.numberO = self._numberO
-        NUMBER_O_BUTTONS[self._numberO].set_active(True)
         self.vmw.numberC = self._numberC
-        NUMBER_C_BUTTONS[self._numberC].set_active(True)
         self.vmw.matches = self._matches
         self.vmw.robot_matches = self._robot_matches
         self.vmw.total_time = self._total_time
