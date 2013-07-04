@@ -30,16 +30,25 @@ class DimensionsMain:
         # create a new window
         self.win = Gtk.Window(type=Gtk.WindowType.TOPLEVEL)
         self.win.maximize()
-        self.win.set_title("%s: %s" % (_("Visual Match"),
+        self.win.set_title("%s: %s" % (_("Dimensions"),
                            _("Click on cards to create sets of three.")))
         self.win.connect("delete_event", lambda w, e: Gtk.main_quit())
 
         menu0 = Gtk.Menu()
-        menu_items = Gtk.MenuItem(_("Toggle level"))
+        menu_items = Gtk.MenuItem(_("beginner"))
         menu0.append(menu_items)
-        menu_items.connect("activate", self._level_cb)
+        menu_items.connect("activate", self._level_cb, 0)
         menu_items.show()
-        level_menu = Gtk.MenuItem("Level")
+        menu_items = Gtk.MenuItem(_("intermediate"))
+        menu0.append(menu_items)
+        menu_items.connect("activate", self._level_cb, 1)
+        menu_items.show()
+        menu_items = Gtk.MenuItem(_("expert"))
+        menu0.append(menu_items)
+        menu_items.connect("activate", self._level_cb, 2)
+        menu_items.show()
+        #TRANS: Level of difficulty
+        level_menu = Gtk.MenuItem(_("Level"))
         level_menu.show()
         level_menu.set_submenu(menu0)
 
@@ -48,6 +57,7 @@ class DimensionsMain:
         menu1.append(menu_items)
         menu_items.connect("activate", self._new_game_cb, 'pattern')
         menu_items.show()
+        '''
         menu_items = Gtk.MenuItem(_("New number game"))
         menu1.append(menu_items)
         menu_items.connect("activate", self._new_game_cb, 'number')
@@ -56,7 +66,8 @@ class DimensionsMain:
         menu1.append(menu_items)
         menu_items.connect("activate", self._new_game_cb, 'word')
         menu_items.show()
-        game_menu = Gtk.MenuItem("Games")
+        '''
+        game_menu = Gtk.MenuItem(_("Game"))
         game_menu.show()
         game_menu.set_submenu(menu1)
 
@@ -65,30 +76,31 @@ class DimensionsMain:
         menu2.append(menu_items)
         menu_items.connect("activate", self._robot_cb)
         menu_items.show()
-        menu_items = Gtk.MenuItem(_("90 sec."))
+        menu_items = Gtk.MenuItem(_("5 minutes"))
         menu2.append(menu_items)
-        menu_items.connect("activate", self._robot_time_cb, 90)
+        menu_items.connect("activate", self._robot_time_cb, 300)
         menu_items.show()
-        menu_items = Gtk.MenuItem(_("60 sec."))
+        menu_items = Gtk.MenuItem(_("2 minutes"))
+        menu2.append(menu_items)
+        menu_items.connect("activate", self._robot_time_cb, 120)
+        menu_items.show()
+        menu_items = Gtk.MenuItem(_("1 minute"))
         menu2.append(menu_items)
         menu_items.connect("activate", self._robot_time_cb, 60)
         menu_items.show()
-        menu_items = Gtk.MenuItem(_("45 sec."))
-        menu2.append(menu_items)
-        menu_items.connect("activate", self._robot_time_cb, 45)
-        menu_items.show()
-        menu_items = Gtk.MenuItem(_("30 sec."))
+        menu_items = Gtk.MenuItem(_("30 seconds"))
         menu2.append(menu_items)
         menu_items.connect("activate", self._robot_time_cb, 30)
         menu_items.show()
-        menu_items = Gtk.MenuItem(_("15 sec."))
+        menu_items = Gtk.MenuItem(_("15 seconds"))
         menu2.append(menu_items)
         menu_items.connect("activate", self._robot_time_cb, 15)
         menu_items.show()
-        tool_menu = Gtk.MenuItem("Robot")
+        tool_menu = Gtk.MenuItem(_('Play with the computer'))
         tool_menu.show()
         tool_menu.set_submenu(menu2)
 
+        '''
         menu3 = Gtk.Menu()
         menu_items = Gtk.MenuItem(_("Product"))
         menu3.append(menu_items)
@@ -137,6 +149,7 @@ class DimensionsMain:
         num_menu = Gtk.MenuItem("Numbers")
         num_menu.show()
         num_menu.set_submenu(menu3)
+        '''
 
         # A vbox to put a menu and the canvas in:
         vbox = Gtk.VBox(False, 0)
@@ -154,7 +167,7 @@ class DimensionsMain:
         menu_bar.append(game_menu)
         menu_bar.append(level_menu)
         menu_bar.append(tool_menu)
-        menu_bar.append(num_menu)
+        # menu_bar.append(num_menu)
         self.win.show_all()
 
         # Join the activity
@@ -202,8 +215,8 @@ class DimensionsMain:
         self.vmw.new_game()
         return True
 
-    def _level_cb(self, widget):
-        self.vmw.level = 1 - self.vmw.level
+    def _level_cb(self, widget, level):
+        self.vmw.level = level
         self.vmw.new_game()
 
     def _robot_cb(self, widget):

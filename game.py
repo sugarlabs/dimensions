@@ -18,6 +18,8 @@ from gi.repository import Gtk
 from gi.repository import Gdk
 from gi.repository import GdkPixbuf
 from gi.repository import GObject
+from gi.repository import Pango
+
 import os
 
 from gettext import gettext as _
@@ -25,6 +27,7 @@ from gettext import gettext as _
 from math import sqrt
 
 from sugar3.graphics.objectchooser import ObjectChooser
+from sugar3.graphics import style
 from sugar3.datastore import datastore
 from sugar3 import mime
 from sugar3.activity import activity
@@ -32,7 +35,6 @@ from sugar3.activity import activity
 import logging
 _logger = logging.getLogger('dimensions-activity')
 
-from sugar3.graphics import style
 GRID_CELL_SIZE = style.GRID_CELL_SIZE
 
 from constants import (LOW, MEDIUM, HIGH, MATCHMASK, ROW, COL, CARD_WIDTH,
@@ -41,7 +43,6 @@ from constants import (LOW, MEDIUM, HIGH, MATCHMASK, ROW, COL, CARD_WIDTH,
                        DIFFICULTY_LEVEL, BACKGROUNDMASK, DECKSIZE,
                        CUSTOM_CARD_INDICIES, SHAPES, COLORS, NUMBER, FILLS,
                        CARDS_IN_A_MATCH, LABELH)
-
 from grid import Grid
 from deck import Deck
 from card import Card
@@ -122,7 +123,6 @@ class Game():
         self._canvas.add_events(Gdk.EventMask.BUTTON_PRESS_MASK)
         self._canvas.add_events(Gdk.EventMask.BUTTON_RELEASE_MASK)
         self._canvas.add_events(Gdk.EventMask.BUTTON_MOTION_MASK)
-        self._canvas.add_events(Gdk.EventMask.KEY_PRESS_MASK)
 
         self._canvas.connect('event', self.__event_cb)
         self._canvas.connect('draw', self.__draw_cb)
@@ -298,11 +298,23 @@ class Game():
             deck_stop = deck_start + self.deck.count()
             self._restore_word_list(self._saved_state[deck_stop +
                                                       3 * self.matches:])
-            self.deck.restore(self._saved_state[deck_start: deck_stop])
-            self.grid.restore(self.deck, self._saved_state[0: ROW * COL])
-            self._restore_matches(self._saved_state[deck_stop: deck_stop +
-                                                    3 * self.matches])
-            self._restore_clicked(self._saved_state[ROW * COL: ROW * COL + 3])
+            if self._saved_state[deck_start] is not None:
+                self.deck.restore(self._saved_state[deck_start: deck_stop])
+                self.grid.restore(self.deck, self._saved_state[0: ROW * COL])
+                self._restore_matches(
+                    self._saved_state[deck_stop: deck_stop + 3 * self.matches])
+                self._restore_clicked(
+                    self._saved_state[ROW * COL: ROW * COL + 3])
+            else:
+                self.deck.hide()
+                self.deck.shuffle()
+                self.grid.deal(self.deck)
+                if not self._find_a_match():
+                    self.grid.deal_extra_cards(self.deck)
+                self.matches = 0
+                self.robot_matches = 0
+                self.match_list = []
+                self.total_time = 0
 
         elif not self.joiner():
             _logger.debug('Starting new game.')
@@ -400,6 +412,9 @@ class Game():
     def edit_word_list(self):
         ''' Update the word cards '''
         if not self.editing_word_list:
+            if hasattr(self, 'text_entry'):
+                self.text_entry.hide()
+                self.text_entry.disconnect(self.text_event_id)
             return
 
         # Set the card type to words, and generate a new deck.
@@ -425,6 +440,38 @@ class Game():
         self.set_label('clock', '')
         self.set_label('status', _('Edit the word cards.'))
 
+        if not hasattr(self, 'text_entry'):
+            self.text_entry = Gtk.TextView()
+            self.text_entry.set_wrap_mode(Gtk.WrapMode.WORD)
+            self.text_entry.set_pixels_above_lines(0)
+            self.text_entry.set_size_request(self._card_width,
+                                             self._card_height)
+            '''
+            rgba = Gdk.RGBA()
+            rgba.red, rgba.green, rgba.blue = rgb(self._colors[1])
+            rgba.alpha = 1.
+            self.text_entry.override_background_color(
+            Gtk.StateFlags.NORMAL, rgba)
+            '''
+            font_text = Pango.font_description_from_string('24')
+            self.text_entry.modify_font(font_text)
+            self.activity.fixed.put(self.text_entry, 0, 0)
+
+    def _text_focus_out_cb(self, widget=None, event=None):
+        if self._edit_card is None:
+            self.text_entry.hide()
+            self.text_entry.disconnect(self.text_event_id)
+        self._update_word_card()
+        self.text_entry.hide()
+
+    def _update_word_card(self):
+        bounds = self.text_buffer.get_bounds()
+        text = self.text_buffer.get_text(bounds[0], bounds[1], True)
+        self._edit_card.spr.set_label(text)
+        (i, j) = WORD_CARD_MAP[self._edit_card.index]
+        self.word_lists[i][j] = text
+        self._edit_card = None
+
     def __event_cb(self, widget, event):
         ''' Handle touch events '''
         if event.type in (Gdk.EventType.TOUCH_BEGIN,
@@ -444,10 +491,6 @@ class Game():
             elif event.type == Gdk.EventType.TOUCH_END or \
                     event.type == Gdk.EventType.BUTTON_RELEASE:
                 self._button_release(x, y)
-        elif event.type == Gdk.EventType.KEY_PRESS:
-            k = Gdk.keyval_name(event.keyval)
-            u = Gdk.keyval_to_unicode(event.keyval)
-            self._keypress(k, u)
 
     def _button_press_cb(self, win, event):
         ''' Look for a card under the button press and save its position. '''
@@ -562,6 +605,8 @@ class Game():
     def _button_release(self, x, y):
         # Maybe there is nothing to do.
         if self._press is None:
+            if self.editing_word_list:
+                self._text_focus_out_cb()
             self._drag_pos = [0, 0]
             return True
 
@@ -581,13 +626,12 @@ class Game():
 
         if move == 'click':
             if self.editing_word_list:
-                if self.editing_word_list:
-                    # Only edit one card at a time, so unselect other cards
-                    for i, c in enumerate(self.clicked):
-                        if c.spr is not None and c.spr != self._press:
-                            c.spr.set_label(
-                                c.spr.labels[0].replace(CURSOR, ''))
-                            c.spr = None  # Unselect
+                # Only edit one card at a time, so unselect other cards
+                for i, c in enumerate(self.clicked):
+                    if c.spr is not None and c.spr != self._press:
+                        c.spr.set_label(
+                            c.spr.labels[0].replace(CURSOR, ''))
+                        c.spr = None  # Unselect
             elif self.editing_custom_cards:
                 pass
             else:
@@ -716,8 +760,17 @@ class Game():
     def process_selection(self, spr):
         ''' After a card has been selected... '''
         if self.editing_word_list:  # Edit label of selected card
+            x, y = spr.get_xy()
+            if self._edit_card is not None:
+                self._update_word_card()
             self._edit_card = self.deck.spr_to_card(spr)
-            spr.set_label(spr.labels[0] + CURSOR)
+            self.text_buffer = self.text_entry.get_buffer()
+            self.text_entry.show()
+            self.text_buffer.set_text(self._edit_card.spr.labels[0])
+            self.activity.fixed.move(self.text_entry, x, y)
+            self.text_event_id = self.text_entry.connect(
+                'focus-out-event', self._text_focus_out_cb)
+            self.text_entry.grab_focus()
         elif self.editing_custom_cards:
             # Only edit one card at a time, so unselect other cards
             for i, c in enumerate(self.clicked):
@@ -890,82 +943,6 @@ class Game():
             self.grid.deal_extra_cards(self.deck)
             self._failure = None
         self._dealing = False
-
-    def _keypress_cb(self, area, event):
-        ''' Keypress: editing word cards or selecting cards to play '''
-        k = Gdk.keyval_name(event.keyval)
-        u = Gdk.keyval_to_unicode(event.keyval)
-        self._keypress(k, u)
-
-    def _keypress(self, k, u):
-        if self.editing_word_list and self._edit_card is not None:
-            if k in NOISE_KEYS:
-                self._dead_key = None
-                return True
-            if k[0:5] == 'dead_':
-                self._dead_key = k
-                return True
-            label = self._edit_card.spr.labels[0]
-            if len(label) > 0:
-                c = label.count(CURSOR)
-                if c == 0:
-                    oldleft = label
-                    oldright = ''
-                elif len(label) == 1:  # Only CURSOR
-                    oldleft = ''
-                    oldright = ''
-                else:
-                    try:  # Why are getting a ValueError on occasion?
-                        oldleft, oldright = label.split(CURSOR)
-                    except ValueError:
-                        oldleft = label
-                        oldright = ''
-            else:
-                oldleft = ''
-                oldright = ''
-            newleft = oldleft
-            if k == 'BackSpace':
-                if len(oldleft) > 1:
-                    newleft = oldleft[:len(oldleft) - 1]
-                else:
-                    newleft = ''
-            elif k == 'Delete':
-                if len(oldright) > 0:
-                    oldright = oldright[1:]
-            elif k == 'Home':
-                oldright = oldleft + oldright
-                newleft = ''
-            elif k == 'Left':
-                if len(oldleft) > 0:
-                    oldright = oldleft[len(oldleft) - 1:] + oldright
-                    newleft = oldleft[:len(oldleft) - 1]
-            elif k == 'Right':
-                if len(oldright) > 0:
-                    newleft = oldleft + oldright[0]
-                    oldright = oldright[1:]
-            elif k == 'End':
-                newleft = oldleft + oldright
-                oldright = ''
-            elif k == 'Return':
-                newleft = oldleft + RETURN
-            else:
-                if self._dead_key is not None:
-                    u = DEAD_DICTS[DEAD_KEYS.index(self._dead_key[5:])][k]
-                if k in WHITE_SPACE:
-                    u = 32
-                if unichr(u) != '\x00':
-                    newleft = oldleft + unichr(u)
-                else:
-                    newleft = oldleft + k
-            label = newleft + CURSOR + oldright
-            self._edit_card.spr.set_label(label)
-            (i, j) = WORD_CARD_MAP[self._edit_card.index]
-            self.word_lists[i][j] = label.replace(CURSOR, '')
-            self._dead_key = None
-        else:
-            if k in KEYMAP:
-                self.process_selection(self.grid.grid_to_spr(KEYMAP.index(k)))
-        return True
 
     def __draw_cb(self, canvas, cr):
         self._sprites.redraw_sprites(cr=cr)

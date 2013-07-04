@@ -128,6 +128,7 @@ class Dimensions(activity.Activity):
         if card_type == 'custom' and self.vmw.custom_paths[0] is None:
             self.image_import_cb()
         else:
+            self.tools_toolbar_button.set_expanded(False)
             self.vmw.new_game()
 
     def _robot_cb(self, button=None):
@@ -426,6 +427,9 @@ class Dimensions(activity.Activity):
         '''
 
     def _configure_cb(self, event):
+        self._vbox.set_size_request(Gdk.Screen.width(), Gdk.Screen.height())
+        self._vbox.show()
+
         if Gdk.Screen.width() < Gdk.Screen.height():
             for sep in self._sep:
                 sep.hide()
@@ -498,15 +502,34 @@ class Dimensions(activity.Activity):
             group=self.beginner_button)
         LEVEL_BUTTONS[EXPERT] = self.expert_button
 
+    def _fixed_resize_cb(self, widget=None, rect=None):
+        ''' If a toolbar opens or closes, we need to resize the vbox
+        holding out scrolling window. '''
+        self._vbox.set_size_request(rect.width, rect.height)
+
     def _setup_canvas(self):
-        ''' Create a canvas.. '''
-        canvas = Gtk.DrawingArea()
-        canvas.set_size_request(Gdk.Screen.width(), Gdk.Screen.height())
-        self.set_canvas(canvas)
-        canvas.show()
+        ''' Create a canvas in a Gtk.Fixed '''
+        self.fixed = Gtk.Fixed()
+        self.fixed.connect('size-allocate', self._fixed_resize_cb)
+        self.fixed.show()
+        self.set_canvas(self.fixed)
+
+        self._vbox = Gtk.VBox(False, 0)
+        self._vbox.set_size_request(Gdk.Screen.width(), Gdk.Screen.height())
+        self.fixed.put(self._vbox, 0, 0)
+        self._vbox.show()
+
+        self._canvas = Gtk.DrawingArea()
+        self._canvas.set_size_request(int(Gdk.Screen.width()),
+                                      int(Gdk.Screen.height()))
+        self._canvas.show()
+        self.show_all()
+        self._vbox.pack_end(self._canvas, True, True, 0)
+        self._vbox.show()
+
         self.show_all()
 
-        self.vmw = Game(canvas, self)
+        self.vmw = Game(self._canvas, self)
         self.vmw.level = self._play_level
         LEVEL_BUTTONS[self._play_level].set_active(True)
         self.vmw.card_type = self._card_type
@@ -529,7 +552,7 @@ class Dimensions(activity.Activity):
                self._custom_jobject[i] is not None:
                 self.vmw.custom_paths[i] = datastore.get(
                     self._custom_jobject[i])
-        return canvas
+        return self._canvas
 
     def write_file(self, file_path):
         ''' Write data to the Journal. '''
