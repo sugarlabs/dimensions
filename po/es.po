@@ -173,13 +173,38 @@ msgstr ""
 #. TRANS: Please translate Visual Match as Dimensions
 #: VisualMatchActivity.py:627 VisualMatchActivity.py:659 game.py:983
 #: visualmatch.py:33
-msgid "Visual Match"
-msgstr "Coincidencia visual"
+msgid "Dimensions"
+msgstr "Dimensiones"
 
 #. TRANS: "summary" option from activity.info file
 #. TRANS: "description" option from activity.info file
 msgid "a pattern-matching game"
 msgstr "un juego de coincidencia de patrones"
+
+#: dimensions.py:79 Dimensions.py:77
+msgid "5 minutes"
+msgstr "5 minutos"
+
+#: dimensions.py:83 Dimensions.py:76
+msgid "2 minutes"
+msgstr "2 minutos"
+
+#: dimensions.py:87 Dimensions.py:76
+msgid "1 minute"
+msgstr "1 minuto"
+
+#: dimensions.py:91 Dimensions.py:75
+msgid "30 seconds"
+msgstr "30 segundos"
+
+#: dimensions.py:95 Dimensions.py:75
+msgid "15 seconds"
+msgstr "15 segundos"
+
+#. TRANS: Level of difficulty
+#: dimensions.py:51
+msgid "Level"
+msgstr "Nivel de dificultad"
 
 #: VisualMatchActivity.py:59 VisualMatchActivity.py:434
 #: VisualMatchActivity.py:639
