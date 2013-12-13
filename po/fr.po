@@ -42,9 +42,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-10-30 00:33-0400\n"
-"PO-Revision-Date: 2012-11-24 22:18+0200\n"
-"Last-Translator: Lionel Laské <llaske@c2s.fr>\n"
+"POT-Creation-Date: 2013-07-05 22:11-0400\n"
+"PO-Revision-Date: 2013-08-17 19:32+0200\n"
+"Last-Translator: samy boutayeb <s.boutayeb@free.fr>\n"
 "Language-Team: OLPC France <contact@olpc-france.org>\n"
 "Language: fr\n"
 "MIME-Version: 1.0\n"
@@ -55,7 +55,7 @@ msgstr ""
 
 #. TRANS: "name" option from activity.info file
 #. TRANS: Please translate Visual Match as Dimensions
-#: VisualMatchActivity.py:627 VisualMatchActivity.py:659 game.py:983
+#: VisualMatchActivity.py:634 VisualMatchActivity.py:666 game.py:983
 #: visualmatch.py:33
 msgid "Visual Match"
 msgstr "Correspondance visuelle"
@@ -65,18 +65,18 @@ msgstr "Correspondance visuelle"
 msgid "a pattern-matching game"
 msgstr "Un jeu de correspondance visuelle"
 
-#: VisualMatchActivity.py:59 VisualMatchActivity.py:434
-#: VisualMatchActivity.py:639
+#: VisualMatchActivity.py:59 VisualMatchActivity.py:441
+#: VisualMatchActivity.py:646
 msgid "beginner"
 msgstr "débutant"
 
-#: VisualMatchActivity.py:59 VisualMatchActivity.py:442
-#: VisualMatchActivity.py:640
+#: VisualMatchActivity.py:59 VisualMatchActivity.py:449
+#: VisualMatchActivity.py:647
 msgid "intermediate"
-msgstr "niveau intermédiaire"
+msgstr "intermédiaire"
 
-#: VisualMatchActivity.py:59 VisualMatchActivity.py:450
-#: VisualMatchActivity.py:641
+#: VisualMatchActivity.py:59 VisualMatchActivity.py:457
+#: VisualMatchActivity.py:648
 msgid "expert"
 msgstr "expert"
 
@@ -92,155 +92,189 @@ msgstr "Nouvelle partie de nombres"
 msgid "New word game"
 msgstr "Nouvelle partie de mots"
 
-#: VisualMatchActivity.py:73 VisualMatchActivity.py:324
+#: VisualMatchActivity.py:73 VisualMatchActivity.py:331
 msgid "Import custom cards"
 msgstr "Importe des cartes personnalisées"
 
-#: VisualMatchActivity.py:128
+#: VisualMatchActivity.py:75
+msgid "Dimensions"
+msgstr "Dimensions"
+
+#. TRANS: The prime number version of the dimensions game
+#: VisualMatchActivity.py:77
+msgid "Prime Dimensions"
+msgstr "Dimensions nombres premiers"
+
+#. TRANS: The word version of the dimensions game
+#: VisualMatchActivity.py:79
+msgid "Word Dimensions"
+msgstr "Dimensions mots"
+
+#: VisualMatchActivity.py:80
+msgid "15 seconds"
+msgstr "15 secondes"
+
+#: VisualMatchActivity.py:80
+msgid "30 seconds"
+msgstr "30 secondes"
+
+#: VisualMatchActivity.py:80
+msgid "1 minute"
+msgstr "1 minute"
+
+#: VisualMatchActivity.py:80
+msgid "2 minutes"
+msgstr "2 minutes"
+
+#: VisualMatchActivity.py:80
+msgid "5 minutes"
+msgstr "5 minutes"
+
+#: VisualMatchActivity.py:135
 msgid "Play with the computer."
 msgstr "Joue avec l'ordinateur."
 
-#: VisualMatchActivity.py:133
+#: VisualMatchActivity.py:140
 msgid "Stop playing with the computer."
 msgstr "Arrête de jouer avec l'ordinateur."
 
-#: VisualMatchActivity.py:217 visualmatch.py:173
+#: VisualMatchActivity.py:224 visualmatch.py:173
 msgid "mouse"
 msgstr "souris"
 
-#: VisualMatchActivity.py:218 visualmatch.py:173
+#: VisualMatchActivity.py:225 visualmatch.py:173
 msgid "cat"
 msgstr "chat"
 
-#: VisualMatchActivity.py:219 visualmatch.py:173
+#: VisualMatchActivity.py:226 visualmatch.py:173
 msgid "dog"
 msgstr "chien"
 
-#: VisualMatchActivity.py:220 visualmatch.py:174
+#: VisualMatchActivity.py:227 visualmatch.py:174
 msgid "cheese"
 msgstr "fromage"
 
-#: VisualMatchActivity.py:221 visualmatch.py:174
+#: VisualMatchActivity.py:228 visualmatch.py:174
 msgid "apple"
 msgstr "pomme"
 
-#: VisualMatchActivity.py:222 visualmatch.py:174
+#: VisualMatchActivity.py:229 visualmatch.py:174
 msgid "bread"
 msgstr "pain"
 
-#: VisualMatchActivity.py:223 visualmatch.py:175
+#: VisualMatchActivity.py:230 visualmatch.py:175
 msgid "moon"
 msgstr "lune"
 
-#: VisualMatchActivity.py:224 visualmatch.py:175
+#: VisualMatchActivity.py:231 visualmatch.py:175
 msgid "sun"
 msgstr "soleil"
 
-#: VisualMatchActivity.py:225 visualmatch.py:175
+#: VisualMatchActivity.py:232 visualmatch.py:175
 msgid "earth"
 msgstr "terre"
 
-#: VisualMatchActivity.py:296 VisualMatchActivity.py:628
+#: VisualMatchActivity.py:303 VisualMatchActivity.py:635
 msgid "Export scores to clipboard"
-msgstr "Exporter les scores dans le presse-papiers"
+msgstr "Exporte les scores dans le presse-papiers"
 
-#: VisualMatchActivity.py:320 VisualMatchActivity.py:622
+#: VisualMatchActivity.py:327 VisualMatchActivity.py:629
 msgid "Edit word lists."
 msgstr "Édite la liste des mots."
 
-#: VisualMatchActivity.py:331 VisualMatchActivity.py:646
+#: VisualMatchActivity.py:338 VisualMatchActivity.py:653
 msgid "product"
 msgstr "produit"
 
-#: VisualMatchActivity.py:339 VisualMatchActivity.py:647
+#: VisualMatchActivity.py:346 VisualMatchActivity.py:654
 msgid "Roman numerals"
 msgstr "Chiffres romains"
 
-#: VisualMatchActivity.py:347 VisualMatchActivity.py:648
+#: VisualMatchActivity.py:354 VisualMatchActivity.py:655
 msgid "word"
 msgstr "mot"
 
-#: VisualMatchActivity.py:355 VisualMatchActivity.py:649 visualmatch.py:105
+#: VisualMatchActivity.py:362 VisualMatchActivity.py:656 visualmatch.py:105
 msgid "Chinese"
 msgstr "Chinois"
 
-#: VisualMatchActivity.py:363 VisualMatchActivity.py:650 visualmatch.py:109
+#: VisualMatchActivity.py:370 VisualMatchActivity.py:657 visualmatch.py:109
 msgid "Mayan"
 msgstr "Maya"
 
-#: VisualMatchActivity.py:371 VisualMatchActivity.py:651 visualmatch.py:113
+#: VisualMatchActivity.py:378 VisualMatchActivity.py:658 visualmatch.py:113
 msgid "Quipu"
 msgstr "Quipu"
 
-#: VisualMatchActivity.py:382 VisualMatchActivity.py:652
+#: VisualMatchActivity.py:389 VisualMatchActivity.py:659
 msgid "hash marks"
 msgstr "marque de graduation"
 
-#: VisualMatchActivity.py:390 VisualMatchActivity.py:653
+#: VisualMatchActivity.py:397 VisualMatchActivity.py:660
 msgid "dots in a circle"
 msgstr "points dans un cercle"
 
-#: VisualMatchActivity.py:398 VisualMatchActivity.py:654
+#: VisualMatchActivity.py:405 VisualMatchActivity.py:661
 msgid "points on a star"
 msgstr "points dans une étoile"
 
-#: VisualMatchActivity.py:406 VisualMatchActivity.py:655
+#: VisualMatchActivity.py:413 VisualMatchActivity.py:662
 msgid "dice"
 msgstr "dé"
 
-#: VisualMatchActivity.py:414 VisualMatchActivity.py:656
+#: VisualMatchActivity.py:421 VisualMatchActivity.py:663
 msgid "dots in a line"
 msgstr "points en ligne"
 
-#: VisualMatchActivity.py:422 VisualMatchActivity.py:637
+#: VisualMatchActivity.py:429 VisualMatchActivity.py:644
 msgid "Play with the computer"
 msgstr "Joue avec l'ordinateur."
 
-#: VisualMatchActivity.py:459
+#: VisualMatchActivity.py:466
 msgid "Find a match."
 msgstr "Trouve une correspondance."
 
-#: VisualMatchActivity.py:462 game.py:838 game.py:952
+#: VisualMatchActivity.py:469 game.py:838 game.py:952
 msgid "cards"
 msgstr "cartes"
 
-#: VisualMatchActivity.py:465 game.py:965 game.py:967
+#: VisualMatchActivity.py:472 game.py:965 game.py:967
 msgid "matches"
 msgstr "correspondances"
 
-#: VisualMatchActivity.py:592
+#: VisualMatchActivity.py:599
 msgid "A new game is loading."
 msgstr "Une nouvelle partie est en train de charger"
 
-#: VisualMatchActivity.py:621 VisualMatchActivity.py:662
+#: VisualMatchActivity.py:628 VisualMatchActivity.py:669
 msgid "Tools"
 msgstr "Outils"
 
-#: VisualMatchActivity.py:623
+#: VisualMatchActivity.py:630
 msgid "Import image cards"
 msgstr "Importer les cartes image"
 
-#: VisualMatchActivity.py:632 VisualMatchActivity.py:660
+#: VisualMatchActivity.py:639 VisualMatchActivity.py:667
 msgid "Game"
 msgstr "Jeu"
 
-#: VisualMatchActivity.py:638
+#: VisualMatchActivity.py:645
 msgid "robot pause time"
 msgstr "pause robot"
 
-#: VisualMatchActivity.py:645 VisualMatchActivity.py:661
+#: VisualMatchActivity.py:652 VisualMatchActivity.py:668
 msgid "Numbers"
 msgstr "Nombres"
 
-#: VisualMatchActivity.py:663
+#: VisualMatchActivity.py:670
 msgid "number of cards remaining in deck"
 msgstr "nombre de cartes restantes dans le tas"
 
-#: VisualMatchActivity.py:664
+#: VisualMatchActivity.py:671
 msgid "number of matches"
 msgstr "nombre de correspondances"
 
-#: VisualMatchActivity.py:665
+#: VisualMatchActivity.py:672
 msgid "elapsed time"
 msgstr "temps écoulé"
 
