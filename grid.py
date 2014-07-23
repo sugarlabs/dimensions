@@ -11,6 +11,7 @@
 
 
 from gi.repository import GObject
+from gi.repository import Gdk
 
 import random
 
@@ -33,6 +34,7 @@ class Grid:
         ''' Initialize the playing surface '''
         self.grid = []
         self.card_width = card_width
+        self.card_height = card_height
         for i in range(ROW * COL):
             self.grid.append(None)
         '''
@@ -136,12 +138,16 @@ class Grid:
         ''' Move card to the match area. '''
         self.stop_animation = False
         spr.set_layer(2000)
+        '''
         if not self.portrait:
             self.ex[i] = MATCH_POSITION
             self.ey[i] = self.top + i * self.yinc
         else:
             self.ex[i] = self.left + i * self.xinc
             self.ey[i] = self.bottom
+        '''
+        self.ex[i] = self.left + i * self.xinc
+        self.ey[i] = self.bottom
         self.sx[i] = spr.get_xy()[0]
         self.sy[i] = spr.get_xy()[1]
         self.dx[i] = int((self.ex[i] - self.sx[i]) / 10)
@@ -231,7 +237,11 @@ class Grid:
     def match_to_xy(self, i):
         ''' Convert from match index to x, y position. '''
         if i > 2:
-            return ((self.left + self.xinc, self.bottom + self.yinc))
+            # return ((self.left + self.xinc, self.bottom + self.yinc))
+            # return self.grid_to_xy(7)
+            x = int(Gdk.Screen.width() / 2) - self.card_width
+            y = int(Gdk.Screen.height() / 2) - self.card_height
+            return ((x, y))
         else:
             return ((self.left + i * self.xinc, self.bottom))
         '''

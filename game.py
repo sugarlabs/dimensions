@@ -203,26 +203,26 @@ class Game():
             self._smiley[-1].spr.move(self.grid.grid_to_xy(i))
         self._smiley.append(Card(scale=self._scale))
         self._smiley[-1].create(
-            generate_smiley(self._scale), sprites=self._sprites)
+            generate_smiley(self._scale * 2), sprites=self._sprites)
         self._smiley[-1].spr.move(self.grid.match_to_xy(3))
         self._smiley[-1].spr.hide()
 
         # A different frowny face for each type of error
-        self._frowny.append(Card(self._scale))
+        self._frowny.append(Card(self._scale * 2))
         self._frowny[-1].create(
-            generate_frowny_shape(self._scale), sprites=self._sprites)
+            generate_frowny_shape(self._scale * 2), sprites=self._sprites)
         self._frowny[-1].spr.move(self.grid.match_to_xy(3))
         self._frowny.append(Card(self._scale))
         self._frowny[-1].create(
-            generate_frowny_color(self._scale), sprites=self._sprites)
+            generate_frowny_color(self._scale * 2), sprites=self._sprites)
         self._frowny[-1].spr.move(self.grid.match_to_xy(3))
         self._frowny.append(Card(self._scale))
         self._frowny[-1].create(
-            generate_frowny_texture(self._scale), sprites=self._sprites)
+            generate_frowny_texture(self._scale * 2), sprites=self._sprites)
         self._frowny[-1].spr.move(self.grid.match_to_xy(3))
         self._frowny.append(Card(self._scale))
         self._frowny[-1].create(
-            generate_frowny_number(self._scale), sprites=self._sprites)
+            generate_frowny_number(self._scale * 2), sprites=self._sprites)
         self._frowny[-1].spr.move(self.grid.match_to_xy(3))
 
         size = min(self._width, self._height)
@@ -807,9 +807,9 @@ class Game():
             # If we have three cards selected, test for a match.
             self._test_for_a_match()
             if self._matches_on_display:
-                self._smiley[-1].spr.set_layer(100)
+                self._smiley[-1].spr.set_layer(10000)
             elif not self._the_game_is_over and self._failure is not None:
-                self._frowny[self._failure].spr.set_layer(100)
+                self._frowny[self._failure].spr.set_layer(10000)
         return
 
     def _none_in_clicked(self):
