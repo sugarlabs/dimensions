@@ -35,12 +35,19 @@ class Grid:
         self.card_width = card_width
         for i in range(ROW * COL):
             self.grid.append(None)
+        '''
         # Card spacing
         if width < height:
             self.left = MATCH_POSITION
             self.portrait = True
         else:
             self.left = int((width - (card_width * 2)) / 2)
+            self.portrait = False
+        '''
+        self.left = int((width - (card_width * 3)) / 2)
+        if width < height:
+            self.portrait = True
+        else:
             self.portrait = False
         self.xinc = int(card_width * 1.2)
         self.top = int(LABELH * 1.25)
@@ -205,10 +212,13 @@ class Grid:
 
     def xy_to_match(self, pos):
         ''' Convert from sprite x,y to match index. '''
+        return int((pos[0] - self.left) / self.xinc)
+        '''
         if self.portrait:
             return int((pos[0] - self.left) / self.xinc)
         else:
             return int((pos[1] - self.top) / self.yinc)
+        '''
 
     def xy_in_match(self, pos):
         ''' Is a position at one of the match points? '''
@@ -220,6 +230,11 @@ class Grid:
 
     def match_to_xy(self, i):
         ''' Convert from match index to x, y position. '''
+        if i > 2:
+            return ((self.left + self.xinc, self.bottom + self.yinc))
+        else:
+            return ((self.left + i * self.xinc, self.bottom))
+        '''
         if self.portrait:
             if i > 2:
                 return ((self.left + self.xinc, self.bottom + self.yinc))
@@ -227,6 +242,7 @@ class Grid:
                 return ((self.left + i * self.xinc, self.bottom))
         else:
             return ((MATCH_POSITION, self.top + i * self.yinc))
+        '''
 
     def xy_in_grid(self, pos):
         ''' Is a position at one of the grid points? '''

@@ -228,13 +228,15 @@ class SVG:
         svg_string += self._svg_style()
         return svg_string
 
-    def _background(self, width=None, height=None):
+    def _background(self, width=None, height=None, corner=True):
         if width == 125 and height == 75:
             return self._svg_rect(119.5, 69.5, 11, 9, 2.75, 2.75)
+        elif not corner:
+            return self._svg_rect(width, height, 0, 0, 0, 0)
         else:
             return self._svg_rect(width - 5.5, height - 5.5, 11, 9, 2.75, 2.75)
 
-    def _header(self, width=125, height=75):
+    def _header(self, width=125, height=75, corner=True):
         svg_string = "<?xml version=\"1.0\" encoding=\"UTF-8\""
         svg_string += " standalone=\"no\"?>\n"
         svg_string += "<!-- Created with Emacs -->\n"
@@ -247,7 +249,7 @@ class SVG:
         svg_string += "%s%f%s%f%s" % ("<g\n       transform=\"matrix(",
                                       self._scale, ", 0, 0, ", self._scale,
                                       ", 0, 0)\">\n")
-        svg_string += self._background(width, height)
+        svg_string += self._background(width, height, corner)
         return svg_string
 
     def _footer(self):
@@ -865,12 +867,23 @@ def generate_selected_card(scale):
     svg_string += svg._footer()
     return svg_string
 
+
 def generate_label(width, height):
     svg = SVG()
     svg._set_scale(1.0)
     svg._set_stroke_width(6.0)
     svg._set_colors(["none", "none"])
     svg_string = svg._header(width, height)
+    svg_string += svg._footer()
+    return svg_string
+
+
+def generate_background(width, height):
+    svg = SVG()
+    svg._set_scale(1.0)
+    svg._set_stroke_width(6.0)
+    svg._set_colors([WHITE, WHITE])
+    svg_string = svg._header(width, height, corner=False)
     svg_string += svg._footer()
     return svg_string
 

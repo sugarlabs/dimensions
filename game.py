@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-#Copyright (c) 2009,12 Walter Bender
+#Copyright (c) 2009-14 Walter Bender
 #Copyright (c) 2009 Michele Pratusevich
 #Copyright (c) 2009 Vincent Le
 
@@ -50,7 +50,7 @@ from sprites import Sprites, Sprite
 from gencards import (generate_match_card, generate_frowny_shape,
                       generate_smiley, generate_frowny_texture,
                       generate_frowny_color, generate_frowny_number,
-                      generate_label)
+                      generate_label, generate_background)
 
 CURSOR = '█'
 
@@ -131,16 +131,17 @@ class Game():
         self._height = Gdk.Screen.height() - GRID_CELL_SIZE * 2
         if self._width < self._height:
             self.portrait = True
-            self._scale = 0.8 * self._width / (CARD_HEIGHT * 5.5)
+            self._scale = 0.67 * self._width / (CARD_HEIGHT * 5.5)
         else:
             self.portrait = False
-            self._scale = 0.8 * self._height / (CARD_HEIGHT * 5.5)
+            self._scale = 0.67 * self._height / (CARD_HEIGHT * 5.5)
 
         self._card_width = CARD_WIDTH * self._scale
         self._card_height = CARD_HEIGHT * self._scale
         self.custom_paths = [None, None, None, None, None, None, None, None,
                              None]
         self._sprites = Sprites(self._canvas)
+        self._sprites.set_delay(True)
         self._press = None
         self.matches = 0
         self.robot_matches = 0
@@ -176,6 +177,11 @@ class Game():
 
         self.grid = Grid(self._width, self._height, self._card_width,
                          self._card_height)
+
+        string = generate_background(Gdk.Screen.width(), Gdk.Screen.height())
+        self.background = Sprite(self._sprites, 0, 0,
+                                 svg_str_to_pixbuf(string, Gdk.Screen.width(),
+                                                   Gdk.Screen.height()))
 
         self._cards = []
         for i in range(DECKSIZE):
@@ -219,12 +225,18 @@ class Game():
             generate_frowny_number(self._scale), sprites=self._sprites)
         self._frowny[-1].spr.move(self.grid.match_to_xy(3))
 
+        size = min(self._width, self._height)
         self._label = Card()
-        self._label.create(generate_label(min(self._width, self._height),
-                                          LABELH),
+        self._label.create(generate_label(size, LABELH * 2),
                            sprites=self._sprites)
-        self._label.spr.move((0, 0))
+        self._label.spr.move((LABELH, LABELH))
         self._label.spr.set_label_attributes(24, horiz_align="left")
+
+        self._label_time = Card()
+        self._label_time.create(generate_label(size, LABELH * 2),
+                                sprites=self._sprites)
+        self._label_time.spr.move((Gdk.Screen.width() - size - LABELH, LABELH))
+        self._label_time.spr.set_label_attributes(24, horiz_align="right")
 
         self._labels = {'deck': '', 'match': '', 'clock': '', 'status': ''}
 
@@ -356,6 +368,8 @@ class Game():
 
         for i in range((ROW - 1) * COL):
             self._smiley[i].hide_card()
+
+        self._sprites.draw_all()
 
     def _sharing(self):
         ''' Are we sharing? '''
@@ -688,8 +702,11 @@ class Game():
         move = 'drag'
         if self.grid.spr_to_grid(spr) is None:
             # Returning a card to the grid
+            '''
             if (self.portrait and y < self.grid.bottom) or \
                     (not self.portrait and x > self.grid.left):
+            '''
+            if y < self.grid.bottom:
                 i = self.grid.xy_to_grid((x, y))
                 if self.grid.grid[i] is not None:
                     i = self.grid.find_an_empty_slot()
@@ -719,9 +736,10 @@ class Game():
             i = self._where_in_clicked(spr)
             if i is None:
                 move = 'abort'
-            # Moving a card to the match area
-            elif (self.portrait and y > self.grid.bottom) or \
-                    (not self.portrait and x < self.grid.left):
+               # Moving a card to the match area
+               # elif (self.portrait and y > self.grid.bottom) or \
+               #        (not self.portrait and x < self.grid.left):
+            elif y > self.grid.bottom:
                 self.grid.grid[self.grid.spr_to_grid(spr)] = None
                 spr.move(self._match_area[i].spr.get_xy())
             else:  # Shuffle positions in match area
@@ -996,12 +1014,11 @@ class Game():
         if label in self._labels:
             self._labels[label] = s
 
-        msg = "%s - %s - %s - %s" % (self._labels['deck'],
-                                     self._labels['match'],
-                                     self._labels['clock'],
-                                     self._labels['status'])
-
+        msg = "%s\n%s" % (self._labels['deck'], self._labels['match'])
         self._label.spr.set_label(msg)
+
+        msg = "%s\n%s" % (self._labels['clock'], self._labels['status'])
+        self._label_time.spr.set_label(msg)
 
     def _restore_clicked(self, saved_selected_indices):
         ''' Restore the selected cards upon resume or share. '''
