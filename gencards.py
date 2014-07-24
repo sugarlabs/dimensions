@@ -278,7 +278,7 @@ class SVG:
     #
     def _smiley(self):
         self._set_font("DejaVu")
-        return self._svg_text(63.5, 63.5, 72, "", '☻')
+        return self._svg_text(63.5, 63.5, 72, "", '☺')  # '☻')
 
     def _frowny(self):
         self._set_font("DejaVu")
@@ -600,7 +600,7 @@ class SVG:
 def generate_smiley(scale):
     svg = SVG()
     svg._set_scale(scale)
-    svg._set_colors([YELLOW, BLACK])
+    svg._set_colors([BLACK, YELLOW])
     svg_string = svg._header()
     svg_string += svg._smiley()
     svg_string += svg._footer()
