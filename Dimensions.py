@@ -19,7 +19,6 @@ from gi.repository import Gdk
 from gi.repository import GObject
 
 from sugar3.activity import activity
-from sugar3 import profile
 from sugar3.graphics.toolbarbox import ToolbarBox
 from sugar3.activity.widgets import ActivityToolbarButton
 from sugar3.activity.widgets import StopButton
@@ -36,10 +35,8 @@ from sugar3.presence import presenceservice
 from sugar3.presence.tubeconn import TubeConnection
 
 from gettext import gettext as _
-import os.path
 import logging
 _logger = logging.getLogger('dimensions-activity')
-import json
 from json import load as jload
 from json import dump as jdump
 
@@ -91,7 +88,7 @@ class Dimensions(activity.Activity):
         self._read_journal_data()
         self._sep = []
         self._setup_toolbars()
-        canvas = self._setup_canvas()
+        self._setup_canvas()
         self._setup_presence_service()
 
         if not hasattr(self, '_saved_state'):
@@ -124,8 +121,7 @@ class Dimensions(activity.Activity):
         if not self.ready_to_play:
             return
         self._notify_new_game(self._prompt)
-        # a brief pause to give alert time to load
-        timeout = GObject.timeout_add(200, self._new_game, card_type)
+        GObject.idle_add(self._new_game, card_type)
 
     def _new_game(self, card_type):
         if card_type == 'custom' and self.vmw.custom_paths[0] is None:
@@ -740,8 +736,7 @@ class Dimensions(activity.Activity):
             'NewTube', self._new_tube_cb)
 
         _logger.debug('This is my activity: making a tube...')
-        id = self.tubes_chan[telepathy.CHANNEL_TYPE_TUBES].OfferDBusTube(
-            SERVICE, {})
+        self.tubes_chan[telepathy.CHANNEL_TYPE_TUBES].OfferDBusTube(SERVICE, {})
 
     def _joined_cb(self, activity):
         ''' ...or join an exisiting share. '''

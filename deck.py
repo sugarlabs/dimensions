@@ -1,4 +1,4 @@
-#Copyright (c) 2009,10 Walter Bender
+#Copyright (c) 2009-14 Walter Bender
 
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -12,11 +12,10 @@
 
 from random import randrange
 
-from constants import HIGH, MEDIUM, LOW, FILLS, SHAPES, NUMBER, COLORS, \
-                      COLOR_PAIRS
-from card import Card
-from gencards import generate_pattern_card, generate_number_card, \
-                     generate_word_card
+from constants import (HIGH, MEDIUM, LOW, FILLS, SHAPES, NUMBER, COLORS,
+                       COLOR_PAIRS)
+from gencards import (generate_pattern_card, generate_number_card,
+                      generate_word_card)
 
 
 class Deck:

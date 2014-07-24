@@ -12,8 +12,6 @@
 # along with this library; if not, write to the Free Software
 # Foundation, 51 Franklin Street, Suite 500 Boston, MA 02110-1335 USA
 
-
-import gi
 from gi.repository import Gtk
 from gi.repository import Gdk
 from gi.repository import GdkPixbuf
@@ -26,23 +24,18 @@ from gettext import gettext as _
 
 from math import sqrt
 
-from sugar3.graphics.objectchooser import ObjectChooser
-from sugar3.graphics import style
-from sugar3.datastore import datastore
-from sugar3 import mime
-from sugar3.activity import activity
-
 import logging
 _logger = logging.getLogger('dimensions-activity')
 
-GRID_CELL_SIZE = style.GRID_CELL_SIZE
+try:
+    from sugar3.graphics.style import GRID_CELL_SIZE, DEFAULT_SPACING
+except:
+    GRID_CELL_SIZE = 55
+    DEFAULT_SPACING = 16
 
-from constants import (LOW, MEDIUM, HIGH, MATCHMASK, ROW, COL, CARD_WIDTH,
-                       WORD_CARD_INDICIES, DEAD_DICTS, DEAD_KEYS, WHITE_SPACE,
-                       NOISE_KEYS, WORD_CARD_MAP, KEYMAP, CARD_HEIGHT, DEAL,
-                       DIFFICULTY_LEVEL, BACKGROUNDMASK, DECKSIZE,
-                       CUSTOM_CARD_INDICIES, SHAPES, COLORS, NUMBER, FILLS,
-                       CARDS_IN_A_MATCH, LABELH)
+from constants import (HIGH, ROW, COL, CARD_WIDTH, WORD_CARD_INDICIES, LABELH,
+                       WORD_CARD_MAP, CARD_HEIGHT, DEAL, DIFFICULTY_LEVEL,
+                       DECKSIZE, CUSTOM_CARD_INDICIES, CARDS_IN_A_MATCH)
 from grid import Grid
 from deck import Deck
 from card import Card
@@ -128,7 +121,7 @@ class Game():
         self._canvas.connect('draw', self.__draw_cb)
 
         self._width = Gdk.Screen.width()
-        self._height = Gdk.Screen.height() - GRID_CELL_SIZE * 2
+        self._height = Gdk.Screen.height()
         if self._width < self._height:
             self.portrait = True
             self._scale = 0.67 * self._width / (CARD_HEIGHT * 5.5)
@@ -158,7 +151,7 @@ class Game():
         self._start_pos = [0, 0]
         self.low_score = [-1, -1, -1]
         self.all_scores = []
-        self.robot = False 
+        self.robot = False
         self.robot_time = 0
         self.total_time = 0
         self.numberC = 0
@@ -178,10 +171,32 @@ class Game():
         self.grid = Grid(self._width, self._height, self._card_width,
                          self._card_height)
 
-        string = generate_background(Gdk.Screen.width(), Gdk.Screen.height())
-        self.background = Sprite(self._sprites, 0, 0,
-                                 svg_str_to_pixbuf(string, Gdk.Screen.width(),
-                                                   Gdk.Screen.height()))
+        self.backgrounds = []
+        if self.portrait:
+            width = Gdk.Screen.height()
+            height = Gdk.Screen.width()
+        else:
+            width = Gdk.Screen.width()
+            height = Gdk.Screen.height()
+        # generate landscape background
+        string = generate_background(width, height)
+        self.backgrounds.append(Sprite(
+            self._sprites, 0, 0, svg_str_to_pixbuf(string, width, height)))
+        if self.portrait:
+            width = Gdk.Screen.width()
+            height = Gdk.Screen.height()
+        else:
+            width = Gdk.Screen.height()
+            height = Gdk.Screen.width()
+        # generate portrait background
+        string = generate_background(width, height)
+        self.backgrounds.append(Sprite(
+            self._sprites, 0, 0, svg_str_to_pixbuf(string, width, height)))
+
+        if self.portrait:
+            self.backgrounds[0].hide()
+        else:
+            self.backgrounds[1].hide()
 
         self._cards = []
         for i in range(DECKSIZE):
@@ -200,8 +215,8 @@ class Game():
             self._smiley.append(Card(scale=self._scale * (i + 2)))
             self._smiley[-1].create(
                 generate_smiley(self._scale * (i + 2)), sprites=self._sprites)
-            x = self.grid.match_to_xy(3)[0] - i * int(self._card_width / 2)
-            y = self.grid.match_to_xy(3)[1] - i * int(self._card_height / 2)
+            x = self._smiley_xy()[0] - i * int(self._card_width / 2)
+            y = self._smiley_xy()[1] - i * int(self._card_height / 2)
             self._smiley[-1].spr.move((x, y))
             if i == 0:
                 self._smiley[-1].spr.set_layer(10000)
@@ -213,19 +228,19 @@ class Game():
         self._frowny.append(Card(self._scale * 2))
         self._frowny[-1].create(
             generate_frowny_shape(self._scale * 2), sprites=self._sprites)
-        self._frowny[-1].spr.move(self.grid.match_to_xy(3))
+        self._frowny[-1].spr.move(self._smiley_xy())
         self._frowny.append(Card(self._scale))
         self._frowny[-1].create(
             generate_frowny_color(self._scale * 2), sprites=self._sprites)
-        self._frowny[-1].spr.move(self.grid.match_to_xy(3))
+        self._frowny[-1].spr.move(self._smiley_xy())
         self._frowny.append(Card(self._scale))
         self._frowny[-1].create(
             generate_frowny_texture(self._scale * 2), sprites=self._sprites)
-        self._frowny[-1].spr.move(self.grid.match_to_xy(3))
+        self._frowny[-1].spr.move(self._smiley_xy())
         self._frowny.append(Card(self._scale))
         self._frowny[-1].create(
             generate_frowny_number(self._scale * 2), sprites=self._sprites)
-        self._frowny[-1].spr.move(self.grid.match_to_xy(3))
+        self._frowny[-1].spr.move(self._smiley_xy())
 
         size = min(self._width, self._height)
         self._label = Card()
@@ -244,24 +259,39 @@ class Game():
 
         Gdk.Screen.get_default().connect('size-changed', self._configure_cb)
 
+    def _smiley_xy(self):
+        x = int(Gdk.Screen.width() / 2) - self._card_width + DEFAULT_SPACING
+        y = int(Gdk.Screen.height() / 2) - self._card_height + DEFAULT_SPACING
+        return ((x, y))
+
     def _configure_cb(self, event):
         self.grid.stop_animation = True
 
         self._width = Gdk.Screen.width()
-        self._height = Gdk.Screen.height() - GRID_CELL_SIZE * 2
+        self._height = Gdk.Screen.height()
 
         if self._width < self._height:
             self.portrait = True
+            self.backgrounds[0].hide()
+            self.backgrounds[1].set_layer(0)
         else:
             self.portrait = False
+            self.backgrounds[1].hide()
+            self.backgrounds[0].set_layer(0)
+
+        size = min(self._width, self._height)
+        self._label_time.spr.move((Gdk.Screen.width() - size - LABELH, LABELH))
 
         self.grid.rotate(self._width, self._height)
 
         for i in range(CARDS_IN_A_MATCH):
             self._match_area[i].spr.move(self.grid.match_to_xy(i))
-        self._smiley[0].spr.move(self.grid.match_to_xy(3))
+        for i in range(15):
+            x = self._smiley_xy()[0] - i * int(self._card_width / 2)
+            y = self._smiley_xy()[1] - i * int(self._card_height / 2)
+            self._smiley[i].spr.move((x, y))
         for c in self._frowny:
-            c.spr.move(self.grid.match_to_xy(3))
+            c.spr.move(self._smiley_xy())
 
         for i, c in enumerate(self.clicked):
             if c.spr is not None:
@@ -277,7 +307,7 @@ class Game():
         self._saved_state = saved_state
         self._deck_index = deck_index
         # Wait for any animations to stop before starting new game
-        timeout = GObject.timeout_add(200, self._prepare_new_game)
+        GObject.timeout_add(200, self._prepare_new_game)
 
     def _prepare_new_game(self):
         # If there is already a deck, hide it.
@@ -539,6 +569,17 @@ class Game():
         # Find the sprite under the mouse.
         spr = self._sprites.find_sprite((x, y))
 
+        # Hide a frowny
+        for card in self._frowny:
+            if spr == card.spr:
+                spr.hide()
+                return True
+
+        # Hide a smiley
+        if spr == self._smiley[0].spr:
+            spr.hide()
+            return True
+
         # If there is a match showing, hide it.
         if self._matches_on_display:
             self.clean_up_match(share=True)
@@ -643,9 +684,6 @@ class Game():
             move = 'abort'
         else:
             move = 'drag'
-
-        # Determine status of card
-        status = self.grid.spr_to_grid(self._press)
 
         if move == 'click':
             if self.editing_word_list:
@@ -812,7 +850,7 @@ class Game():
                              self.custom_paths, DIFFICULTY_LEVEL[1])
             self.deck.hide()
             self.grid.restore(self.deck, CUSTOM_CARD_INDICIES)
-        elif self._none_in_clicked() == None:
+        elif self._none_in_clicked() is None:
             # If we have three cards selected, test for a match.
             self._test_for_a_match()
             if self._matches_on_display:
@@ -876,8 +914,8 @@ class Game():
             self.set_label('deck', '')
             self.set_label('clock', '')
             self.set_label('status', '%s (%d:%02d)' %
-                (_('Game over'), int(self.total_time / 60),
-                 int(self.total_time % 60)))
+                           (_('Game over'), int(self.total_time / 60),
+                            int(self.total_time % 60)))
             self._smiley[0].show_card()
             self.animation_timeout_id = GObject.timeout_add(
                 500, self._show_animation, 0)
@@ -918,8 +956,8 @@ class Game():
                 elif self.total_time < self.low_score[self.level]:
                     self.low_score[self.level] = self.total_time
                     self.set_label('status', '%s (%d:%02d)' %
-                        (_('New record'), int(self.total_time / 60),
-                         int(self.total_time % 60)))
+                                   (_('New record'), int(self.total_time / 60),
+                                    int(self.total_time % 60)))
                 # Round to nearest second
                 self.all_scores.append(int(self.total_time + 0.5))
                 if not self._sugar:
@@ -928,9 +966,10 @@ class Game():
                     self._auto_increase_difficulty()
                 return True
             else:
-                # Wait a few seconds before dealing new cards.
-                self._dealing = True
-                GObject.timeout_add(2000, self._deal_new_cards)
+                if self.deck.cards_remaining() > 0:
+                    self._dealing = True
+                    # Wait a few seconds before dealing new cards.
+                    GObject.timeout_add(2000, self._deal_new_cards)
 
             # Keep playing.
             self._update_labels()
@@ -989,7 +1028,7 @@ class Game():
 
         # Restrict Cairo to the exposed area; avoid extra work
         cr.rectangle(event.area.x, event.area.y,
-                event.area.width, event.area.height)
+                     event.area.width, event.area.height)
         cr.clip()
 
         # Refresh sprite list
@@ -1003,7 +1042,7 @@ class Game():
     def _update_labels(self):
         ''' Write strings to a label in the toolbar. '''
         self.set_label('deck', '%d %s' %
-            (self.deck.cards_remaining(), _('cards')))
+                       (self.deck.cards_remaining(), _('cards')))
         self.set_label('status', '')
         if self.matches == 1:
             if self.robot_matches > 0:
@@ -1039,7 +1078,6 @@ class Game():
                 self.clicked[j].reset()
             else:
                 self.clicked[j].spr = self.deck.index_to_card(i).spr
-                k = self.grid.spr_to_grid(self.clicked[j].spr)
                 self.clicked[j].spr.move(self.grid.match_to_xy(j))
                 self.clicked[j].pos = self.grid.match_to_xy(j)
                 self.clicked[j].spr.set_layer(2000)
@@ -1048,7 +1086,6 @@ class Game():
 
     def _restore_matches(self, saved_match_list_indices):
         ''' Restore the match list upon resume or share. '''
-        j = 0
         self.match_list = []
         for i in saved_match_list_indices:
             if i is not None:
@@ -1077,7 +1114,8 @@ class Game():
         ''' Reset the timer for the robot '''
         self.start_time = GObject.get_current_time()
         self.timeout_id = None
-        self._counter()
+        if not self._the_game_is_over:
+            self._counter()
 
     def _show_animation(self, i):
         ''' Show smiley animation '''
@@ -1167,9 +1205,9 @@ class Game():
         # Special case: only check number when shapes are the same
         if card_type == 'word':
             if cardarray[0].shape == cardarray[1].shape and \
-                  cardarray[0].shape == cardarray[2].shape and \
-                  (cardarray[0].num + cardarray[1].num + cardarray[2].num) % 3\
-                  != 0:
+               cardarray[0].shape == cardarray[2].shape and \
+               (cardarray[0].num + cardarray[1].num + cardarray[2].num) % 3 \
+               != 0:
                 return False
         else:
             if (cardarray[0].num + cardarray[1].num +
@@ -1181,6 +1219,9 @@ class Game():
 
     def _choose_custom_card(self):
         ''' Select a custom card from the Journal '''
+        from sugar3.graphics.objectchooser import ObjectChooser
+        from sugar3 import mime
+
         chooser = None
         name = None
         if hasattr(mime, 'GENERIC_TYPE_IMAGE'):
@@ -1219,6 +1260,8 @@ class Game():
 
     def _find_custom_paths(self, jobject):
         ''' Associate a Journal object with a card '''
+        from sugar3.datastore import datastore
+
         found_a_sequence = False
         if self.custom_paths[0] is None:
             basename, suffix, i = _find_the_number_in_the_name(
@@ -1276,6 +1319,8 @@ class Game():
 
     def help_animation(self):
         ''' Simple explanatory animation at start of play '''
+        from sugar3.activity import activity
+
         for i in range(22):
             path = os.path.join(activity.get_bundle_path(),
                                 'images', 'help-%d.svg' % i)

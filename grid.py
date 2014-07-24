@@ -1,4 +1,4 @@
-#Copyright (c) 2009,10 Walter Bender
+#Copyright (c) 2009-14 Walter Bender
 
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -11,11 +11,12 @@
 
 
 from gi.repository import GObject
-from gi.repository import Gdk
 
-import random
-
-from constants import ROW, COL, MATCH_POSITION, DEAL, LABELH
+from constants import ROW, COL, DEAL, LABELH
+try:
+    from sugar3.graphics.style import DEFAULT_SPACING
+except:
+    DEFAULT_SPACING = 16
 
 import logging
 _logger = logging.getLogger('dimensions-activity')
@@ -37,23 +38,17 @@ class Grid:
         self.card_height = card_height
         for i in range(ROW * COL):
             self.grid.append(None)
-        '''
+
         # Card spacing
-        if width < height:
-            self.left = MATCH_POSITION
-            self.portrait = True
-        else:
-            self.left = int((width - (card_width * 2)) / 2)
-            self.portrait = False
-        '''
         self.left = int((width - (card_width * 3)) / 2)
         if width < height:
             self.portrait = True
+            self.top = int(LABELH * 6)
         else:
             self.portrait = False
-        self.xinc = int(card_width * 1.2)
-        self.top = int(LABELH * 1.25)
-        self.yinc = int(card_height * 1.33)
+            self.top = int(LABELH)
+        self.xinc = int(card_width + DEFAULT_SPACING)
+        self.yinc = int(card_height + DEFAULT_SPACING)
         self.bottom = int(self.top + 5 * self.yinc)
         self.dx = [0, 0, 0, 0, 0, 0]
         self.dy = [0, 0, 0, 0, 0, 0]
@@ -66,11 +61,14 @@ class Grid:
 
     def rotate(self, width, height):
         if width < height:
-            self.left = MATCH_POSITION
             self.portrait = True
+            self.top = int(LABELH * 6)
         else:
-            self.left = int((width - (self.card_width * 2)) / 2)
             self.portrait = False
+            self.top = int(LABELH)
+        self.left = int((width - (self.card_width * 3)) / 2)
+        self.bottom = int(self.top + 5 * self.yinc)
+
         for i in range(ROW * COL):
             self.place_a_card(self.grid[i], self.grid_to_xy(i)[0],
                               self.grid_to_xy(i)[1])
@@ -130,7 +128,7 @@ class Grid:
                     i = self.find_an_empty_slot()
                     # Put new card in grid position of card we are replacing.
                     self.grid[i] = deck.deal_next_card()
-                    timeout_id = GObject.timeout_add(
+                    GObject.timeout_add(
                         1200, self.place_a_card, self.grid[i],
                         self.grid_to_xy(i)[0], self.grid_to_xy(i)[1], j)
 
@@ -138,22 +136,13 @@ class Grid:
         ''' Move card to the match area. '''
         self.stop_animation = False
         spr.set_layer(2000)
-        '''
-        if not self.portrait:
-            self.ex[i] = MATCH_POSITION
-            self.ey[i] = self.top + i * self.yinc
-        else:
-            self.ex[i] = self.left + i * self.xinc
-            self.ey[i] = self.bottom
-        '''
         self.ex[i] = self.left + i * self.xinc
         self.ey[i] = self.bottom
         self.sx[i] = spr.get_xy()[0]
         self.sy[i] = spr.get_xy()[1]
         self.dx[i] = int((self.ex[i] - self.sx[i]) / 10)
         self.dy[i] = int((self.ey[i] - self.sy[i]) / 10)
-        timeout_id = GObject.timeout_add(
-            100, self._move_to_position, spr, i)
+        GObject.timeout_add(100, self._move_to_position, spr, i)
 
     def return_to_grid(self, spr, i, j):
         ''' Move card from the match area. '''
@@ -166,8 +155,7 @@ class Grid:
         self.sy[j] = spr.get_xy()[1]
         self.dx[j] = int((self.ex[j] - self.sx[j]) / 10)
         self.dy[j] = int((self.ey[j] - self.sy[j]) / 10)
-        timeout_id = GObject.timeout_add(
-            100, self._move_to_position, spr, j)
+        GObject.timeout_add(100, self._move_to_position, spr, j)
 
     def _move_to_position(self, spr, i):
         ''' Piece-wise animation of card movement '''
@@ -179,8 +167,7 @@ class Grid:
             spr.move((self.ex[i], self.ey[i]))
             self.animation_lock[i] = False
         else:
-            timeout_id = GObject.timeout_add(
-                100, self._move_to_position, spr, i)
+            GObject.timeout_add(100, self._move_to_position, spr, i)
 
     def consolidate(self):
         ''' If we have removed cards from an expanded grid,
@@ -213,18 +200,12 @@ class Grid:
                 self.dy[animate + 3] = int(
                     (self.ey[animate + 3] - c.spr.get_xy()[1]) / 10)
                 self.animation_lock[animate + 3] = True
-                timeout_id = GObject.timeout_add(100, self._move_to_position,
-                        c.spr, animate + 3)
+                GObject.timeout_add(100, self._move_to_position,
+                                    c.spr, animate + 3)
 
     def xy_to_match(self, pos):
         ''' Convert from sprite x,y to match index. '''
         return int((pos[0] - self.left) / self.xinc)
-        '''
-        if self.portrait:
-            return int((pos[0] - self.left) / self.xinc)
-        else:
-            return int((pos[1] - self.top) / self.yinc)
-        '''
 
     def xy_in_match(self, pos):
         ''' Is a position at one of the match points? '''
@@ -236,23 +217,7 @@ class Grid:
 
     def match_to_xy(self, i):
         ''' Convert from match index to x, y position. '''
-        if i > 2:
-            # return ((self.left + self.xinc, self.bottom + self.yinc))
-            # return self.grid_to_xy(7)
-            x = int(Gdk.Screen.width() / 2) - self.card_width
-            y = int(Gdk.Screen.height() / 2) - self.card_height
-            return ((x, y))
-        else:
-            return ((self.left + i * self.xinc, self.bottom))
-        '''
-        if self.portrait:
-            if i > 2:
-                return ((self.left + self.xinc, self.bottom + self.yinc))
-            else:
-                return ((self.left + i * self.xinc, self.bottom))
-        else:
-            return ((MATCH_POSITION, self.top + i * self.yinc))
-        '''
+        return ((self.left + i * self.xinc, self.bottom))
 
     def xy_in_grid(self, pos):
         ''' Is a position at one of the grid points? '''
