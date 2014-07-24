@@ -196,29 +196,18 @@ class Game():
                 generate_match_card(self._scale), sprites=self._sprites)
             self._match_area[-1].spr.move(self.grid.match_to_xy(i))
 
-        for i in range((ROW - 1) * COL):
-            self._smiley.append(Card(scale=self._scale))
+        for i in range(14):
+            self._smiley.append(Card(scale=self._scale * (i + 2)))
             self._smiley[-1].create(
-                generate_smiley(self._scale), sprites=self._sprites)
-            self._smiley[-1].spr.move(self.grid.grid_to_xy(i))
-        self._smiley.append(Card(scale=self._scale))
-        self._smiley[-1].create(
-            generate_smiley(self._scale * 2), sprites=self._sprites)
-        self._smiley[-1].spr.move(self.grid.match_to_xy(3))
-        self._smiley[-1].spr.hide()
-
-        self._smiley_animations = []
-        for i in range(12):
-            self._smiley_animations.append(Card(scale=self._scale * (i + 3)))
-            self._smiley_animations[-1].create(
-                generate_smiley(self._scale * (i + 3)), sprites=self._sprites)
-            x = self.grid.match_to_xy(3)[0] - \
-                (i + 1) * int(self._card_width / 2)
-            y = self.grid.match_to_xy(3)[1] - \
-                (i + 1) * int(self._card_height / 2)
-            self._smiley_animations[-1].spr.move((x, y))
-            self._smiley_animations[-1].spr.set_layer(20000)
-            self._smiley_animations[-1].spr.hide()
+                generate_smiley(self._scale * (i + 2)), sprites=self._sprites)
+            x = self.grid.match_to_xy(3)[0] - i * int(self._card_width / 2)
+            y = self.grid.match_to_xy(3)[1] - i * int(self._card_height / 2)
+            self._smiley[-1].spr.move((x, y))
+            if i == 0:
+                self._smiley[-1].spr.set_layer(10000)
+            else:
+                self._smiley[-1].spr.set_layer(20000)
+            self._smiley[-1].spr.hide()
 
         # A different frowny face for each type of error
         self._frowny.append(Card(self._scale * 2))
@@ -270,7 +259,7 @@ class Game():
 
         for i in range(CARDS_IN_A_MATCH):
             self._match_area[i].spr.move(self.grid.match_to_xy(i))
-        self._smiley[-1].spr.move(self.grid.match_to_xy(3))
+        self._smiley[0].spr.move(self.grid.match_to_xy(3))
         for c in self._frowny:
             c.spr.move(self.grid.match_to_xy(3))
 
@@ -304,8 +293,8 @@ class Game():
 
         self._hide_frowny()
 
-        self._smiley[-1].spr.hide()
-        for card in self._smiley_animations:
+        self._smiley[0].spr.hide()
+        for card in self._smiley:
             card.spr.hide()
 
         if self._saved_state is not None:
@@ -379,13 +368,15 @@ class Game():
             if hasattr(self, 'match_timeout_id') and \
                     self.match_timeout_id is not None:
                 GObject.source_remove(self.match_timeout_id)
-            # if hasattr(self, 'animation_timeout_id') and \
-            #         self.animation_timeout_id is not None:
-            #     GObject.source_remove(self.animation_timeout_id)
+            if hasattr(self, 'animation_timeout_id') and \
+                    self.animation_timeout_id is not None:
+                GObject.source_remove(self.animation_timeout_id)
             self._timer_reset()
 
-        for i in range((ROW - 1) * COL):
-            self._smiley[i].hide_card()
+        for card in self._smiley:
+            card.hide_card()
+        for card in self._frowny:
+            card.hide_card()
 
         self._sprites.draw_all()
 
@@ -597,7 +588,7 @@ class Game():
         ''' Unselect clicked cards that are now in the match pile '''
         self._matches_on_display = False
         self._hide_clicked()
-        self._smiley[-1].spr.hide()
+        self._smiley[0].spr.hide()
         if share and self._sharing():
             self.activity._send_event('r:')
 
@@ -825,7 +816,7 @@ class Game():
             # If we have three cards selected, test for a match.
             self._test_for_a_match()
             if self._matches_on_display:
-                self._smiley[-1].spr.set_layer(10000)
+                self._smiley[0].spr.set_layer(10000)
             elif not self._the_game_is_over and self._failure is not None:
                 self._frowny[self._failure].spr.set_layer(10000)
         return
@@ -892,7 +883,7 @@ class Game():
                 if self.grid.grid[i] == None:
                     self._smiley[i].show_card()
             '''
-            self._smiley[-1].show_card()
+            self._smiley[0].show_card()
             # self.match_timeout_id = GObject.timeout_add(
             #     2000, self._show_matches, 0)
             self.animation_timeout_id = GObject.timeout_add(
@@ -1093,20 +1084,18 @@ class Game():
 
     def _show_animation(self, i):
         ''' Show smiley animation '''
-        logging.error('show animations %d' % i)
-        if i < len(self._smiley_animations) - 1:
-            self._smiley_animations[i].show_card(layer=20000)
+        if i < len(self._smiley) - 1:
+            self._smiley[i].show_card(layer=20000)
             self.animation_timeout_id = GObject.timeout_add(
                 500, self._show_animation, i + 1)
         else:
-            for card in self._smiley_animations:
+            for card in self._smiley:
                 card.spr.hide()
             self.match_timeout_id = GObject.timeout_add(
                 2000, self._show_matches, 0)
 
     def _show_matches(self, i):
         ''' Show all the matches as a simple animation. '''
-        logging.error('show matches %d' % i)
         if i < self.matches and \
                 i * CARDS_IN_A_MATCH < len(self.match_list):
             for j in range(CARDS_IN_A_MATCH):
@@ -1157,7 +1146,7 @@ class Game():
             self.grid.grid[i[j]] = None
         self.robot_matches += 1
         self._test_for_a_match()
-        self._smiley[-1].spr.set_layer(100)
+        self._smiley[0].spr.set_layer(100)
         self._matches_on_display = True
 
     def _match_check(self, cardarray, card_type):
