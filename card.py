@@ -57,10 +57,10 @@ class Card:
         self.spr.set_label_attributes(self._scale * 24)
         self.spr.set_label('')
 
-    def show_card(self):
+    def show_card(self, layer=2000):
         ''' Show the card '''
         if self.spr is not None:
-            self.spr.set_layer(2000)
+            self.spr.set_layer(layer)
             self.spr.draw()
 
     def hide_card(self):

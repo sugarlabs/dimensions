@@ -1095,10 +1095,12 @@ class Game():
         ''' Show smiley animation '''
         logging.error('show animations %d' % i)
         if i < len(self._smiley_animations) - 1:
-            self._smiley_animations[i].show_card()
+            self._smiley_animations[i].show_card(layer=20000)
             self.animation_timeout_id = GObject.timeout_add(
                 500, self._show_animation, i + 1)
         else:
+            for card in self._smiley_animations:
+                card.spr.hide()
             self.match_timeout_id = GObject.timeout_add(
                 2000, self._show_matches, 0)
 
