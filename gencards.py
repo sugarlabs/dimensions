@@ -30,13 +30,17 @@ class SVG:
         self._stroke = RED_STROKE
         self._font = 'DejaVu'
 
-    def _svg_style(self, extras=""):
-        return "%s%s%s%s%s%f%s%s%s" % ("style=\"fill:", self._fill, ";stroke:",
-                                       self._stroke, ";stroke-width:",
-                                       self._stroke_width, ";", extras,
-                                       "\" />\n")
+    def _svg_style(self, extras="", stroke=True):
+        if stroke:
+            return "%s%s%s%s%s%f%s%s%s" % (
+                "style=\"fill:", self._fill, ";stroke:", self._stroke,
+                ";stroke-width:", self._stroke_width, ";", extras, "\" />\n")
+        else:
+            return "%s%s%s%s%s%f%s%s%s" % (
+                "style=\"fill:", self._fill, ";stroke:", self._fill,
+                ";stroke-width:", 0.0, ";", extras, "\" />\n")
 
-    def _svg_rect(self, w, h, rx, ry, x, y):
+    def _svg_rect(self, w, h, rx, ry, x, y, stroke=True):
         svg_string = "       <rect\n"
         svg_string += "          width=\"%f\"\n" % (w)
         svg_string += "          height=\"%f\"\n" % (h)
@@ -44,7 +48,7 @@ class SVG:
         svg_string += "          ry=\"%f\"\n" % (ry)
         svg_string += "          x=\"%f\"\n" % (x)
         svg_string += "          y=\"%f\"\n" % (y)
-        svg_string += self._svg_style()
+        svg_string += self._svg_style(stroke)
         return svg_string
 
     def _svg_circle(self, cx, cy, r):
@@ -228,15 +232,17 @@ class SVG:
         svg_string += self._svg_style()
         return svg_string
 
-    def _background(self, width=None, height=None, corner=True):
-        if width == 125 and height == 75:
-            return self._svg_rect(119.5, 69.5, 11, 9, 2.75, 2.75)
-        elif not corner:
-            return self._svg_rect(width, height, 0, 0, 0, 0)
+    def _background(self, width=None, height=None, corner=True, stroke=True):
+        if corner:
+            if width == 125 and height == 75:
+                return self._svg_rect(119.5, 69.5, 11, 9, 2.75, 2.75)
+            else:
+                return self._svg_rect(width - 5.5, height - 5.5, 11, 9,
+                                      2.75, 2.75)
         else:
-            return self._svg_rect(width - 5.5, height - 5.5, 11, 9, 2.75, 2.75)
+            return self._svg_rect(width, height, 0, 0, 0, 0, stroke)
 
-    def _header(self, width=125, height=75, corner=True):
+    def _header(self, width=125, height=75, corner=True, stroke=True):
         svg_string = "<?xml version=\"1.0\" encoding=\"UTF-8\""
         svg_string += " standalone=\"no\"?>\n"
         svg_string += "<!-- Created with Emacs -->\n"
@@ -249,7 +255,7 @@ class SVG:
         svg_string += "%s%f%s%f%s" % ("<g\n       transform=\"matrix(",
                                       self._scale, ", 0, 0, ", self._scale,
                                       ", 0, 0)\">\n")
-        svg_string += self._background(width, height, corner)
+        svg_string += self._background(width, height, corner, stroke)
         return svg_string
 
     def _footer(self):
@@ -278,7 +284,7 @@ class SVG:
     #
     def _smiley(self):
         self._set_font("DejaVu")
-        return self._svg_text(63.5, 63.5, 72, "", '☺')  # '☻')
+        return self._svg_text(63.5, 63.5, 72, "", '☺')
 
     def _frowny(self):
         self._set_font("DejaVu")
@@ -601,7 +607,7 @@ def generate_smiley(scale):
     svg = SVG()
     svg._set_scale(scale)
     svg._set_colors([BLACK, YELLOW])
-    svg_string = svg._header()
+    svg_string = svg._header(corner=False, stroke=False)
     svg_string += svg._smiley()
     svg_string += svg._footer()
     return svg_string
@@ -611,7 +617,7 @@ def generate_frowny(scale):
     svg = SVG()
     svg._set_scale(scale)
     svg._set_colors([BLACK, YELLOW])
-    svg_string = svg._header()
+    svg_string = svg._header(corner=False, stroke=False)
     # svg_string += svg._frowny()
     svg_string += svg._footer()
     return svg_string
@@ -621,7 +627,7 @@ def generate_frowny_shape(scale):
     svg = SVG()
     svg._set_scale(scale)
     svg._set_colors([BLACK, YELLOW])
-    svg_string = svg._header()
+    svg_string = svg._header(corner=False, stroke=False)
     svg_string += '\
   <path\
      d="m 40.725683,37.5 5.05,5.05 c 0.4,0.4 0.6,0.9 0.6,1.45 0,1.15 -0.95,2.05 -2.05,2.05 -0.55,0 -1.1,-0.25 -1.45,-0.6 l -5.05,-5.05 -5.05,5.05 c -0.4,0.4 -0.9,0.6 -1.45,0.6 -1.15,0 -2.05,-0.95 -2.05,-2.05 0,-0.55 0.25,-1.1 0.6,-1.45 l 5.05,-5.05 -5.05,-5.05 c -0.35,-0.35 -0.6,-0.9 -0.6,-1.45 0,-1.15 0.95,-2.05 2.05,-2.05 0.55,0 1.1,0.25 1.45,0.6 l 5.05,5.05 5.05,-5.05 c 0.4,-0.35 0.9,-0.6 1.45,-0.6 1.15,0 2.05,0.95 2.05,2.05 0,0.55 -0.25,1.1 -0.6,1.45 l -5.05,5.05 z"\
@@ -681,7 +687,7 @@ def generate_frowny_color(scale):
     svg = SVG()
     svg._set_scale(scale)
     svg._set_colors([BLACK, YELLOW])
-    svg_string = svg._header()
+    svg_string = svg._header(corner=False, stroke=False)
     svg_string += '\
   <path\
      d="m 40.725683,37.5 5.05,5.05 c 0.4,0.4 0.6,0.9 0.6,1.45 0,1.15 -0.95,2.05 -2.05,2.05 -0.55,0 -1.1,-0.25 -1.45,-0.6 l -5.05,-5.05 -5.05,5.05 c -0.4,0.4 -0.9,0.6 -1.45,0.6 -1.15,0 -2.05,-0.95 -2.05,-2.05 0,-0.55 0.25,-1.1 0.6,-1.45 l 5.05,-5.05 -5.05,-5.05 c -0.35,-0.35 -0.6,-0.9 -0.6,-1.45 0,-1.15 0.95,-2.05 2.05,-2.05 0.55,0 1.1,0.25 1.45,0.6 l 5.05,5.05 5.05,-5.05 c 0.4,-0.35 0.9,-0.6 1.45,-0.6 1.15,0 2.05,0.95 2.05,2.05 0,0.55 -0.25,1.1 -0.6,1.45 l -5.05,5.05 z"\
@@ -715,7 +721,7 @@ def generate_frowny_number(scale):
     svg = SVG()
     svg._set_scale(scale)
     svg._set_colors([BLACK, YELLOW])
-    svg_string = svg._header()
+    svg_string = svg._header(corner=False, stroke=False)
     svg_string += '\
   <text\
      x="28.9"\
@@ -762,7 +768,7 @@ def generate_frowny_texture(scale):
     svg = SVG()
     svg._set_scale(scale)
     svg._set_colors([BLACK, YELLOW])
-    svg_string = svg._header()
+    svg_string = svg._header(corner=False, stroke=False)
     svg_string += '\
   <path\
      d="m 40.725683,37.5 5.05,5.05 c 0.4,0.4 0.6,0.9 0.6,1.45 0,1.15 -0.95,2.05 -2.05,2.05 -0.55,0 -1.1,-0.25 -1.45,-0.6 l -5.05,-5.05 -5.05,5.05 c -0.4,0.4 -0.9,0.6 -1.45,0.6 -1.15,0 -2.05,-0.95 -2.05,-2.05 0,-0.55 0.25,-1.1 0.6,-1.45 l 5.05,-5.05 -5.05,-5.05 c -0.35,-0.35 -0.6,-0.9 -0.6,-1.45 0,-1.15 0.95,-2.05 2.05,-2.05 0.55,0 1.1,0.25 1.45,0.6 l 5.05,5.05 5.05,-5.05 c 0.4,-0.35 0.9,-0.6 1.45,-0.6 1.15,0 2.05,0.95 2.05,2.05 0,0.55 -0.25,1.1 -0.6,1.45 l -5.05,5.05 z"\
