@@ -196,7 +196,7 @@ class Game():
                 generate_match_card(self._scale), sprites=self._sprites)
             self._match_area[-1].spr.move(self.grid.match_to_xy(i))
 
-        for i in range(14):
+        for i in range(15):
             self._smiley.append(Card(scale=self._scale * (i + 2)))
             self._smiley[-1].create(
                 generate_smiley(self._scale * (i + 2)), sprites=self._sprites)
@@ -878,14 +878,7 @@ class Game():
             self.set_label('status', '%s (%d:%02d)' %
                 (_('Game over'), int(self.total_time / 60),
                  int(self.total_time % 60)))
-            '''
-            for i in range((ROW - 1) * COL):
-                if self.grid.grid[i] == None:
-                    self._smiley[i].show_card()
-            '''
             self._smiley[0].show_card()
-            # self.match_timeout_id = GObject.timeout_add(
-            #     2000, self._show_matches, 0)
             self.animation_timeout_id = GObject.timeout_add(
                 500, self._show_animation, 0)
             self._the_game_is_over = True
@@ -948,6 +941,9 @@ class Game():
 
     def _auto_increase_difficulty(self):
         ''' Auto advance levels '''
+        return  # was found to be confusing
+
+        '''
         if self.level == 2 and len(self.all_scores) > 3:
             sum = 0
             for i in range(3):
@@ -962,6 +958,7 @@ class Game():
             if sum < 240:
                 self.level = 1
                 self.activity.expert_button.set_active(True)
+        '''
 
     def _deal_new_cards(self):
         ''' Deal three new cards. '''
