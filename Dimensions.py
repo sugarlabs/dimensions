@@ -639,6 +639,8 @@ class Dimensions(activity.Activity):
     def _notify_new_game(self, prompt):
         ''' Called from New Game button since loading a new game can
         be slooow!! '''
+        # Replaced by busy cursor
+        '''
         alert = NotifyAlert(3)
         alert.props.title = prompt
         alert.props.msg = _('A new game is loading.')
@@ -649,6 +651,7 @@ class Dimensions(activity.Activity):
         alert.connect('response', _notification_alert_response_cb, self)
         self.add_alert(alert)
         alert.show()
+        '''
 
     def _new_help_box(self, name, button=None):
         help_box = Gtk.VBox()

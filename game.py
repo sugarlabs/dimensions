@@ -198,6 +198,12 @@ class Game():
         else:
             self.backgrounds[1].hide()
 
+        self._old_cursor = self.activity.get_window().get_cursor()
+        self.activity.get_window().set_cursor(Gdk.Cursor.new(
+            Gdk.CursorType.WATCH))
+        GObject.idle_add(self._complete_loading)
+
+    def _complete_loading(self):
         self._cards = []
         for i in range(DECKSIZE):
             self._cards.append(Card(scale=self._scale))
@@ -258,6 +264,7 @@ class Game():
         self._labels = {'deck': '', 'match': '', 'clock': '', 'status': ''}
 
         Gdk.Screen.get_default().connect('size-changed', self._configure_cb)
+        self.activity.get_window().set_cursor(self._old_cursor)
 
     def _smiley_xy(self):
         x = int(Gdk.Screen.width() / 2) - self._card_width + DEFAULT_SPACING
@@ -306,7 +313,8 @@ class Game():
         self._edit_card = None
         self._saved_state = saved_state
         self._deck_index = deck_index
-        # Wait for any animations to stop before starting new game
+        self.activity.get_window().set_cursor(Gdk.Cursor.new(
+            Gdk.CursorType.WATCH))
         GObject.timeout_add(200, self._prepare_new_game)
 
     def _prepare_new_game(self):
@@ -409,6 +417,7 @@ class Game():
             card.hide_card()
 
         self._sprites.draw_all()
+        self.activity.get_window().set_cursor(self._old_cursor)
 
     def _sharing(self):
         ''' Are we sharing? '''
