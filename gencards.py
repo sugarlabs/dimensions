@@ -869,9 +869,9 @@ def generate_custom_card(shape, color, number, fill, scale, path=None):
     svg._set_stroke_width(3.0)
     svg_string = svg._header()
     if path is not None:
-        if fill == 0:
+        if number == 0:
             svg_string += svg._svg_image(38, 38, 42.5, 18.5, path)
-        elif fill == 1:
+        elif number == 1:
             svg_string += svg._svg_image(38, 38, 22.5, 18.5, path)
             svg_string += svg._svg_image(38, 38, 62.5, 18.5, path)
         else:

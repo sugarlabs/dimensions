@@ -42,7 +42,8 @@ class Deck:
 
         # Copy images into root/instance as squares
         for i, object in enumerate(lists):
-            if object is not None and not isinstance(object, str):
+            if object is not None and \
+               not isinstance(object, (str, unicode, list)):
                 pixbuf = GdkPixbuf.Pixbuf.new_from_file(
                     object.file_path)
                 size = min(pixbuf.get_width(), pixbuf.get_height())
@@ -93,7 +94,7 @@ class Deck:
         elif card_type == 'custom':
             path = None
             if len(lists) == 9:
-                index = shape * 3 + num
+                index = shape * 3 + fill
                 path = self._image_paths[index]
             else:
                 index = i

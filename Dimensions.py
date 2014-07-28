@@ -323,8 +323,9 @@ class Dimensions(activity.Activity):
             tooltip=_('Import custom cards'))
 
         self.button_custom = button_factory(
-            'no-custom-game', tools_toolbar, self._select_game_cb,
-            cb_arg='custom', tooltip=PROMPT_DICT['custom'])
+            'new-custom-game', tools_toolbar, self._select_game_cb,
+            cb_arg='custom', tooltip=_('New custom game'))
+        self.button_custom.set_sensitive(False)
 
         if MODE == 'numbers':
             self._setup_number_buttons(numbers_toolbar)
@@ -548,6 +549,7 @@ class Dimensions(activity.Activity):
                self._custom_jobject[i] is not None:
                 self.vmw.custom_paths[i] = datastore.get(
                     self._custom_jobject[i])
+                self.button_custom.set_sensitive(True)
         return self._canvas
 
     def write_file(self, file_path):

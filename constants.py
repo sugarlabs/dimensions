@@ -85,7 +85,9 @@ WORD_CARD_MAP = {WORD_CARD_INDICIES[0]: (0, 0), WORD_CARD_INDICIES[1]: (0, 1),
                  WORD_CARD_INDICIES[4]: (1, 1), WORD_CARD_INDICIES[5]: (1, 2),
                  WORD_CARD_INDICIES[6]: (2, 0), WORD_CARD_INDICIES[7]: (2, 1),
                  WORD_CARD_INDICIES[8]: (2, 2)}
-CUSTOM_CARD_INDICIES = [0, 4, 8, 36, 40, 44, 72, 76, 80, None, None, None,
+# CUSTOM_CARD_INDICIES = [0, 4, 8, 36, 40, 44, 72, 76, 80, None, None, None,
+#                         None, None, None]
+CUSTOM_CARD_INDICIES = [0, 1, 2, 36, 37, 38, 72, 73, 74, None, None, None,
                         None, None, None]
 
 # 'dead key' Unicode dictionaries

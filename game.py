@@ -447,6 +447,12 @@ class Game():
         if not self.editing_custom_cards:
             return
 
+        if self._sugar:
+            self.activity.get_window().set_cursor(Gdk.Cursor.new(
+                Gdk.CursorType.WATCH))
+        GObject.idle_add(self._edit_custom_card_action)
+
+    def _edit_custom_card_action(self):
         # Set the card type to custom, and generate a new deck.
         self._hide_clicked()
 
@@ -474,6 +480,9 @@ class Game():
         self.set_label('match', '')
         self.set_label('clock', '')
         self.set_label('status', _('Edit the custom cards.'))
+
+        if self._sugar:
+            self.activity.get_window().set_cursor(self._old_cursor)
 
     def edit_word_list(self):
         ''' Update the word cards '''
@@ -1338,8 +1347,7 @@ class Game():
                 jobject.object_id
 
         self.card_type = 'custom'
-        self.activity.button_custom.set_icon_name('new-custom-game')
-        self.activity.button_custom.set_tooltip(_('New custom game'))
+        self.activity.button_custom.set_sensitive(True)
         return
 
     def _in_motion(self, spr):
