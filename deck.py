@@ -23,7 +23,14 @@ try:
     from sugar3.activity import activity
     ACTIVITY_ROOT = os.path.join(activity.get_activity_root(), 'instance')
 except:
-    ACTIVITY_ROOT = os.path.expand_user('~')
+    ACTIVITY_ROOT = os.path.expanduser('~')
+
+try:
+    from sugar3.activity import activity
+    bundle_path = activity.get_bundle_path()
+except:
+    bundle_path = os.path.expanduser(os.path.join('~', 'Activities',
+                                                  'WordDimensions.activity'))
 
 class Deck:
     """ Class for defining deck of card """
