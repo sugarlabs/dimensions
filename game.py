@@ -98,7 +98,7 @@ class Click():
 class Game():
     ''' The game play -- called from within Sugar or GNOME '''
 
-    def __init__(self, canvas, parent=None):
+    def __init__(self, canvas, parent=None, card_type='pattern'):
         ''' Initialize the playing surface '''
         self.activity = parent
 
@@ -164,7 +164,7 @@ class Game():
         self._dead_key = None
         self._found_a_match = False
         self.level = 0
-        self.card_type = 'pattern'
+        self.card_type = card_type
         self.buddies = []
         self._dealing = False
         self._the_game_is_over = False
@@ -426,7 +426,8 @@ class Game():
 
         if self._saved_state == None and not self._played_animation:
             # Launch animated help
-            self.help_animation()
+            if self._sugar:
+                self.help_animation()
 
     def _sharing(self):
         ''' Are we sharing? '''

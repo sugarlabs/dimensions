@@ -50,7 +50,7 @@ from helpbutton import (HelpButton, add_section, add_paragraph, help_windows,
                         help_buttons)
 from game import Game
 
-MODE = 'patterns'
+MODE = 'pattern'
 
 help_palettes = {}
 
@@ -202,7 +202,7 @@ class Dimensions(activity.Activity):
         ''' There may be data from a previous instance. '''
         self._play_level = int(self._read_metadata('play_level', 0))
         self._robot_time = int(self._read_metadata('robot_time', 60))
-        self._card_type = self._read_metadata('cardtype', 'pattern')
+        self._card_type = self._read_metadata('cardtype', MODE)
         self._low_score = [int(self._read_metadata('low_score_beginner', -1)),
                            int(self._read_metadata('low_score_intermediate',
                                                    -1)),
@@ -232,7 +232,7 @@ class Dimensions(activity.Activity):
         if self._card_type == 'custom':
             self._custom_object = self._read_metadata('custom_object', None)
             if self._custom_object == None:
-                self._card_type = 'pattern'
+                self._card_type = MODE
         self._custom_jobject = []
         for i in range(9):
             self._custom_jobject.append(self._read_metadata(
@@ -261,7 +261,7 @@ class Dimensions(activity.Activity):
         self.numbers_toolbar_button = ToolbarButton(
             page=numbers_toolbar,
             icon_name='number-tools')
-        if MODE == 'numbers':
+        if MODE == 'number':
             numbers_toolbar.show()
             toolbox.toolbar.insert(self.numbers_toolbar_button, -1)
             self.numbers_toolbar_button.show()
@@ -273,11 +273,11 @@ class Dimensions(activity.Activity):
         toolbox.toolbar.insert(self.tools_toolbar_button, -1)
         self.tools_toolbar_button.show()
 
-        if MODE == 'patterns':
+        if MODE == 'pattern':
             self.button_pattern = button_factory(
                 'new-pattern-game', toolbox.toolbar, self._select_game_cb,
                 cb_arg='pattern', tooltip=PROMPT_DICT['pattern'])
-        elif MODE == 'numbers':
+        elif MODE == 'number':
             self.button_number = button_factory(
                 'new-number-game', toolbox.toolbar, self._select_game_cb,
                 cb_arg='number', tooltip=PROMPT_DICT['number'])
@@ -310,7 +310,7 @@ class Dimensions(activity.Activity):
         self.set_toolbar_box(toolbox)
         toolbox.show()
 
-        if MODE == 'words':
+        if MODE == 'word':
             self.words_tool_button = button_factory(
                 'word-tools', tools_toolbar, self._edit_words_cb,
                 tooltip=_('Edit word lists.'))
@@ -324,7 +324,7 @@ class Dimensions(activity.Activity):
             cb_arg='custom', tooltip=_('New custom game'))
         self.button_custom.set_sensitive(False)
 
-        if MODE == 'numbers':
+        if MODE == 'number':
             self._setup_number_buttons(numbers_toolbar)
 
     def _setup_number_buttons(self, numbers_toolbar):
@@ -523,7 +523,7 @@ class Dimensions(activity.Activity):
 
         self.show_all()
 
-        self.vmw = Game(self._canvas, self)
+        self.vmw = Game(self._canvas, parent=self, card_type=MODE)
         self.vmw.level = self._play_level
         LEVEL_BUTTONS[self._play_level].set_active(True)
         self.vmw.card_type = self._card_type
@@ -667,13 +667,13 @@ class Dimensions(activity.Activity):
         help_box = self._new_help_box('main-toolbar')
         add_section(help_box, _('Dimensions'), icon='activity-dimensions')
         add_paragraph(help_box, _('Tools'), icon='view-source')
-        if MODE == 'patterns':
+        if MODE == 'pattern':
             add_paragraph(help_box, _('Game'), icon='new-pattern-game')
-        elif MODE == 'numbers':
+        elif MODE == 'number':
             add_paragraph(help_box, PROMPT_DICT['number'],
                           icon='new-number-game')
             add_paragraph(help_box, _('Numbers'), icon='number-tools')
-        elif MODE == 'words':
+        elif MODE == 'word':
             add_paragraph(help_box, PROMPT_DICT['word'], icon='new-word-game')
         add_paragraph(help_box, _('Play with the computer'), icon='robot-off')
         add_paragraph(help_box, _('robot pause time'), icon='timer-60')
@@ -688,10 +688,10 @@ class Dimensions(activity.Activity):
         add_section(help_box, _('Tools'), icon='view-source')
         add_section(help_box, _('Import image cards'), icon='image-tools')
         add_paragraph(help_box, PROMPT_DICT['custom'], icon='new-custom-game')
-        if MODE == 'words':
+        if MODE == 'word':
             add_section(help_box, _('Edit word lists.'), icon='word-tools')
 
-        if MODE == 'numbers':
+        if MODE == 'number':
             add_section(help_box, _('Numbers'), icon='number-tools')
             add_paragraph(help_box, _('product'), icon='product')
             add_paragraph(help_box, _('Roman numerals'), icon='roman')
