@@ -143,6 +143,7 @@ class Game():
         self._smiley = []
         self._frowny = []
         self._help = []
+        self._help_timeout_id = None
         self._stop_help = True
         self._failure = None
         self.clicked = []
@@ -167,6 +168,7 @@ class Game():
         self.buddies = []
         self._dealing = False
         self._the_game_is_over = False
+        self._played_animation = False
 
         self.grid = Grid(self._width, self._height, self._card_width,
                          self._card_height)
@@ -334,7 +336,6 @@ class Game():
 
         self._hide_frowny()
 
-        self._smiley[0].spr.hide()
         for card in self._smiley:
             card.spr.hide()
 
@@ -422,6 +423,10 @@ class Game():
         self._sprites.draw_all()
         if self._sugar:
             self.activity.get_window().set_cursor(self._old_cursor)
+
+        if self._saved_state == None and not self._played_animation:
+            # Launch animated help
+            self.help_animation()
 
     def _sharing(self):
         ''' Are we sharing? '''
@@ -1363,6 +1368,7 @@ class Game():
         ''' Simple explanatory animation at start of play '''
         from sugar3.activity import activity
 
+        self._played_animation = True
         for i in range(22):
             path = os.path.join(activity.get_bundle_path(),
                                 'images', 'help-%d.svg' % i)

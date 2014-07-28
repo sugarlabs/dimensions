@@ -96,9 +96,6 @@ class Dimensions(activity.Activity):
             self._saved_state = None
         self.vmw.new_game(self._saved_state, self._deck_index)
         self.ready_to_play = True
-        if self._saved_state == None:
-            # Launch animated help
-            self.vmw.help_animation()
 
         if self._editing_word_list:
             self.vmw.editing_word_list = True
