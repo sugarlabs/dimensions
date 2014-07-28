@@ -40,6 +40,15 @@ class SVG:
                 "style=\"fill:", self._fill, ";stroke:", self._fill,
                 ";stroke-width:", 0.0, ";", extras, "\" />\n")
 
+    def _svg_image(self, w, h, x, y, path):
+        svg_string = '<image\n'
+        svg_string += 'xlink:href="file://%s"\n' % path
+        svg_string += 'x="%f"\n' % x
+        svg_string += 'y="%f"\n' % y
+        svg_string += 'width="%f"\n' % w
+        svg_string += 'height="%f"\n />' % h
+        return svg_string
+
     def _svg_rect(self, w, h, rx, ry, x, y, stroke=True):
         svg_string = "       <rect\n"
         svg_string += "          width=\"%f\"\n" % (w)
@@ -602,6 +611,15 @@ class SVG:
 
 # Card generators
 
+def generate_picture(scale, color, path):
+    svg = SVG()
+    svg._set_scale(scale)
+    svg._set_colors(["#A0A0A0", COLOR_PAIRS[color][1]])
+    svg_string = svg._header()
+    svg_string += svg._image(70, 70, 27.5, 2.5, path)
+    svg_string += svg._footer()
+    return svg_string
+
 
 def generate_smiley(scale):
     svg = SVG()
@@ -832,24 +850,34 @@ def generate_number_card(shape, color, number, fill, number_types, scale):
     return svg_string
 
 
-def generate_word_card(shape, color, number, fill, scale):
+def generate_word_card(shape, color, number, fill, scale, path=None):
     svg = SVG()
     svg._set_scale(scale)
-    if number == 0:
-        _stroke = DARK_COLOR[color]
-    elif number == 1:
-        _stroke = COLOR_PAIRS[color][1]
-    else:
-        _stroke = COLOR_PAIRS[color][0]
-    if fill == 0:
-        _fill = COLOR_PAIRS[color][1]
-    elif fill == 1:
-        _fill = COLOR_PAIRS[color][0]
-    else:
-        _fill = DARK_COLOR[color]
-    svg._set_colors([_stroke, _fill])
+    svg._set_colors(["#A0A0A0", COLOR_PAIRS[color][1]])
     svg._set_stroke_width(3.0)
     svg_string = svg._header()
+    if path is not None:
+        svg_string += svg._svg_image(70, 70, 29.5, 2.5, path)
+    svg_string += svg._footer()
+    return svg_string
+
+
+def generate_custom_card(shape, color, number, fill, scale, path=None):
+    svg = SVG()
+    svg._set_scale(scale)
+    svg._set_colors(["#A0A0A0", COLOR_PAIRS[color][1]])
+    svg._set_stroke_width(3.0)
+    svg_string = svg._header()
+    if path is not None:
+        if fill == 0:
+            svg_string += svg._svg_image(38, 38, 42.5, 18.5, path)
+        elif fill == 1:
+            svg_string += svg._svg_image(38, 38, 22.5, 18.5, path)
+            svg_string += svg._svg_image(38, 38, 62.5, 18.5, path)
+        else:
+            svg_string += svg._svg_image(38, 38, 2.5, 18.5, path)
+            svg_string += svg._svg_image(38, 38, 42.5, 18.5, path)
+            svg_string += svg._svg_image(38, 38, 82.5, 18.5, path)
     svg_string += svg._footer()
     return svg_string
 

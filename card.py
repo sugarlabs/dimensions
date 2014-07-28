@@ -12,9 +12,6 @@
 
 from gi.repository import GdkPixbuf
 
-import logging
-_logger = logging.getLogger('visualmatch-activity')
-
 from constants import COLORS, NUMBER, FILLS, CARD_WIDTH, CARD_HEIGHT
 
 from sprites import Sprite

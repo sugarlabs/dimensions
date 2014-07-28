@@ -691,7 +691,7 @@ class Game():
 
         # Determine if it was a click, a drag, or an aborted drag
         d = _distance((x, y), (self._start_pos[0], self._start_pos[1]))
-        if d < self._card_width / 10:  # click
+        if self.editing_custom_cards or d < self._card_width / 10:  # click
             move = 'click'
         elif d < self._card_width / 2:  # aborted drag
             move = 'abort'
@@ -857,12 +857,6 @@ class Game():
             # Choose an image from the Journal for a card
             self._edit_card = self.deck.spr_to_card(spr)
             self._choose_custom_card()
-            # Regenerate the deck with the new card definitions
-            self.deck.create(self._sprites, self.card_type,
-                             [self.numberO, self.numberC],
-                             self.custom_paths, DIFFICULTY_LEVEL[1])
-            self.deck.hide()
-            self.grid.restore(self.deck, CUSTOM_CARD_INDICIES)
         elif self._none_in_clicked() is None:
             # If we have three cards selected, test for a match.
             self._test_for_a_match()
@@ -903,6 +897,8 @@ class Game():
 
     def _hide_clicked(self):
         ''' Hide the clicked cards '''
+        if self.editing_custom_cards:
+            return
         for c in self.clicked:
             if c is not None:
                 c.hide()
@@ -1087,7 +1083,7 @@ class Game():
         ''' Restore the selected cards upon resume or share. '''
         j = 0
         for i in saved_selected_indices:
-            if i is None:
+            if i is None or self.deck.index_to_card(i) is None:
                 self.clicked[j].reset()
             else:
                 self.clicked[j].spr = self.deck.index_to_card(i).spr
@@ -1232,19 +1228,35 @@ class Game():
 
     def _choose_custom_card(self):
         ''' Select a custom card from the Journal '''
+        self.activity.get_window().set_cursor(Gdk.Cursor.new(
+            Gdk.CursorType.WATCH))
+        GObject.idle_add(self._choose_custom_card_action)
+
+    def _choose_custom_card_action(self):
         from sugar3.graphics.objectchooser import ObjectChooser
+        try:
+            from sugar3.graphics.objectchooser import FILTER_TYPE_GENERIC_MIME
+        except:
+            FILTER_TYPE_GENERIC_MIME = 'generic_mime'
         from sugar3 import mime
 
         chooser = None
         name = None
+
         if hasattr(mime, 'GENERIC_TYPE_IMAGE'):
             # See #2398
             if 'image/svg+xml' not in \
                     mime.get_generic_type(mime.GENERIC_TYPE_IMAGE).mime_types:
                 mime.get_generic_type(
                     mime.GENERIC_TYPE_IMAGE).mime_types.append('image/svg+xml')
-            chooser = ObjectChooser(parent=self.activity,
-                                    what_filter=mime.GENERIC_TYPE_IMAGE)
+            try:
+                chooser = ObjectChooser(parent=self.activity,
+                                        what_filter=mime.GENERIC_TYPE_IMAGE,
+                                        filter_type=FILTER_TYPE_GENERIC_MIME,
+                                        show_preview=True)
+            except:
+                chooser = ObjectChooser(parent=self.activity,
+                                        what_filter=mime.GENERIC_TYPE_IMAGE)
         else:
             try:
                 chooser = ObjectChooser(parent=self, what_filter=None)
@@ -1270,6 +1282,15 @@ class Game():
 
             if name is not None:
                 self._find_custom_paths(jobject)
+
+            # Regenerate the deck with the new card definitions
+            self.deck.create(self._sprites, self.card_type,
+                             [self.numberO, self.numberC],
+                             self.custom_paths, DIFFICULTY_LEVEL[2])
+            self.deck.hide()
+            self.grid.restore(self.deck, CUSTOM_CARD_INDICIES)
+
+        self.activity.get_window().set_cursor(self._old_cursor)
 
     def _find_custom_paths(self, jobject):
         ''' Associate a Journal object with a card '''
@@ -1317,7 +1338,7 @@ class Game():
                 jobject.object_id
 
         self.card_type = 'custom'
-        self.activity.button_custom.set_icon('new-custom-game')
+        self.activity.button_custom.set_icon_name('new-custom-game')
         self.activity.button_custom.set_tooltip(_('New custom game'))
         return
 
