@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-#Copyright (c) 2009-12 Walter Bender
+#Copyright (c) 2009-14 Walter Bender
 
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -22,6 +22,8 @@ import os
 from game import Game
 from constants import PRODUCT, HASH, ROMAN, WORD, CHINESE, MAYAN, DICE, DOTS, \
                       STAR, LINES, INCAN
+
+MODE = 'pattern'
 
 
 class DimensionsMain:
@@ -53,20 +55,23 @@ class DimensionsMain:
         level_menu.set_submenu(menu0)
 
         menu1 = Gtk.Menu()
-        menu_items = Gtk.MenuItem(_("New pattern game"))
-        menu1.append(menu_items)
-        menu_items.connect("activate", self._new_game_cb, 'pattern')
-        menu_items.show()
-        '''
-        menu_items = Gtk.MenuItem(_("New number game"))
-        menu1.append(menu_items)
-        menu_items.connect("activate", self._new_game_cb, 'number')
-        menu_items.show()
-        menu_items = Gtk.MenuItem(_("New word game"))
-        menu1.append(menu_items)
-        menu_items.connect("activate", self._new_game_cb, 'word')
-        menu_items.show()
-        '''
+
+        if MODE == 'pattern':
+            menu_items = Gtk.MenuItem(_("New pattern game"))
+            menu1.append(menu_items)
+            menu_items.connect("activate", self._new_game_cb, 'pattern')
+            menu_items.show()
+        elif MODE == 'number':
+            menu_items = Gtk.MenuItem(_("New number game"))
+            menu1.append(menu_items)
+            menu_items.connect("activate", self._new_game_cb, 'number')
+            menu_items.show()
+        else:
+            menu_items = Gtk.MenuItem(_("New word game"))
+            menu1.append(menu_items)
+            menu_items.connect("activate", self._new_game_cb, 'word')
+            menu_items.show()
+
         game_menu = Gtk.MenuItem(_("Game"))
         game_menu.show()
         game_menu.set_submenu(menu1)
@@ -100,56 +105,55 @@ class DimensionsMain:
         tool_menu.show()
         tool_menu.set_submenu(menu2)
 
-        '''
-        menu3 = Gtk.Menu()
-        menu_items = Gtk.MenuItem(_("Product"))
-        menu3.append(menu_items)
-        menu_items.connect("activate", self._number_card_O_cb, PRODUCT)
-        menu_items.show()
-        menu_items = Gtk.MenuItem(_("Roman"))
-        menu3.append(menu_items)
-        menu_items.connect("activate", self._number_card_O_cb, ROMAN)
-        menu_items.show()
-        menu_items = Gtk.MenuItem(_("Word"))
-        menu3.append(menu_items)
-        menu_items.connect("activate", self._number_card_O_cb, WORD)
-        menu_items.show()
-        menu_items = Gtk.MenuItem(_("Chinese"))
-        menu3.append(menu_items)
-        menu_items.connect("activate", self._number_card_O_cb, CHINESE)
-        menu_items.show()
-        menu_items = Gtk.MenuItem(_("Mayan"))
-        menu3.append(menu_items)
-        menu_items.connect("activate", self._number_card_O_cb, MAYAN)
-        menu_items.show()
-        menu_items = Gtk.MenuItem(_("Quipu"))
-        menu3.append(menu_items)
-        menu_items.connect("activate", self._number_card_O_cb, INCAN)
-        menu_items.show()
-        menu_items = Gtk.MenuItem(_("Hash"))
-        menu3.append(menu_items)
-        menu_items.connect("activate", self._number_card_C_cb, HASH)
-        menu_items.show()
-        menu_items = Gtk.MenuItem(_("Dice"))
-        menu3.append(menu_items)
-        menu_items.connect("activate", self._number_card_C_cb, DICE)
-        menu_items.show()
-        menu_items = Gtk.MenuItem(_("Dots"))
-        menu3.append(menu_items)
-        menu_items.connect("activate", self._number_card_C_cb, DOTS)
-        menu_items.show()
-        menu_items = Gtk.MenuItem(_("Star"))
-        menu3.append(menu_items)
-        menu_items.connect("activate", self._number_card_C_cb, STAR)
-        menu_items.show()
-        menu_items = Gtk.MenuItem(_("Lines"))
-        menu3.append(menu_items)
-        menu_items.connect("activate", self._number_card_C_cb, LINES)
-        menu_items.show()
-        num_menu = Gtk.MenuItem("Numbers")
-        num_menu.show()
-        num_menu.set_submenu(menu3)
-        '''
+        if MODE == 'number':
+            menu3 = Gtk.Menu()
+            menu_items = Gtk.MenuItem(_("Product"))
+            menu3.append(menu_items)
+            menu_items.connect("activate", self._number_card_O_cb, PRODUCT)
+            menu_items.show()
+            menu_items = Gtk.MenuItem(_("Roman"))
+            menu3.append(menu_items)
+            menu_items.connect("activate", self._number_card_O_cb, ROMAN)
+            menu_items.show()
+            menu_items = Gtk.MenuItem(_("Word"))
+            menu3.append(menu_items)
+            menu_items.connect("activate", self._number_card_O_cb, WORD)
+            menu_items.show()
+            menu_items = Gtk.MenuItem(_("Chinese"))
+            menu3.append(menu_items)
+            menu_items.connect("activate", self._number_card_O_cb, CHINESE)
+            menu_items.show()
+            menu_items = Gtk.MenuItem(_("Mayan"))
+            menu3.append(menu_items)
+            menu_items.connect("activate", self._number_card_O_cb, MAYAN)
+            menu_items.show()
+            menu_items = Gtk.MenuItem(_("Quipu"))
+            menu3.append(menu_items)
+            menu_items.connect("activate", self._number_card_O_cb, INCAN)
+            menu_items.show()
+            menu_items = Gtk.MenuItem(_("Hash"))
+            menu3.append(menu_items)
+            menu_items.connect("activate", self._number_card_C_cb, HASH)
+            menu_items.show()
+            menu_items = Gtk.MenuItem(_("Dice"))
+            menu3.append(menu_items)
+            menu_items.connect("activate", self._number_card_C_cb, DICE)
+            menu_items.show()
+            menu_items = Gtk.MenuItem(_("Dots"))
+            menu3.append(menu_items)
+            menu_items.connect("activate", self._number_card_C_cb, DOTS)
+            menu_items.show()
+            menu_items = Gtk.MenuItem(_("Star"))
+            menu3.append(menu_items)
+            menu_items.connect("activate", self._number_card_C_cb, STAR)
+            menu_items.show()
+            menu_items = Gtk.MenuItem(_("Lines"))
+            menu3.append(menu_items)
+            menu_items.connect("activate", self._number_card_C_cb, LINES)
+            menu_items.show()
+            num_menu = Gtk.MenuItem("Numbers")
+            num_menu.show()
+            num_menu.set_submenu(menu3)
 
         # A vbox to put a menu and the canvas in:
         vbox = Gtk.VBox(False, 0)
@@ -167,14 +171,15 @@ class DimensionsMain:
         menu_bar.append(game_menu)
         menu_bar.append(level_menu)
         menu_bar.append(tool_menu)
-        # menu_bar.append(num_menu)
+        if MODE == 'number':
+            menu_bar.append(num_menu)
         self.win.show_all()
 
         # Join the activity
         self.vmw = Game(canvas)
         self.vmw.win = self.win
         self.vmw.activity = self
-        self.vmw.card_type = 'pattern'
+        self.vmw.card_type = MODE
         self.vmw.level = 1
         self.vmw.robot = False
         self.vmw.robot_time = 60
