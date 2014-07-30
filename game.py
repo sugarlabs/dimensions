@@ -220,13 +220,14 @@ class Game():
                 generate_match_card(self._scale), sprites=self._sprites)
             self._match_area[-1].spr.move(self.grid.match_to_xy(i))
 
-        for i in range(15):
-            self._smiley.append(Card(scale=self._scale * (i + 2)))
+        for i in range(30):
+            scale = self._scale * (i / 2 + 2)
+            self._smiley.append(Card(scale=scale))
             self._smiley[-1].create(
-                generate_smiley(self._scale * (i + 2)), sprites=self._sprites)
-            x = self._smiley_xy()[0] - i * int(self._card_width / 2)
-            y = self._smiley_xy()[1] - i * int(self._card_height / 2)
-            self._smiley[-1].spr.move((x, y))
+                generate_smiley(scale), sprites=self._sprites)
+            x = self._smiley_xy()[0] - i / 2 * int(self._card_width / 2)
+            y = self._smiley_xy()[1] - i / 2 * int(self._card_height / 2)
+            self._smiley[-1].spr.move((int(x), int(y)))
             if i == 0:
                 self._smiley[-1].spr.set_layer(10000)
             else:
@@ -297,7 +298,7 @@ class Game():
 
         for i in range(CARDS_IN_A_MATCH):
             self._match_area[i].spr.move(self.grid.match_to_xy(i))
-        for i in range(15):
+        for i in range(30):
             x = self._smiley_xy()[0] - i * int(self._card_width / 2)
             y = self._smiley_xy()[1] - i * int(self._card_height / 2)
             self._smiley[i].spr.move((x, y))
@@ -942,7 +943,7 @@ class Game():
                             int(self.total_time % 60)))
             self._smiley[0].show_card()
             self.animation_timeout_id = GObject.timeout_add(
-                500, self._show_animation, 0)
+                200, self._show_animation, 0)
             self._the_game_is_over = True
         elif self.grid.cards_in_grid() == DEAL + 3 \
                 and not self._find_a_match():
@@ -1146,12 +1147,12 @@ class Game():
         if i < len(self._smiley) - 1:
             self._smiley[i].show_card(layer=20000)
             self.animation_timeout_id = GObject.timeout_add(
-                500, self._show_animation, i + 1)
+                100, self._show_animation, i + 1)
         else:
             for card in self._smiley:
                 card.spr.hide()
             self.match_timeout_id = GObject.timeout_add(
-                2000, self._show_matches, 0)
+                1000, self._show_matches, 0)
 
     def _show_matches(self, i):
         ''' Show all the matches as a simple animation. '''
