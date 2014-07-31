@@ -251,16 +251,17 @@ class Game():
         self._frowny[-1].create(
             generate_frowny_number(self._scale * 2), sprites=self._sprites)
         self._frowny[-1].spr.move(self._smiley_xy())
+        self._hide_frowny()
 
         size = min(self._width, self._height)
         self._label = Card()
-        self._label.create(generate_label(size, LABELH * 2),
+        self._label.create(generate_label(size, LABELH * 4),
                            sprites=self._sprites)
         self._label.spr.move((LABELH, LABELH))
         self._label.spr.set_label_attributes(24, horiz_align="left")
 
         self._label_time = Card()
-        self._label_time.create(generate_label(size, LABELH * 2),
+        self._label_time.create(generate_label(size, LABELH * 4),
                                 sprites=self._sprites)
         self._label_time.spr.move((Gdk.Screen.width() - size - LABELH, LABELH))
         self._label_time.spr.set_label_attributes(24, horiz_align="right")
@@ -416,12 +417,11 @@ class Game():
                 GObject.source_remove(self.animation_timeout_id)
             self._timer_reset()
 
-        for card in self._smiley:
-            card.hide_card()
-        for card in self._frowny:
-            card.hide_card()
+        self._hide_smiley()
+        self._hide_frowny()
 
         self._sprites.draw_all()
+
         if self._sugar:
             self.activity.get_window().set_cursor(self._old_cursor)
 
@@ -429,6 +429,7 @@ class Game():
             # Launch animated help
             if self._sugar:
                 self.help_animation()
+        self._played_animation = True
 
     def _sharing(self):
         ''' Are we sharing? '''
@@ -919,10 +920,14 @@ class Game():
             if c is not None:
                 c.hide()
 
+    def _hide_smiley(self):
+        for card in self._smiley:
+            card.spr.hide()
+
     def _hide_frowny(self):
         ''' Hide the frowny cards '''
-        for c in self._frowny:
-            c.spr.hide()
+        for card in self._frowny:
+            card.spr.hide()
 
     def return_card_to_grid(self, i):
         ''' "Unclick" '''
@@ -938,7 +943,7 @@ class Game():
             self._hide_frowny()
             self.set_label('deck', '')
             self.set_label('clock', '')
-            self.set_label('status', '%s (%d:%02d)' %
+            self.set_label('status', '%s\n(%d:%02d)' %
                            (_('Game over'), int(self.total_time / 60),
                             int(self.total_time % 60)))
             self._smiley[0].show_card()
@@ -1069,18 +1074,22 @@ class Game():
         self.set_label('deck', '%d %s' %
                        (self.deck.cards_remaining(), _('cards')))
         self.set_label('status', '')
-        if self.matches == 1:
+        if self.matches - self.robot_matches == 1:
             if self.robot_matches > 0:
-                self.set_label('match', '%d (%d) %s' % (
-                    self.matches - self.robot_matches, self.robot_matches,
-                    _('match')))
+                self.set_label('match', '%d %s\n(%d %s)' % (
+                    self.matches - self.robot_matches,
+                    _('match'),
+                    self.robot_matches,
+                    _('robot')))
             else:
                 self.set_label('match', '%d %s' % (self.matches, _('match')))
         else:
             if self.robot_matches > 0:
-                self.set_label('match', '%d (%d) %s' % (
-                    self.matches - self.robot_matches, self.robot_matches,
-                    _('matches')))
+                self.set_label('match', '%d %s\n(%d %s)' % (
+                    self.matches - self.robot_matches,
+                    _('matches'),
+                    self.robot_matches,
+                    _('robot')))
             else:
                 self.set_label('match', '%d %s' % (self.matches, _('matches')))
 
