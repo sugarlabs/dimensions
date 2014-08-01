@@ -1403,18 +1403,6 @@ class Game():
                                      pixbuf))
             self._help[-1].hide()
 
-        '''
-        for i in range(22):
-            path = os.path.join(activity.get_bundle_path(),
-                                'images', 'help-%d.svg' % i)
-            svg_str = svg_from_file(path)
-            pixbuf = svg_str_to_pixbuf(svg_str, int(self._width / 2),
-                                       int(self._height / 2))
-            self._help.append(Sprite(self._sprites, int(self._width / 4),
-                                     int(self._height / 4), pixbuf))
-            self._help[-1].hide()
-        '''
-
         self._help_index = 0
         self._stop_help = False
         self._help[self._help_index].set_layer(5000)
@@ -1429,10 +1417,11 @@ class Game():
         self._help_index += 1
         self._help_index %= len(self._help)
         self._help[self._help_index].set_layer(5000)
-        if self._help_index in [0, 9, 10, 20, 21]:
-            self._help_timeout_id = GObject.timeout_add(2000, self._help_next)
+        if self._help_index in [0, 9, 20, 24]:
+            pause = 2500
         else:
-            self._help_timeout_id = GObject.timeout_add(1000, self._help_next)
+            pause = 750
+        self._help_timeout_id = GObject.timeout_add(pause, self._help_next)
 
 
 class Permutation:
