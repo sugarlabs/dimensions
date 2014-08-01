@@ -941,6 +941,7 @@ class Game():
         ''' Game is over when the deck is empty and no more matches. '''
         if self.deck.empty() and not self._find_a_match():
             self._hide_frowny()
+            self._update_labels()
             self.set_label('deck', '')
             self.set_label('clock', '')
             self.set_label('status', '%s\n(%d:%02d)' %
@@ -953,6 +954,7 @@ class Game():
         elif self.grid.cards_in_grid() == DEAL + 3 \
                 and not self._find_a_match():
             self._hide_frowny()
+            self._update_labels()
             self.set_label('deck', '')
             self.set_label('clock', '')
             self.set_label('status', _('unsolvable'))
