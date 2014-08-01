@@ -1417,7 +1417,7 @@ class Game():
         self._help_index += 1
         self._help_index %= len(self._help)
         self._help[self._help_index].set_layer(5000)
-        if self._help_index in [0, 10, 22, 27]:
+        if self._help_index in [0, 12, 24, 29]:
             pause = 2500
         else:
             pause = 750
