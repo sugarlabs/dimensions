@@ -19,6 +19,7 @@ from gi.repository import GObject
 from gi.repository import Pango
 
 import os
+import glob
 
 from gettext import gettext as _
 
@@ -1377,11 +1378,32 @@ class Game():
             return False
         return True
 
-    def help_animation(self):
-        ''' Simple explanatory animation at start of play '''
+    def _get_help_files(self):
         from sugar3.activity import activity
 
+        help_target = os.path.join(activity.get_bundle_path(),
+                                   'images', 'help-*.png')
+        help_files = glob.glob(help_target)
+        return sorted(help_files)
+
+    def help_animation(self):
+        ''' Simple explanatory animation at start of play '''
+        if not self._sugar:
+            return
+
+        # from sugar3.activity import activity
+
         self._played_animation = True
+        for help_file in self._get_help_files():
+            pixbuf = GdkPixbuf.Pixbuf.new_from_file_at_size(
+                help_file, 550, 650)
+            self._help.append(Sprite(self._sprites,
+                                     int((self._width - 550) / 2),
+                                     int((self._height - 650) / 2),
+                                     pixbuf))
+            self._help[-1].hide()
+
+        '''
         for i in range(22):
             path = os.path.join(activity.get_bundle_path(),
                                 'images', 'help-%d.svg' % i)
@@ -1391,6 +1413,7 @@ class Game():
             self._help.append(Sprite(self._sprites, int(self._width / 4),
                                      int(self._height / 4), pixbuf))
             self._help[-1].hide()
+        '''
 
         self._help_index = 0
         self._stop_help = False
