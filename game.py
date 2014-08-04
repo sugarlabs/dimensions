@@ -147,6 +147,7 @@ class Game():
         self._matches_on_display = False
         self._smiley = []
         self._frowny = []
+        self._robot_card = None
         self._help = []
         self._help_timeout_id = None
         self._stop_help = True
@@ -258,6 +259,10 @@ class Game():
         self._frowny[-1].spr.move(self._smiley_xy())
         self._hide_frowny()
 
+        if self._sugar:
+            self._generate_robot_card(self._scale * 2)
+            self._robot_card.spr.hide()
+
         size = min(self._width, self._height)
         self._label = Card()
         self._label.create(generate_label(size, LABELH * 4),
@@ -310,6 +315,7 @@ class Game():
             self._smiley[i].spr.move((x, y))
         for c in self._frowny:
             c.spr.move(self._smiley_xy())
+        self._robot_card.spr.move(self._smiley_xy())
 
         for i, c in enumerate(self.clicked):
             if c.spr is not None:
@@ -341,10 +347,10 @@ class Game():
         self._matches_on_display = False
         self._failure = None
 
-        self._hide_frowny()
-
         for card in self._smiley:
             card.spr.hide()
+        self._hide_frowny()
+        self._robot_card.spr.hide()
 
         if self._saved_state is not None:
             _logger.debug('Restoring state: %s' % (str(self._saved_state)))
@@ -424,6 +430,7 @@ class Game():
 
         self._hide_smiley()
         self._hide_frowny()
+        self._robot_card.spr.hide()
 
         self._sprites.draw_all()
 
@@ -618,6 +625,11 @@ class Game():
 
         # Hide a smiley
         if spr == self._smiley[0].spr:
+            spr.hide()
+            return True
+
+        # Hide a robot card
+        if spr == self._robot_card.spr:
             spr.hide()
             return True
 
@@ -889,7 +901,7 @@ class Game():
             # If we have three cards selected, test for a match.
             self._test_for_a_match()
             if self._matches_on_display:
-                self._smiley[0].spr.set_layer(SMILE_LATER)
+                self._smiley[0].spr.set_layer(SMILE_LAYER)
             elif not self._the_game_is_over and self._failure is not None:
                 self._frowny[self._failure].spr.set_layer(SMILE_LAYER)
         return
@@ -950,11 +962,12 @@ class Game():
 
     def _game_over(self):
         ''' Game is over when the deck is empty and no more matches. '''
+        self._hide_frowny()
+        self._robot_card.spr.hide()
+        self._update_labels()
+        self.set_label('deck', '')
+        self.set_label('clock', '')
         if self.deck.empty() and not self._find_a_match():
-            self._hide_frowny()
-            self._update_labels()
-            self.set_label('deck', '')
-            self.set_label('clock', '')
             self.set_label('status', '%s\n(%d:%02d)' %
                            (_('Game over'), int(self.total_time / 60),
                             int(self.total_time % 60)))
@@ -964,10 +977,6 @@ class Game():
             self._the_game_is_over = True
         elif self.grid.cards_in_grid() == DEAL + 3 \
                 and not self._find_a_match():
-            self._hide_frowny()
-            self._update_labels()
-            self.set_label('deck', '')
-            self.set_label('clock', '')
             self.set_label('status', _('unsolvable'))
             self._the_game_is_over = True
         return self._the_game_is_over
@@ -1108,7 +1117,7 @@ class Game():
 
     def set_label(self, label, s):
         ''' Update the toolbar labels '''
-        if not self._played_animation:
+        if not hasattr(self, '_labels'):
             return
 
         if label in self._labels:
@@ -1164,7 +1173,7 @@ class Game():
         ''' Reset the timer for the robot '''
         self.start_time = GObject.get_current_time()
         self.timeout_id = None
-        if self._played_animation and not self._the_game_is_over:
+        if not self._the_game_is_over:
             self._counter()
 
     def _show_animation(self, i):
@@ -1215,6 +1224,7 @@ class Game():
                     # Stop animations before moving robot match
                     self.grid.stop_animation = True
                     self._robot_match(i)
+                    self._robot_card.spr.set_layer(SMILE_LAYER)
                 return True
         return False
 
@@ -1390,6 +1400,21 @@ class Game():
         if self.grid.xy_in_grid((x, y)):
             return False
         return True
+
+    def _generate_robot_card(self, scale):
+        ''' Sugar only '''
+        from sugar3.activity import activity
+
+        w = int(125 * scale)
+        h = int(75 * scale)
+        x = int((Gdk.Screen.width() - w) / 2)
+        y = int((Gdk.Screen.height() - h) / 2)
+        robot_target = os.path.join(activity.get_bundle_path(),
+                                    'images', 'robot-card.svg')
+        pixbuf = svg_str_to_pixbuf(svg_from_file(robot_target), w, h)
+        self._robot_card = Card(scale=scale)
+        self._robot_card.spr = Sprite(self._sprites, x, y, pixbuf)
+        self._robot_card.spr.set_layer(SMILE_LAYER)
 
     def _get_help_files(self):
         from sugar3.activity import activity
