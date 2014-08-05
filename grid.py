@@ -18,6 +18,9 @@ try:
 except:
     DEFAULT_SPACING = 16
 
+DELTA = 20
+STEP_PAUSE = 50
+
 import logging
 _logger = logging.getLogger('dimensions-activity')
 
@@ -140,9 +143,9 @@ class Grid:
         self.ey[i] = self.bottom
         self.sx[i] = spr.get_xy()[0]
         self.sy[i] = spr.get_xy()[1]
-        self.dx[i] = int((self.ex[i] - self.sx[i]) / 10)
-        self.dy[i] = int((self.ey[i] - self.sy[i]) / 10)
-        GObject.timeout_add(100, self._move_to_position, spr, i)
+        self.dx[i] = int((self.ex[i] - self.sx[i]) / DELTA)
+        self.dy[i] = int((self.ey[i] - self.sy[i]) / DELTA)
+        GObject.timeout_add(STEP_PAUSE, self._move_to_position, spr, i)
 
     def return_to_grid(self, spr, i, j):
         ''' Move card from the match area. '''
@@ -153,9 +156,9 @@ class Grid:
         self.ey[j] = self.grid_to_xy(i)[1]
         self.sx[j] = spr.get_xy()[0]
         self.sy[j] = spr.get_xy()[1]
-        self.dx[j] = int((self.ex[j] - self.sx[j]) / 10)
-        self.dy[j] = int((self.ey[j] - self.sy[j]) / 10)
-        GObject.timeout_add(100, self._move_to_position, spr, j)
+        self.dx[j] = int((self.ex[j] - self.sx[j]) / DELTA)
+        self.dy[j] = int((self.ey[j] - self.sy[j]) / DELTA)
+        GObject.timeout_add(STEP_PAUSE, self._move_to_position, spr, j)
 
     def _move_to_position(self, spr, i):
         ''' Piece-wise animation of card movement '''
@@ -167,7 +170,7 @@ class Grid:
             spr.move((self.ex[i], self.ey[i]))
             self.animation_lock[i] = False
         else:
-            GObject.timeout_add(100, self._move_to_position, spr, i)
+            GObject.timeout_add(STEP_PAUSE, self._move_to_position, spr, i)
 
     def consolidate(self):
         ''' If we have removed cards from an expanded grid,
@@ -196,11 +199,11 @@ class Grid:
                 self.ex[animate + 3] = x
                 self.ey[animate + 3] = y
                 self.dx[animate + 3] = int(
-                    (self.ex[animate + 3] - c.spr.get_xy()[0]) / 10)
+                    (self.ex[animate + 3] - c.spr.get_xy()[0]) / DELTA)
                 self.dy[animate + 3] = int(
-                    (self.ey[animate + 3] - c.spr.get_xy()[1]) / 10)
+                    (self.ey[animate + 3] - c.spr.get_xy()[1]) / DELTA)
                 self.animation_lock[animate + 3] = True
-                GObject.timeout_add(100, self._move_to_position,
+                GObject.timeout_add(STEP_PAUSE, self._move_to_position,
                                     c.spr, animate + 3)
 
     def xy_to_match(self, pos):
