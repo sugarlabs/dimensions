@@ -973,7 +973,7 @@ class Game():
                             int(self.total_time % 60)))
             self._smiley[0].show_card()
             self.animation_timeout_id = GObject.timeout_add(
-                200, self._show_animation, 0)
+                100, self._show_animation, 0)
             self._the_game_is_over = True
         elif self.grid.cards_in_grid() == DEAL + 3 \
                 and not self._find_a_match():
@@ -1181,7 +1181,7 @@ class Game():
         if i < len(self._smiley) - 1:
             self._smiley[i].show_card(layer=ANIMATION_LAYER)
             self.animation_timeout_id = GObject.timeout_add(
-                100, self._show_animation, i + 1)
+                50, self._show_animation, i + 1)
         else:
             for card in self._smiley:
                 card.spr.hide()
