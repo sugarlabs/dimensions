@@ -206,19 +206,20 @@ class Game():
         else:
             self.backgrounds[1].hide()
 
-        if self._sugar:
-            self._old_cursor = self.activity.get_window().get_cursor()
-            self.activity.get_window().set_cursor(Gdk.Cursor.new(
-                Gdk.CursorType.WATCH))
-        GObject.idle_add(self._complete_loading)
-
-    def _complete_loading(self):
         self._cards = []
         for i in range(DECKSIZE):
             self._cards.append(Card(scale=self._scale))
 
         self.deck = Deck(self._cards, scale=self._scale)
 
+        if self._sugar:
+            self._old_cursor = self.activity.get_window().get_cursor()
+            self.activity.get_window().set_cursor(Gdk.Cursor.new(
+                Gdk.CursorType.WATCH))
+
+        GObject.idle_add(self._complete_loading)
+
+    def _complete_loading(self):
         for i in range(CARDS_IN_A_MATCH):
             self.clicked.append(Click())
             self._match_area.append(Card(scale=self._scale))
@@ -226,7 +227,7 @@ class Game():
                 generate_match_card(self._scale), sprites=self._sprites)
             self._match_area[-1].spr.move(self.grid.match_to_xy(i))
 
-        for i in range(30):
+        for i in range(15):
             scale = self._scale * (i / 2 + 2)
             self._smiley.append(Card(scale=scale))
             self._smiley[-1].create(
@@ -284,7 +285,8 @@ class Game():
 
     def _smiley_xy(self):
         x = int(Gdk.Screen.width() / 2) - self._card_width + DEFAULT_SPACING
-        y = int(Gdk.Screen.height() / 2) - self._card_height + DEFAULT_SPACING
+        y = int(Gdk.Screen.height() / 2) - self._card_height - \
+            DEFAULT_SPACING * 2
         return ((x, y))
 
     def _configure_cb(self, event):
@@ -683,6 +685,7 @@ class Game():
         self._matches_on_display = False
         self._hide_clicked()
         self._smiley[0].spr.hide()
+        self._robot_card.spr.hide()
         if share and self._sharing():
             self.activity._send_event('r:')
 
@@ -1164,6 +1167,11 @@ class Game():
         ''' Display of seconds since start_time. '''
         seconds = int(GObject.get_current_time() - self.start_time)
         self.set_label('clock', str(seconds))
+
+        if seconds == 5:
+            if self._matches_on_display:
+                self.clean_up_match(share=False)
+
         if self.robot and self.robot_time < seconds:
             self._find_a_match(robot_match=True)
         else:
@@ -1407,8 +1415,7 @@ class Game():
 
         w = int(125 * scale)
         h = int(75 * scale)
-        x = int((Gdk.Screen.width() - w) / 2)
-        y = int((Gdk.Screen.height() - h) / 2)
+        x, y = self._smiley_xy()
         robot_target = os.path.join(activity.get_bundle_path(),
                                     'images', 'robot-card.svg')
         pixbuf = svg_str_to_pixbuf(svg_from_file(robot_target), w, h)
