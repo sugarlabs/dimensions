@@ -214,12 +214,7 @@ class Game():
 
         if self._sugar:
             self._old_cursor = self.activity.get_window().get_cursor()
-            self.activity.get_window().set_cursor(Gdk.Cursor.new(
-                Gdk.CursorType.WATCH))
 
-        GObject.idle_add(self._complete_loading)
-
-    def _complete_loading(self):
         for i in range(CARDS_IN_A_MATCH):
             self.clicked.append(Click())
             self._match_area.append(Card(scale=self._scale))
@@ -280,8 +275,6 @@ class Game():
         self._labels = {'deck': '', 'match': '', 'clock': '', 'status': ''}
 
         Gdk.Screen.get_default().connect('size-changed', self._configure_cb)
-        if self._sugar:
-            self.activity.get_window().set_cursor(self._old_cursor)
 
     def _smiley_xy(self):
         x = int(Gdk.Screen.width() / 2) - self._card_width + DEFAULT_SPACING
@@ -1438,6 +1431,12 @@ class Game():
 
         self._played_animation = True
 
+        self.activity.get_window().set_cursor(Gdk.Cursor.new(
+            Gdk.CursorType.WATCH))
+
+        GObject.idle_add(self._complete_loading)
+
+    def _complete_loading(self):
         if self.portrait:
             self.backgrounds[1].set_layer(SMILE_LAYER)
         else:
@@ -1456,6 +1455,9 @@ class Game():
         self._help_index = 0
         self._stop_help = False
         self._help[self._help_index].set_layer(ANIMATION_LAYER)
+
+        self.activity.get_window().set_cursor(self._old_cursor)
+
         self._help_timeout_id = GObject.timeout_add(2000, self._help_next)
 
     def _help_next(self):
