@@ -166,7 +166,7 @@ class Grid:
         if self.stop_animation:
             spr.move((self.sx[i], self.sy[i]))
             self.animation_lock[i] = False
-        elif _distance_squared(spr.get_xy(), (self.ex[i], self.ey[i])) < 200:
+        elif _distance_squared(spr.get_xy(), (self.ex[i], self.ey[i])) < 1000:
             spr.move((self.ex[i], self.ey[i]))
             self.animation_lock[i] = False
         else:
