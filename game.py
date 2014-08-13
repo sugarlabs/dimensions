@@ -36,7 +36,8 @@ except:
 
 from constants import (HIGH, ROW, COL, CARD_WIDTH, WORD_CARD_INDICIES, LABELH,
                        WORD_CARD_MAP, CARD_HEIGHT, DEAL, DIFFICULTY_LEVEL,
-                       DECKSIZE, CUSTOM_CARD_INDICIES, CARDS_IN_A_MATCH)
+                       DECKSIZE, CUSTOM_CARD_INDICIES, CARDS_IN_A_MATCH,
+                       NUMBER_STYLES_C, NUMBER_STYLES_O, CARD_STYLES)
 from grid import Grid
 from deck import Deck
 from card import Card
@@ -52,6 +53,7 @@ ANIMATION_LAYER = 20000
 BACKGROUND_LAYER = 0
 DRAG_LAYER = 5000
 SELECT_LAYER = 2000
+
 
 def _distance(pos1, pos2):
     ''' simple distance function '''
@@ -174,7 +176,9 @@ class Game():
         self.buddies = []
         self._dealing = False
         self._the_game_is_over = False
-        self._played_animation = False
+        # self._played_animation = False
+        self._choosing_card_type = True
+        self._choosing_number_type = False
 
         self.grid = Grid(self._width, self._height, self._card_width,
                          self._card_height)
@@ -222,42 +226,16 @@ class Game():
                 generate_match_card(self._scale), sprites=self._sprites)
             self._match_area[-1].spr.move(self.grid.match_to_xy(i))
 
-        for i in range(15):
-            scale = self._scale * (i / 2 + 2)
-            self._smiley.append(Card(scale=scale))
-            self._smiley[-1].create(
-                generate_smiley(scale), sprites=self._sprites)
-            x = self._smiley_xy()[0] - i / 2 * int(self._card_width / 2)
-            y = self._smiley_xy()[1] - i / 2 * int(self._card_height / 2)
-            self._smiley[-1].spr.move((int(x), int(y)))
-            if i == 0:
-                self._smiley[-1].spr.set_layer(SMILE_LAYER)
-            else:
-                self._smiley[-1].spr.set_layer(ANIMATION_LAYER)
-            self._smiley[-1].spr.hide()
-
-        # A different frowny face for each type of error
-        self._frowny.append(Card(self._scale * 2))
-        self._frowny[-1].create(
-            generate_frowny_shape(self._scale * 2), sprites=self._sprites)
-        self._frowny[-1].spr.move(self._smiley_xy())
-        self._frowny.append(Card(self._scale))
-        self._frowny[-1].create(
-            generate_frowny_color(self._scale * 2), sprites=self._sprites)
-        self._frowny[-1].spr.move(self._smiley_xy())
-        self._frowny.append(Card(self._scale))
-        self._frowny[-1].create(
-            generate_frowny_texture(self._scale * 2), sprites=self._sprites)
-        self._frowny[-1].spr.move(self._smiley_xy())
-        self._frowny.append(Card(self._scale))
-        self._frowny[-1].create(
-            generate_frowny_number(self._scale * 2), sprites=self._sprites)
-        self._frowny[-1].spr.move(self._smiley_xy())
-        self._hide_frowny()
+        self._make_smiley_cards()
+        self._make_frowny_cards()
 
         if self._sugar:
             self._generate_robot_card(self._scale * 2)
             self._robot_card.spr.hide()
+
+            self._make_card_type_buttons()
+            self._make_help_buttons()
+            self._make_number_type_buttons()
 
         size = min(self._width, self._height)
         self._label = Card()
@@ -312,26 +290,118 @@ class Game():
             c.spr.move(self._smiley_xy())
         self._robot_card.spr.move(self._smiley_xy())
 
+        for i, spr in self._card_type_buttons:
+            spr.move(
+                (int(((self._width - size)/ 2) - ((i + 2) % 3) * size + size),
+                 int((self._height - size) / 4)))
+
         for i, c in enumerate(self.clicked):
             if c.spr is not None:
                 c.spr.move(self.grid.match_to_xy(i))
 
-    def new_game(self, saved_state=None, deck_index=0):
+    def _hide_card_type_selector(self):
+        self._choosing_card_type = False
+        for spr in self._card_type_buttons:
+            spr.hide()
+        for spr in self._help_buttons:
+            spr.hide()
+        if self.portrait:
+            self.backgrounds[0].hide()
+            self.backgrounds[1].set_layer(BACKGROUND_LAYER)
+        else:
+            self.backgrounds[1].hide()
+            self.backgrounds[0].set_layer(BACKGROUND_LAYER)
+
+    def _hide_number_type_selector(self):
+        self._choosing_number_type = False
+        for spr in self._number_type_c_buttons:
+            spr.hide()
+        for spr in self._number_type_o_buttons:
+            spr.hide()
+        if self.portrait:
+            self.backgrounds[0].hide()
+            self.backgrounds[1].set_layer(BACKGROUND_LAYER)
+        else:
+            self.backgrounds[1].hide()
+            self.backgrounds[0].set_layer(BACKGROUND_LAYER)
+
+    def choose_card_type(self):
+        self._choosing_card_type = True
+        self._help_buttons[0].set_layer(ANIMATION_LAYER)
+        n = len(CARD_STYLES)
+        logging.error('CHOOSE CARD TYPE %s' % self.card_type)
+        i = CARD_STYLES.index(self.card_type)
+        logging.error('CHOOSE CARD TYPE %d' % i)
+        for j in range(n):
+            if j == i:
+                self._card_type_buttons[i + n].set_layer(ANIMATION_LAYER)
+                self._card_type_buttons[i].hide()
+            else:
+                self._card_type_buttons[j].set_layer(ANIMATION_LAYER)
+                self._card_type_buttons[j + n].hide()
+        if self.portrait:
+            self.backgrounds[0].hide()
+            self.backgrounds[1].set_layer(SMILE_LAYER)
+        else:
+            self.backgrounds[1].hide()
+            self.backgrounds[0].set_layer(SMILE_LAYER)
+
+    def choose_number_type(self):
+        self._choosing_card_type = False
+        self._choosing_number_type = True
+        n = len(NUMBER_STYLES_C)
+        i = self.numberC
+        for j in range(n):
+            if j == i:
+                self._number_type_c_buttons[i + n].set_layer(ANIMATION_LAYER)
+                self._number_type_c_buttons[i].hide()
+            else:
+                self._number_type_c_buttons[j].set_layer(ANIMATION_LAYER)
+                self._number_type_c_buttons[j + n].hide()
+        n = len(NUMBER_STYLES_O)
+        i = self.numberO
+        for j in range(n):
+            if j == i:
+                self._number_type_o_buttons[i + n].set_layer(ANIMATION_LAYER)
+                self._number_type_o_buttons[i].hide()
+            else:
+                self._number_type_o_buttons[j].set_layer(ANIMATION_LAYER)
+                self._number_type_o_buttons[j + n].hide()
+        if self.portrait:
+            self.backgrounds[0].hide()
+            self.backgrounds[1].set_layer(SMILE_LAYER)
+        else:
+            self.backgrounds[1].hide()
+            self.backgrounds[0].set_layer(SMILE_LAYER)
+
+    def new_game(self, saved_state=None, deck_index=0, show_selector=False):
         ''' Start a new game '''
+        logging.error('NEW GAME: show_selector=%r' % show_selector)
+
         # If we were editing the word list, time to stop
         self.grid.stop_animation = True
         self.editing_word_list = False
         self.editing_custom_cards = False
         self._edit_card = None
+       
         self._saved_state = saved_state
         self._deck_index = deck_index
         if self._sugar:
+            if show_selector:
+                logging.error('CHOOSE CARD TYPE')
+                self.choose_card_type()
+                return
+            else:  # if self._saved_state is not None:
+                logging.error('HIDE CARD TYPE SELECTOR')
+                self._hide_card_type_selector()
+                self._hide_number_type_selector()
             self.activity.get_window().set_cursor(Gdk.Cursor.new(
                 Gdk.CursorType.WATCH))
         GObject.timeout_add(200, self._prepare_new_game)
 
     def _prepare_new_game(self):
         # If there is already a deck, hide it.
+        logging.error('PREPARING NEW GAME')
         if hasattr(self, 'deck'):
             self.deck.hide()
 
@@ -432,11 +502,13 @@ class Game():
         if self._sugar:
             self.activity.get_window().set_cursor(self._old_cursor)
 
+        '''
         if self._saved_state == None and not self._played_animation:
             # Launch animated help
             if self._sugar:
                 self.help_animation()
         self._played_animation = True
+        '''
 
     def _sharing(self):
         ''' Are we sharing? '''
@@ -611,6 +683,78 @@ class Game():
 
         # Find the sprite under the mouse.
         spr = self._sprites.find_sprite((x, y))
+
+        # Show help?
+        logging.error('PRESS: %s' % spr.type)
+        if spr.type in ['help-button', 'help-button-selected']:
+            if spr.type == 'help-button':
+                self._help_buttons[0].hide()
+                self._help_buttons[1].set_layer(ANIMATION_LAYER)
+            GObject.timeout_add(100, self.help_animation)
+            return True
+
+        # Change card type
+        if self._choosing_card_type and \
+           spr.type in ['card-type-button', 'card-type-button-selected']:
+            logging.error('PRESS: %s' % spr.type)
+            n = len(CARD_STYLES)
+            i = CARD_STYLES.index(spr.name)
+            for j in range(n):
+                if j == i:
+                    self._card_type_buttons[i + n].set_layer(ANIMATION_LAYER)
+                    self._card_type_buttons[i].hide()
+                else:
+                    self._card_type_buttons[j].set_layer(ANIMATION_LAYER)
+                    self._card_type_buttons[j + n].hide()
+            logging.error('PRESS: %s' % spr.name)
+            self.card_type = spr.name
+            if spr.name == 'number':
+                self._hide_card_type_selector()
+                self.choose_number_type()
+            else:
+                GObject.timeout_add(100, self.new_game)
+            self._choosing_card_type = False
+            return True
+
+        # Change number c type
+        if self._choosing_number_type and \
+           spr.type in ['number-type-c-button', 'card-type-c-button-selected']:
+            logging.error('PRESS: %s' % spr.type)
+            n = len(NUMBER_STYLES_C)
+            i = NUMBER_STYLES_C.index(spr.name)
+            for j in range(n):
+                if j == i:
+                    self._number_type_c_buttons[i + n].set_layer(
+                        ANIMATION_LAYER)
+                    self._number_type_c_buttons[i].hide()
+                else:
+                    self._number_type_c_buttons[j].set_layer(ANIMATION_LAYER)
+                    self._number_type_c_buttons[j + n].hide()
+            logging.error('PRESS: %s %d' % (spr.name, i))
+            self.numberC = i
+            GObject.timeout_add(100, self.new_game)
+            self._choosing_card_type = False
+            return True
+
+        # Change number o type
+        if self._choosing_number_type and \
+           spr.type in ['number-type-o-button', 'card-type-o-button-selected']:
+            logging.error('PRESS: %s' % spr.type)
+            n = len(NUMBER_STYLES_O)
+            i = NUMBER_STYLES_O.index(spr.name)
+            for j in range(n):
+                if j == i:
+                    self._number_type_o_buttons[i + n].set_layer(
+                        ANIMATION_LAYER)
+                    self._number_type_o_buttons[i].hide()
+                else:
+                    self._number_type_o_buttons[j].set_layer(ANIMATION_LAYER)
+                    self._number_type_o_buttons[j + n].hide()
+            logging.error('PRESS: %s %d' % (spr.name, i))
+            self.numberO = i
+            GObject.timeout_add(100, self.new_game)
+            self._choosing_card_type = False
+            return True
 
         # Hide a frowny
         for card in self._frowny:
@@ -1410,17 +1554,175 @@ class Game():
         h = int(75 * scale)
         x, y = self._smiley_xy()
         robot_target = os.path.join(activity.get_bundle_path(),
-                                    'images', 'robot-card.svg')
+                                    'buttons', 'robot-card.svg')
         pixbuf = svg_str_to_pixbuf(svg_from_file(robot_target), w, h)
         self._robot_card = Card(scale=scale)
         self._robot_card.spr = Sprite(self._sprites, x, y, pixbuf)
         self._robot_card.spr.set_layer(SMILE_LAYER)
 
+    def _make_smiley_cards(self):
+        for i in range(15):
+            scale = self._scale * (i / 2 + 2)
+            self._smiley.append(Card(scale=scale))
+            self._smiley[-1].create(
+                generate_smiley(scale), sprites=self._sprites)
+            x = self._smiley_xy()[0] - i / 2 * int(self._card_width / 2)
+            y = self._smiley_xy()[1] - i / 2 * int(self._card_height / 2)
+            self._smiley[-1].spr.move((int(x), int(y)))
+            if i == 0:
+                self._smiley[-1].spr.set_layer(SMILE_LAYER)
+            else:
+                self._smiley[-1].spr.set_layer(ANIMATION_LAYER)
+            self._smiley[-1].spr.hide()
+
+    def _make_frowny_cards(self):
+        # A different frowny face for each type of error
+        self._frowny.append(Card(self._scale * 2))
+        self._frowny[-1].create(
+            generate_frowny_shape(self._scale * 2), sprites=self._sprites)
+        self._frowny[-1].spr.move(self._smiley_xy())
+        self._frowny.append(Card(self._scale))
+        self._frowny[-1].create(
+            generate_frowny_color(self._scale * 2), sprites=self._sprites)
+        self._frowny[-1].spr.move(self._smiley_xy())
+        self._frowny.append(Card(self._scale))
+        self._frowny[-1].create(
+            generate_frowny_texture(self._scale * 2), sprites=self._sprites)
+        self._frowny[-1].spr.move(self._smiley_xy())
+        self._frowny.append(Card(self._scale))
+        self._frowny[-1].create(
+            generate_frowny_number(self._scale * 2), sprites=self._sprites)
+        self._frowny[-1].spr.move(self._smiley_xy())
+        self._hide_frowny()
+
+    def _make_number_type_buttons(self):
+        from sugar3.activity import activity
+
+        size = int(110 * Gdk.Screen.width() / 1200.)
+
+        n = len(NUMBER_STYLES_C)
+        self._number_type_c_buttons = []
+        path = os.path.join(activity.get_bundle_path(), 'buttons')
+        for i, name in enumerate(NUMBER_STYLES_C):
+            file_name = '%s-button.png' % name
+            pixbuf = GdkPixbuf.Pixbuf.new_from_file_at_size(
+                os.path.join(path, file_name), size, size)
+            self._number_type_c_buttons.append(Sprite(
+                self._sprites,
+                int(((self._width - n * size) / 2) + i * size),
+                int((self._height - size) / 4),
+                pixbuf))
+            self._number_type_c_buttons[i].type = 'number-type-c-button'
+            self._number_type_c_buttons[i].name = NUMBER_STYLES_C[i % n]
+        for i, name in enumerate(NUMBER_STYLES_C):
+            file_name = '%s-button-selected.png' % name
+            pixbuf = GdkPixbuf.Pixbuf.new_from_file_at_size(
+                os.path.join(path, file_name), size, size)
+            self._number_type_c_buttons.append(Sprite(
+                self._sprites,
+                int(((self._width - n * size) / 2) + i * size),
+                int((self._height - size) / 4),
+                pixbuf))
+            self._number_type_c_buttons[i + n].type = \
+                'number-type-c-button-selected'
+            self._number_type_c_buttons[i + n].name = NUMBER_STYLES_C[i % n]
+
+        n = len(NUMBER_STYLES_O)
+        self._number_type_o_buttons = []
+        for i, name in enumerate(NUMBER_STYLES_O):
+            if name == 'word':
+                file_name = '%s-button.png' % 'five'
+            else:
+                file_name = '%s-button.png' % name
+            pixbuf = GdkPixbuf.Pixbuf.new_from_file_at_size(
+                os.path.join(path, file_name), size, size)
+            self._number_type_o_buttons.append(Sprite(
+                self._sprites,
+                int(((self._width - n * size) / 2) + i * size),
+                int((self._height + 4 * size) / 4),
+                pixbuf))
+            self._number_type_o_buttons[i].type = 'number-type-o-button'
+            self._number_type_o_buttons[i].name = NUMBER_STYLES_O[i % n]
+        for i, name in enumerate(NUMBER_STYLES_O):
+            if name == 'word':
+                file_name = '%s-button-selected.png' % 'five'
+            else:
+                file_name = '%s-button-selected.png' % name
+            pixbuf = GdkPixbuf.Pixbuf.new_from_file_at_size(
+                os.path.join(path, file_name), size, size)
+            self._number_type_o_buttons.append(Sprite(
+                self._sprites,
+                int(((self._width - n * size) / 2) + i * size),
+                int((self._height + 4 * size) / 4),
+                pixbuf))
+            self._number_type_o_buttons[i + n].type = \
+                'number-type-o-button-selected'
+            self._number_type_o_buttons[i + n].name = NUMBER_STYLES_O[i % n]
+
+    def _make_help_buttons(self):
+        ''' Sugar only '''
+        from sugar3.activity import activity
+
+        size = 110
+        self._help_buttons = []
+        path = os.path.join(activity.get_bundle_path(), 'buttons')
+        file_name = 'help-button.png'
+        pixbuf = GdkPixbuf.Pixbuf.new_from_file_at_size(
+            os.path.join(path, file_name), size, size)
+        self._help_buttons.append(Sprite(
+            self._sprites,
+            int((self._width - size) / 2),
+            int((self._height - size) / 2) + size,
+            pixbuf))
+        self._help_buttons[-1].type = 'help-button'
+        self._help_buttons[-1].name = 'help'
+        file_name = 'help-button-selected.png'
+        pixbuf = GdkPixbuf.Pixbuf.new_from_file_at_size(
+            os.path.join(path, file_name), size, size)
+        self._help_buttons.append(Sprite(
+            self._sprites,
+            int((self._width - size) / 2),
+            int((self._height - size) / 2) + size,
+            pixbuf))
+        self._help_buttons[-1].type = 'help-button-selected'
+        self._help_buttons[-1].name = 'help'
+
+    def _make_card_type_buttons(self):
+        from sugar3.activity import activity
+
+        size = int(220 * Gdk.Screen.width() / 1200.)
+        n = len(CARD_STYLES)
+
+        self._card_type_buttons = []
+        path = os.path.join(activity.get_bundle_path(), 'buttons')
+        for i, name in enumerate(CARD_STYLES):
+            file_name = '%s-button.png' % name
+            pixbuf = GdkPixbuf.Pixbuf.new_from_file_at_size(
+                os.path.join(path, file_name), size, size)
+            self._card_type_buttons.append(Sprite(
+                self._sprites,
+                int(((self._width - n * size) / 2) + i * size),
+                int((self._height - size) / 4),
+                pixbuf))
+            self._card_type_buttons[i].type = 'card-type-button'
+            self._card_type_buttons[i].name = CARD_STYLES[i % n]
+        for i, name in enumerate(CARD_STYLES):
+            file_name = '%s-button-selected.png' % name
+            pixbuf = GdkPixbuf.Pixbuf.new_from_file_at_size(
+                os.path.join(path, file_name), size, size)
+            self._card_type_buttons.append(Sprite(
+                self._sprites,
+                int(((self._width - n * size) / 2) + i * size),
+                int((self._height - size) / 4),
+                pixbuf))
+            self._card_type_buttons[i + n].type = 'card-type-button-selected'
+            self._card_type_buttons[i + n].name = CARD_STYLES[i % n]
+
     def _get_help_files(self):
         from sugar3.activity import activity
 
         help_target = os.path.join(activity.get_bundle_path(),
-                                   'images', 'help-*.png')
+                                   'help', 'help-*.png')
         help_files = glob.glob(help_target)
         return sorted(help_files)
 
@@ -1429,7 +1731,7 @@ class Game():
         if not self._sugar:
             return
 
-        self._played_animation = True
+        # self._played_animation = True
 
         self.activity.get_window().set_cursor(Gdk.Cursor.new(
             Gdk.CursorType.WATCH))
@@ -1456,6 +1758,14 @@ class Game():
         self._stop_help = False
         self._help[self._help_index].set_layer(ANIMATION_LAYER)
 
+        self._help_buttons[1].hide()
+        self._hide_card_type_selector()
+        if self.portrait:
+            self.backgrounds[0].hide()
+            self.backgrounds[1].set_layer(SMILE_LAYER)
+        else:
+            self.backgrounds[1].hide()
+            self.backgrounds[0].set_layer(SMILE_LAYER)
         self.activity.get_window().set_cursor(self._old_cursor)
 
         self._help_timeout_id = GObject.timeout_add(2000, self._help_next)
@@ -1465,6 +1775,7 @@ class Game():
         self._help[self._help_index].hide()
         if self._stop_help:
             self._help = []
+            self.choose_card_type()
             return
         self._help_index += 1
         self._help_index %= len(self._help)

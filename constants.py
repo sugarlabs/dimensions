@@ -31,6 +31,11 @@ ROW = 5
 COL = 3
 KEYMAP = ['1', '2', '3', 'q', 'w', 'e', 'a', 's', 'd', 'z', 'x', 'c', '8',
           '9', '0']
+
+CARD_STYLES = ['pattern', 'number', 'word', 'custom']
+NUMBER_STYLES_O = ['roman', 'product', 'chinese', 'word', 'mayan', 'incan']
+NUMBER_STYLES_C = ['lines', 'dots', 'star', 'hash', 'dice']
+
 ROMAN = 0
 PRODUCT = 1
 CHINESE = 2

@@ -94,7 +94,10 @@ class Dimensions(activity.Activity):
 
         if not hasattr(self, '_saved_state'):
             self._saved_state = None
-        self.vmw.new_game(self._saved_state, self._deck_index)
+            self.vmw.new_game(show_selector=True)
+        else:
+            self.vmw.new_game(saved_state=self._saved_state,
+                              deck_index=self._deck_index)
         self.ready_to_play = True
 
         if self._editing_word_list:
@@ -111,22 +114,22 @@ class Dimensions(activity.Activity):
         ''' Choose which game we are playing. '''
         if self.vmw.joiner():  # joiner cannot change level
             return
-        self.vmw.card_type = card_type
+        # self.vmw.card_type = card_type
         self._prompt = PROMPT_DICT[card_type]
         self._load_new_game(card_type)
 
-    def _load_new_game(self, card_type=None):
+    def _load_new_game(self, card_type=None, show_selector=True):
         if not self.ready_to_play:
             return
         # self._notify_new_game(self._prompt)
-        GObject.idle_add(self._new_game, card_type)
+        GObject.idle_add(self._new_game, card_type, show_selector)
 
-    def _new_game(self, card_type):
+    def _new_game(self, card_type, show_selector=True):
         if card_type == 'custom' and self.vmw.custom_paths[0] is None:
             self.image_import_cb()
         else:
             self.tools_toolbar_button.set_expanded(False)
-            self.vmw.new_game()
+            self.vmw.new_game(show_selector=show_selector)
 
     def _robot_cb(self, button=None):
         ''' Toggle robot assist on/off '''
@@ -147,7 +150,7 @@ class Dimensions(activity.Activity):
         self.vmw.level = level
         # self.level_label.set_text(self.calc_level_label(self.vmw.low_score,
         #                                                 self.vmw.level))
-        self._load_new_game()
+        self._load_new_game(show_selector=False)
 
     def calc_level_label(self, low_score, play_level):
         ''' Show the score. '''
@@ -288,12 +291,14 @@ class Dimensions(activity.Activity):
 
         self._set_extras(toolbox.toolbar)
 
+        '''
         self._sep.append(separator_factory(toolbox.toolbar, False, True))
 
         help_button = HelpButton(self)
         toolbox.toolbar.insert(help_button, -1)
         help_button.show()
         self._setup_toolbar_help()
+        '''
 
         self._sep.append(separator_factory(toolbox.toolbar, True, False))
 
