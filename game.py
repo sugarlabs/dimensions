@@ -333,6 +333,7 @@ class Game():
     def choose_card_type(self):
         if self._choosing_number_type:
             self._hide_number_type_selector()
+        self._stop_help_on_click = True
         self._choosing_card_type = True
         self._help_buttons[0].set_layer(ANIMATION_LAYER)
         n = len(CARD_STYLES)
