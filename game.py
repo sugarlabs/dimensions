@@ -108,6 +108,7 @@ class Game():
     def __init__(self, canvas, parent=None, card_type='pattern'):
         ''' Initialize the playing surface '''
         self.activity = parent
+        self._first_time = True
 
         if parent is None:  # Starting from command line
             self._sugar = False
@@ -145,6 +146,7 @@ class Game():
         self._press = None
         self.matches = 0
         self.robot_matches = 0
+        self.match_list = []
         self._match_area = []
         self._matches_on_display = False
         self._smiley = []
@@ -288,7 +290,8 @@ class Game():
             self._smiley[i].spr.move((x, y))
         for c in self._frowny:
             c.spr.move(self._smiley_xy())
-        self._robot_card.spr.move(self._smiley_xy())
+        if self._sugar:
+            self._robot_card.spr.move(self._smiley_xy())
 
         for i, spr in self._card_type_buttons:
             spr.move(
@@ -330,8 +333,12 @@ class Game():
         self._help_buttons[0].set_layer(ANIMATION_LAYER)
         n = len(CARD_STYLES)
         logging.error('CHOOSE CARD TYPE %s' % self.card_type)
-        i = CARD_STYLES.index(self.card_type)
-        logging.error('CHOOSE CARD TYPE %d' % i)
+        if not self._first_time and self.card_type is not None:
+            i = CARD_STYLES.index(self.card_type)
+            logging.error('CHOOSE CARD TYPE %d' % i)
+        else:
+            i = None
+        self._first_time = False
         for j in range(n):
             if j == i:
                 self._card_type_buttons[i + n].set_layer(ANIMATION_LAYER)
@@ -415,10 +422,12 @@ class Game():
         for card in self._smiley:
             card.spr.hide()
         self._hide_frowny()
-        self._robot_card.spr.hide()
+        if self._sugar:
+            self._robot_card.spr.hide()
 
         if self._saved_state is not None:
             _logger.debug('Restoring state: %s' % (str(self._saved_state)))
+            self._first_time = False
             if self.card_type == 'custom':
                 self.deck.create(self._sprites, self.card_type,
                                  [self.numberO, self.numberC],
@@ -495,7 +504,8 @@ class Game():
 
         self._hide_smiley()
         self._hide_frowny()
-        self._robot_card.spr.hide()
+        if self._sugar:
+            self._robot_card.spr.hide()
 
         self._sprites.draw_all()
 
@@ -768,7 +778,7 @@ class Game():
             return True
 
         # Hide a robot card
-        if spr == self._robot_card.spr:
+        if self._sugar and spr == self._robot_card.spr:
             spr.hide()
             return True
 
@@ -822,7 +832,8 @@ class Game():
         self._matches_on_display = False
         self._hide_clicked()
         self._smiley[0].spr.hide()
-        self._robot_card.spr.hide()
+        if self._sugar:
+            self._robot_card.spr.hide()
         if share and self._sharing():
             self.activity._send_event('r:')
 
@@ -1103,7 +1114,8 @@ class Game():
     def _game_over(self):
         ''' Game is over when the deck is empty and no more matches. '''
         self._hide_frowny()
-        self._robot_card.spr.hide()
+        if self._sugar:
+            self._robot_card.spr.hide()
         self._update_labels()
         self.set_label('deck', '')
         self.set_label('clock', '')
@@ -1369,7 +1381,8 @@ class Game():
                     # Stop animations before moving robot match
                     self.grid.stop_animation = True
                     self._robot_match(i)
-                    self._robot_card.spr.set_layer(SMILE_LAYER)
+                    if self._sugar:
+                        self._robot_card.spr.set_layer(SMILE_LAYER)
                 return True
         return False
 
