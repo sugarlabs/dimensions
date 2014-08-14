@@ -56,21 +56,18 @@ class DimensionsMain:
 
         menu1 = Gtk.Menu()
 
-        if MODE == 'pattern':
-            menu_items = Gtk.MenuItem(_("New pattern game"))
-            menu1.append(menu_items)
-            menu_items.connect("activate", self._new_game_cb, 'pattern')
-            menu_items.show()
-        elif MODE == 'number':
-            menu_items = Gtk.MenuItem(_("New number game"))
-            menu1.append(menu_items)
-            menu_items.connect("activate", self._new_game_cb, 'number')
-            menu_items.show()
-        else:
-            menu_items = Gtk.MenuItem(_("New word game"))
-            menu1.append(menu_items)
-            menu_items.connect("activate", self._new_game_cb, 'word')
-            menu_items.show()
+        menu_items = Gtk.MenuItem(_("New pattern game"))
+        menu1.append(menu_items)
+        menu_items.connect("activate", self._new_game_cb, 'pattern')
+        menu_items.show()
+        menu_items = Gtk.MenuItem(_("New number game"))
+        menu1.append(menu_items)
+        menu_items.connect("activate", self._new_game_cb, 'number')
+        menu_items.show()
+        menu_items = Gtk.MenuItem(_("New word game"))
+        menu1.append(menu_items)
+        menu_items.connect("activate", self._new_game_cb, 'word')
+        menu_items.show()
 
         game_menu = Gtk.MenuItem(_("Game"))
         game_menu.show()
@@ -105,7 +102,7 @@ class DimensionsMain:
         tool_menu.show()
         tool_menu.set_submenu(menu2)
 
-        if MODE == 'number':
+        if True:  # MODE == 'number':
             menu3 = Gtk.Menu()
             menu_items = Gtk.MenuItem(_("Product"))
             menu3.append(menu_items)
@@ -171,7 +168,7 @@ class DimensionsMain:
         menu_bar.append(game_menu)
         menu_bar.append(level_menu)
         menu_bar.append(tool_menu)
-        if MODE == 'number':
+        if True:  # MODE == 'number':
             menu_bar.append(num_menu)
         self.win.show_all()
 
