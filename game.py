@@ -701,8 +701,7 @@ class Game():
             return True
 
         # Change card type
-        if self._choosing_card_type and \
-           spr.type in ['card-type-button', 'card-type-button-selected']:
+        if spr.type in ['card-type-button', 'card-type-button-selected']:
             n = len(CARD_STYLES)
             i = CARD_STYLES.index(spr.name)
             for j in range(n):
@@ -728,8 +727,7 @@ class Game():
             return True
 
         # Change number c type
-        if self._choosing_number_type and \
-           spr.type in ['number-type-c-button', 'card-type-c-button-selected']:
+        if spr.type in ['number-type-c-button', 'card-type-c-button-selected']:
             n = len(NUMBER_STYLES_C)
             i = NUMBER_STYLES_C.index(spr.name)
             for j in range(n):
@@ -746,8 +744,7 @@ class Game():
             return True
 
         # Change number o type
-        if self._choosing_number_type and \
-           spr.type in ['number-type-o-button', 'card-type-o-button-selected']:
+        if spr.type in ['number-type-o-button', 'card-type-o-button-selected']:
             n = len(NUMBER_STYLES_O)
             i = NUMBER_STYLES_O.index(spr.name)
             for j in range(n):
