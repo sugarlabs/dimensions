@@ -272,10 +272,17 @@ class Dimensions(activity.Activity):
         self.tools_toolbar_button = ToolbarButton(
             page=tools_toolbar,
             icon_name='view-source')
+        '''
         tools_toolbar.show()
         toolbox.toolbar.insert(self.tools_toolbar_button, -1)
         self.tools_toolbar_button.show()
+        '''
 
+        self.button_pattern = button_factory(
+            'new-pattern-game', toolbox.toolbar, self._select_game_cb,
+            cb_arg='pattern', tooltip=_('New game'))
+
+        '''
         if MODE == 'pattern':
             self.button_pattern = button_factory(
                 'new-pattern-game', toolbox.toolbar, self._select_game_cb,
@@ -288,6 +295,7 @@ class Dimensions(activity.Activity):
             self.button_pattern = button_factory(
                 'new-word-game', toolbox.toolbar, self._select_game_cb,
                 cb_arg='word', tooltip=PROMPT_DICT['word'])
+        '''
 
         self._set_extras(toolbox.toolbar)
 

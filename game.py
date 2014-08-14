@@ -332,10 +332,8 @@ class Game():
         self._choosing_card_type = True
         self._help_buttons[0].set_layer(ANIMATION_LAYER)
         n = len(CARD_STYLES)
-        logging.error('CHOOSE CARD TYPE %s' % self.card_type)
         if not self._first_time and self.card_type is not None:
             i = CARD_STYLES.index(self.card_type)
-            logging.error('CHOOSE CARD TYPE %d' % i)
         else:
             i = None
         self._first_time = False
@@ -383,8 +381,6 @@ class Game():
 
     def new_game(self, saved_state=None, deck_index=0, show_selector=False):
         ''' Start a new game '''
-        logging.error('NEW GAME: show_selector=%r' % show_selector)
-
         # If we were editing the word list, time to stop
         self.grid.stop_animation = True
         self.editing_word_list = False
@@ -395,11 +391,9 @@ class Game():
         self._deck_index = deck_index
         if self._sugar:
             if show_selector:
-                logging.error('CHOOSE CARD TYPE')
                 self.choose_card_type()
                 return
             else:  # if self._saved_state is not None:
-                logging.error('HIDE CARD TYPE SELECTOR')
                 self._hide_card_type_selector()
                 self._hide_number_type_selector()
             self.activity.get_window().set_cursor(Gdk.Cursor.new(
@@ -408,7 +402,6 @@ class Game():
 
     def _prepare_new_game(self):
         # If there is already a deck, hide it.
-        logging.error('PREPARING NEW GAME')
         if hasattr(self, 'deck'):
             self.deck.hide()
 
@@ -695,7 +688,6 @@ class Game():
         spr = self._sprites.find_sprite((x, y))
 
         # Show help?
-        logging.error('PRESS: %s' % spr.type)
         if spr.type in ['help-button', 'help-button-selected']:
             if spr.type == 'help-button':
                 self._help_buttons[0].hide()
@@ -706,7 +698,6 @@ class Game():
         # Change card type
         if self._choosing_card_type and \
            spr.type in ['card-type-button', 'card-type-button-selected']:
-            logging.error('PRESS: %s' % spr.type)
             n = len(CARD_STYLES)
             i = CARD_STYLES.index(spr.name)
             for j in range(n):
@@ -716,11 +707,16 @@ class Game():
                 else:
                     self._card_type_buttons[j].set_layer(ANIMATION_LAYER)
                     self._card_type_buttons[j + n].hide()
-            logging.error('PRESS: %s' % spr.name)
             self.card_type = spr.name
             if spr.name == 'number':
                 self._hide_card_type_selector()
                 self.choose_number_type()
+            elif spr.name == 'custom' and None in self.custom_paths:
+                # Not all the custom cards are loaded.
+                self._hide_card_type_selector()
+                self.editing_custom_cards = True
+                self.editing_word_list = False
+                self.edit_custom_card()
             else:
                 GObject.timeout_add(100, self.new_game)
             self._choosing_card_type = False
@@ -729,7 +725,6 @@ class Game():
         # Change number c type
         if self._choosing_number_type and \
            spr.type in ['number-type-c-button', 'card-type-c-button-selected']:
-            logging.error('PRESS: %s' % spr.type)
             n = len(NUMBER_STYLES_C)
             i = NUMBER_STYLES_C.index(spr.name)
             for j in range(n):
@@ -740,7 +735,6 @@ class Game():
                 else:
                     self._number_type_c_buttons[j].set_layer(ANIMATION_LAYER)
                     self._number_type_c_buttons[j + n].hide()
-            logging.error('PRESS: %s %d' % (spr.name, i))
             self.numberC = i
             GObject.timeout_add(100, self.new_game)
             self._choosing_card_type = False
@@ -749,7 +743,6 @@ class Game():
         # Change number o type
         if self._choosing_number_type and \
            spr.type in ['number-type-o-button', 'card-type-o-button-selected']:
-            logging.error('PRESS: %s' % spr.type)
             n = len(NUMBER_STYLES_O)
             i = NUMBER_STYLES_O.index(spr.name)
             for j in range(n):
@@ -760,7 +753,6 @@ class Game():
                 else:
                     self._number_type_o_buttons[j].set_layer(ANIMATION_LAYER)
                     self._number_type_o_buttons[j + n].hide()
-            logging.error('PRESS: %s %d' % (spr.name, i))
             self.numberO = i
             GObject.timeout_add(100, self.new_game)
             self._choosing_card_type = False
@@ -1054,6 +1046,7 @@ class Game():
             if self._matches_on_display:
                 self._smiley[0].spr.set_layer(SMILE_LAYER)
             elif not self._the_game_is_over and self._failure is not None:
+                logging.error('SHOWING FROWNY')
                 self._frowny[self._failure].spr.set_layer(SMILE_LAYER)
         return
 
@@ -1643,7 +1636,7 @@ class Game():
         n = len(NUMBER_STYLES_O)
         self._number_type_o_buttons = []
         for i, name in enumerate(NUMBER_STYLES_O):
-            if name == 'word':
+            if name == 'word':  # work around artwork filename conflict
                 file_name = '%s-button.png' % 'five'
             else:
                 file_name = '%s-button.png' % name
