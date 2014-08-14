@@ -48,11 +48,13 @@ from gencards import (generate_match_card, generate_frowny_shape,
                       generate_label, generate_background)
 
 CURSOR = '█'
+
+BACKGROUND_LAYER = 0
+SELECT_LAYER = 2000
+DRAG_LAYER = 5000
 SMILE_LAYER = 10000
 ANIMATION_LAYER = 20000
-BACKGROUND_LAYER = 0
-DRAG_LAYER = 5000
-SELECT_LAYER = 2000
+HELP_LAYER = 30000
 
 
 def _distance(pos1, pos2):
@@ -154,7 +156,7 @@ class Game():
         self._robot_card = None
         self._help = []
         self._help_timeout_id = None
-        self._stop_help = True
+        self._stop_help_on_click = False
         self._failure = None
         self.clicked = []
         self.last_click = None
@@ -665,9 +667,12 @@ class Game():
         self._button_press(x, y)
 
     def _button_press(self, x, y):
+        # Find the sprite under the mouse.
+        spr = self._sprites.find_sprite((x, y))
+
         # Turn off help animation
-        if not self._stop_help:
-            self._stop_help = True
+        if spr in self._help:  # not self._stop_help_on_click:
+            self._stop_help_on_click = True
             if self.portrait:
                 self.backgrounds[1].set_layer(BACKGROUND_LAYER)
             else:
@@ -683,9 +688,6 @@ class Game():
         # Don't do anything during a deal
         if self._dealing:
             return True
-
-        # Find the sprite under the mouse.
-        spr = self._sprites.find_sprite((x, y))
 
         # Show help?
         if spr.type in ['help-button', 'help-button-selected']:
@@ -1046,7 +1048,6 @@ class Game():
             if self._matches_on_display:
                 self._smiley[0].spr.set_layer(SMILE_LAYER)
             elif not self._the_game_is_over and self._failure is not None:
-                logging.error('SHOWING FROWNY')
                 self._frowny[self._failure].spr.set_layer(SMILE_LAYER)
         return
 
@@ -1738,7 +1739,6 @@ class Game():
             return
 
         # self._played_animation = True
-
         self.activity.get_window().set_cursor(Gdk.Cursor.new(
             Gdk.CursorType.WATCH))
 
@@ -1750,44 +1750,46 @@ class Game():
         else:
             self.backgrounds[0].set_layer(SMILE_LAYER)
 
-        h = int(650 * Gdk.Screen.height() / 900.)
-        w = int(550 * Gdk.Screen.width() / 1200.)
-        for help_file in self._get_help_files():
-            pixbuf = GdkPixbuf.Pixbuf.new_from_file_at_size(help_file, w, h)
-            self._help.append(Sprite(self._sprites,
-                                     int((self._width - w) / 2),
-                                     int((self._height - h) / 2),
-                                     pixbuf))
-            self._help[-1].hide()
+        if len(self._help) == 0:
+            h = int(650 * Gdk.Screen.height() / 900.)
+            w = int(550 * Gdk.Screen.width() / 1200.)
+            for help_file in self._get_help_files():
+                pixbuf = GdkPixbuf.Pixbuf.new_from_file_at_size(
+                    help_file, w, h)
+                self._help.append(Sprite(self._sprites,
+                                         int((self._width - w) / 2),
+                                         int((self._height - h) / 2),
+                                         pixbuf))
+                self._help[-1].hide()
 
         self._help_index = 0
-        self._stop_help = False
-        self._help[self._help_index].set_layer(ANIMATION_LAYER)
+        self._stop_help_on_click = False
+        self._help[self._help_index].set_layer(HELP_LAYER)
 
         self._help_buttons[1].hide()
         self._hide_card_type_selector()
         if self.portrait:
             self.backgrounds[0].hide()
-            self.backgrounds[1].set_layer(SMILE_LAYER)
+            self.backgrounds[1].set_layer(ANIMATION_LAYER)
         else:
             self.backgrounds[1].hide()
-            self.backgrounds[0].set_layer(SMILE_LAYER)
+            self.backgrounds[0].set_layer(ANIMATION_LAYER)
         self.activity.get_window().set_cursor(self._old_cursor)
 
         self._help_timeout_id = GObject.timeout_add(2000, self._help_next)
 
     def _help_next(self):
         ''' Load the next frame in the animation '''
+        self._sprites.draw_all()
         self._help[self._help_index].hide()
-        if self._stop_help:
-            self._help = []
+        if self._stop_help_on_click:
             self.choose_card_type()
             return
         self._help_index += 1
         self._help_index %= len(self._help)
-        self._help[self._help_index].set_layer(ANIMATION_LAYER)
+        self._help[self._help_index].set_layer(HELP_LAYER)
         if self._help_index in [0, 13, 25, 30]:
-            pause = 2500
+            pause = 2000
         else:
             pause = 750
         self._help_timeout_id = GObject.timeout_add(pause, self._help_next)
