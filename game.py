@@ -1775,12 +1775,13 @@ class Game():
             self.backgrounds[1].hide()
             self.backgrounds[0].set_layer(ANIMATION_LAYER)
         self.activity.get_window().set_cursor(self._old_cursor)
+        self._sprites.draw_all()
 
         self._help_timeout_id = GObject.timeout_add(2000, self._help_next)
 
     def _help_next(self):
         ''' Load the next frame in the animation '''
-        self._sprites.draw_all()
+        # self._sprites.draw_all()
         self._help[self._help_index].hide()
         if self._stop_help_on_click:
             self.choose_card_type()
