@@ -159,7 +159,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2013-07-05 22:11-0400\n"
-"PO-Revision-Date: 2013-07-06 14:32+0200\n"
+"PO-Revision-Date: 2014-01-20 00:37+0200\n"
 "Last-Translator: AlanJAS <alanjas@hotmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: es\n"
@@ -174,7 +174,7 @@ msgstr ""
 #: VisualMatchActivity.py:634 VisualMatchActivity.py:666 game.py:983
 #: visualmatch.py:33
 msgid "Visual Match"
-msgstr "Coincidencia visual"
+msgstr "Dimensiones"
 
 #. TRANS: "summary" option from activity.info file
 #. TRANS: "description" option from activity.info file
@@ -218,15 +218,13 @@ msgstr "Dimensiones"
 
 #. TRANS: The prime number version of the dimensions game
 #: VisualMatchActivity.py:77
-#, fuzzy
 msgid "Prime Dimensions"
-msgstr "Dimensions de Primos"
+msgstr "Dimensiones Primos"
 
 #. TRANS: The word version of the dimensions game
 #: VisualMatchActivity.py:79
-#, fuzzy
 msgid "Word Dimensions"
-msgstr "Dimensión de Palabra"
+msgstr "Dimensiones Palabras"
 
 #: VisualMatchActivity.py:80
 msgid "15 seconds"
