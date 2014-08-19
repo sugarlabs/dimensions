@@ -331,6 +331,7 @@ class Game():
             self.backgrounds[0].set_layer(BACKGROUND_LAYER)
 
     def choose_card_type(self):
+        self._the_game_is_over = False
         if self._choosing_number_type:
             self._hide_number_type_selector()
         self._stop_help_on_click = True
