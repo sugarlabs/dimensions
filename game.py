@@ -258,6 +258,14 @@ class Game():
         self._label_time.spr.move((Gdk.Screen.width() - size - LABELH, LABELH))
         self._label_time.spr.set_label_attributes(24, horiz_align="right")
 
+        self._label_custom = Card()
+        self._label_custom.create(generate_label(size, LABELH * 4),
+                                  sprites=self._sprites)
+        self._label_custom.spr.set_label_attributes(24, horiz_align="left")
+        self._label_custom.spr.move((self.grid.left,
+                                     self.grid.grid_to_xy(9)[1]))
+        self._label_custom.spr.set_layer(ANIMATION_LAYER)
+
         self._labels = {'deck': '', 'match': '', 'clock': '', 'status': ''}
 
         Gdk.Screen.get_default().connect('size-changed', self._configure_cb)
@@ -398,7 +406,7 @@ class Game():
         self.editing_word_list = False
         self.editing_custom_cards = False
         self._edit_card = None
-       
+        self._label_custom.spr.set_label('')
         self._saved_state = saved_state
         self._deck_index = deck_index
         if self._sugar:
@@ -581,7 +589,8 @@ class Game():
         self.set_label('deck', '')
         self.set_label('match', '')
         self.set_label('clock', '')
-        self.set_label('status', _('Edit the custom cards.'))
+        self.set_label('status', '')
+        self._label_custom.spr.set_label(_('Edit the custom cards.'))
 
         if self._sugar:
             self.activity.get_window().set_cursor(self._old_cursor)
@@ -615,7 +624,8 @@ class Game():
         self.set_label('deck', '')
         self.set_label('match', '')
         self.set_label('clock', '')
-        self.set_label('status', _('Edit the word cards.'))
+        self.set_label('status', '')
+        self._label_custom.spr.set_label(_('Edit the word cards.'))
 
         if not hasattr(self, 'text_entry'):
             self.text_entry = Gtk.TextView()
