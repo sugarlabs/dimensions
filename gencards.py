@@ -40,6 +40,25 @@ class SVG:
                 "style=\"fill:", self._fill, ";stroke:", self._fill,
                 ";stroke-width:", 0.0, ";", extras, "\" />\n")
 
+    def _new_smiley(self):
+        return '\n \
+  <g\
+     transform="translate(0,-977.36218)">\
+    <g>\
+      <path\
+         d="m 52.133334,28.200001 a 6.4000001,6.1333332 0 1 1 -12.800001,0 6.4000001,6.1333332 0 1 1 12.800001,0 z"\
+        transform="matrix(0.93749999,0,0,0.97826089,6.1250002,977.04189)"\
+         style="fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none" />\
+      <path\
+         d="m 52.133334,28.200001 a 6.4000001,6.1333332 0 1 1 -12.800001,0 6.4000001,6.1333332 0 1 1 12.800001,0 z"\
+         transform="matrix(0.93749999,0,0,0.97826089,33.125,977.04189)"\
+         style="fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none" />\
+    </g>\
+    <path\
+       d="m 39.566666,1021.6288 c 0,0 9.855107,11.0396 22.933334,11 13.078227,-0.039 22.933334,-11 22.933334,-11"\
+       style="fill:none;stroke:#000000;stroke-width:5;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none" />\
+  </g>'
+
     def _svg_image(self, w, h, x, y, path):
         svg_string = '<image\n'
         svg_string += 'xlink:href="file://%s"\n' % path
@@ -912,12 +931,33 @@ def generate_label(width, height):
     return svg_string
 
 
+def generate_new_game_card(width, height):
+    svg = SVG()
+    svg._set_scale(1.0)
+    svg._set_stroke_width(6.0)
+    svg._set_colors([BLACK, WHITE])
+    svg_string = svg._header(width, height)
+    svg_string += svg._footer()
+    return svg_string
+
+
 def generate_background(width, height):
     svg = SVG()
     svg._set_scale(1.0)
     svg._set_stroke_width(6.0)
     svg._set_colors([WHITE, WHITE])
     svg_string = svg._header(width, height, corner=False)
+    svg_string += svg._footer()
+    return svg_string
+
+
+def generate_new_smiley_card(width=125, height=75):
+    svg = SVG()
+    svg._set_scale(1.0)
+    svg._set_stroke_width(3.0)
+    svg._set_colors([BLACK, YELLOW])
+    svg_string = svg._header(width, height, corner=True)
+    svg_string += svg._new_smiley()
     svg_string += svg._footer()
     return svg_string
 
@@ -987,6 +1027,12 @@ def generate_extras(datapath):
     close_file(f)
 
 
+def generate_new_smiley(datapath):
+    f = open_file(datapath, "new-smiley.svg")
+    f.write(generate_new_smiley_card())
+    close_file(f)
+
+
 def main():
     return 0
 
@@ -994,5 +1040,5 @@ def main():
 if __name__ == "__main__":
     if not os.path.exists(os.path.join(os.path.abspath('.'), 'images')):
         os.mkdir(os.path.join(os.path.abspath('.'), 'images'))
-    generator(os.path.join(os.path.abspath('.'), 'images'))
+    generate_new_smiley(os.path.join(os.path.abspath('.'), 'images'))
     main()
