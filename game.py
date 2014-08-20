@@ -185,6 +185,7 @@ class Game():
         # self._played_animation = False
         self._choosing_card_type = True
         self._choosing_number_type = False
+        self._showing_robot_match = False
 
         self.grid = Grid(self._width, self._height, self._card_width,
                          self._card_height)
@@ -678,6 +679,10 @@ class Game():
     def _button_press(self, x, y):
         # Find the sprite under the mouse.
         spr = self._sprites.find_sprite((x, y))
+
+        if self._showing_robot_match:
+            logging.debug('showing robot match')
+            return True
 
         # New game card
         if spr is not None and spr == self._new_game_spr:
@@ -1396,9 +1401,10 @@ class Game():
                          self.grid.grid[i[2]]]
             if self._match_check(cardarray, self.card_type):
                 if robot_match:
+                    self._showing_robot_match = True
                     # Stop animations before moving robot match
                     self.grid.stop_animation = True
-                    self._robot_match(i)
+                    GObject.timeout_add(1500, self._robot_match, i)
                     if self._sugar:
                         self._robot_card.spr.set_layer(SMILE_LAYER)
                 return True
@@ -1406,19 +1412,37 @@ class Game():
 
     def _robot_match(self, i):
         ''' Robot finds a match '''
-        for j in range(CARDS_IN_A_MATCH):
-            # WARNING: Sometimes there is a race condition between the
-            # robot delay and shoing a robot match.
-            if self.grid.grid[i[j]] is not None:
-                self.clicked[j].spr = self.grid.grid[i[j]].spr
-                self.grid.grid[i[j]].spr.move(self.grid.match_to_xy(j))
+        if self._sugar:
+            self._robot_card.spr.hide()
+        if self.grid.grid[i[0]] is not None:
+            self.clicked[0].spr = self.grid.grid[i[0]].spr
+            self.grid.grid[i[0]].spr.move(self.grid.match_to_xy(0))
+        else:
+            _logger.error('in robot match, grid[%d] is None' % (i[0]))
+        self.grid.grid[i[0]] = None
+        GObject.timeout_add(1500, self._next_robot_match, i, 1)
+
+    def _next_robot_match(self, i, j):
+        if j == 1:
+            if self.grid.grid[i[1]] is not None:
+                self.clicked[1].spr = self.grid.grid[i[1]].spr
+                self.grid.grid[i[1]].spr.move(self.grid.match_to_xy(1))
             else:
-                _logger.error('in robot match, grid[%d] is None' % (i[j]))
-            self.grid.grid[i[j]] = None
-        self.robot_matches += 1
-        self._test_for_a_match()
-        self._smiley[0].spr.set_layer(BACKGROUND_LAYER)
-        self._matches_on_display = True
+                _logger.error('in robot match, grid[%d] is None' % (i[1]))
+            self.grid.grid[i[1]] = None
+            GObject.timeout_add(1500, self._next_robot_match, i, 2)
+        else:
+            if self.grid.grid[i[2]] is not None:
+                self.clicked[2].spr = self.grid.grid[i[2]].spr
+                self.grid.grid[i[2]].spr.move(self.grid.match_to_xy(2))
+            else:
+                _logger.error('in robot match, grid[%d] is None' % (i[2]))
+            self.grid.grid[i[2]] = None
+            self._showing_robot_match = False
+            self.robot_matches += 1
+            self._test_for_a_match()
+            self._smiley[0].spr.set_layer(SMILE_LAYER)
+            self._matches_on_display = True
 
     def _match_check(self, cardarray, card_type):
         ''' For each attribute, either it is the same or different. '''
