@@ -397,6 +397,7 @@ class Game():
         else:
             self.backgrounds[1].hide()
             self.backgrounds[0].set_layer(SMILE_LAYER)
+        self._sprites.draw_all()
 
     def new_game(self, saved_state=None, deck_index=0, show_selector=False):
         ''' Start a new game '''
@@ -410,7 +411,11 @@ class Game():
         self._deck_index = deck_index
         if self._sugar:
             if show_selector:
+                logging.error('choosing card type')
                 self.choose_card_type()
+                return
+            elif self._choosing_number_type:
+                logging.error('choosing number type')
                 return
             else:  # if self._saved_state is not None:
                 self._hide_card_type_selector()
@@ -447,7 +452,8 @@ class Game():
                                  DIFFICULTY_LEVEL[self.level])
             else:
                 self.deck.create(self._sprites, self.card_type,
-                                 [self.numberO, self.numberC], self.word_lists,
+                                 [self.numberO, self.numberC],
+                                 self.word_lists,
                                  DIFFICULTY_LEVEL[self.level])
             self.deck.hide()
             self.deck.index = self._deck_index
@@ -557,6 +563,7 @@ class Game():
             return
 
         if self._sugar:
+            self._hide_number_type_selector()
             self.activity.get_window().set_cursor(Gdk.Cursor.new(
                 Gdk.CursorType.WATCH))
         GObject.idle_add(self._edit_custom_card_action)
@@ -590,6 +597,8 @@ class Game():
         self.set_label('clock', '')
         self.set_label('status', '')
         self._label_custom.spr.set_label(_('Edit the custom cards.'))
+
+        self._sprites.draw_all()
 
         if self._sugar:
             self.activity.get_window().set_cursor(self._old_cursor)
@@ -736,18 +745,25 @@ class Game():
                     self._card_type_buttons[j].set_layer(ANIMATION_LAYER)
                     self._card_type_buttons[j + n].hide()
             self.card_type = spr.name
+            logging.debug(spr.name)
             if spr.name == 'number':
                 self._hide_card_type_selector()
+                self._choosing_card_type = False
+                self._choosing_number_type = True
+                logging.debug('choose number type')
                 self.choose_number_type()
             elif spr.name == 'custom' and None in self.custom_paths:
                 # Not all the custom cards are loaded.
                 self._hide_card_type_selector()
                 self.editing_custom_cards = True
                 self.editing_word_list = False
+                self._choosing_card_type = False
+                logging.debug('edit custom cards')
                 self.edit_custom_card()
             else:
+                logging.debug('starting new game')
+                self._choosing_card_type = False
                 GObject.timeout_add(100, self.new_game)
-            self._choosing_card_type = False
             return True
 
         # Change number c type
@@ -763,8 +779,9 @@ class Game():
                     self._number_type_c_buttons[j].set_layer(ANIMATION_LAYER)
                     self._number_type_c_buttons[j + n].hide()
             self.numberC = i
-            GObject.timeout_add(100, self.new_game)
+            self._choosing_number_type = False
             self._choosing_card_type = False
+            GObject.timeout_add(100, self.new_game)
             return True
 
         # Change number o type
@@ -780,8 +797,9 @@ class Game():
                     self._number_type_o_buttons[j].set_layer(ANIMATION_LAYER)
                     self._number_type_o_buttons[j + n].hide()
             self.numberO = i
-            GObject.timeout_add(100, self.new_game)
+            self._choosing_number_type = False
             self._choosing_card_type = False
+            GObject.timeout_add(100, self.new_game)
             return True
 
         # Hide a frowny
