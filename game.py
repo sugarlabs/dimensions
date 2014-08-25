@@ -259,11 +259,10 @@ class Game():
         self._label_time.spr.set_label_attributes(24, horiz_align="right")
 
         self._label_custom = Card()
-        self._label_custom.create(generate_label(size, LABELH * 4),
+        self._label_custom.create(generate_label(self._width, LABELH * 4),
                                   sprites=self._sprites)
-        self._label_custom.spr.set_label_attributes(24, horiz_align="left")
-        self._label_custom.spr.move((self.grid.left,
-                                     self.grid.grid_to_xy(9)[1]))
+        self._label_custom.spr.set_label_attributes(24, horiz_align='center')
+        self._label_custom.spr.move((0, self.grid.grid_to_xy(9)[1]))
         self._label_custom.spr.set_layer(ANIMATION_LAYER)
 
         self._labels = {'deck': '', 'match': '', 'clock': '', 'status': ''}
