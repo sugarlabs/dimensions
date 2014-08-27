@@ -207,6 +207,8 @@ class Game():
         else:
             width = Gdk.Screen.height()
             height = Gdk.Screen.width()
+        self.backgrounds[-1].type = 'background'
+
         # generate portrait background
         string = generate_background(width, height)
         self.backgrounds.append(Sprite(
@@ -216,6 +218,7 @@ class Game():
             self.backgrounds[0].hide()
         else:
             self.backgrounds[1].hide()
+        self.backgrounds[-1].type = 'background'
 
         self._cards = []
         for i in range(DECKSIZE):
@@ -251,12 +254,14 @@ class Game():
                            sprites=self._sprites)
         self._label.spr.move((LABELH, LABELH))
         self._label.spr.set_label_attributes(24, horiz_align="left")
+        self._label.spr.type = 'label'
 
         self._label_time = Card()
         self._label_time.create(generate_label(size, LABELH * 4),
                                 sprites=self._sprites)
         self._label_time.spr.move((Gdk.Screen.width() - size - LABELH, LABELH))
         self._label_time.spr.set_label_attributes(24, horiz_align="right")
+        self._label_time.spr.type = 'label'
 
         self._label_custom = Card()
         self._label_custom.create(generate_label(self._width, LABELH * 4),
@@ -264,6 +269,8 @@ class Game():
         self._label_custom.spr.set_label_attributes(24, horiz_align='center')
         self._label_custom.spr.move((0, self.grid.grid_to_xy(9)[1]))
         self._label_custom.spr.set_layer(ANIMATION_LAYER)
+        self._label_custom.spr.type = 'label'
+        self._label_custom.spr.hide()
 
         self._labels = {'deck': '', 'match': '', 'clock': '', 'status': ''}
 
@@ -407,6 +414,7 @@ class Game():
         self.editing_custom_cards = False
         self._edit_card = None
         self._label_custom.spr.set_label('')
+        self._label_custom.spr.hide()
         self._saved_state = saved_state
         self._deck_index = deck_index
         if self._sugar:
@@ -597,6 +605,7 @@ class Game():
         self.set_label('clock', '')
         self.set_label('status', '')
         self._label_custom.spr.set_label(_('Edit the custom cards.'))
+        self._label_custom.spr.set_layer(ANIMATION_LAYER)
 
         self._sprites.draw_all()
 
@@ -697,17 +706,21 @@ class Game():
     def _button_press(self, x, y):
         # Find the sprite under the mouse.
         spr = self._sprites.find_sprite((x, y))
+        if spr is not None:
+            logging.debug('press: type %s' % (spr.type))
 
         if self._showing_robot_match:
-            logging.debug('showing robot match')
+            logging.debug('press: showing robot match')
             return True
 
         # New game card
         if spr is not None and spr == self._new_game_spr:
+            logging.debug('press: new game card')
             GObject.timeout_add(100, self.new_game)
 
         # Turn off help animation
         if spr in self._help:  # not self._stop_help_on_click:
+            logging.debug('press: turning off help')
             self._stop_help_on_click = True
             if self.portrait:
                 self.backgrounds[1].set_layer(BACKGROUND_LAYER)
@@ -719,14 +732,17 @@ class Game():
 
         # Don't do anything if the game is over
         if self._the_game_is_over:
+            logging.debug('press: game is over')
             return True
 
         # Don't do anything during a deal
         if self._dealing:
+            logging.debug('press: dealing')
             return True
 
         # Show help?
         if spr.type in ['help-button', 'help-button-selected']:
+            logging.debug('press: help button')
             if spr.type == 'help-button':
                 self._help_buttons[0].hide()
                 self._help_buttons[1].set_layer(ANIMATION_LAYER)
@@ -735,6 +751,7 @@ class Game():
 
         # Change card type
         if spr.type in ['card-type-button', 'card-type-button-selected']:
+            logging.debug('press: card type button')
             n = len(CARD_STYLES)
             i = CARD_STYLES.index(spr.name)
             for j in range(n):
@@ -750,7 +767,7 @@ class Game():
                 self._hide_card_type_selector()
                 self._choosing_card_type = False
                 self._choosing_number_type = True
-                logging.debug('choose number type')
+                logging.debug('press: choose number type')
                 self.choose_number_type()
             elif spr.name == 'custom' and None in self.custom_paths:
                 # Not all the custom cards are loaded.
@@ -758,16 +775,17 @@ class Game():
                 self.editing_custom_cards = True
                 self.editing_word_list = False
                 self._choosing_card_type = False
-                logging.debug('edit custom cards')
+                logging.debug('press: edit custom cards')
                 self.edit_custom_card()
             else:
-                logging.debug('starting new game')
+                logging.debug('press: starting new game')
                 self._choosing_card_type = False
                 GObject.timeout_add(100, self.new_game)
             return True
 
         # Change number c type
         if spr.type in ['number-type-c-button', 'card-type-c-button-selected']:
+            logging.debug('press: number type c button')
             n = len(NUMBER_STYLES_C)
             i = NUMBER_STYLES_C.index(spr.name)
             for j in range(n):
@@ -786,6 +804,7 @@ class Game():
 
         # Change number o type
         if spr.type in ['number-type-o-button', 'card-type-o-button-selected']:
+            logging.debug('press: number type o button')
             n = len(NUMBER_STYLES_O)
             i = NUMBER_STYLES_O.index(spr.name)
             for j in range(n):
@@ -805,37 +824,45 @@ class Game():
         # Hide a frowny
         for card in self._frowny:
             if spr == card.spr:
+                logging.debug('press: frowny')
                 spr.hide()
                 return True
 
         # Hide a smiley
         if spr == self._smiley[0].spr:
+            logging.debug('press: smiley')
             spr.hide()
             return True
 
         # Hide a robot card
         if self._sugar and spr == self._robot_card.spr:
+            logging.debug('press: robot card')
             spr.hide()
             return True
 
         # If there is a match showing, hide it.
         if self._matches_on_display:
+            logging.debug('press: clean up match')
             self.clean_up_match(share=True)
 
         # Nothing else to do.
         if spr is None:
+            logging.debug('press: None')
             return True
 
         # Don't grab cards in the match pile.
         if spr in self.match_list:
+            logging.debug('press: in the match list')
             return True
 
         # Don't grab a card being animated.
         if True in self.grid.animation_lock:
+            logging.debug('press: animation lock')
             return True
 
         # Don't do anything if a card is already in motion
-        if self._in_motion(spr):
+        if self._in_motion(spr, x=x, y=y):
+            logging.debug('press: in motion')
             return True
 
         # Keep track of starting drag position.
@@ -844,11 +871,13 @@ class Game():
 
         # If the match area is full, we need to move a card back to the grid
         if self._failure is not None:
+            logging.debug('press: failure')
             if not self.grid.xy_in_match(spr.get_xy()):
                 return True
 
         # We are only interested in cards in the deck.
         if self.deck.spr_to_card(spr) is not None:
+            logging.debug('press: pressed a card')
             self._press = spr
             # Save its starting position so we can restore it if necessary
             if self._where_in_clicked(spr) is None:
@@ -860,6 +889,7 @@ class Game():
                     self.clicked[i].pos = spr.get_xy()
                     self.last_click = i
         else:
+            logging.debug('press: pressed something other than a card')
             self._press = None
         return True
 
@@ -1619,9 +1649,14 @@ class Game():
         self.activity.button_custom.set_sensitive(True)
         return
 
-    def _in_motion(self, spr):
+    def _in_motion(self, spr, x=None, y=None):
         ''' Is the sprite in a grid or match position or in motion? '''
-        x, y = spr.get_xy()
+        if x is None or y is None:
+            x, y = spr.get_xy()
+        else:
+            i = self.grid.xy_to_grid((x, y))
+            x, y = self.grid.grid_to_xy(i)
+        logging.debug('in motion? %d,%d' % (x, y))
         if self.grid.xy_in_match((x, y)):
             return False
         if self.grid.xy_in_grid((x, y)):
