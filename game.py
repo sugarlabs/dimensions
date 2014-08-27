@@ -1402,6 +1402,9 @@ class Game():
             self._counter()
 
     def _show_animation(self, i):
+        if True in self.grid.animation_lock:
+            GObject.timeout_add(500, self._show_animation, 0)
+
         ''' Show smiley animation '''
         '''
         if i < len(self._smiley) - 1:
@@ -1427,7 +1430,8 @@ class Game():
                 i * CARDS_IN_A_MATCH < len(self.match_list):
             for j in range(CARDS_IN_A_MATCH):
                 self.grid.display_match(
-                    self.match_list[i * CARDS_IN_A_MATCH + j], j)
+                    self.match_list[i * CARDS_IN_A_MATCH + j], j,
+                    animate=False)
             self.match_timeout_id = GObject.timeout_add(
                 2000, self._show_matches, i + 1)
         else:

@@ -135,17 +135,21 @@ class Grid:
                         1200, self.place_a_card, self.grid[i],
                         self.grid_to_xy(i)[0], self.grid_to_xy(i)[1], j)
 
-    def display_match(self, spr, i):
+    def display_match(self, spr, i, animate=True):
         ''' Move card to the match area. '''
-        self.stop_animation = False
         spr.set_layer(2000)
         self.ex[i] = self.left + i * self.xinc
         self.ey[i] = self.bottom
-        self.sx[i] = spr.get_xy()[0]
-        self.sy[i] = spr.get_xy()[1]
-        self.dx[i] = int((self.ex[i] - self.sx[i]) / DELTA)
-        self.dy[i] = int((self.ey[i] - self.sy[i]) / DELTA)
-        GObject.timeout_add(STEP_PAUSE, self._move_to_position, spr, i)
+        if animate:
+            self.stop_animation = False
+            self.sx[i] = spr.get_xy()[0]
+            self.sy[i] = spr.get_xy()[1]
+            self.dx[i] = int((self.ex[i] - self.sx[i]) / DELTA)
+            self.dy[i] = int((self.ey[i] - self.sy[i]) / DELTA)
+            GObject.timeout_add(STEP_PAUSE, self._move_to_position, spr, i)
+        else:
+            self.stop_animation = True
+            spr.move((self.ex[i], self.ey[i]))
 
     def return_to_grid(self, spr, i, j):
         ''' Move card from the match area. '''
@@ -164,7 +168,8 @@ class Grid:
         ''' Piece-wise animation of card movement '''
         spr.move_relative((self.dx[i], self.dy[i]))
         if self.stop_animation:
-            spr.move((self.sx[i], self.sy[i]))
+            # spr.move((self.sx[i], self.sy[i]))
+            spr.move((self.ex[i], self.ey[i]))
             self.animation_lock[i] = False
         elif _distance_squared(spr.get_xy(), (self.ex[i], self.ey[i])) < 1000:
             spr.move((self.ex[i], self.ey[i]))
@@ -194,6 +199,7 @@ class Grid:
             if animate == -1:
                 c.spr.move((x, y))
                 c.show_card()
+                logging.error('moving card to %d, %d' % (x, y))
             else:
                 c.spr.set_layer(3000)
                 self.ex[animate + 3] = x
@@ -224,8 +230,10 @@ class Grid:
 
     def xy_in_grid(self, pos):
         ''' Is a position at one of the grid points? '''
+        logging.error(pos)
         for i in range(ROW * COL):
             x, y = self.grid_to_xy(i)
+            logging.error('%d,%d %d' % (x, y, i))
             if pos[0] == x and pos[1] == y:
                 return True
         return False

@@ -11,6 +11,7 @@
 # Foundation, 51 Franklin Street, Suite 500 Boston, MA 02110-1335 USA
 
 from gi.repository import GdkPixbuf
+import logging
 
 from constants import COLORS, NUMBER, FILLS, CARD_WIDTH, CARD_HEIGHT
 
@@ -58,6 +59,7 @@ class Card:
         if self.spr is not None:
             self.spr.set_layer(layer)
             self.spr.draw()
+            logging.debug(self.spr.get_xy())
 
     def hide_card(self):
         ''' Hide a card '''
