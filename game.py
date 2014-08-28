@@ -315,7 +315,7 @@ class Game():
 
         for i, spr in self._card_type_buttons:
             spr.move(
-                (int(((self._width - size)/ 2) - ((i + 2) % 3) * size + size),
+                (int(((self._width - size) / 2) - ((i + 2) % 3) * size + size),
                  int((self._height - size) / 4)))
 
         for i, c in enumerate(self.clicked):
@@ -419,11 +419,9 @@ class Game():
         self._deck_index = deck_index
         if self._sugar:
             if show_selector:
-                logging.error('choosing card type')
                 self.choose_card_type()
                 return
             elif self._choosing_number_type:
-                logging.error('choosing number type')
                 return
             else:  # if self._saved_state is not None:
                 self._hide_card_type_selector()
@@ -706,21 +704,16 @@ class Game():
     def _button_press(self, x, y):
         # Find the sprite under the mouse.
         spr = self._sprites.find_sprite((x, y))
-        if spr is not None:
-            logging.debug('press: type %s' % (spr.type))
 
         if self._showing_robot_match:
-            logging.debug('press: showing robot match')
             return True
 
         # New game card
         if spr is not None and spr == self._new_game_spr:
-            logging.debug('press: new game card')
             GObject.timeout_add(100, self.new_game)
 
         # Turn off help animation
         if spr in self._help:  # not self._stop_help_on_click:
-            logging.debug('press: turning off help')
             self._stop_help_on_click = True
             if self.portrait:
                 self.backgrounds[1].set_layer(BACKGROUND_LAYER)
@@ -732,17 +725,14 @@ class Game():
 
         # Don't do anything if the game is over
         if self._the_game_is_over:
-            logging.debug('press: game is over')
             return True
 
         # Don't do anything during a deal
         if self._dealing:
-            logging.debug('press: dealing')
             return True
 
         # Show help?
         if spr.type in ['help-button', 'help-button-selected']:
-            logging.debug('press: help button')
             if spr.type == 'help-button':
                 self._help_buttons[0].hide()
                 self._help_buttons[1].set_layer(ANIMATION_LAYER)
@@ -751,7 +741,6 @@ class Game():
 
         # Change card type
         if spr.type in ['card-type-button', 'card-type-button-selected']:
-            logging.debug('press: card type button')
             n = len(CARD_STYLES)
             i = CARD_STYLES.index(spr.name)
             for j in range(n):
@@ -762,12 +751,10 @@ class Game():
                     self._card_type_buttons[j].set_layer(ANIMATION_LAYER)
                     self._card_type_buttons[j + n].hide()
             self.card_type = spr.name
-            logging.debug(spr.name)
             if spr.name == 'number':
                 self._hide_card_type_selector()
                 self._choosing_card_type = False
                 self._choosing_number_type = True
-                logging.debug('press: choose number type')
                 self.choose_number_type()
             elif spr.name == 'custom' and None in self.custom_paths:
                 # Not all the custom cards are loaded.
@@ -775,17 +762,14 @@ class Game():
                 self.editing_custom_cards = True
                 self.editing_word_list = False
                 self._choosing_card_type = False
-                logging.debug('press: edit custom cards')
                 self.edit_custom_card()
             else:
-                logging.debug('press: starting new game')
                 self._choosing_card_type = False
                 GObject.timeout_add(100, self.new_game)
             return True
 
         # Change number c type
         if spr.type in ['number-type-c-button', 'card-type-c-button-selected']:
-            logging.debug('press: number type c button')
             n = len(NUMBER_STYLES_C)
             i = NUMBER_STYLES_C.index(spr.name)
             for j in range(n):
@@ -804,7 +788,6 @@ class Game():
 
         # Change number o type
         if spr.type in ['number-type-o-button', 'card-type-o-button-selected']:
-            logging.debug('press: number type o button')
             n = len(NUMBER_STYLES_O)
             i = NUMBER_STYLES_O.index(spr.name)
             for j in range(n):
@@ -824,45 +807,37 @@ class Game():
         # Hide a frowny
         for card in self._frowny:
             if spr == card.spr:
-                logging.debug('press: frowny')
                 spr.hide()
                 return True
 
         # Hide a smiley
         if spr == self._smiley[0].spr:
-            logging.debug('press: smiley')
             spr.hide()
             return True
 
         # Hide a robot card
         if self._sugar and spr == self._robot_card.spr:
-            logging.debug('press: robot card')
             spr.hide()
             return True
 
         # If there is a match showing, hide it.
         if self._matches_on_display:
-            logging.debug('press: clean up match')
             self.clean_up_match(share=True)
 
         # Nothing else to do.
         if spr is None:
-            logging.debug('press: None')
             return True
 
         # Don't grab cards in the match pile.
         if spr in self.match_list:
-            logging.debug('press: in the match list')
             return True
 
         # Don't grab a card being animated.
         if True in self.grid.animation_lock:
-            logging.debug('press: animation lock')
             return True
 
         # Don't do anything if a card is already in motion
         if self._in_motion(spr, x=x, y=y):
-            logging.debug('press: in motion')
             return True
 
         # Keep track of starting drag position.
@@ -871,13 +846,11 @@ class Game():
 
         # If the match area is full, we need to move a card back to the grid
         if self._failure is not None:
-            logging.debug('press: failure')
             if not self.grid.xy_in_match(spr.get_xy()):
                 return True
 
         # We are only interested in cards in the deck.
         if self.deck.spr_to_card(spr) is not None:
-            logging.debug('press: pressed a card')
             self._press = spr
             # Save its starting position so we can restore it if necessary
             if self._where_in_clicked(spr) is None:
@@ -889,7 +862,6 @@ class Game():
                     self.clicked[i].pos = spr.get_xy()
                     self.last_click = i
         else:
-            logging.debug('press: pressed something other than a card')
             self._press = None
         return True
 
@@ -1419,7 +1391,8 @@ class Game():
         '''
         for i in range(3):
             self._smiley_sprs[i].set_layer(ANIMATION_LAYER)
-        self.match_timeout_id = GObject.timeout_add(1000, self._show_matches, 0)
+        self.match_timeout_id = GObject.timeout_add(
+            1000, self._show_matches, 0)
 
     def _show_matches(self, i):
         ''' Show all the matches as a simple animation. '''
@@ -1510,29 +1483,28 @@ class Game():
         for a in cardarray:
             if a is None:
                 return False
-
-        if (cardarray[0].shape + cardarray[1].shape +
-            cardarray[2].shape) % 3 != 0:
+        s = cardarray[0].shape + cardarray[1].shape + cardarray[2].shape
+        if s % 3 != 0:
             self._failure = 0
             return False
-        if (cardarray[0].color + cardarray[1].color +
-            cardarray[2].color) % 3 != 0:
+        c = cardarray[0].color + cardarray[1].color + cardarray[2].color
+        if c % 3 != 0:
             self._failure = 1
             return False
-        if (cardarray[0].fill + cardarray[1].fill +
-            cardarray[2].fill) % 3 != 0:
+        f = cardarray[0].fill + cardarray[1].fill + cardarray[2].fill
+        if f % 3 != 0:
             self._failure = 2
             return False
         # Special case: only check number when shapes are the same
         if card_type == 'word':
-            if cardarray[0].shape == cardarray[1].shape and \
-               cardarray[0].shape == cardarray[2].shape and \
-               (cardarray[0].num + cardarray[1].num + cardarray[2].num) % 3 \
-               != 0:
+            n = cardarray[0].num + cardarray[1].num + cardarray[2].num
+            test = cardarray[0].shape == cardarray[1].shape and \
+                cardarray[0].shape == cardarray[2].shape
+            if test and n % 3 != 0:
                 return False
         else:
-            if (cardarray[0].num + cardarray[1].num +
-                cardarray[2].num) % 3 != 0:
+            n = cardarray[0].num + cardarray[1].num + cardarray[2].num
+            if n % 3 != 0:
                 self._failure = 3
                 return False
         self._failure = None
@@ -1660,7 +1632,6 @@ class Game():
         else:
             i = self.grid.xy_to_grid((x, y))
             x, y = self.grid.grid_to_xy(i)
-        logging.debug('in motion? %d,%d' % (x, y))
         if self.grid.xy_in_match((x, y)):
             return False
         if self.grid.xy_in_grid((x, y)):

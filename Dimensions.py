@@ -37,6 +37,7 @@ from sugar3.presence.tubeconn import TubeConnection
 from gettext import gettext as _
 import logging
 _logger = logging.getLogger('dimensions-activity')
+
 from json import load as jload
 from json import dump as jdump
 
@@ -45,9 +46,7 @@ from StringIO import StringIO
 from toolbar_utils import (radio_factory, button_factory, separator_factory)
 
 from constants import (DECKSIZE, PRODUCT, HASH, ROMAN, WORD, CHINESE, MAYAN,
-                       INCAN, DOTS, STAR, DICE, LINES, DEAL)
-from helpbutton import (HelpButton, add_section, add_paragraph, help_windows,
-                        help_buttons)
+                       INCAN, DOTS, STAR, DICE, LINES)
 from game import Game
 
 MODE = 'pattern'
@@ -57,7 +56,7 @@ help_palettes = {}
 BEGINNER = 0
 INTERMEDIATE = 1
 EXPERT = 2
-LEVEL_LABELS = [_('beginner'),_('intermediate'), _('expert')]
+LEVEL_LABELS = [_('beginner'), _('intermediate'), _('expert')]
 LEVEL_DECKSIZE = [DECKSIZE / 3, DECKSIZE, DECKSIZE / 9]
 
 NUMBER_O_BUTTONS = {}
@@ -158,9 +157,9 @@ class Dimensions(activity.Activity):
             return LEVEL_LABELS[play_level]
         else:
             return '%s (%d:%02d)' % \
-                    (LEVEL_LABELS[play_level],
-                     int(low_score[play_level] / 60),
-                     int(low_score[play_level] % 60))
+                (LEVEL_LABELS[play_level],
+                 int(low_score[play_level] / 60),
+                 int(low_score[play_level] % 60))
 
     def image_import_cb(self, button=None):
         ''' Import custom cards from the Journal '''
@@ -229,17 +228,17 @@ class Dimensions(activity.Activity):
                              self._read_metadata('sun', _('sun')),
                              self._read_metadata('earth', _('earth'))]]
         self._editing_word_list = bool(int(self._read_metadata(
-                    'editing_word_list', 0)))
+            'editing_word_list', 0)))
         self._editing_custom_cards = bool(int(self._read_metadata(
-                    'editing_custom_cards', 0)))
+            'editing_custom_cards', 0)))
         if self._card_type == 'custom':
             self._custom_object = self._read_metadata('custom_object', None)
-            if self._custom_object == None:
+            if self._custom_object is None:
                 self._card_type = MODE
         self._custom_jobject = []
         for i in range(9):
             self._custom_jobject.append(self._read_metadata(
-                    'custom_' + str(i), None))
+                'custom_' + str(i), None))
 
     def _write_scores_to_clipboard(self, button=None):
         ''' SimpleGraph will plot the cululative results '''
@@ -251,7 +250,6 @@ class Dimensions(activity.Activity):
     def _setup_toolbars(self):
         ''' Setup the toolbars.. '''
 
-        games_toolbar = Gtk.Toolbar()
         tools_toolbar = Gtk.Toolbar()
         numbers_toolbar = Gtk.Toolbar()
         toolbox = ToolbarBox()
@@ -315,10 +313,9 @@ class Dimensions(activity.Activity):
         toolbox.toolbar.insert(stop_button, -1)
         stop_button.show()
 
-        export_scores = button_factory(
-            'score-copy', self.activity_toolbar_button,
-            self._write_scores_to_clipboard,
-            tooltip=_('Export scores to clipboard'))
+        button_factory('score-copy', self.activity_toolbar_button,
+                       self._write_scores_to_clipboard,
+                       tooltip=_('Export scores to clipboard'))
 
         self.set_toolbar_box(toolbox)
         toolbox.show()
@@ -749,7 +746,8 @@ class Dimensions(activity.Activity):
             'NewTube', self._new_tube_cb)
 
         _logger.debug('This is my activity: making a tube...')
-        self.tubes_chan[telepathy.CHANNEL_TYPE_TUBES].OfferDBusTube(SERVICE, {})
+        self.tubes_chan[telepathy.CHANNEL_TYPE_TUBES].OfferDBusTube(
+            SERVICE, {})
 
     def _joined_cb(self, activity):
         ''' ...or join an exisiting share. '''
@@ -765,7 +763,7 @@ class Dimensions(activity.Activity):
         self.tubes_chan = self._shared_activity.telepathy_tubes_chan
         self.text_chan = self._shared_activity.telepathy_text_chan
 
-        self.tubes_chan[telepathy.CHANNEL_TYPE_TUBES].connect_to_signal(\
+        self.tubes_chan[telepathy.CHANNEL_TYPE_TUBES].connect_to_signal(
             'NewTube', self._new_tube_cb)
 
         _logger.debug('I am joining an activity: waiting for a tube...')
@@ -787,20 +785,20 @@ class Dimensions(activity.Activity):
     def _new_tube_cb(self, id, initiator, type, service, params, state):
         ''' Create a new tube. '''
         _logger.debug('New tube: ID=%d initator=%d type=%d service=%s '
-                     'params=%r state=%d', id, initiator, type, service,
-                     params, state)
+                      'params=%r state=%d', id, initiator, type, service,
+                      params, state)
 
         if (type == telepathy.TUBE_TYPE_DBUS and service == SERVICE):
             if state == telepathy.TUBE_STATE_LOCAL_PENDING:
-                self.tubes_chan[ \
-                              telepathy.CHANNEL_TYPE_TUBES].AcceptDBusTube(id)
+                self.tubes_chan[
+                    telepathy.CHANNEL_TYPE_TUBES].AcceptDBusTube(id)
 
-            tube_conn = TubeConnection(self.conn,
-                self.tubes_chan[telepathy.CHANNEL_TYPE_TUBES], id, \
+            tube_conn = TubeConnection(
+                self.conn, self.tubes_chan[telepathy.CHANNEL_TYPE_TUBES], id,
                 group_iface=self.text_chan[telepathy.CHANNEL_INTERFACE_GROUP])
 
-            self.chattube = ChatTube(tube_conn, self.initiating, \
-                self.event_received_cb)
+            self.chattube = ChatTube(tube_conn, self.initiating,
+                                     self.event_received_cb)
 
             if self.waiting_for_deck:
                 self._send_event('j')

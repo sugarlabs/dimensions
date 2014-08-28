@@ -11,10 +11,8 @@
 # Foundation, 51 Franklin Street, Suite 500 Boston, MA 02110-1335 USA
 
 from gi.repository import GdkPixbuf
-import logging
 
 from constants import COLORS, NUMBER, FILLS, CARD_WIDTH, CARD_HEIGHT
-
 from sprites import Sprite
 
 
@@ -39,9 +37,9 @@ class Card:
             self.num = attributes[2]
             self.fill = attributes[3]
             self.index = self.shape * COLORS * NUMBER * FILLS + \
-                         self.color * NUMBER * FILLS + \
-                         self.num * FILLS + \
-                         self.fill
+                self.color * NUMBER * FILLS + \
+                self.num * FILLS + \
+                self.fill
             if self.spr is None:
                 self.spr = Sprite(sprites, 0, 0, svg_str_to_pixbuf(string))
             else:
@@ -59,7 +57,6 @@ class Card:
         if self.spr is not None:
             self.spr.set_layer(layer)
             self.spr.draw()
-            logging.debug(self.spr.get_xy())
 
     def hide_card(self):
         ''' Hide a card '''

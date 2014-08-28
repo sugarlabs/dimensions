@@ -21,9 +21,6 @@ except:
 DELTA = 20
 STEP_PAUSE = 50
 
-import logging
-_logger = logging.getLogger('dimensions-activity')
-
 
 def _distance_squared(pos1, pos2):
     ''' simple distance function '''
@@ -92,7 +89,6 @@ class Grid:
             and only 12 cards in the grid
         '''
         if not deck.empty() and self.cards_in_grid() == DEAL:
-            logging.debug('DEAL EXTRA CARDS')
             for c in range(0, COL):
                 i = self.grid.index(None)
                 self.grid[i] = deck.deal_next_card()
@@ -199,7 +195,6 @@ class Grid:
             if animate == -1:
                 c.spr.move((x, y))
                 c.show_card()
-                logging.error('moving card to %d, %d' % (x, y))
             else:
                 c.spr.set_layer(3000)
                 self.ex[animate + 3] = x
@@ -230,10 +225,8 @@ class Grid:
 
     def xy_in_grid(self, pos):
         ''' Is a position at one of the grid points? '''
-        logging.error(pos)
         for i in range(ROW * COL):
             x, y = self.grid_to_xy(i)
-            logging.error('%d,%d %d' % (x, y, i))
             if pos[0] == x and pos[1] == y:
                 return True
         return False
