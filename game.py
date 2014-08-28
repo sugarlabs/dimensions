@@ -1410,6 +1410,7 @@ class Game():
         else:
             for j in range(3):
                 self._smiley_sprs[j].set_layer(ANIMATION_LAYER)
+            self._smiley[0].spr.hide()
             self._new_game_spr.set_layer(ANIMATION_LAYER)
 
     def _find_a_match(self, robot_match=False):
