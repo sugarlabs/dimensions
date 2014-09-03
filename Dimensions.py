@@ -203,7 +203,7 @@ class Dimensions(activity.Activity):
     def _read_journal_data(self):
         ''' There may be data from a previous instance. '''
         self._play_level = int(self._read_metadata('play_level', 0))
-        self._robot_time = int(self._read_metadata('robot_time', 60))
+        self._robot_time = int(self._read_metadata('robot_time', 15))
         self._card_type = self._read_metadata('cardtype', MODE)
         self._low_score = [int(self._read_metadata('low_score_beginner', -1)),
                            int(self._read_metadata('low_score_intermediate',
