@@ -22,14 +22,17 @@ from gi.repository import GdkPixbuf
 from gi.repository import GObject
 
 from sugar3.activity import activity
-from sugar3.graphics.toolbarbox import ToolbarBox
 from sugar3.activity.widgets import ActivityToolbarButton
 from sugar3.activity.widgets import StopButton
+from sugar3.graphics.toolbarbox import ToolbarBox
 from sugar3.graphics.toolbarbox import ToolbarButton
 from sugar3.graphics.menuitem import MenuItem
-from sugar3.graphics.alert import NotifyAlert
+from sugar3.graphics.alert import NotifyAlert, Alert
 from sugar3.graphics import style
+from sugar3.graphics.icon import Icon
+from sugar3.graphics.xocolor import XoColor
 from sugar3.datastore import datastore
+from sugar3 import profile
 
 import telepathy
 from dbus.service import signal
@@ -93,6 +96,22 @@ class Dimensions(activity.Activity):
         self._sep = []
         self._setup_toolbars()
         self._setup_canvas()
+
+        if self.shared_activity:
+            # We're joining
+            if not self.get_shared():
+                xocolors = XoColor(profile.get_color().to_string())
+                share_icon = Icon(icon_name='zoom-neighborhood',
+                                  xo_color=xocolors)
+                self._joined_alert = Alert()
+                self._joined_alert.props.icon = share_icon
+                self._joined_alert.props.title = _('Please wait')
+                self._joined_alert.props.msg = _('Starting connection...')
+                self.add_alert(self._joined_alert)
+
+                # Wait for joined signal
+                self.connect("joined", self._joined_cb)
+
         self._setup_presence_service()
 
         if not hasattr(self, '_saved_state'):
@@ -731,18 +750,18 @@ class Dimensions(activity.Activity):
 
     def _shared_cb(self, activity):
         ''' Either set up initial share...'''
-        if self._shared_activity is None:
+        if self.shared_activity is None:
             _logger.error('Failed to share or join activity ... \
-                _shared_activity is null in _shared_cb()')
+                shared_activity is null in _shared_cb()')
             return
 
         self.initiating = True
         self.waiting_for_deck = False
         _logger.debug('I am sharing...')
 
-        self.conn = self._shared_activity.telepathy_conn
-        self.tubes_chan = self._shared_activity.telepathy_tubes_chan
-        self.text_chan = self._shared_activity.telepathy_text_chan
+        self.conn = self.shared_activity.telepathy_conn
+        self.tubes_chan = self.shared_activity.telepathy_tubes_chan
+        self.text_chan = self.shared_activity.telepathy_text_chan
 
         self.tubes_chan[telepathy.CHANNEL_TYPE_TUBES].connect_to_signal(
             'NewTube', self._new_tube_cb)
@@ -753,17 +772,21 @@ class Dimensions(activity.Activity):
 
     def _joined_cb(self, activity):
         ''' ...or join an exisiting share. '''
-        if self._shared_activity is None:
+        if self.shared_activity is None:
             _logger.error('Failed to share or join activity ... \
-                _shared_activity is null in _shared_cb()')
+                shared_activity is null in _shared_cb()')
             return
+
+        if self._joined_alert is not None:
+            self.remove_alert(self._joined_alert)
+            self._joined_alert = None
 
         self.initiating = False
         _logger.debug('I joined a shared activity.')
 
-        self.conn = self._shared_activity.telepathy_conn
-        self.tubes_chan = self._shared_activity.telepathy_tubes_chan
-        self.text_chan = self._shared_activity.telepathy_text_chan
+        self.conn = self.shared_activity.telepathy_conn
+        self.tubes_chan = self.shared_activity.telepathy_tubes_chan
+        self.text_chan = self.shared_activity.telepathy_text_chan
 
         self.tubes_chan[telepathy.CHANNEL_TYPE_TUBES].connect_to_signal(
             'NewTube', self._new_tube_cb)
@@ -774,6 +797,13 @@ class Dimensions(activity.Activity):
             error_handler=self._list_tubes_error_cb)
 
         self.waiting_for_deck = True
+
+        self.button_pattern.set_sensitive(False)
+        self.robot_button.set_sensitive(False)
+        self._robot_time_button.set_sensitive(False)
+        self.beginner_button.set_sensitive(False)
+        self.intermediate_button.set_sensitive(False)
+        self.expert_button.set_sensitive(False)
 
     def _list_tubes_reply_cb(self, tubes):
         ''' Reply to a list request. '''

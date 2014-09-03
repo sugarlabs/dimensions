@@ -1291,6 +1291,7 @@ class Game():
         self.set_label('deck', '%d %s' %
                        (self.deck.cards_remaining(), _('cards')))
         self.set_label('status', '')
+        logging.error('%d %d' % (self.matches, self.robot_matches))
         user_matches = self.matches - self.robot_matches
         if user_matches == 1:
             label = _('match')
@@ -1470,6 +1471,7 @@ class Game():
             self.grid.grid[i[2]] = None
             self._showing_robot_match = False
             self.robot_matches += 1
+            logging.error('robot match %d %d' % (self.matches, self.robot_matches))
             self._test_for_a_match()
             self._smiley[0].spr.set_layer(SMILE_LAYER)
             # self._matches_on_display = True
