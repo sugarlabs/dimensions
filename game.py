@@ -417,6 +417,7 @@ class Game():
         self._label_custom.spr.hide()
         self._saved_state = saved_state
         self._deck_index = deck_index
+        self._stop_help_on_click = True
         if self._sugar:
             if show_selector:
                 self.choose_card_type()
@@ -715,12 +716,9 @@ class Game():
         # Turn off help animation
         if spr in self._help:  # not self._stop_help_on_click:
             self._stop_help_on_click = True
-            if self.portrait:
-                self.backgrounds[1].set_layer(BACKGROUND_LAYER)
-            else:
-                self.backgrounds[0].set_layer(BACKGROUND_LAYER)
             self._timer_reset()
             self._update_labels()
+            self.choose_card_type()
             return True
 
         # Don't do anything if the game is over
@@ -1888,10 +1886,8 @@ class Game():
 
     def _help_next(self):
         ''' Load the next frame in the animation '''
-        # self._sprites.draw_all()
         self._help[self._help_index].hide()
         if self._stop_help_on_click:
-            self.choose_card_type()
             return
         self._help_index += 1
         self._help_index %= len(self._help)
