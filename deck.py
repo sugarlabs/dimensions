@@ -63,7 +63,8 @@ class Deck:
                 newpixbuf.savev(path, 'png', [], [])
                 self._image_paths[i] = path
 
-        # If level is 'simple', only generate one fill type
+        # If level is LOW, only generate one fill type and one number type
+        # If level is MEDIUM, only generate one fill type
         shape_range = SHAPES
         color_range = COLORS
         number_range = NUMBER
@@ -72,7 +73,7 @@ class Deck:
             fill_range = 1
         elif level == LOW:
             fill_range = 1
-            shape_range = 1
+            number_range = 1
 
         # Initialize the deck of cards by looping through all the patterns
         i = 0
