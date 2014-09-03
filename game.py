@@ -1064,7 +1064,7 @@ class Game():
                                   'match area (%d)' % (i))
                     spr.move(self.grid.match_to_xy(i))
 
-    def process_selection(self, spr):
+    def process_selection(self, spr, restoring=False):
         ''' After a card has been selected... '''
         if self.editing_word_list:  # Edit label of selected card
             x, y = spr.get_xy()
@@ -1090,6 +1090,9 @@ class Game():
             # If we have three cards selected, test for a match.
             self._test_for_a_match()
             if self._matches_on_display:
+                # If we are restoring, we have already counted this match
+                if restoring:
+                    self.matches -= 1
                 self._smiley[0].spr.set_layer(SMILE_LAYER)
             elif not self._the_game_is_over and self._failure is not None:
                 self._frowny[self._failure].spr.set_layer(SMILE_LAYER)
@@ -1288,24 +1291,16 @@ class Game():
         self.set_label('deck', '%d %s' %
                        (self.deck.cards_remaining(), _('cards')))
         self.set_label('status', '')
-        if self.matches - self.robot_matches == 1:
-            if self.robot_matches > 0:
-                self.set_label('match', '%d %s\n(%d %s)' % (
-                    self.matches - self.robot_matches,
-                    _('match'),
-                    self.robot_matches,
-                    _('robot')))
-            else:
-                self.set_label('match', '%d %s' % (self.matches, _('match')))
+        user_matches = self.matches - self.robot_matches
+        if user_matches == 1:
+            label = _('match')
         else:
-            if self.robot_matches > 0:
-                self.set_label('match', '%d %s\n(%d %s)' % (
-                    self.matches - self.robot_matches,
-                    _('matches'),
-                    self.robot_matches,
-                    _('robot')))
-            else:
-                self.set_label('match', '%d %s' % (self.matches, _('matches')))
+            label = _('matches')
+        if self.robot_matches > 0:
+            self.set_label('match', '%d %s\n(%d %s)' % (
+                user_matches, label, self.robot_matches, _('robot')))
+        else:
+            self.set_label('match', '%d %s' % (user_matches, label))
 
     def set_label(self, label, s):
         ''' Update the toolbar labels '''
@@ -1333,7 +1328,7 @@ class Game():
                 self.clicked[j].pos = self.grid.match_to_xy(j)
                 self.clicked[j].spr.set_layer(SELECT_LAYER)
             j += 1
-        self.process_selection(None)
+        self.process_selection(None, restoring=True)
 
     def _restore_matches(self, saved_match_list_indices):
         ''' Restore the match list upon resume or share. '''
@@ -1477,7 +1472,7 @@ class Game():
             self.robot_matches += 1
             self._test_for_a_match()
             self._smiley[0].spr.set_layer(SMILE_LAYER)
-            self._matches_on_display = True
+            # self._matches_on_display = True
 
     def _match_check(self, cardarray, card_type):
         ''' For each attribute, either it is the same or different. '''

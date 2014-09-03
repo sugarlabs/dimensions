@@ -250,7 +250,6 @@ class Dimensions(activity.Activity):
         jscores = ''
         for i, s in enumerate(self.vmw.all_scores):
             jscores += '%s: %s\n' % (str(i + 1), s)
-        logging.debug(jscores)
         clipboard = Gtk.Clipboard.get(Gdk.SELECTION_CLIPBOARD)
         clipboard.set_text(jscores, -1)
 
