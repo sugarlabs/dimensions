@@ -14,8 +14,11 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
+import os
+
 from gi.repository import Gtk
 from gi.repository import Gdk
+from gi.repository import GdkPixbuf
 from gi.repository import GObject
 
 from sugar3.activity import activity
@@ -76,6 +79,7 @@ ROBOT_TIMER_VALUES = [15, 30, 60, 120, 300]
 ROBOT_TIMER_LABELS = {15: _('15 seconds'), 30: _('30 seconds'),
                       60: _('1 minute'), 120: _('2 minutes'),
                       300: _('5 minutes')}
+ROBOT_TIMER_DEFAULT = 15
 
 
 class Dimensions(activity.Activity):
@@ -203,7 +207,8 @@ class Dimensions(activity.Activity):
     def _read_journal_data(self):
         ''' There may be data from a previous instance. '''
         self._play_level = int(self._read_metadata('play_level', 0))
-        self._robot_time = int(self._read_metadata('robot_time', 15))
+        self._robot_time = int(self._read_metadata('robot_time',
+                                                   ROBOT_TIMER_DEFAULT))
         self._card_type = self._read_metadata('cardtype', MODE)
         self._low_score = [int(self._read_metadata('low_score_beginner', -1)),
                            int(self._read_metadata('low_score_intermediate',
@@ -270,41 +275,12 @@ class Dimensions(activity.Activity):
         self.tools_toolbar_button = ToolbarButton(
             page=tools_toolbar,
             icon_name='view-source')
-        '''
-        tools_toolbar.show()
-        toolbox.toolbar.insert(self.tools_toolbar_button, -1)
-        self.tools_toolbar_button.show()
-        '''
 
         self.button_pattern = button_factory(
             'new-pattern-game', toolbox.toolbar, self._select_game_cb,
             cb_arg='pattern', tooltip=_('New game'))
 
-        '''
-        if MODE == 'pattern':
-            self.button_pattern = button_factory(
-                'new-pattern-game', toolbox.toolbar, self._select_game_cb,
-                cb_arg='pattern', tooltip=PROMPT_DICT['pattern'])
-        elif MODE == 'number':
-            self.button_number = button_factory(
-                'new-number-game', toolbox.toolbar, self._select_game_cb,
-                cb_arg='number', tooltip=PROMPT_DICT['number'])
-        else:
-            self.button_pattern = button_factory(
-                'new-word-game', toolbox.toolbar, self._select_game_cb,
-                cb_arg='word', tooltip=PROMPT_DICT['word'])
-        '''
-
         self._set_extras(toolbox.toolbar)
-
-        '''
-        self._sep.append(separator_factory(toolbox.toolbar, False, True))
-
-        help_button = HelpButton(self)
-        toolbox.toolbar.insert(help_button, -1)
-        help_button.show()
-        self._setup_toolbar_help()
-        '''
 
         self._sep.append(separator_factory(toolbox.toolbar, True, False))
 
@@ -453,19 +429,44 @@ class Dimensions(activity.Activity):
     def _setup_robot_palette(self):
         self._robot_palette = self._robot_time_button.get_palette()
 
+        self._robot_timer_menu = {}
         for seconds in ROBOT_TIMER_VALUES:
-            text = ROBOT_TIMER_LABELS[seconds]
-            menu_item = MenuItem(icon_name='timer-%d' % (seconds),
-                                 text_label=text)
-            menu_item.connect('activate', self._robot_selected_cb, seconds)
-            self._robot_palette.menu.append(menu_item)
-            menu_item.show()
+            self._robot_timer_menu[seconds] = {
+                'menu_item': MenuItem(),
+                'label': ROBOT_TIMER_LABELS[seconds],
+                'icon': image_from_svg_file(
+                    'timer-%d.svg' % (seconds)),
+                'icon-selected': image_from_svg_file(
+                    'timer-%d-selected.svg' % (seconds))
+                }
+
+            self._robot_timer_menu[seconds]['menu_item'].set_label(
+                    self._robot_timer_menu[seconds]['label'])
+            if seconds == ROBOT_TIMER_DEFAULT:
+                self._robot_timer_menu[seconds]['menu_item'].set_image(
+                    self._robot_timer_menu[seconds]['icon-selected'])
+            else:
+                self._robot_timer_menu[seconds]['menu_item'].set_image(
+                    self._robot_timer_menu[seconds]['icon'])
+            self._robot_timer_menu[seconds]['menu_item'].connect(
+                'activate', self._robot_selected_cb, seconds)
+            self._robot_palette.menu.append(
+                self._robot_timer_menu[seconds]['menu_item'])
+            self._robot_timer_menu[seconds]['menu_item'].show()
 
     def _robot_selected_cb(self, button, seconds):
         self.vmw.robot_time = seconds
         if hasattr(self, '_robot_time_button') and \
                 seconds in ROBOT_TIMER_VALUES:
             self._robot_time_button.set_icon_name('timer-%d' % seconds)
+
+        for time in ROBOT_TIMER_VALUES:
+            if time == seconds:
+                self._robot_timer_menu[time]['menu_item'].set_image(
+                    self._robot_timer_menu[time]['icon-selected'])
+            else:
+                self._robot_timer_menu[time]['menu_item'].set_image(
+                    self._robot_timer_menu[time]['icon'])
 
     def _set_extras(self, toolbar):
         self.robot_button = button_factory(
@@ -877,3 +878,17 @@ class ChatTube(ExportedGObject):
     @signal(dbus_interface=IFACE, signature='s')
     def SendText(self, text):
         self.stack = text
+
+
+def image_from_svg_file(filename):
+    path = os.path.join(activity.get_bundle_path(), 'icons', filename)
+    fd = open(path)
+    svg = fd.read()
+    fd.close()
+    pl = GdkPixbuf.PixbufLoader.new_with_type('svg')
+    pl.write(svg)
+    pl.close()
+    pixbuf = pl.get_pixbuf()
+    image = Gtk.Image()
+    image.set_from_pixbuf(pixbuf)
+    return image

@@ -25,6 +25,15 @@
   </metadata>
   <defs
      id="defs21" />
+  <rect
+     width="55"
+     height="55"
+     rx="4.8505225"
+     ry="4.8288693"
+     x="0"
+     y="0"
+     id="rect3120"
+     style="fill:#a0a0a0;fill-opacity:1;fill-rule:nonzero;stroke:#a0a0a0;stroke-width:0;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0" />
   <g
      id="layer2"
      style="display:inline">
@@ -38,7 +47,7 @@
      id="layer1"
      style="display:inline">
     <path
-       d="m 27.665302,29.407631 14.817701,0.09176"
+       d="m 27.5,29.5 0,-14"
        id="path3897"
        style="fill:none;stroke:#000000;stroke-width:3.5;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none" />
   </g>
@@ -54,52 +63,27 @@
        id="path4283"
        style="fill:none;stroke:#000000;stroke-width:3.5;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none" />
   </g>
+  <path
+     d="m 22.873381,5.940543 9.622594,0"
+     id="path4076"
+     style="fill:none;stroke:#000000;stroke-width:3.5;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none" />
+  <path
+     d="m 38.96491,8.681773 5.209549,3.91786"
+     id="path4080"
+     style="fill:none;stroke:#000000;stroke-width:3.5;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none" />
+  <path
+     d="m 16.03509,8.681773 -5.209549,3.91786"
+     id="path4107"
+     style="fill:none;stroke:#000000;stroke-width:3.5;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none" />
+  <path
+     d="m 46.656135,29.5 a 19.156135,19.156135 0 1 1 -38.31227,0 19.156135,19.156135 0 1 1 38.31227,0 z"
+     id="path4380"
+     style="fill:none;stroke:#000000;stroke-width:3.5;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;display:inline" />
   <g
-     id="layer4"
-     style="display:inline">
-    <g
-       id="g4315"
-       style="display:inline">
-      <path
-         d="m 27.5,15.555556 0,3.888889"
-         id="path3811"
-         style="fill:none;stroke:#000000;stroke-width:3.5;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none" />
-      <path
-         d="m 41.444444,29.5 -3.888889,0"
-         id="path3823"
-         style="fill:none;stroke:#000000;stroke-width:3.5;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none" />
-      <path
-         d="m 13.555556,29.5 3.888889,0"
-         id="path3829"
-         style="fill:none;stroke:#000000;stroke-width:3.5;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none" />
-      <path
-         d="m 27.5,43.444444 0,-3.888889"
-         id="path3854"
-         style="fill:none;stroke:#000000;stroke-width:3.5;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none" />
-      <path
-         d="m 22.873381,5.940543 9.622594,0"
-         id="path4076"
-         style="fill:none;stroke:#000000;stroke-width:3.5;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none" />
-      <path
-         d="m 38.96491,8.681773 5.209549,3.91786"
-         id="path4080"
-         style="fill:none;stroke:#000000;stroke-width:3.5;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none" />
-      <path
-         d="m 16.03509,8.681773 -5.209549,3.91786"
-         id="path4107"
-         style="fill:none;stroke:#000000;stroke-width:3.5;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none" />
-    </g>
-    <path
-       d="m 45.925926,24.25926 a 21.296297,21.296297 0 1 1 -42.5925939,0 21.296297,21.296297 0 1 1 42.5925939,0 z"
-       transform="matrix(0.89950544,0,0,0.89950544,5.3455146,7.6786635)"
-       id="path4380"
-       style="fill:none;stroke:#000000;stroke-width:3.89102697;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;display:inline" />
-  </g>
-  <g
-     transform="matrix(0,1.036341,-0.91759527,0,55.382638,1.4335988)"
+     transform="matrix(1.036341,0,0,0.91759527,-0.80910097,3.4667904)"
      id="g3906">
     <path
-       d="M 15.420073,29.629934 C 15.062375,23.128916 19.85161,18.730516 23.159983,16.583162"
+       d="m 35.767761,19.586168 c 7.419178,7.751636 0.65992,21.346159 -7.890471,21.666289 -8.550391,0.32013 -12.099519,-5.121504 -12.457217,-11.622523 -0.357698,-6.501018 4.431537,-10.899418 7.73991,-13.046772"
        id="path3132"
        style="fill:none;stroke:#000000;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none" />
     <path
