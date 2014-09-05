@@ -494,7 +494,7 @@ class Dimensions(activity.Activity):
             tooltip=_('Play with the computer'))
 
         self._robot_time_button = button_factory(
-            'timer-60',
+            'timer-15',
             toolbar,
             self._robot_selection_cb,
             tooltip=_('robot pause time'))
