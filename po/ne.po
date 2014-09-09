@@ -52,6 +52,9 @@ msgstr ""
 msgid "Visual Match"
 msgstr "दृष्टि जोडा"
 
+msgid "Dimensions"
+msgstr "दृष्टि जोडा"
+
 #. TRANS: "summary" option from activity.info file
 #. TRANS: "description" option from activity.info file
 msgid "a pattern-matching game"
@@ -87,10 +90,6 @@ msgstr "नँया शब्द खेल"
 #: VisualMatchActivity.py:73 VisualMatchActivity.py:331
 msgid "Import custom cards"
 msgstr "अनुकूलन कार्ड आयात गर"
-
-#: VisualMatchActivity.py:75
-msgid "Dimensions"
-msgstr ""
 
 #. TRANS: The prime number version of the dimensions game
 #: VisualMatchActivity.py:77

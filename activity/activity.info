@@ -2,7 +2,7 @@
 name = Dimensions
 activity_version = 56
 license = GPLv3
-bundle_id = org.sugarlabs.Dimensions
+bundle_id = org.sugarlabs.VisualMatchActivity
 exec = sugar-activity Dimensions.Dimensions
 icon = activity-dimensions
 show_launcher = yes
