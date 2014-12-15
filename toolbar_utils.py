@@ -18,7 +18,7 @@ from sugar3.graphics.radiotoolbutton import RadioToolButton
 
 
 def button_factory(icon_name, toolbar, callback, cb_arg=None, tooltip=None,
-                    accelerator=None):
+                   accelerator=None):
     ''' Factory for making toolbar buttons '''
     button = ToolButton(icon_name)
     if tooltip is not None:
@@ -39,7 +39,7 @@ def button_factory(icon_name, toolbar, callback, cb_arg=None, tooltip=None,
 
 
 def radio_factory(icon_name, toolbar, callback, cb_arg=None,
-                          tooltip=None, group=None):
+                  tooltip=None, group=None):
     ''' Add a radio button to a toolbar '''
     button = RadioToolButton(group=group)
     button.set_icon_name(icon_name)
@@ -96,4 +96,3 @@ def separator_factory(toolbar, expand=False, visible=True):
     toolbar.insert(separator, -1)
     separator.show()
     return separator
-

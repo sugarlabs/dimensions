@@ -1,4 +1,4 @@
-#Copyright (c) 2009-14 Walter Bender
+# Copyright (c) 2009-14 Walter Bender
 
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -81,7 +81,9 @@ ROBOT_TIMER_DEFAULT = 15
 
 
 class Dimensions(activity.Activity):
+
     ''' Dimension matching game '''
+
     def __init__(self, handle):
         ''' Initialize the Sugar activity '''
         super(Dimensions, self).__init__(handle)
@@ -453,10 +455,10 @@ class Dimensions(activity.Activity):
                     'timer-%d.svg' % (seconds)),
                 'icon-selected': image_from_svg_file(
                     'timer-%d-selected.svg' % (seconds))
-                }
+            }
 
             self._robot_timer_menu[seconds]['menu_item'].set_label(
-                    self._robot_timer_menu[seconds]['label'])
+                self._robot_timer_menu[seconds]['label'])
             if seconds == ROBOT_TIMER_DEFAULT:
                 self._robot_timer_menu[seconds]['menu_item'].set_image(
                     self._robot_timer_menu[seconds]['icon-selected'])
@@ -884,7 +886,9 @@ class Dimensions(activity.Activity):
 
 
 class ChatTube(ExportedGObject):
+
     ''' Class for setting up tube for sharing '''
+
     def __init__(self, tube, is_initiator, stack_received_cb):
         super(ChatTube, self).__init__(tube, PATH)
         self.tube = tube
