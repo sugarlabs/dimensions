@@ -83,6 +83,7 @@ class HelpButton(Gtk.ToolItem):
         self._palette.popup(immediate=True, state=1)
         '''
 
+
 def add_section(help_box, section_text, icon=None):
     ''' Add a section to the help palette. From helpbutton.py by
     Gonzalo Odiard '''

@@ -52,6 +52,9 @@ msgstr ""
 msgid "Visual Match"
 msgstr "Sfida Visuale"
 
+msgid "Dimensions"
+msgstr "Dimensioni"
+
 #. TRANS: "summary" option from activity.info file
 #. TRANS: "description" option from activity.info file
 msgid "a pattern-matching game"
@@ -87,10 +90,6 @@ msgstr "Inizia una partita con parole"
 #: VisualMatchActivity.py:73 VisualMatchActivity.py:331
 msgid "Import custom cards"
 msgstr "Importa carte personalizzate"
-
-#: VisualMatchActivity.py:75
-msgid "Dimensions"
-msgstr ""
 
 #. TRANS: The prime number version of the dimensions game
 #: VisualMatchActivity.py:77

@@ -45,6 +45,9 @@ msgstr ""
 msgid "Visual Match"
 msgstr "Визуални Меч"
 
+msgid "Dimensions"
+msgstr "Визуални Меч"
+
 #. TRANS: "summary" option from activity.info file
 #. TRANS: "description" option from activity.info file
 msgid "a pattern-matching game"

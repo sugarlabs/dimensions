@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-#Copyright (c) 2009, 10 Walter Bender
+# Copyright (c) 2009, 10 Walter Bender
 
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -21,6 +21,7 @@ FROWN = '☹'
 
 
 class SVG:
+
     ''' SVG generators '''
 
     def __init__(self):
@@ -89,7 +90,7 @@ class SVG:
 
     def _svg_line(self, x1, y1, x2, y2):
         svg_string = "<line x1=\"%f\" y1=\"%f\" x2=\"%f\" y2=\"%f\"\n" % \
-                      (x1, y1, x2, y2)
+            (x1, y1, x2, y2)
         svg_string += self._svg_style("stroke-linecap:round;")
         return svg_string
 
@@ -119,14 +120,14 @@ class SVG:
 
     def _svg_cross(self, x):
         svg_string = "%s%s%s%s%s%s%s%s" % (
-                "<path d=\"m 33.4,62.5 l 10.1,10.1 c 0.8,0.8 1.2,1.8 1.2,2.9 ",
-                "0,2.3 -1.9,4.1 -4.1,4.1 -1.1,0 -2.2,-0.5 -2.9,-1.2 l ",
-                "-10.1,-10.1 -10.1,10.1 c -0.8,0.8 -1.8,1.2 -2.9,1.2 -2.3,0 ",
-                "-4.1,-1.9 -4.1,-4.1 0,-1.1 0.5,-2.2 1.2,-2.9 l 10.1,-10.1 ",
-                "-10.1,-10.1 c -0.7,-0.7 -1.2,-1.8 -1.2,-2.9 0,-2.3 1.9,-4.1 ",
-                "4.1,-4.1 1.1,0 2.2,0.5 2.9,1.2 l 10.1,10.1 10.1,-10.1 c ",
-                "0.8,-0.7 1.8,-1.2 2.9,-1.2 2.3,0 4.1,1.9 4.1,4.1 0,1.1 ",
-                "-0.5,2.2 -1.2,2.9 l -10.1,10.1 z\"\n")
+            "<path d=\"m 33.4,62.5 l 10.1,10.1 c 0.8,0.8 1.2,1.8 1.2,2.9 ",
+            "0,2.3 -1.9,4.1 -4.1,4.1 -1.1,0 -2.2,-0.5 -2.9,-1.2 l ",
+            "-10.1,-10.1 -10.1,10.1 c -0.8,0.8 -1.8,1.2 -2.9,1.2 -2.3,0 ",
+            "-4.1,-1.9 -4.1,-4.1 0,-1.1 0.5,-2.2 1.2,-2.9 l 10.1,-10.1 ",
+            "-10.1,-10.1 c -0.7,-0.7 -1.2,-1.8 -1.2,-2.9 0,-2.3 1.9,-4.1 ",
+            "4.1,-4.1 1.1,0 2.2,0.5 2.9,1.2 l 10.1,10.1 10.1,-10.1 c ",
+            "0.8,-0.7 1.8,-1.2 2.9,-1.2 2.3,0 4.1,1.9 4.1,4.1 0,1.1 ",
+            "-0.5,2.2 -1.2,2.9 l -10.1,10.1 z\"\n")
         svg_string += "%s%f%s" % ("   transform=\"translate(", x - 10,
                                   ", -25)\"\n")
         svg_string += self._svg_style()
@@ -279,7 +280,9 @@ class SVG:
         svg_string += "   xmlns=\"http://www.w3.org/2000/svg\"\n"
         svg_string += "   version=\"1.0\"\n"
         svg_string += "%s%f%s" % ("   width=\"", width * self._scale, "\"\n")
-        svg_string += "%s%f%s" % ("   height=\"", height * self._scale, "\">\n")
+        svg_string += "%s%f%s" % ("   height=\"",
+                                  height * self._scale,
+                                  "\">\n")
         svg_string += "%s%f%s%f%s" % ("<g\n       transform=\"matrix(",
                                       self._scale, ", 0, 0, ", self._scale,
                                       ", 0, 0)\">\n")
@@ -630,6 +633,7 @@ class SVG:
 
 # Card generators
 
+
 def generate_picture(scale, color, path):
     svg = SVG()
     svg._set_scale(scale)
@@ -862,9 +866,9 @@ def generate_number_card(shape, color, number, fill, number_types, scale):
     svg._set_colors(["#A0A0A0", COLOR_PAIRS[color][1]])
     svg_string = svg._header()
     svg_string += svg._number_card(shape, (number + 1) * stab[fill],
-                                  COLOR_PAIRS[color][0],
-                                  methodX, methodO[number_types[0]],
-                                  methodC[number_types[1]])
+                                   COLOR_PAIRS[color][0],
+                                   methodX, methodO[number_types[0]],
+                                   methodC[number_types[1]])
     svg_string += svg._footer()
     return svg_string
 

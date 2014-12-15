@@ -1,5 +1,5 @@
-#Copyright (c) 2009-14 Walter Bender
-#Copyright (c) 2009 Michele Pratusevich
+# Copyright (c) 2009-14 Walter Bender
+# Copyright (c) 2009 Michele Pratusevich
 
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -17,7 +17,9 @@ from sprites import Sprite
 
 
 class Card:
+
     ''' Individual cards '''
+
     def __init__(self, scale=1.0):
         ''' Create the card and store its attributes '''
         self.spr = None

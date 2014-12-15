@@ -52,6 +52,9 @@ msgstr ""
 msgid "Visual Match"
 msgstr "圖樣對照"
 
+msgid "Dimensions"
+msgstr "圖樣對照"
+
 #. TRANS: "summary" option from activity.info file
 #. TRANS: "description" option from activity.info file
 msgid "a pattern-matching game"

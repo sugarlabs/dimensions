@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
-#Copyright (c) 2009-14 Walter Bender
-#Copyright (c) 2009 Michele Pratusevich
-#Copyright (c) 2009 Vincent Le
+# Copyright (c) 2009-14 Walter Bender
+# Copyright (c) 2009 Michele Pratusevich
+# Copyright (c) 2009 Vincent Le
 
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -89,6 +89,7 @@ def _construct_a_name(before, i, after):
 
 
 class Click():
+
     ''' A simple class to hold a clicked card '''
 
     def __init__(self):
@@ -106,6 +107,7 @@ class Click():
 
 
 class Game():
+
     ''' The game play -- called from within Sugar or GNOME '''
 
     def __init__(self, canvas, parent=None, card_type='pattern'):
@@ -1291,7 +1293,9 @@ class Game():
         self.set_label('deck', '%d %s' %
                        (self.deck.cards_remaining(), _('cards')))
         self.set_label('status', '')
-        logging.error('update labels: %d %d' % (self.matches, self.robot_matches))
+        logging.error(
+            'update labels: %d %d' %
+            (self.matches, self.robot_matches))
         user_matches = self.matches - self.robot_matches
         if user_matches == 1:
             label = _('match')
@@ -1461,7 +1465,9 @@ class Game():
                 self.clicked[1].spr = self.grid.grid[match[1]].spr
                 self.grid.grid[match[1]].spr.move(self.grid.match_to_xy(1))
             else:
-                logging.error('in robot match, j == 1, grid[%d] is None' % (match[1]))
+                logging.error(
+                    'in robot match, j == 1, grid[%d] is None' %
+                    (match[1]))
                 return
             self.grid.grid[match[1]] = None
             logging.error('calling next_robot_match %r 2' % match)
@@ -1471,12 +1477,16 @@ class Game():
                 self.clicked[2].spr = self.grid.grid[match[2]].spr
                 self.grid.grid[match[2]].spr.move(self.grid.match_to_xy(2))
             else:
-                logging.error('in robot match, j != 1, grid[%d] is None' % (match[2]))
+                logging.error(
+                    'in robot match, j != 1, grid[%d] is None' %
+                    (match[2]))
                 return
             self.grid.grid[match[2]] = None
             self._showing_robot_match = False
             self.robot_matches += 1
-            logging.error('robot match +=1, now: %d %d' % (self.matches, self.robot_matches))
+            logging.error(
+                'robot match +=1, now: %d %d' %
+                (self.matches, self.robot_matches))
             self._test_for_a_match()
             self._smiley[0].spr.set_layer(SMILE_LAYER)
             # self._matches_on_display = True
@@ -1904,6 +1914,7 @@ class Game():
 
 
 class Permutation:
+
     '''Permutaion class for checking for all possible matches on the grid '''
 
     def __init__(self, elist):
