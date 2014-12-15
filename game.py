@@ -167,7 +167,8 @@ class Game():
         self._drag_pos = [0, 0]
         self._start_pos = [0, 0]
         self.low_score = [-1, -1, -1]
-        self.all_scores = []
+        self.all_scores = {
+            'pattern': [], 'number': [], 'word': [], 'custom': []}
         self.robot = False
         self.robot_time = 0
         self.total_time = 0
@@ -1208,7 +1209,8 @@ class Game():
                                    (_('New record'), int(self.total_time / 60),
                                     int(self.total_time % 60)))
                 # Round to nearest second
-                self.all_scores.append(int(self.total_time + 0.5))
+                self.all_scores[str(self.card_type)].append(
+                    [self.level, int(self.total_time + 0.5)])
                 if not self._sugar:
                     self.activity.save_score()
                 else:

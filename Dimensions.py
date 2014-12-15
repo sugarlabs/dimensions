@@ -11,10 +11,13 @@
 
 import os
 
+from cairoplot import cairoplot
+
 from gi.repository import Gtk
 from gi.repository import Gdk
 from gi.repository import GdkPixbuf
 from gi.repository import GObject
+from gi.repository import GConf
 
 from sugar3.activity import activity
 from sugar3.activity.widgets import ActivityToolbarButton
@@ -39,8 +42,9 @@ from gettext import gettext as _
 import logging
 _logger = logging.getLogger('dimensions-activity')
 
-from json import load as jload
 from json import dump as jdump
+from json import dumps as jdumps
+from json import loads as jloads
 
 from StringIO import StringIO
 
@@ -213,12 +217,20 @@ class Dimensions(activity.Activity):
         if self.vmw.robot:
             self._robot_cb(button)
 
-    def _read_metadata(self, keyword, default_value):
+    def _read_metadata(self, keyword, default_value, json=False):
         ''' If the keyword is found, return stored value '''
         if keyword in self.metadata:
-            return(self.metadata[keyword])
+            data = self.metadata[keyword]
         else:
-            return(default_value)
+            data = default_value
+
+        if json:
+            try:
+                return jloads(data)
+            except:
+                pass
+
+        return data
 
     def _read_journal_data(self):
         ''' There may be data from a previous instance. '''
@@ -231,8 +243,10 @@ class Dimensions(activity.Activity):
                                                    -1)),
                            int(self._read_metadata('low_score_expert', -1))]
 
-        self._all_scores = self._data_loader(
-            self._read_metadata('all_scores', '[]'))
+        self._all_scores = self._read_metadata(
+            'all_scores',
+            '{"pattern": [], "word": [], "number": [], "custom": []}',
+            True)
         self._numberO = int(self._read_metadata('numberO', PRODUCT))
         self._numberC = int(self._read_metadata('numberC', HASH))
         self._matches = int(self._read_metadata('matches', 0))
@@ -264,8 +278,11 @@ class Dimensions(activity.Activity):
     def _write_scores_to_clipboard(self, button=None):
         ''' SimpleGraph will plot the cululative results '''
         jscores = ''
-        for i, s in enumerate(self.vmw.all_scores):
-            jscores += '%s: %s\n' % (str(i + 1), s)
+        c = 0
+        for key in self.vmw.all_scores.keys():
+            for data in self.vmw.all_scores[key]:
+                jscores += '%s: %s\n' % (str(c + 1), data[1])
+                c += 1
         clipboard = Gtk.Clipboard.get(Gdk.SELECTION_CLIPBOARD)
         clipboard.set_text(jscores, -1)
 
@@ -309,6 +326,12 @@ class Dimensions(activity.Activity):
         button_factory('score-copy', self.activity_toolbar_button,
                        self._write_scores_to_clipboard,
                        tooltip=_('Export scores to clipboard'))
+
+        button_factory(
+            'scorechart',
+            self.activity_toolbar_button,
+            self._write_scores_to_chart,
+            tooltip=_('Export scores to chart and save it to journal'))
 
         self.set_toolbar_box(toolbox)
         toolbox.show()
@@ -585,8 +608,7 @@ class Dimensions(activity.Activity):
             self.metadata['low_score_intermediate'] = int(
                 self.vmw.low_score[1])
             self.metadata['low_score_expert'] = int(self.vmw.low_score[2])
-            self.metadata['all_scores'] = \
-                self._data_dumper(self.vmw.all_scores)
+            self.metadata['all_scores'] = jdumps(self.vmw.all_scores)
             self.metadata['robot_time'] = self.vmw.robot_time
             self.metadata['numberO'] = self.vmw.numberO
             self.metadata['numberC'] = self.vmw.numberC
@@ -657,8 +679,8 @@ class Dimensions(activity.Activity):
             self._saved_state = saved_state
 
     def _data_loader(self, data):
-        io = StringIO(data)
-        return jload(io)
+        json_data = jloads(data)
+        return json_data
 
     def _notify_new_game(self, prompt):
         ''' Called from New Game button since loading a new game can
@@ -883,6 +905,104 @@ class Dimensions(activity.Activity):
         ''' Send event through the tube. '''
         if hasattr(self, 'chattube') and self.chattube is not None:
             self.chattube.SendText(entry)
+
+    def _write_scores_to_chart(self, button=None):
+        client = GConf.Client.get_default()
+        jobject = datastore.create()
+        color = client.get_string('/desktop/sugar/user/color')
+        jobject.metadata['title'] = _('Score chart')
+        jobject.metadata['icon-color'] = color
+        jobject.metadata['mime_type'] = 'image/png'
+        file_path = None
+        try:
+            file_path = self._generate_scorechart()
+            title = _("High score chart")
+            msg = _("High Score chart copied to journal.")
+            jobject.file_path = file_path
+            if not file_path:
+                # Provocate exception
+                jobject.destroy()
+                del jobject
+                1 / 0
+            datastore.write(jobject)
+            jobject.destroy()
+            del jobject
+        except Exception as e:
+            title = _("High score chart")
+            msg = _(
+                "High Score cant be created. Try again playing more times.")
+
+        alert = NotifyAlert(5)
+        alert.props.title = title
+        alert.props.msg = msg
+        self.add_alert(alert)
+        alert.connect(
+            'response',
+            lambda alert,
+            response: self.remove_alert(alert))
+
+    def _generate_scorechart(self):
+        y_labels = []
+        x_labels = []
+        level1 = []
+        level2 = []
+        level3 = []
+
+        w = Gdk.Screen.width()
+        h = Gdk.Screen.height()
+
+        total_games = 0
+        all_numbers = []
+
+        for key in self.vmw.all_scores.keys():
+            for data in self.vmw.all_scores[key]:
+                if data[0] == 0:
+                    level1.append(data[1])
+                elif data[0] == 1:
+                    level2.append(data[1])
+                elif data[0] == 2:
+                    level3.append(data[1])
+                total_games += 1
+                all_numbers.append(data[1])
+
+        current = 0
+        for x in range(0, 11):
+            if total_games < 10:
+                y_labels.append(str(x))
+            else:
+                y_labels.append(str(current))
+                current += max(all_numbers) / 10
+
+        for level in range(0, total_games):
+            x_labels.append(str(level))
+
+        normal_len = len(level1) >= 3 or len(level2) >= 3 or len(level3) >= 3
+
+        if not normal_len:
+            return None
+
+        if not level1:
+            level1 = [0, 0, 0]
+        if not level2:
+            level2 = [0, 0, 0]
+        if not level3:
+            level3 = [0, 0, 0]
+
+        data = {'Level 1': level1, 'Level 2': level2, 'Level 3': level3}
+        print data
+
+        file_path = "/tmp/DimensionsChart.png"
+
+        cairoplot.dot_line_plot(file_path, data, w, h,
+                                axis=True,
+                                grid=True,
+                                y_labels=y_labels,
+                                x_labels=x_labels,
+                                series_legend=True,
+                                y_title=_("Time (in seconds)"),
+                                x_title=_("Total games played"),
+                                dots=True)
+        return file_path
 
 
 class ChatTube(ExportedGObject):
