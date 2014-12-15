@@ -1,4 +1,4 @@
-#Copyright (c) 2009-14 Walter Bender
+# Copyright (c) 2009-14 Walter Bender
 
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -28,6 +28,7 @@ def _distance_squared(pos1, pos2):
 
 
 class Grid:
+
     ''' Class for managing ROWxCOL matrix of cards '''
 
     def __init__(self, width, height, card_width, card_height):

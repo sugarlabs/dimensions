@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-#Copyright (c) 2009-14 Walter Bender
+# Copyright (c) 2009-14 Walter Bender
 
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -21,7 +21,7 @@ import os
 
 from game import Game
 from constants import PRODUCT, HASH, ROMAN, WORD, CHINESE, MAYAN, DICE, DOTS, \
-                      STAR, LINES, INCAN
+    STAR, LINES, INCAN
 
 MODE = 'pattern'
 
@@ -32,8 +32,9 @@ class DimensionsMain:
         # create a new window
         self.win = Gtk.Window(type=Gtk.WindowType.TOPLEVEL)
         self.win.maximize()
-        self.win.set_title("%s: %s" % (_("Dimensions"),
-                           _("Click on cards to create sets of three.")))
+        self.win.set_title(
+            "%s: %s" %
+            (_("Dimensions"), _("Click on cards to create sets of three.")))
         self.win.connect("delete_event", lambda w, e: Gtk.main_quit())
 
         menu0 = Gtk.Menu()
@@ -49,7 +50,7 @@ class DimensionsMain:
         menu0.append(menu_items)
         menu_items.connect("activate", self._level_cb, 2)
         menu_items.show()
-        #TRANS: Level of difficulty
+        # TRANS: Level of difficulty
         level_menu = Gtk.MenuItem(_("Level"))
         level_menu.show()
         level_menu.set_submenu(menu0)
@@ -185,9 +186,9 @@ class DimensionsMain:
         self.vmw.matches = 0
         self.vmw.robot_matches = 0
         self.load_score()
-        self.vmw.word_lists = [[_('mouse'), _('cat'), _('dog')],\
-                           [_('cheese'), _('apple'), _('bread')],\
-                           [_('moon'), _('sun'), _('earth')]]
+        self.vmw.word_lists = [[_('mouse'), _('cat'), _('dog')],
+                               [_('cheese'), _('apple'), _('bread')],
+                               [_('moon'), _('sun'), _('earth')]]
 
         self.vmw.new_game()
 

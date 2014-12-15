@@ -1,4 +1,4 @@
-#Copyright (c) 2009-14 Walter Bender
+# Copyright (c) 2009-14 Walter Bender
 
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -32,7 +32,9 @@ except:
     bundle_path = os.path.expanduser(os.path.join('~', 'Activities',
                                                   'WordDimensions.activity'))
 
+
 class Deck:
+
     """ Class for defining deck of card """
 
     def __init__(self, cards, scale=1.0):
@@ -112,12 +114,12 @@ class Deck:
                 generate_custom_card(shape, color, num, fill, self._scale,
                                      path=path),
                 sprites=sprites, attributes=[shape, color, num, fill])
-                #, file_path=lists[index])
+            #, file_path=lists[index])
         else:
             # Fixme: Work-around for i18n
-            word_picture_lists = [['mouse', 'cat', 'dog',],
-                                  ['cheese', 'apple', 'bread',],
-                                  ['moon','sun','earth']]
+            word_picture_lists = [['mouse', 'cat', 'dog', ],
+                                  ['cheese', 'apple', 'bread', ],
+                                  ['moon', 'sun', 'earth']]
 
             # shape == category: animal, food, orb
             # color == color
@@ -127,8 +129,11 @@ class Deck:
                 path = os.path.join(bundle_path, 'pictures',
                                     word_picture_lists[shape][num] + '.png')
             elif fill == 1:
-                path = os.path.join(bundle_path, 'pictures',
-                                    word_picture_lists[shape][num] + '-gray.png')
+                path = os.path.join(
+                    bundle_path,
+                    'pictures',
+                    word_picture_lists[shape][num] +
+                    '-gray.png')
             else:
                 path = None
             self.cards[i].create(
