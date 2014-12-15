@@ -1,3 +1,13 @@
+57
+
+* Reintegration of all three games: patterns, numbers, and words
+* Simplification of toolbar
+* New end of game animations
+* Better feedback when playing computer (robot)
+* Fixed regression in collaboration
+* Fixed regression in scoring
+* Fixed problem that cause cards to occasionally fly off the screen
+
 56
 
 * New layout

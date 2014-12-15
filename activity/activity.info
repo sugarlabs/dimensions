@@ -1,6 +1,6 @@
 [Activity]
 name = Dimensions
-activity_version = 56
+activity_version = 57
 license = GPLv3
 bundle_id = org.sugarlabs.Dimensions
 exec = sugar-activity Dimensions.Dimensions
