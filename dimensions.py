@@ -69,6 +69,9 @@ class DimensionsMain:
         menu1.append(menu_items)
         menu_items.connect("activate", self._new_game_cb, 'word')
         menu_items.show()
+        menu_items = Gtk.MenuItem(_("Show High Score chart"))
+        menu1.append(menu_items)
+        menu_items.connect("activate", self._show_score_cb)
 
         game_menu = Gtk.MenuItem(_("Game"))
         game_menu.show()
@@ -240,6 +243,9 @@ class DimensionsMain:
         self.vmw.numberC = numberC
         self.vmw.card_type = 'number'
         self.vmw.new_game()
+
+    def _show_score_cb(self, widget):
+        self.vmw.score_chart()
 
 
 def main():
