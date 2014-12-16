@@ -12,6 +12,8 @@
 # along with this library; if not, write to the Free Software
 # Foundation, 51 Franklin Street, Suite 500 Boston, MA 02110-1335 USA
 
+from cairoplot import cairoplot
+
 from gi.repository import Gtk
 from gi.repository import Gdk
 from gi.repository import GdkPixbuf
@@ -30,9 +32,12 @@ _logger = logging.getLogger('dimensions-activity')
 
 try:
     from sugar3.graphics.style import GRID_CELL_SIZE, DEFAULT_SPACING
+    from sugar3.graphics.alert import NotifyAlert
+    NOTIFY = True
 except:
     GRID_CELL_SIZE = 55
     DEFAULT_SPACING = 16
+    NOTIFY = False
 
 from constants import (HIGH, ROW, COL, CARD_WIDTH, WORD_CARD_INDICIES, LABELH,
                        WORD_CARD_MAP, CARD_HEIGHT, DEAL, DIFFICULTY_LEVEL,
@@ -159,6 +164,7 @@ class Game():
         self._frowny = []
         self._robot_card = None
         self._help = []
+        self._chart_sprite = []
         self._help_timeout_id = None
         self._stop_help_on_click = False
         self._failure = None
@@ -167,7 +173,8 @@ class Game():
         self._drag_pos = [0, 0]
         self._start_pos = [0, 0]
         self.low_score = [-1, -1, -1]
-        self.all_scores = []
+        self.all_scores = {
+            'pattern': [], 'number': [], 'word': [], 'custom': []}
         self.robot = False
         self.robot_time = 0
         self.total_time = 0
@@ -359,6 +366,7 @@ class Game():
         self._stop_help_on_click = True
         self._choosing_card_type = True
         self._help_buttons[0].set_layer(ANIMATION_LAYER)
+        self._help_buttons[2].set_layer(ANIMATION_LAYER)
         n = len(CARD_STYLES)
         if not self._first_time and self.card_type is not None:
             i = CARD_STYLES.index(self.card_type)
@@ -447,9 +455,9 @@ class Game():
 
         self._hide_smiley()
         self._hide_frowny()
+        self._new_game_spr.hide()
         if self._sugar:
             self._robot_card.spr.hide()
-            self._new_game_spr.hide()
 
         if self._saved_state is not None:
             _logger.debug('Restoring state: %s' % (str(self._saved_state)))
@@ -716,7 +724,8 @@ class Game():
             GObject.timeout_add(100, self.new_game)
 
         # Turn off help animation
-        if spr in self._help:  # not self._stop_help_on_click:
+        # not self._stop_help_on_click:
+        if spr in self._help or spr in self._chart_sprite:
             self._stop_help_on_click = True
             self._timer_reset()
             self._update_labels()
@@ -737,6 +746,13 @@ class Game():
                 self._help_buttons[0].hide()
                 self._help_buttons[1].set_layer(ANIMATION_LAYER)
             GObject.timeout_add(100, self.help_animation)
+            return True
+
+        if spr.type in ['chart-button', 'chart-button-selected']:
+            if spr.type == 'chart-button':
+                self._help_buttons[2].hide()
+                self._help_buttons[3].set_layer(ANIMATION_LAYER)
+            GObject.timeout_add(100, self.score_chart)
             return True
 
         # Change card type
@@ -1208,7 +1224,8 @@ class Game():
                                    (_('New record'), int(self.total_time / 60),
                                     int(self.total_time % 60)))
                 # Round to nearest second
-                self.all_scores.append(int(self.total_time + 0.5))
+                self.all_scores[str(self.card_type)].append(
+                    [self.level, int(self.total_time + 0.5)])
                 if not self._sugar:
                     self.activity.save_score()
                 else:
@@ -1797,7 +1814,7 @@ class Game():
             os.path.join(path, file_name), size, size)
         self._help_buttons.append(Sprite(
             self._sprites,
-            int((self._width - size) / 2),
+            int((self._width - size) / 2) + size / 2,
             int((self._height - size) / 2) + size,
             pixbuf))
         self._help_buttons[-1].type = 'help-button'
@@ -1807,11 +1824,33 @@ class Game():
             os.path.join(path, file_name), size, size)
         self._help_buttons.append(Sprite(
             self._sprites,
-            int((self._width - size) / 2),
+            int((self._width - size) / 2) + size / 2,
             int((self._height - size) / 2) + size,
             pixbuf))
         self._help_buttons[-1].type = 'help-button-selected'
         self._help_buttons[-1].name = 'help'
+
+        file_name = 'chart-button.png'
+        pixbuf = GdkPixbuf.Pixbuf.new_from_file_at_size(
+            os.path.join(path, file_name), size, size)
+        self._help_buttons.append(Sprite(
+            self._sprites,
+            int((self._width - size) / 2) - size / 2,
+            int((self._height - size) / 2) + size,
+            pixbuf))
+        self._help_buttons[-1].type = 'chart-button'
+        self._help_buttons[-1].name = 'chart'
+
+        file_name = 'chart-button.png'
+        pixbuf = GdkPixbuf.Pixbuf.new_from_file_at_size(
+            os.path.join(path, file_name), size, size)
+        self._help_buttons.append(Sprite(
+            self._sprites,
+            int((self._width - size) / 2) - size / 2,
+            int((self._height - size) / 2) + size,
+            pixbuf))
+        self._help_buttons[-1].type = 'chart-button'
+        self._help_buttons[-1].name = 'chart'
 
     def _make_card_type_buttons(self):
         from sugar3.activity import activity
@@ -1851,6 +1890,82 @@ class Game():
                                    'help', 'help-*.png')
         help_files = glob.glob(help_target)
         return sorted(help_files)
+
+    def score_chart(self, *args):
+        h = int(650 * Gdk.Screen.height() / 900.)
+        w = int(550 * Gdk.Screen.width() / 1200.)
+        self._stop_help_on_click = False
+
+        chart_path = self._generate_scorechart()
+        title = _("High score chart")
+        if not chart_path:
+            msg = _(
+                "High Score cant be created. Try again playing more times.")
+
+            if self._sugar and NOTIFY:
+                alert = NotifyAlert(5)
+                alert.props.title = title
+                alert.props.msg = msg
+                self.activity.add_alert(alert)
+                alert.connect(
+                    'response',
+                    lambda alert,
+                    response: self.activity.remove_alert(alert))
+            else:
+                dialog = Gtk.MessageDialog()
+                dialog.set_title(title)
+                dialog.add_button('Ok', Gtk.ResponseType.ACCEPT)
+                dialog.format_secondary_text(msg)
+                dialog.run()
+                dialog.destroy()
+            return
+
+        pixbuf = GdkPixbuf.Pixbuf.new_from_file_at_size(chart_path, w, h)
+        if chart_path and not self._sugar:
+
+            dialog = Gtk.MessageDialog()
+            dialog.set_title(title)
+            dialog.add_button('Ok', Gtk.ResponseType.ACCEPT)
+            dialog.vbox.pack_start(
+                Gtk.Image.new_from_pixbuf(pixbuf),
+                True,
+                True,
+                0)
+            dialog.show_all()
+            dialog.run()
+            dialog.destroy()
+            return
+
+        if self.portrait:
+            self.backgrounds[1].set_layer(SMILE_LAYER)
+        else:
+            self.backgrounds[0].set_layer(SMILE_LAYER)
+        self._hide_card_type_selector()
+
+        self._chart_sprite.append(Sprite(self._sprites,
+                                         int((self._width - w) / 2),
+                                         int((self._height - h) / 2),
+                                         pixbuf))
+
+        if self.portrait:
+            self.backgrounds[0].hide()
+            self.backgrounds[1].set_layer(ANIMATION_LAYER)
+        else:
+            self.backgrounds[1].hide()
+            self.backgrounds[0].set_layer(ANIMATION_LAYER)
+
+        def draw_layer():
+            if self._stop_help_on_click:
+                self._chart_sprite[0].hide()
+                self._chart_sprite = []
+                return False
+
+            self._chart_sprite[0].set_layer(HELP_LAYER)
+
+            self._sprites.draw_all()
+            return True
+
+        GObject.idle_add(draw_layer)
 
     def help_animation(self):
         ''' Simple explanatory animation at start of play '''
@@ -1911,6 +2026,68 @@ class Game():
         else:
             pause = 750
         self._help_timeout_id = GObject.timeout_add(pause, self._help_next)
+
+    def _generate_scorechart(self):
+        y_labels = []
+        x_labels = []
+        level1 = []
+        level2 = []
+        level3 = []
+
+        h = int(650 * Gdk.Screen.height() / 900.)
+        w = int(550 * Gdk.Screen.width() / 1200.)
+
+        total_games = 1
+        all_numbers = []
+
+        for key in self.all_scores.keys():
+            for data in self.all_scores[key]:
+                if data[0] == 0:
+                    level1.append(data[1])
+                elif data[0] == 1:
+                    level2.append(data[1])
+                elif data[0] == 2:
+                    level3.append(data[1])
+                total_games += 1
+                all_numbers.append(data[1])
+
+        current = 0
+        for x in range(0, 11):
+            if total_games < 10:
+                y_labels.append(str(x))
+            else:
+                y_labels.append(str(current))
+                current += max(all_numbers) / 10
+
+        for level in range(0, total_games):
+            x_labels.append(str(level))
+
+        cant = len(level1) < 3 and len(level2) < 3 and len(level3) < 3
+        if cant:
+            return None
+
+        if not level1:
+            level1 = [0, 0, 0]
+        if not level2:
+            level2 = [0, 0, 0]
+        if not level3:
+            level3 = [0, 0, 0]
+
+        data = {'Level 1': level1, 'Level 2': level2, 'Level 3': level3}
+
+        file_path = "/tmp/DimensionsChart.png"
+
+        cairoplot.dot_line_plot(file_path, data, w, h,
+                                axis=True,
+                                grid=True,
+                                y_labels=y_labels,
+                                x_labels=x_labels,
+                                series_legend=True,
+                                y_title=_("Time (in seconds)"),
+                                x_title=_("Total games played"),
+                                series_colors=["red", "blue", "green"],
+                                dots=True)
+        return file_path
 
 
 class Permutation:
