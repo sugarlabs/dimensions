@@ -455,9 +455,9 @@ class Game():
 
         self._hide_smiley()
         self._hide_frowny()
+        self._new_game_spr.hide()
         if self._sugar:
             self._robot_card.spr.hide()
-            self._new_game_spr.hide()
 
         if self._saved_state is not None:
             _logger.debug('Restoring state: %s' % (str(self._saved_state)))
@@ -1922,6 +1922,7 @@ class Game():
 
         pixbuf = GdkPixbuf.Pixbuf.new_from_file_at_size(chart_path, w, h)
         if chart_path and not self._sugar:
+
             dialog = Gtk.MessageDialog()
             dialog.set_title(title)
             dialog.add_button('Ok', Gtk.ResponseType.ACCEPT)
