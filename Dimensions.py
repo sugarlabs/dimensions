@@ -39,8 +39,9 @@ from gettext import gettext as _
 import logging
 _logger = logging.getLogger('dimensions-activity')
 
-from json import load as jload
 from json import dump as jdump
+from json import dumps as jdumps
+from json import loads as jloads
 
 from StringIO import StringIO
 
@@ -48,6 +49,7 @@ from toolbar_utils import (radio_factory, button_factory, separator_factory)
 
 from constants import (DECKSIZE, PRODUCT, HASH, ROMAN, WORD, CHINESE, MAYAN,
                        INCAN, DOTS, STAR, DICE, LINES)
+
 from game import Game
 
 MODE = 'pattern'
@@ -213,12 +215,20 @@ class Dimensions(activity.Activity):
         if self.vmw.robot:
             self._robot_cb(button)
 
-    def _read_metadata(self, keyword, default_value):
+    def _read_metadata(self, keyword, default_value, json=False):
         ''' If the keyword is found, return stored value '''
         if keyword in self.metadata:
-            return(self.metadata[keyword])
+            data = self.metadata[keyword]
         else:
-            return(default_value)
+            data = default_value
+
+        if json:
+            try:
+                return jloads(data)
+            except:
+                pass
+
+        return data
 
     def _read_journal_data(self):
         ''' There may be data from a previous instance. '''
@@ -231,8 +241,10 @@ class Dimensions(activity.Activity):
                                                    -1)),
                            int(self._read_metadata('low_score_expert', -1))]
 
-        self._all_scores = self._data_loader(
-            self._read_metadata('all_scores', '[]'))
+        self._all_scores = self._read_metadata(
+            'all_scores',
+            '{"pattern": [], "word": [], "number": [], "custom": []}',
+            True)
         self._numberO = int(self._read_metadata('numberO', PRODUCT))
         self._numberC = int(self._read_metadata('numberC', HASH))
         self._matches = int(self._read_metadata('matches', 0))
@@ -264,8 +276,11 @@ class Dimensions(activity.Activity):
     def _write_scores_to_clipboard(self, button=None):
         ''' SimpleGraph will plot the cululative results '''
         jscores = ''
-        for i, s in enumerate(self.vmw.all_scores):
-            jscores += '%s: %s\n' % (str(i + 1), s)
+        c = 0
+        for key in self.vmw.all_scores.keys():
+            for data in self.vmw.all_scores[key]:
+                jscores += '%s: %s\n' % (str(c + 1), data[1])
+                c += 1
         clipboard = Gtk.Clipboard.get(Gdk.SELECTION_CLIPBOARD)
         clipboard.set_text(jscores, -1)
 
@@ -585,8 +600,8 @@ class Dimensions(activity.Activity):
             self.metadata['low_score_intermediate'] = int(
                 self.vmw.low_score[1])
             self.metadata['low_score_expert'] = int(self.vmw.low_score[2])
-            self.metadata['all_scores'] = \
-                self._data_dumper(self.vmw.all_scores)
+            self.metadata['all_scores'] = jdumps(self.vmw.all_scores)
+            print jdumps(self.vmw.all_scores)
             self.metadata['robot_time'] = self.vmw.robot_time
             self.metadata['numberO'] = self.vmw.numberO
             self.metadata['numberC'] = self.vmw.numberC
@@ -657,8 +672,8 @@ class Dimensions(activity.Activity):
             self._saved_state = saved_state
 
     def _data_loader(self, data):
-        io = StringIO(data)
-        return jload(io)
+        json_data = jloads(data)
+        return json_data
 
     def _notify_new_game(self, prompt):
         ''' Called from New Game button since loading a new game can
