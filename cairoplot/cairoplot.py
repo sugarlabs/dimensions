@@ -123,7 +123,7 @@ class Plot(object):
         self.border = border
         self.borders = {}
         self.line_color = (0.5, 0.5, 0.5)
-        self.line_width = 0.5
+        self.line_width = 3
         self.label_color = (0.0, 0.0, 0.0)
         self.grid_color = (0.8, 0.8, 0.8)
     

@@ -2085,6 +2085,7 @@ class Game():
                                 series_legend=True,
                                 y_title=_("Time (in seconds)"),
                                 x_title=_("Total games played"),
+                                series_colors=["red", "blue", "green"],
                                 dots=True)
         return file_path
 
