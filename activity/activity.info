@@ -7,3 +7,4 @@ exec = sugar-activity Dimensions.Dimensions
 icon = activity-dimensions
 show_launcher = yes
 summary = a pattern-matching game
+category = maths game
