@@ -96,6 +96,7 @@ class Dimensions(activity.Activity):
     def __init__(self, handle):
         ''' Initialize the Sugar activity '''
         super(Dimensions, self).__init__(handle)
+        self.initiating = None
         self.ready_to_play = False
         self._prompt = ''
         self._read_journal_data()
