@@ -59,6 +59,7 @@ from constants import (DECKSIZE, PRODUCT, HASH, ROMAN, WORD, CHINESE, MAYAN,
 
 from game import Game
 
+SLASH = '-x-SLASH-x-'  # slash safe encoding
 MODE = 'pattern'
 
 help_palettes = {}
