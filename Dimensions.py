@@ -748,65 +748,25 @@ class Dimensions(activity.Activity):
             add_paragraph(help_box, _('dice'), icon='dice')
             add_paragraph(help_box, _('dots in a line'), icon='lines')
 
-    def _setup_presence_service(self):
-        ''' Setup the Presence Service. '''
-        self.pservice = presenceservice.get_instance()
-        self.initiating = None  # sharing (True) or joining (False)
-
-        owner = self.pservice.get_owner()
-        self.owner = owner
-        self.vmw.buddies.append(self.owner)
-        self._share = ''
-        self.connect('shared', self._shared_cb)
-        self.connect('joined', self._joined_cb)
-
-    def _shared_cb(self, activity):
-        ''' Either set up initial share...'''
-        if self.shared_activity is None:
-            _logger.error('Failed to share or join activity ... \
-                shared_activity is null in _shared_cb()')
-            return
+    ###
+    def _shared_cb(self, sender):
+        self._setup_presence_service()
 
         self.initiating = True
         self.waiting_for_deck = False
         _logger.debug('I am sharing...')
 
-        self.conn = self.shared_activity.telepathy_conn
-        self.tubes_chan = self.shared_activity.telepathy_tubes_chan
-        self.text_chan = self.shared_activity.telepathy_text_chan
-
-        self.tubes_chan[telepathy.CHANNEL_TYPE_TEXT].connect_to_signal(
-            'NewTube', self._new_tube_cb)
-
-        _logger.debug('This is my activity: making a tube...')
-        self.tubes_chan[telepathy.CHANNEL_TYPE_TEXT].OfferDBusTube(
-            SERVICE, {})
-
-    def _joined_cb(self, activity):
-        ''' ...or join an exisiting share. '''
-        if self.shared_activity is None:
-            _logger.error('Failed to share or join activity ... \
-                shared_activity is null in _shared_cb()')
+    def _joined_cb(self, sender):
+        '''Joined a shared activity.'''
+        if not self.shared_activity:
             return
-
-        if self._joined_alert is not None:
-            self.remove_alert(self._joined_alert)
-            self._joined_alert = None
+        logger.debug('Joined a shared chat')
+        for buddy in self.shared_activity.get_joined_buddies():
+            self._buddy_already_exists(buddy)
+        self._setup_presence_service()
 
         self.initiating = False
         _logger.debug('I joined a shared activity.')
-
-        self.conn = self.shared_activity.telepathy_conn
-        self.tubes_chan = self.shared_activity.telepathy_tubes_chan
-        self.text_chan = self.shared_activity.telepathy_text_chan
-
-        self.tubes_chan[telepathy.CHANNEL_TYPE_TEXT].connect_to_signal(
-            'NewTube', self._new_tube_cb)
-
-        _logger.debug('I am joining an activity: waiting for a tube...')
-        self.tubes_chan[telepathy.CHANNEL_TYPE_TEXT].ListTubes(
-            reply_handler=self._list_tubes_reply_cb,
-            error_handler=self._list_tubes_error_cb)
 
         self.waiting_for_deck = True
 
@@ -817,36 +777,51 @@ class Dimensions(activity.Activity):
         self.intermediate_button.set_sensitive(False)
         self.expert_button.set_sensitive(False)
 
-    def _list_tubes_reply_cb(self, tubes):
-        ''' Reply to a list request. '''
-        for tube_info in tubes:
-            self._new_tube_cb(*tube_info)
+    def _setup_presence_service(self):
+        self.text_channel = TextChannelWrapper(
+            self.shared_activity.telepathy_text_chan,
+            self.shared_activity.telepathy_conn)
+        self.text_channel.set_received_callback(self._received_cb)
 
-    def _list_tubes_error_cb(self, e):
-        ''' Log errors. '''
-        _logger.error('ListTubes() failed: %s', e)
+        owner = self.pservice.get_owner()
+        self.owner = owner
+        self.vmw.buddies.append(self.owner)
+        self._share = ''
 
-    def _new_tube_cb(self, id, initiator, type, service, params, state):
-        ''' Create a new tube. '''
-        _logger.debug('New tube: ID=%d initator=%d type=%d service=%s '
-                      'params=%r state=%d', id, initiator, type, service,
-                      params, state)
+        self.shared_activity.connect('buddy-joined', self._buddy_joined_cb)
+        self.shared_activity.connect('buddy-left', self._buddy_left_cb)
 
-        if (type == telepathy.TUBE_TYPE_DBUS and service == SERVICE):
-            if state == telepathy.TUBE_STATE_LOCAL_PENDING:
-                self.tubes_chan[
-                    telepathy.CHANNEL_TYPE_TEXT].AcceptDBusTube(id)
+    def _received_cb(self, buddy, text):
+        '''Show message that was received.'''
+        if buddy:
+            if type(buddy) is dict:
+                nick = buddy['nick']
+            else:
+                nick = buddy.props.nick
+        else:
+            nick = '???'
+        logger.debug('Received message from %s: %s', nick, text)
+        self.event_received_cb(text)
 
-            tube_conn = TubeConnection(
-                self.conn, self.tubes_chan[telepathy.CHANNEL_TYPE_TEXT], id,
-                group_iface=self.text_chan[telepathy.CHANNEL_INTERFACE_GROUP])
+    def _buddy_joined_cb(self, sender, buddy):
+        '''Show a buddy who joined'''
+        if buddy == self.owner:
+            return
 
-            self.chattube = ChatTube(tube_conn, self.initiating,
-                                     self.event_received_cb)
+    def _buddy_left_cb(self, sender, buddy):
+        '''Show a buddy who joined'''
+        if buddy == self.owner:
+            return
 
-            if self.waiting_for_deck:
-                self._send_event('j')
+    def _buddy_already_exists(self, buddy):
+        '''Show a buddy already in the chat.'''
+        if buddy == self.owner:
+            return
 
+    def can_close(self):
+        '''Perform cleanup before closing.'''
+        return True
+    
     def event_received_cb(self, text):
         ''' Data is passed as tuples: cmd:text '''
         if text[0] == 'B':
@@ -896,33 +871,8 @@ class Dimensions(activity.Activity):
 
     def _send_event(self, entry):
         ''' Send event through the tube. '''
-        if hasattr(self, 'chattube') and self.chattube is not None:
-            self.chattube.SendText(entry)
-
-
-class ChatTube(ExportedGObject):
-
-    ''' Class for setting up tube for sharing '''
-
-    def __init__(self, tube, is_initiator, stack_received_cb):
-        super(ChatTube, self).__init__(tube, PATH)
-        self.tube = tube
-        self.is_initiator = is_initiator  # Are we sharing or joining activity?
-        self.stack_received_cb = stack_received_cb
-        self.stack = ''
-
-        self.tube.add_signal_receiver(self.send_stack_cb, 'SendText', IFACE,
-                                      path=PATH, sender_keyword='sender')
-
-    def send_stack_cb(self, text, sender=None):
-        if sender == self.tube.get_unique_name():
-            return
-        self.stack = text
-        self.stack_received_cb(text)
-
-    @signal(dbus_interface=IFACE, signature='s')
-    def SendText(self, text):
-        self.stack = text
+        if self.text_channel:
+            self.text_channel.post(entry)
 
 
 def image_from_svg_file(filename):
@@ -937,3 +887,143 @@ def image_from_svg_file(filename):
     image = Gtk.Image()
     image.set_from_pixbuf(pixbuf)
     return image
+
+
+class TextChannelWrapper(object):
+    '''Wrap a telepathy Text Channfel to make usage simpler.'''
+
+    def __init__(self, text_chan, conn):
+        '''Connect to the text channel'''
+        self._activity_cb = None
+        self._activity_close_cb = None
+        self._text_chan = text_chan
+        self._conn = conn
+        self._logger = logging.getLogger(
+            'chat-activity.TextChannelWrapper')
+        self._signal_matches = []
+        m = self._text_chan[CHANNEL_INTERFACE].connect_to_signal(
+            'Closed', self._closed_cb)
+        self._signal_matches.append(m)
+
+    def post(self, text):
+        if text is not None:
+            self.send(text)
+
+    def send(self, text):
+        '''Send text over the Telepathy text channel.'''
+        # XXX Implement CHANNEL_TEXT_MESSAGE_TYPE_ACTION
+        logging.debug('sending %s' % text)
+
+        text = text.replace('/', SLASH)
+
+        if self._text_chan is not None:
+            self._text_chan[CHANNEL_TYPE_TEXT].Send(
+                CHANNEL_TEXT_MESSAGE_TYPE_NORMAL, text)
+
+    def close(self):
+        '''Close the text channel.'''
+        self._logger.debug('Closing text channel')
+        try:
+            self._text_chan[CHANNEL_INTERFACE].Close()
+        except Exception:
+            self._logger.debug('Channel disappeared!')
+            self._closed_cb()
+
+    def _closed_cb(self):
+        '''Clean up text channel.'''
+        self._logger.debug('Text channel closed.')
+        for match in self._signal_matches:
+            match.remove()
+        self._signal_matches = []
+        self._text_chan = None
+        if self._activity_close_cb is not None:
+            self._activity_close_cb()
+
+    def set_received_callback(self, callback):
+        '''Connect the function callback to the signal.
+
+        callback -- callback function taking buddy and text args
+        '''
+        if self._text_chan is None:
+            return
+        self._activity_cb = callback
+        m = self._text_chan[CHANNEL_TYPE_TEXT].connect_to_signal(
+            'Received', self._received_cb)
+        self._signal_matches.append(m)
+
+    def handle_pending_messages(self):
+        '''Get pending messages and show them as received.'''
+        for identity, timestamp, sender, type_, flags, text in \
+            self._text_chan[
+                CHANNEL_TYPE_TEXT].ListPendingMessages(False):
+            self._received_cb(identity, timestamp, sender, type_, flags, text)
+
+    def _received_cb(self, identity, timestamp, sender, type_, flags, text):
+        '''Handle received text from the text channel.
+
+        Converts sender to a Buddy.
+        Calls self._activity_cb which is a callback to the activity.
+        '''
+        logging.debug('received_cb %r %s' % (type_, text))
+        if type_ != 0:
+            # Exclude any auxiliary messages
+            return
+
+        text = text.replace(SLASH, '/')
+
+        if self._activity_cb:
+            try:
+                self._text_chan[CHANNEL_INTERFACE_GROUP]
+            except Exception:
+                # One to one XMPP chat
+                nick = self._conn[
+                    CONN_INTERFACE_ALIASING].RequestAliases([sender])[0]
+                buddy = {'nick': nick, 'color': '#000000,#808080'}
+                logging.error('Exception: recieved from sender %r buddy %r' %
+                              (sender, buddy))
+            else:
+                # Normal sugar MUC chat
+                # XXX: cache these
+                buddy = self._get_buddy(sender)
+                logging.error('Else: recieved from sender %r buddy %r' %
+                              (sender, buddy))
+            self._activity_cb(buddy, text)
+            self._text_chan[
+                CHANNEL_TYPE_TEXT].AcknowledgePendingMessages([identity])
+        else:
+            self._logger.debug('Throwing received message on the floor'
+                               ' since there is no callback connected. See'
+                               ' set_received_callback')
+
+    def set_closed_callback(self, callback):
+        '''Connect a callback for when the text channel is closed.
+
+        callback -- callback function taking no args
+
+        '''
+        self._activity_close_cb = callback
+
+    def _get_buddy(self, cs_handle):
+        '''Get a Buddy from a (possibly channel-specific) handle.'''
+        # XXX This will be made redundant once Presence Service
+        # provides buddy resolution
+        # Get the Presence Service
+        pservice = presenceservice.get_instance()
+        # Get the Telepathy Connection
+        tp_name, tp_path = pservice.get_preferred_connection()
+        conn = Connection(tp_name, tp_path)
+        group = self._text_chan[CHANNEL_INTERFACE_GROUP]
+        my_csh = group.GetSelfHandle()
+        if my_csh == cs_handle:
+            handle = conn.GetSelfHandle()
+        elif group.GetGroupFlags() & \
+             CHANNEL_GROUP_FLAG_CHANNEL_SPECIFIC_HANDLES:
+            handle = group.GetHandleOwners([cs_handle])[0]
+        else:
+            handle = cs_handle
+
+            # XXX: deal with failure to get the handle owner
+            assert handle != 0
+
+        return pservice.get_buddy_by_telepathy_handle(
+            tp_name, tp_path, handle)
