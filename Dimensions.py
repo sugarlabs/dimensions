@@ -118,7 +118,9 @@ class Dimensions(activity.Activity):
                 # Wait for joined signal
                 self.connect("joined", self._joined_cb)
 
-        self._setup_presence_service()
+        pservice = presenceservice.get_instance()
+        self.owner = pservice.get_owner()
+        # self._setup_presence_service()
 
         if not hasattr(self, '_saved_state'):
             self._saved_state = None
@@ -790,8 +792,8 @@ class Dimensions(activity.Activity):
             self.shared_activity.telepathy_conn)
         self.text_channel.set_received_callback(self._received_cb)
 
-        owner = self.pservice.get_owner()
-        self.owner = owner
+        ## owner = self.pservice.get_owner()
+        ## self.owner = owner
         self.vmw.buddies.append(self.owner)
         self._share = ''
 
