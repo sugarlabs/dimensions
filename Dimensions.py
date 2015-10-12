@@ -105,28 +105,35 @@ class Dimensions(activity.Activity):
 
         if self.shared_activity:
             # We're joining the activity
+            _logger.debug('shared activity')
             self.connect("joined", self._joined_cb)
 
             if self.get_shared():
+                _logger.debug('calling _joined_cb')
                 self._joined_cb(self)
 
             else:
+                _logger.debug('Please wait')
                 self._alert(_('Please wait'), _('Starting connection...'))
         else:
             # we are creating the activity
             if not self.metadata or self.metadata.get(
                     'share-scope', activity.SCOPE_PRIVATE) == \
                     activity.SCOPE_PRIVATE:
+                _logger.debug('Off-line')
                 self._alert(_('Off-line...'),
                     _('Please share or invite someone or play by yourself.'))
             else:
+                _logger.debug('On-line')
                 self._alert(_('On-line...'),
                             _('Please wait for the connection...'))
+            _logger.debug('connecting to shared_cb')
             self.connect('shared', self._shared_cb)
 
         pservice = presenceservice.get_instance()
         self.owner = pservice.get_owner()
         # self._setup_presence_service()
+        _logger.debug(self.owner)
 
         if not hasattr(self, '_saved_state'):
             self._saved_state = None
@@ -790,12 +797,15 @@ class Dimensions(activity.Activity):
         self.initiating = True
         self.waiting_for_deck = False
         _logger.debug('I am sharing...')
-
+        self._alert(_('shared cb'), ('I am sharing'));
+        
     def _joined_cb(self, sender):
         '''Joined a shared activity.'''
         if not self.shared_activity:
             return
-        logger.debug('Joined a shared chat')
+        _logger.debug('Joined a shared chat')
+        self._alert(_('joined cb'), ('I am joining'));
+
         for buddy in self.shared_activity.get_joined_buddies():
             self._buddy_already_exists(buddy)
         self._setup_presence_service()
@@ -813,6 +823,7 @@ class Dimensions(activity.Activity):
         self.expert_button.set_sensitive(False)
 
     def _setup_presence_service(self):
+        _logger.debug('setup presence service')
         self.text_channel = TextChannelWrapper(
             self.shared_activity.telepathy_text_chan,
             self.shared_activity.telepathy_conn)
@@ -835,21 +846,24 @@ class Dimensions(activity.Activity):
                 nick = buddy.props.nick
         else:
             nick = '???'
-        logger.debug('Received message from %s: %s', nick, text)
+        _logger.debug('Received message from %s: %s', nick, text)
         self.event_received_cb(text)
 
     def _buddy_joined_cb(self, sender, buddy):
         '''Show a buddy who joined'''
+        _logger.debug('buddy joined')
         if buddy == self.owner:
             return
 
     def _buddy_left_cb(self, sender, buddy):
         '''Show a buddy who joined'''
+        _logger.debug('buddy left')
         if buddy == self.owner:
             return
 
     def _buddy_already_exists(self, buddy):
         '''Show a buddy already in the chat.'''
+        _logger.debug('buddy already exists')
         if buddy == self.owner:
             return
 
@@ -859,6 +873,8 @@ class Dimensions(activity.Activity):
     
     def event_received_cb(self, text):
         ''' Data is passed as tuples: cmd:text '''
+        _logger.debug('event received cb:')
+        _logger.debug(text)
         if text[0] == 'B':
             e, card_index = text.split(':')
             self.vmw.add_to_clicked(
@@ -906,6 +922,8 @@ class Dimensions(activity.Activity):
 
     def _send_event(self, entry):
         ''' Send event through the tube. '''
+        _logger.debug('send event')
+        _logger.debug(entry)
         if self.text_channel:
             self.text_channel.post(entry)
 
@@ -934,7 +952,7 @@ class TextChannelWrapper(object):
         self._text_chan = text_chan
         self._conn = conn
         self._logger = logging.getLogger(
-            'chat-activity.TextChannelWrapper')
+            'dimension-activity.TextChannelWrapper')
         self._signal_matches = []
         m = self._text_chan[CHANNEL_INTERFACE].connect_to_signal(
             'Closed', self._closed_cb)
@@ -942,12 +960,13 @@ class TextChannelWrapper(object):
 
     def post(self, text):
         if text is not None:
+            _logger.debug('post')
             self.send(text)
 
     def send(self, text):
         '''Send text over the Telepathy text channel.'''
         # XXX Implement CHANNEL_TEXT_MESSAGE_TYPE_ACTION
-        logging.debug('sending %s' % text)
+        _logger.debug('sending %s' % text)
 
         text = text.replace('/', SLASH)
 
@@ -999,7 +1018,7 @@ class TextChannelWrapper(object):
         Converts sender to a Buddy.
         Calls self._activity_cb which is a callback to the activity.
         '''
-        logging.debug('received_cb %r %s' % (type_, text))
+        _logger.debug('received_cb %r %s' % (type_, text))
         if type_ != 0:
             # Exclude any auxiliary messages
             return
@@ -1014,13 +1033,13 @@ class TextChannelWrapper(object):
                 nick = self._conn[
                     CONN_INTERFACE_ALIASING].RequestAliases([sender])[0]
                 buddy = {'nick': nick, 'color': '#000000,#808080'}
-                logging.error('Exception: recieved from sender %r buddy %r' %
+                _logger.error('Exception: recieved from sender %r buddy %r' %
                               (sender, buddy))
             else:
                 # Normal sugar MUC chat
                 # XXX: cache these
                 buddy = self._get_buddy(sender)
-                logging.error('Else: recieved from sender %r buddy %r' %
+                _logger.error('Else: recieved from sender %r buddy %r' %
                               (sender, buddy))
             self._activity_cb(buddy, text)
             self._text_chan[
@@ -1036,6 +1055,7 @@ class TextChannelWrapper(object):
         callback -- callback function taking no args
 
         '''
+        self._logger.debug('set closed callback')
         self._activity_close_cb = callback
 
     def _get_buddy(self, cs_handle):
@@ -1060,5 +1080,6 @@ class TextChannelWrapper(object):
             # XXX: deal with failure to get the handle owner
             assert handle != 0
 
+        self._logger.debug('get buddy')
         return pservice.get_buddy_by_telepathy_handle(
             tp_name, tp_path, handle)
