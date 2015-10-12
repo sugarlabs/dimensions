@@ -29,11 +29,18 @@ from sugar3.graphics.xocolor import XoColor
 from sugar3.datastore import datastore
 from sugar3 import profile
 
-import telepathy
+from telepathy.interfaces import CHANNEL_INTERFACE
+from telepathy.interfaces import CHANNEL_INTERFACE_GROUP
+from telepathy.interfaces import CHANNEL_TYPE_TEXT
+from telepathy.interfaces import CONN_INTERFACE_ALIASING
+from telepathy.constants import CHANNEL_GROUP_FLAG_CHANNEL_SPECIFIC_HANDLES
+from telepathy.constants import CHANNEL_TEXT_MESSAGE_TYPE_NORMAL
+from telepathy.client import Connection
+from telepathy.client import Channel
+
 from dbus.service import signal
 from dbus.gobject_service import ExportedGObject
 from sugar3.presence import presenceservice
-from sugar3.presence.tubeconn import TubeConnection
 
 from gettext import gettext as _
 import logging
