@@ -103,10 +103,6 @@ class Dimensions(activity.Activity):
         self._setup_toolbars()
         self._setup_canvas()
 
-        xocolors = XoColor(profile.get_color().to_string())
-        share_icon = Icon(icon_name='zoom-neighborhood',
-                          xo_color=xocolors)
-
         if self.shared_activity:
             # We're joining the activity
             self.connect("joined", self._joined_cb)
@@ -151,6 +147,10 @@ class Dimensions(activity.Activity):
         self._configure_cb(None)
 
     def _alert(self, title, text=None):
+        xocolors = XoColor(profile.get_color().to_string())
+        share_icon = Icon(icon_name='zoom-neighborhood',
+                          xo_color=xocolors)
+
         alert = NotifyAlert(timeout=5)
         alert.props.title = title
         alert.props.msg = text
