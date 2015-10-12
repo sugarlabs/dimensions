@@ -775,11 +775,11 @@ class Dimensions(activity.Activity):
         self.tubes_chan = self.shared_activity.telepathy_tubes_chan
         self.text_chan = self.shared_activity.telepathy_text_chan
 
-        self.tubes_chan[telepathy.CHANNEL_TYPE_TUBES].connect_to_signal(
+        self.tubes_chan[telepathy.CHANNEL_TYPE_TEXT].connect_to_signal(
             'NewTube', self._new_tube_cb)
 
         _logger.debug('This is my activity: making a tube...')
-        self.tubes_chan[telepathy.CHANNEL_TYPE_TUBES].OfferDBusTube(
+        self.tubes_chan[telepathy.CHANNEL_TYPE_TEXT].OfferDBusTube(
             SERVICE, {})
 
     def _joined_cb(self, activity):
@@ -800,11 +800,11 @@ class Dimensions(activity.Activity):
         self.tubes_chan = self.shared_activity.telepathy_tubes_chan
         self.text_chan = self.shared_activity.telepathy_text_chan
 
-        self.tubes_chan[telepathy.CHANNEL_TYPE_TUBES].connect_to_signal(
+        self.tubes_chan[telepathy.CHANNEL_TYPE_TEXT].connect_to_signal(
             'NewTube', self._new_tube_cb)
 
         _logger.debug('I am joining an activity: waiting for a tube...')
-        self.tubes_chan[telepathy.CHANNEL_TYPE_TUBES].ListTubes(
+        self.tubes_chan[telepathy.CHANNEL_TYPE_TEXT].ListTubes(
             reply_handler=self._list_tubes_reply_cb,
             error_handler=self._list_tubes_error_cb)
 
@@ -835,10 +835,10 @@ class Dimensions(activity.Activity):
         if (type == telepathy.TUBE_TYPE_DBUS and service == SERVICE):
             if state == telepathy.TUBE_STATE_LOCAL_PENDING:
                 self.tubes_chan[
-                    telepathy.CHANNEL_TYPE_TUBES].AcceptDBusTube(id)
+                    telepathy.CHANNEL_TYPE_TEXT].AcceptDBusTube(id)
 
             tube_conn = TubeConnection(
-                self.conn, self.tubes_chan[telepathy.CHANNEL_TYPE_TUBES], id,
+                self.conn, self.tubes_chan[telepathy.CHANNEL_TYPE_TEXT], id,
                 group_iface=self.text_chan[telepathy.CHANNEL_INTERFACE_GROUP])
 
             self.chattube = ChatTube(tube_conn, self.initiating,
