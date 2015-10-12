@@ -103,20 +103,42 @@ class Dimensions(activity.Activity):
         self._setup_toolbars()
         self._setup_canvas()
 
+        xocolors = XoColor(profile.get_color().to_string())
+        share_icon = Icon(icon_name='zoom-neighborhood',
+                          xo_color=xocolors)
+
         if self.shared_activity:
-            # We're joining
-            if not self.get_shared():
-                xocolors = XoColor(profile.get_color().to_string())
-                share_icon = Icon(icon_name='zoom-neighborhood',
-                                  xo_color=xocolors)
+            # We're joining the activity
+            self.connect("joined", self._joined_cb)
+
+            if self.get_shared():
+                self._joined_cb(self)
+
+            else:
                 self._joined_alert = Alert()
                 self._joined_alert.props.icon = share_icon
                 self._joined_alert.props.title = _('Please wait')
                 self._joined_alert.props.msg = _('Starting connection...')
                 self.add_alert(self._joined_alert)
-
-                # Wait for joined signal
-                self.connect("joined", self._joined_cb)
+        else:
+            # we are creating the activity
+            if not self.metadata or self.metadata.get(
+                    'share-scope', activity.SCOPE_PRIVATE) == \
+                    activity.SCOPE_PRIVATE:
+                self._shared_alert = Alert()
+                self._shared_alert.props.icon = share_icon
+                self._shared_alert.props.title = _('Off-line...')
+                self._shared_alert.props.msg = \
+                    _('Please share or invite someone or play by yourself.')
+                self.add_alert(self._shared_alert)
+            else:
+                self._shared_alert = Alert()
+                self._shared_alert.props.icon = share_icon
+                self._shared_alert.props.title = _('On-line...')
+                self._shared_alert.props.msg = \
+                    _('Please wait for the connection...')
+                self.add_alert(self._shared_alert)
+            self.connect('shared', self._shared_cb)
 
         pservice = presenceservice.get_instance()
         self.owner = pservice.get_owner()
