@@ -115,29 +115,17 @@ class Dimensions(activity.Activity):
                 self._joined_cb(self)
 
             else:
-                self._joined_alert = Alert()
-                self._joined_alert.props.icon = share_icon
-                self._joined_alert.props.title = _('Please wait')
-                self._joined_alert.props.msg = _('Starting connection...')
-                self.add_alert(self._joined_alert)
+                self._alert(_('Please wait'), _('Starting connection...'))
         else:
             # we are creating the activity
             if not self.metadata or self.metadata.get(
                     'share-scope', activity.SCOPE_PRIVATE) == \
                     activity.SCOPE_PRIVATE:
-                self._shared_alert = Alert()
-                self._shared_alert.props.icon = share_icon
-                self._shared_alert.props.title = _('Off-line...')
-                self._shared_alert.props.msg = \
-                    _('Please share or invite someone or play by yourself.')
-                self.add_alert(self._shared_alert)
+                self._alert(_('Off-line...'),
+                    _('Please share or invite someone or play by yourself.'))
             else:
-                self._shared_alert = Alert()
-                self._shared_alert.props.icon = share_icon
-                self._shared_alert.props.title = _('On-line...')
-                self._shared_alert.props.msg = \
-                    _('Please wait for the connection...')
-                self.add_alert(self._shared_alert)
+                self._alert(_('On-line...'),
+                            _('Please wait for the connection...'))
             self.connect('shared', self._shared_cb)
 
         pservice = presenceservice.get_instance()
@@ -161,6 +149,22 @@ class Dimensions(activity.Activity):
 
         Gdk.Screen.get_default().connect('size-changed', self._configure_cb)
         self._configure_cb(None)
+
+    def _alert(self, title, text=None):
+        alert = NotifyAlert(timeout=5)
+        alert.props.title = title
+        alert.props.msg = text
+        alert.props.icon = share_icon
+        self.add_alert(alert)
+        alert.connect('response', self._alert_cancel_cb)
+        alert.show()
+        self._has_alert = True
+        # self._fixed_resize_cb()
+
+    def _alert_cancel_cb(self, alert, response_id):
+        self.remove_alert(alert)
+        self._has_alert = False
+        # self._fixed_resize_cb()
 
     def _select_game_cb(self, button, card_type):
         ''' Choose which game we are playing. '''
