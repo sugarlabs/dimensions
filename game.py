@@ -557,8 +557,9 @@ class Game():
 
     def _sharing(self):
         ''' Are we sharing? '''
-        if self._sugar and hasattr(self.activity, 'chattube') and \
-                self.activity.chattube is not None:
+        if self._sugar and self.activity.initiating is not None:
+        # if self._sugar and hasattr(self.activity, 'chattube') and \
+        #         self.activity.chattube is not None:
             return True
         return False
 

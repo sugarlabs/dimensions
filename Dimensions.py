@@ -29,11 +29,9 @@ from sugar3.graphics.xocolor import XoColor
 from sugar3.datastore import datastore
 from sugar3 import profile
 
-import telepathy
-from dbus.service import signal
-from dbus.gobject_service import ExportedGObject
+from textchannelwrapper import TextChannelWrapper
+
 from sugar3.presence import presenceservice
-from sugar3.presence.tubeconn import TubeConnection
 
 from gettext import gettext as _
 import logging
@@ -66,10 +64,6 @@ NUMBER_O_BUTTONS = {}
 NUMBER_C_BUTTONS = {}
 LEVEL_BUTTONS = {}
 
-SERVICE = 'org.sugarlabs.Dimensions'
-IFACE = SERVICE
-PATH = '/org/augarlabs/Dimensions'
-
 PROMPT_DICT = {'pattern': _('New pattern game'),
                'number': _('New number game'),
                'word': _('New word game'),
@@ -89,29 +83,43 @@ class Dimensions(activity.Activity):
     def __init__(self, handle):
         ''' Initialize the Sugar activity '''
         super(Dimensions, self).__init__(handle)
+        self.initiating = None
         self.ready_to_play = False
+        self._text_channel = None
         self._prompt = ''
         self._read_journal_data()
         self._sep = []
         self._setup_toolbars()
+
+        pservice = presenceservice.get_instance()
+        self.owner = pservice.get_owner()
+
         self._setup_canvas()
 
+        # Some glue to know if we are launching, joining, or resuming
+        # a shared activity.
         if self.shared_activity:
-            # We're joining
-            if not self.get_shared():
-                xocolors = XoColor(profile.get_color().to_string())
-                share_icon = Icon(icon_name='zoom-neighborhood',
-                                  xo_color=xocolors)
-                self._joined_alert = Alert()
-                self._joined_alert.props.icon = share_icon
-                self._joined_alert.props.title = _('Please wait')
-                self._joined_alert.props.msg = _('Starting connection...')
-                self.add_alert(self._joined_alert)
+            # We're joining the activity.
+            self.connect("joined", self._joined_cb)
 
-                # Wait for joined signal
-                self.connect("joined", self._joined_cb)
-
-        self._setup_presence_service()
+            if self.get_shared():
+                _logger.debug('calling _joined_cb')
+                self._joined_cb(self)
+            else:
+                _logger.debug('Please wait')
+                self._alert(_('Please wait'), _('Starting connection...'))
+        else:
+            if not self.metadata or self.metadata.get(
+                    'share-scope', activity.SCOPE_PRIVATE) == \
+                    activity.SCOPE_PRIVATE:
+                # We are creating a new activity instance.
+                _logger.debug('Off-line')
+            else:
+                # We are sharing an old activity instance.
+                _logger.debug('On-line')
+                self._alert(_('Resuming shared activity...'),
+                            _('Please wait for the connection...'))
+            self.connect('shared', self._shared_cb)
 
         if not hasattr(self, '_saved_state'):
             self._saved_state = None
@@ -130,6 +138,26 @@ class Dimensions(activity.Activity):
 
         Gdk.Screen.get_default().connect('size-changed', self._configure_cb)
         self._configure_cb(None)
+
+    def _alert(self, title, text=None):
+        xocolors = XoColor(profile.get_color().to_string())
+        share_icon = Icon(icon_name='zoom-neighborhood',
+                          xo_color=xocolors)
+
+        alert = NotifyAlert(timeout=5)
+        alert.props.title = title
+        alert.props.msg = text
+        alert.props.icon = share_icon
+        self.add_alert(alert)
+        alert.connect('response', self._alert_cancel_cb)
+        alert.show()
+        self._has_alert = True
+        # self._fixed_resize_cb()
+
+    def _alert_cancel_cb(self, alert, response_id):
+        self.remove_alert(alert)
+        self._has_alert = False
+        # self._fixed_resize_cb()
 
     def _select_game_cb(self, button, card_type):
         ''' Choose which game we are playing. '''
@@ -579,7 +607,7 @@ class Dimensions(activity.Activity):
         self.vmw.matches = self._matches
         self.vmw.robot_matches = self._robot_matches
         self.vmw.total_time = self._total_time
-        self.vmw.buddies = []
+        self.vmw.buddies = [self.owner]
         self.vmw.word_lists = self._word_lists
         self.vmw.editing_word_list = self._editing_word_list
         if hasattr(self, '_custom_object') and self._custom_object is not None:
@@ -748,65 +776,30 @@ class Dimensions(activity.Activity):
             add_paragraph(help_box, _('dice'), icon='dice')
             add_paragraph(help_box, _('dots in a line'), icon='lines')
 
-    def _setup_presence_service(self):
-        ''' Setup the Presence Service. '''
-        self.pservice = presenceservice.get_instance()
-        self.initiating = None  # sharing (True) or joining (False)
+    # Collaboration glue
 
-        owner = self.pservice.get_owner()
-        self.owner = owner
-        self.vmw.buddies.append(self.owner)
-        self._share = ''
-        self.connect('shared', self._shared_cb)
-        self.connect('joined', self._joined_cb)
-
-    def _shared_cb(self, activity):
-        ''' Either set up initial share...'''
-        if self.shared_activity is None:
-            _logger.error('Failed to share or join activity ... \
-                shared_activity is null in _shared_cb()')
-            return
+    def _shared_cb(self, sender):
+        ''' Callback for when activity is shared. '''
+        self._setup_text_channel()
 
         self.initiating = True
         self.waiting_for_deck = False
         _logger.debug('I am sharing...')
-
-        self.conn = self.shared_activity.telepathy_conn
-        self.tubes_chan = self.shared_activity.telepathy_tubes_chan
-        self.text_chan = self.shared_activity.telepathy_text_chan
-
-        self.tubes_chan[telepathy.CHANNEL_TYPE_TUBES].connect_to_signal(
-            'NewTube', self._new_tube_cb)
-
-        _logger.debug('This is my activity: making a tube...')
-        self.tubes_chan[telepathy.CHANNEL_TYPE_TUBES].OfferDBusTube(
-            SERVICE, {})
-
-    def _joined_cb(self, activity):
-        ''' ...or join an exisiting share. '''
-        if self.shared_activity is None:
-            _logger.error('Failed to share or join activity ... \
-                shared_activity is null in _shared_cb()')
+        self._alert(_('shared cb'), ('I am sharing'));
+        
+    def _joined_cb(self, sender):
+        '''Callback for when an activity is joined.'''
+        if not self.shared_activity:
             return
+        _logger.debug('Joined a shared chat')
+        self._alert(_('joined cb'), ('I am joining'));
 
-        if self._joined_alert is not None:
-            self.remove_alert(self._joined_alert)
-            self._joined_alert = None
+        for buddy in self.shared_activity.get_joined_buddies():
+            self._buddy_already_exists(buddy)
+        self._setup_text_channel()
 
         self.initiating = False
         _logger.debug('I joined a shared activity.')
-
-        self.conn = self.shared_activity.telepathy_conn
-        self.tubes_chan = self.shared_activity.telepathy_tubes_chan
-        self.text_chan = self.shared_activity.telepathy_text_chan
-
-        self.tubes_chan[telepathy.CHANNEL_TYPE_TUBES].connect_to_signal(
-            'NewTube', self._new_tube_cb)
-
-        _logger.debug('I am joining an activity: waiting for a tube...')
-        self.tubes_chan[telepathy.CHANNEL_TYPE_TUBES].ListTubes(
-            reply_handler=self._list_tubes_reply_cb,
-            error_handler=self._list_tubes_error_cb)
 
         self.waiting_for_deck = True
 
@@ -817,38 +810,58 @@ class Dimensions(activity.Activity):
         self.intermediate_button.set_sensitive(False)
         self.expert_button.set_sensitive(False)
 
-    def _list_tubes_reply_cb(self, tubes):
-        ''' Reply to a list request. '''
-        for tube_info in tubes:
-            self._new_tube_cb(*tube_info)
+    def _setup_text_channel(self):
+        ''' Set up a text channel to use for collaboration. '''
+        self._text_channel = TextChannelWrapper(
+            self.shared_activity.telepathy_text_chan,
+            self.shared_activity.telepathy_conn)
 
-    def _list_tubes_error_cb(self, e):
-        ''' Log errors. '''
-        _logger.error('ListTubes() failed: %s', e)
+        # Tell the text channel what callback to use for incoming
+        # text messages.
+        self._text_channel.set_received_callback(self._received_cb)
 
-    def _new_tube_cb(self, id, initiator, type, service, params, state):
-        ''' Create a new tube. '''
-        _logger.debug('New tube: ID=%d initator=%d type=%d service=%s '
-                      'params=%r state=%d', id, initiator, type, service,
-                      params, state)
+        # Tell the text channel what callbacks to use when buddies
+        # come and go.
+        self.shared_activity.connect('buddy-joined', self._buddy_joined_cb)
+        self.shared_activity.connect('buddy-left', self._buddy_left_cb)
 
-        if (type == telepathy.TUBE_TYPE_DBUS and service == SERVICE):
-            if state == telepathy.TUBE_STATE_LOCAL_PENDING:
-                self.tubes_chan[
-                    telepathy.CHANNEL_TYPE_TUBES].AcceptDBusTube(id)
+    def _received_cb(self, buddy, text):
+        '''Process a message when it is received.'''
+        if buddy:
+            if type(buddy) is dict:
+                nick = buddy['nick']
+            else:
+                nick = buddy.props.nick
+        else:
+            nick = '???'
+        _logger.debug('Received message from %s: %s' % (nick, text))
+        self.event_received_cb(text)
 
-            tube_conn = TubeConnection(
-                self.conn, self.tubes_chan[telepathy.CHANNEL_TYPE_TUBES], id,
-                group_iface=self.text_chan[telepathy.CHANNEL_INTERFACE_GROUP])
+    def _buddy_joined_cb(self, sender, buddy):
+        '''A buddy joined.'''
+        if buddy == self.owner:
+            return
 
-            self.chattube = ChatTube(tube_conn, self.initiating,
-                                     self.event_received_cb)
+    def _buddy_left_cb(self, sender, buddy):
+        '''A buddy left.'''
+        if buddy == self.owner:
+            return
 
-            if self.waiting_for_deck:
-                self._send_event('j')
+    def _buddy_already_exists(self, buddy):
+        '''The buddy already joined.'''
+        if buddy == self.owner:
+            return
 
+    def can_close(self):
+        '''Perform cleanup before closing.'''
+        # Do we need to clean up the text channel?
+        if self._text_channel:
+            self._text_channel.close();
+        return True
+    
     def event_received_cb(self, text):
         ''' Data is passed as tuples: cmd:text '''
+        _logger.debug('event received cb: %s' % text)
         if text[0] == 'B':
             e, card_index = text.split(':')
             self.vmw.add_to_clicked(
@@ -896,33 +909,9 @@ class Dimensions(activity.Activity):
 
     def _send_event(self, entry):
         ''' Send event through the tube. '''
-        if hasattr(self, 'chattube') and self.chattube is not None:
-            self.chattube.SendText(entry)
-
-
-class ChatTube(ExportedGObject):
-
-    ''' Class for setting up tube for sharing '''
-
-    def __init__(self, tube, is_initiator, stack_received_cb):
-        super(ChatTube, self).__init__(tube, PATH)
-        self.tube = tube
-        self.is_initiator = is_initiator  # Are we sharing or joining activity?
-        self.stack_received_cb = stack_received_cb
-        self.stack = ''
-
-        self.tube.add_signal_receiver(self.send_stack_cb, 'SendText', IFACE,
-                                      path=PATH, sender_keyword='sender')
-
-    def send_stack_cb(self, text, sender=None):
-        if sender == self.tube.get_unique_name():
-            return
-        self.stack = text
-        self.stack_received_cb(text)
-
-    @signal(dbus_interface=IFACE, signature='s')
-    def SendText(self, text):
-        self.stack = text
+        _logger.debug('send event %s' % entry)
+        if self._text_channel:
+            self._text_channel.post(entry)
 
 
 def image_from_svg_file(filename):
