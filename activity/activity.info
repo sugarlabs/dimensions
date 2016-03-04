@@ -1,6 +1,6 @@
 [Activity]
 name = Dimensions
-activity_version = 58
+activity_version = 59
 license = GPLv3
 bundle_id = org.sugarlabs.VisualMatchActivity
 exec = sugar-activity Dimensions.Dimensions
@@ -8,3 +8,4 @@ icon = activity-dimensions
 show_launcher = yes
 summary = a pattern-matching game
 category = maths game
+repository = https://github.com/walterbender/dimensions
