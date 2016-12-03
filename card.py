@@ -66,7 +66,7 @@ class Card:
             self.spr.hide()
 
 
-def svg_str_to_pixbuf(string, subpixel=False):
+def svg_str_to_pixbuf(string, embedded_picture=False):
     ''' Load pixbuf from SVG string '''
     pl = GdkPixbuf.PixbufLoader.new_with_type('svg')
     pl.write(string)
@@ -74,7 +74,7 @@ def svg_str_to_pixbuf(string, subpixel=False):
     pixbuf = pl.get_pixbuf()
     pixbuf2 = None
 
-    if subpixel:
+    if embedded_picture:
         p_path = None
         p_size = [0, 0]
 
