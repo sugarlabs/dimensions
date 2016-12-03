@@ -45,7 +45,7 @@ class Card:
             if self.spr is None:
                 self.spr = Sprite(sprites, 0, 0, svg_str_to_pixbuf(string))
             else:
-                self.spr.set_image(svg_str_to_pixbuf(string))
+                self.spr.set_image(svg_str_to_pixbuf(string, True))
 
             if file_path is not None:
                 self.spr.set_image(load_image(file_path, self._scale), i=1,
@@ -66,14 +66,36 @@ class Card:
             self.spr.hide()
 
 
-def svg_str_to_pixbuf(string):
+def svg_str_to_pixbuf(string, subpixel=False):
     ''' Load pixbuf from SVG string '''
     pl = GdkPixbuf.PixbufLoader.new_with_type('svg')
     pl.write(string)
     pl.close()
     pixbuf = pl.get_pixbuf()
-    return pixbuf
+    pixbuf2 = None
 
+    if subpixel:
+        p_path = None
+        p_size = [0, 0]
+
+        for line in string.splitlines():
+            # Extract png data
+            if line.startswith('xlink:href="file://'):
+                p_path = line[19:-1]  # xlink:href="file:///home/..."
+
+            elif line.startswith("width="):
+                p_size[0] = int(float(line[7:-1]))  # width="data"
+
+            elif line.startswith("height="):
+                p_size[1] = int(float(line[8:-1]))  # height="data"
+
+        if p_path is not None and p_size != [0, 0]:
+            pixbuf2 = GdkPixbuf.Pixbuf.new_from_file_at_size(p_path, p_size[0], p_size[1])
+
+    if pixbuf2 is None:
+        return pixbuf
+    else:
+        return [pixbuf, pixbuf2]
 
 def load_image(object, scale):
     ''' Load pixbuf from file '''

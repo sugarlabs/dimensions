@@ -192,10 +192,15 @@ class Sprite:
         self._dx = []  # image offsets
         self._dy = []
         self.type = None
+        self._subpixel = None
         self.set_image(image)
         self._sprites.append_to_list(self)
 
     def set_image(self, image, i=0, dx=0, dy=0):
+        if type(image) == list:
+            self._subpixel = image[1]
+            image = image[0]
+
         ''' Add an image to the sprite. '''
         while len(self.cached_surfaces) < i + 1:
             self.cached_surfaces.append(None)
@@ -358,6 +363,16 @@ class Sprite:
                          self.rect[1] + self._dy[i],
                          self.rect[2],
                          self.rect[3])
+            cr.fill()
+
+        if self._subpixel is not None:
+            w = self.rect[2]
+            h = self.rect[3]
+            x = self.rect[0] + w / 2 - self._subpixel.get_width() / 2
+            y = self.rect[1] + h / 2 - self._subpixel.get_height() / 2
+
+            Gdk.cairo_set_source_pixbuf(cr, self._subpixel, x, y)
+            cr.rectangle(x, y, w, h)
             cr.fill()
 
         if len(self.labels) > 0:
