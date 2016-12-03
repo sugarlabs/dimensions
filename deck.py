@@ -29,8 +29,8 @@ try:
     from sugar3.activity import activity
     bundle_path = activity.get_bundle_path()
 except:
-    bundle_path = os.path.expanduser(os.path.join('~', 'Activities',
-                                                  'WordDimensions.activity'))
+    bundle_path = os.path.dirname(os.path.realpath(__file__))
+
 
 class Deck:
 
