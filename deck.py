@@ -32,7 +32,6 @@ except:
     bundle_path = os.path.expanduser(os.path.join('~', 'Activities',
                                                   'WordDimensions.activity'))
 
-
 class Deck:
 
     """ Class for defining deck of card """
