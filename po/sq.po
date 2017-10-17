@@ -2,60 +2,25 @@
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-# SOME DESCRIPTIVE TITLE.
-# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
-# This file is distributed under the same license as the PACKAGE package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-# SOME DESCRIPTIVE TITLE.
-# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
-# This file is distributed under the same license as the PACKAGE package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-# SOME DESCRIPTIVE TITLE.
-# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
-# This file is distributed under the same license as the PACKAGE package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-# SOME DESCRIPTIVE TITLE.
-# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
-# This file is distributed under the same license as the PACKAGE package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-# SOME DESCRIPTIVE TITLE.
-# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
-# This file is distributed under the same license as the PACKAGE package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-# SOME DESCRIPTIVE TITLE.
-# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
-# This file is distributed under the same license as the PACKAGE package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-# SOME DESCRIPTIVE TITLE.
-# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
-# This file is distributed under the same license as the PACKAGE package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-# SOME DESCRIPTIVE TITLE.
-# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
-# This file is distributed under the same license as the PACKAGE package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-# SOME DESCRIPTIVE TITLE.
-# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
-# This file is distributed under the same license as the PACKAGE package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-10-30 00:33-0400\n"
-"PO-Revision-Date: 2011-01-19 03:40+0200\n"
-"Last-Translator: Chris <cjl@laptop.org>\n"
+"POT-Creation-Date: 2013-07-05 22:11-0400\n"
+"PO-Revision-Date: 2017-10-15 17:26+0000\n"
+"Last-Translator: Chris <cjl@sugarlabs.org>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
-"Language: \n"
+"Language: sq\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Pootle 2.0.3\n"
+"X-Generator: Pootle 2.5.1.1\n"
+"X-POOTLE-MTIME: 1508088365.000000\n"
 
 #. TRANS: "name" option from activity.info file
 #. TRANS: Please translate Visual Match as Dimensions
-#: VisualMatchActivity.py:627 VisualMatchActivity.py:659 game.py:983
+#: VisualMatchActivity.py:634 VisualMatchActivity.py:666 game.py:983
 #: visualmatch.py:33
 msgid "Visual Match"
 msgstr "Ndeshje Vizuale"
@@ -63,187 +28,220 @@ msgstr "Ndeshje Vizuale"
 #. TRANS: "summary" option from activity.info file
 #. TRANS: "description" option from activity.info file
 msgid "a pattern-matching game"
-msgstr ""
+msgstr "lojë me përputhje mostrash"
 
-#: VisualMatchActivity.py:59 VisualMatchActivity.py:434
-#: VisualMatchActivity.py:639
+#: VisualMatchActivity.py:59 VisualMatchActivity.py:441
+#: VisualMatchActivity.py:646
 msgid "beginner"
 msgstr "fillestar"
 
-#: VisualMatchActivity.py:59 VisualMatchActivity.py:442
-#: VisualMatchActivity.py:640
+#: VisualMatchActivity.py:59 VisualMatchActivity.py:449
+#: VisualMatchActivity.py:647
 msgid "intermediate"
-msgstr ""
+msgstr "mesatar"
 
-#: VisualMatchActivity.py:59 VisualMatchActivity.py:450
-#: VisualMatchActivity.py:641
+#: VisualMatchActivity.py:59 VisualMatchActivity.py:457
+#: VisualMatchActivity.py:648
 msgid "expert"
 msgstr "ekspert"
 
 #: VisualMatchActivity.py:70 visualmatch.py:47
 msgid "New pattern game"
-msgstr "Model loja e re"
+msgstr "Lojë e re mostrash"
 
 #: VisualMatchActivity.py:71 visualmatch.py:51
 msgid "New number game"
-msgstr "Numër i ri lojrash"
+msgstr "Lojë e re me numra"
 
 #: VisualMatchActivity.py:72 visualmatch.py:55
 msgid "New word game"
 msgstr "Lojë e re fjalësh"
 
-#: VisualMatchActivity.py:73 VisualMatchActivity.py:324
+#: VisualMatchActivity.py:73 VisualMatchActivity.py:331
 msgid "Import custom cards"
 msgstr ""
 
-#: VisualMatchActivity.py:128
+#: VisualMatchActivity.py:75
+msgid "Dimensions"
+msgstr "Përmasa"
+
+#. TRANS: The prime number version of the dimensions game
+#: VisualMatchActivity.py:77
+msgid "Prime Dimensions"
+msgstr ""
+
+#. TRANS: The word version of the dimensions game
+#: VisualMatchActivity.py:79
+msgid "Word Dimensions"
+msgstr ""
+
+#: VisualMatchActivity.py:80
+msgid "15 seconds"
+msgstr "15 sekonda"
+
+#: VisualMatchActivity.py:80
+msgid "30 seconds"
+msgstr "30 sekonda"
+
+#: VisualMatchActivity.py:80
+msgid "1 minute"
+msgstr "1 minutë"
+
+#: VisualMatchActivity.py:80
+msgid "2 minutes"
+msgstr "2 minuta"
+
+#: VisualMatchActivity.py:80
+msgid "5 minutes"
+msgstr "5 minuta"
+
+#: VisualMatchActivity.py:135
 msgid "Play with the computer."
-msgstr "Luaj me kompjuterin."
+msgstr "Luanij me kompjuterin."
 
-#: VisualMatchActivity.py:133
+#: VisualMatchActivity.py:140
 msgid "Stop playing with the computer."
-msgstr "Ndalo lojën me kompjuter."
+msgstr "Ndaleni lojën me kompjuterin."
 
-#: VisualMatchActivity.py:217 visualmatch.py:173
+#: VisualMatchActivity.py:224 visualmatch.py:173
 msgid "mouse"
 msgstr "mi"
 
-#: VisualMatchActivity.py:218 visualmatch.py:173
+#: VisualMatchActivity.py:225 visualmatch.py:173
 msgid "cat"
 msgstr "mace"
 
-#: VisualMatchActivity.py:219 visualmatch.py:173
+#: VisualMatchActivity.py:226 visualmatch.py:173
 msgid "dog"
 msgstr "qen"
 
-#: VisualMatchActivity.py:220 visualmatch.py:174
+#: VisualMatchActivity.py:227 visualmatch.py:174
 msgid "cheese"
 msgstr "djathë"
 
-#: VisualMatchActivity.py:221 visualmatch.py:174
+#: VisualMatchActivity.py:228 visualmatch.py:174
 msgid "apple"
 msgstr "mollë"
 
-#: VisualMatchActivity.py:222 visualmatch.py:174
+#: VisualMatchActivity.py:229 visualmatch.py:174
 msgid "bread"
 msgstr "bukë"
 
-#: VisualMatchActivity.py:223 visualmatch.py:175
+#: VisualMatchActivity.py:230 visualmatch.py:175
 msgid "moon"
 msgstr "hëna"
 
-#: VisualMatchActivity.py:224 visualmatch.py:175
+#: VisualMatchActivity.py:231 visualmatch.py:175
 msgid "sun"
 msgstr "dielli"
 
-#: VisualMatchActivity.py:225 visualmatch.py:175
+#: VisualMatchActivity.py:232 visualmatch.py:175
 msgid "earth"
 msgstr "toka"
 
-#: VisualMatchActivity.py:296 VisualMatchActivity.py:628
+#: VisualMatchActivity.py:303 VisualMatchActivity.py:635
 msgid "Export scores to clipboard"
-msgstr ""
+msgstr "Eksportoji pikët në të papastër"
 
-#: VisualMatchActivity.py:320 VisualMatchActivity.py:622
+#: VisualMatchActivity.py:327 VisualMatchActivity.py:629
 msgid "Edit word lists."
-msgstr "Ndrysho listën e fjalëve."
+msgstr "Ndryshoni listën e fjalëve."
 
-#: VisualMatchActivity.py:331 VisualMatchActivity.py:646
+#: VisualMatchActivity.py:338 VisualMatchActivity.py:653
 msgid "product"
 msgstr "produkt"
 
-#: VisualMatchActivity.py:339 VisualMatchActivity.py:647
+#: VisualMatchActivity.py:346 VisualMatchActivity.py:654
 msgid "Roman numerals"
-msgstr "Numrat Romak"
+msgstr "Numra romakë"
 
-#: VisualMatchActivity.py:347 VisualMatchActivity.py:648
+#: VisualMatchActivity.py:354 VisualMatchActivity.py:655
 msgid "word"
 msgstr "fjalë"
 
-#: VisualMatchActivity.py:355 VisualMatchActivity.py:649 visualmatch.py:105
+#: VisualMatchActivity.py:362 VisualMatchActivity.py:656 visualmatch.py:105
 msgid "Chinese"
 msgstr "Kinez"
 
-#: VisualMatchActivity.py:363 VisualMatchActivity.py:650 visualmatch.py:109
+#: VisualMatchActivity.py:370 VisualMatchActivity.py:657 visualmatch.py:109
 msgid "Mayan"
 msgstr ""
 
-#: VisualMatchActivity.py:371 VisualMatchActivity.py:651 visualmatch.py:113
+#: VisualMatchActivity.py:378 VisualMatchActivity.py:658 visualmatch.py:113
 msgid "Quipu"
 msgstr ""
 
-#: VisualMatchActivity.py:382 VisualMatchActivity.py:652
+#: VisualMatchActivity.py:389 VisualMatchActivity.py:659
 msgid "hash marks"
 msgstr ""
 
-#: VisualMatchActivity.py:390 VisualMatchActivity.py:653
+#: VisualMatchActivity.py:397 VisualMatchActivity.py:660
 msgid "dots in a circle"
-msgstr "pikat në një rreth"
+msgstr "pika në një rreth"
 
-#: VisualMatchActivity.py:398 VisualMatchActivity.py:654
+#: VisualMatchActivity.py:405 VisualMatchActivity.py:661
 msgid "points on a star"
 msgstr "pikat në një yll"
 
-#: VisualMatchActivity.py:406 VisualMatchActivity.py:655
+#: VisualMatchActivity.py:413 VisualMatchActivity.py:662
 msgid "dice"
 msgstr "zar"
 
-#: VisualMatchActivity.py:414 VisualMatchActivity.py:656
+#: VisualMatchActivity.py:421 VisualMatchActivity.py:663
 msgid "dots in a line"
-msgstr "pikat në një vijë"
+msgstr "pika në një vijë"
 
-#: VisualMatchActivity.py:422 VisualMatchActivity.py:637
-#, fuzzy
+#: VisualMatchActivity.py:429 VisualMatchActivity.py:644
 msgid "Play with the computer"
-msgstr "Luaj me kompjuterin"
+msgstr "Luani me kompjuterin"
 
-#: VisualMatchActivity.py:459
+#: VisualMatchActivity.py:466
 msgid "Find a match."
-msgstr "Kërko një ndeshje."
+msgstr "Gjeni përputhje."
 
-#: VisualMatchActivity.py:462 game.py:838 game.py:952
+#: VisualMatchActivity.py:469 game.py:838 game.py:952
 msgid "cards"
-msgstr "letrat"
+msgstr "letra"
 
-#: VisualMatchActivity.py:465 game.py:965 game.py:967
+#: VisualMatchActivity.py:472 game.py:965 game.py:967
 msgid "matches"
-msgstr "ndeshje"
+msgstr "përputhje"
 
-#: VisualMatchActivity.py:592
+#: VisualMatchActivity.py:599
 msgid "A new game is loading."
-msgstr ""
+msgstr "Po ngarkohet një lojë e re."
 
-#: VisualMatchActivity.py:621 VisualMatchActivity.py:662
+#: VisualMatchActivity.py:628 VisualMatchActivity.py:669
 msgid "Tools"
-msgstr "Veglat"
+msgstr "Mjete"
 
-#: VisualMatchActivity.py:623
+#: VisualMatchActivity.py:630
 msgid "Import image cards"
 msgstr ""
 
-#: VisualMatchActivity.py:632 VisualMatchActivity.py:660
+#: VisualMatchActivity.py:639 VisualMatchActivity.py:667
 msgid "Game"
 msgstr "Lojë"
 
-#: VisualMatchActivity.py:638
+#: VisualMatchActivity.py:645
 msgid "robot pause time"
-msgstr ""
+msgstr "kohë pushimi për robotin"
 
-#: VisualMatchActivity.py:645 VisualMatchActivity.py:661
+#: VisualMatchActivity.py:652 VisualMatchActivity.py:668
 msgid "Numbers"
-msgstr "Numrat"
+msgstr "Numra"
 
-#: VisualMatchActivity.py:663
+#: VisualMatchActivity.py:670
 msgid "number of cards remaining in deck"
 msgstr ""
 
-#: VisualMatchActivity.py:664
+#: VisualMatchActivity.py:671
 msgid "number of matches"
-msgstr ""
+msgstr "numër përputhjesh"
 
-#: VisualMatchActivity.py:665
+#: VisualMatchActivity.py:672
 msgid "elapsed time"
-msgstr ""
+msgstr "kohë e rrjedhur"
 
 #: constants.py:71
 msgid "five"
@@ -271,15 +269,15 @@ msgstr "pesëmbëdhjetë"
 
 #: constants.py:72
 msgid "twenty two"
-msgstr "njëzet e dy"
+msgstr "njëzetedy"
 
 #: constants.py:73
 msgid "twenty one"
-msgstr "njëzet e një"
+msgstr "njëzetenjë"
 
 #: constants.py:73
 msgid "thirty three"
-msgstr "tridhjetë e tre"
+msgstr "tridhjetetre"
 
 #: game.py:356
 msgid "Edit the custom cards."
@@ -287,15 +285,15 @@ msgstr ""
 
 #: game.py:384
 msgid "Edit the word cards."
-msgstr "Ndrysho kartat me fjalë."
+msgstr "Ndryshoni kartat me fjalë."
 
 #: game.py:752
 msgid "Game over"
-msgstr "Lojë e humbur"
+msgstr "Loja mbaroi"
 
 #: game.py:765
 msgid "unsolvable"
-msgstr ""
+msgstr "e pazgjidhshme"
 
 #: game.py:796
 msgid "New record"
@@ -303,47 +301,47 @@ msgstr "Rekord i ri"
 
 #: game.py:958 game.py:960
 msgid "match"
-msgstr "ndeshje"
+msgstr "përputhje"
 
 #: game.py:1203
 msgid "New custom game"
-msgstr ""
+msgstr "Lojë e re vetjake"
 
 #: helpbutton.py:47
 msgid "Help"
-msgstr ""
+msgstr "Ndihmë"
 
 #: visualmatch.py:34
 msgid "Click on cards to create sets of three."
-msgstr "Klikoni mbi kartat për të krijuar grupe të tre."
+msgstr "Klikoni mbi kartat për të krijuar grupe treshe."
 
 #: visualmatch.py:38
 msgid "Toggle level"
-msgstr ""
+msgstr "Ndryshoni nivel"
 
 #: visualmatch.py:64
 msgid "Robot on/off"
-msgstr "Robot ndizu/fiku"
+msgstr "Robot on/off"
 
 #: visualmatch.py:68
 msgid "90 sec."
-msgstr "90 sec."
+msgstr "90 sek."
 
 #: visualmatch.py:72
 msgid "60 sec."
-msgstr "60 sec."
+msgstr "60 sek."
 
 #: visualmatch.py:76
 msgid "45 sec."
-msgstr "45 sec."
+msgstr "45 sek."
 
 #: visualmatch.py:80
 msgid "30 sec."
-msgstr "30 sec."
+msgstr "30 sek."
 
 #: visualmatch.py:84
 msgid "15 sec."
-msgstr "15 sec."
+msgstr "15 sek."
 
 #: visualmatch.py:93
 msgid "Product"
