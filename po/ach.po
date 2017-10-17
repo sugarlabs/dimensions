@@ -7,165 +7,165 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2013-07-05 22:11-0400\n"
-"PO-Revision-Date: 2017-10-15 17:13+0000\n"
+"PO-Revision-Date: 2017-10-15 17:03+0000\n"
 "Last-Translator: Chris <cjl@sugarlabs.org>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
-"Language: pbs\n"
+"Language: ach\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
 "X-Generator: Pootle 2.5.1.1\n"
-"X-POOTLE-MTIME: 1508087638.000000\n"
+"X-POOTLE-MTIME: 1508086999.000000\n"
 
 #. TRANS: "name" option from activity.info file
 #. TRANS: Please translate Visual Match as Dimensions
 #: VisualMatchActivity.py:634 VisualMatchActivity.py:666 game.py:983
 #: visualmatch.py:33
 msgid "Visual Match"
-msgstr "Kutue'p"
+msgstr "Tuku pyem me anena"
 
 #. TRANS: "summary" option from activity.info file
 #. TRANS: "description" option from activity.info file
 msgid "a pattern-matching game"
-msgstr "nda namjeng skad-a vakjá maku'uts"
+msgstr "yore mapapat-me tuku pyem"
 
 #: VisualMatchActivity.py:59 VisualMatchActivity.py:441
 #: VisualMatchActivity.py:646
 msgid "beginner"
-msgstr "kapup"
+msgstr "me acaki"
 
 #: VisualMatchActivity.py:59 VisualMatchActivity.py:449
 #: VisualMatchActivity.py:647
 msgid "intermediate"
-msgstr "kiñkie'mejep masau'"
+msgstr "iyi akina"
 
 #: VisualMatchActivity.py:59 VisualMatchActivity.py:457
 #: VisualMatchActivity.py:648
 msgid "expert"
-msgstr "majau vunu'u"
+msgstr "adiro"
 
 #: VisualMatchActivity.py:70 visualmatch.py:47
 msgid "New pattern game"
-msgstr "Viñkjiu namjeng matsjau"
+msgstr "Tuku ikite manyen"
 
 #: VisualMatchActivity.py:71 visualmatch.py:51
 msgid "New number game"
-msgstr "Viñkjiu namjeng rave'en"
+msgstr "Tuku inamba manyen"
 
 #: VisualMatchActivity.py:72 visualmatch.py:55
 msgid "New word game"
-msgstr "Viñkjiu namjeng riñjá"
+msgstr "Tuku ilok manyen"
 
 #: VisualMatchActivity.py:73 VisualMatchActivity.py:331
 msgid "Import custom cards"
-msgstr "Ma'ujuñ k'ua liji nik'ix"
+msgstr "Omi kad ame gitiyo kwede"
 
 #: VisualMatchActivity.py:75
 msgid "Dimensions"
-msgstr "Kundap"
+msgstr "Twoke ducu"
 
 #. TRANS: The prime number version of the dimensions game
 #: VisualMatchActivity.py:77
 msgid "Prime Dimensions"
-msgstr "Kundap tanjiat"
+msgstr "Twoke apire tek"
 
 #. TRANS: The word version of the dimensions game
 #: VisualMatchActivity.py:79
 msgid "Word Dimensions"
-msgstr "Ndue'p re riñjá"
+msgstr "Twoke ilok akoba"
 
 #: VisualMatchActivity.py:80
 msgid "15 seconds"
-msgstr "seska'ai kik'iaí vatsejé"
+msgstr "ceken 15"
 
 #: VisualMatchActivity.py:80
 msgid "30 seconds"
-msgstr "lyen seska'ai vatsejé"
+msgstr "ceken 30"
 
 #: VisualMatchActivity.py:80
 msgid "1 minute"
-msgstr "nda chich'i rabe'en"
+msgstr "dakika 1"
 
 #: VisualMatchActivity.py:80
 msgid "2 minutes"
-msgstr "nui chi'i'rabe'en"
+msgstr "dakika 2"
 
 #: VisualMatchActivity.py:80
 msgid "5 minutes"
-msgstr "kik'iaí chi'i'rabe'en"
+msgstr "dakika 5"
 
 #: VisualMatchActivity.py:135
 msgid "Play with the computer."
-msgstr "Namjeng pu nak'ujuly' nde'ets kily'e."
+msgstr "Tuku ki komputa."
 
 #: VisualMatchActivity.py:140
 msgid "Stop playing with the computer."
-msgstr "Ndama'ai namjeng pu nak'ujuly' nde'ets kily'e."
+msgstr "Gik tuku ki komputa."
 
 #: VisualMatchActivity.py:224 visualmatch.py:173
 msgid "mouse"
-msgstr "niñkiaú"
+msgstr "gidiyo"
 
 #: VisualMatchActivity.py:225 visualmatch.py:173
 msgid "cat"
-msgstr "nimix"
+msgstr "puc"
 
 #: VisualMatchActivity.py:226 visualmatch.py:173
 msgid "dog"
-msgstr "nad-á"
+msgstr "gwok"
 
 #: VisualMatchActivity.py:227 visualmatch.py:174
 msgid "cheese"
-msgstr "guinchi'í"
+msgstr "cheese"
 
 #: VisualMatchActivity.py:228 visualmatch.py:174
 msgid "apple"
-msgstr "manzana"
+msgstr "apple"
 
 #: VisualMatchActivity.py:229 visualmatch.py:174
 msgid "bread"
-msgstr "ngumje chixí"
+msgstr "ogati"
 
 #: VisualMatchActivity.py:230 visualmatch.py:175
 msgid "moon"
-msgstr "ngum'au'"
+msgstr "dwe"
 
 #: VisualMatchActivity.py:231 visualmatch.py:175
 msgid "sun"
-msgstr "kunju'"
+msgstr "ceng"
 
 #: VisualMatchActivity.py:232 visualmatch.py:175
 msgid "earth"
-msgstr "ngujaung"
+msgstr "lobo"
 
 #: VisualMatchActivity.py:303 VisualMatchActivity.py:635
 msgid "Export scores to clipboard"
-msgstr "Ma'ujuñ re malejeiñ namá manjat ngk'uix mavun"
+msgstr "Cwal en ame onwongere ikajogo"
 
 #: VisualMatchActivity.py:327 VisualMatchActivity.py:629
 msgid "Edit word lists."
-msgstr "Malejeiñ nde'et lju'p riñjá."
+msgstr "Yik lic me lok akoba."
 
 #: VisualMatchActivity.py:338 VisualMatchActivity.py:653
 msgid "product"
-msgstr "sania' matsjau"
+msgstr "jami oya iye"
 
 #: VisualMatchActivity.py:346 VisualMatchActivity.py:654
 msgid "Roman numerals"
-msgstr "Rabe'en romanos"
+msgstr "Coc namba ajo Rome"
 
 #: VisualMatchActivity.py:354 VisualMatchActivity.py:655
 msgid "word"
-msgstr "riñjá"
+msgstr "lok akoba"
 
 #: VisualMatchActivity.py:362 VisualMatchActivity.py:656 visualmatch.py:105
 msgid "Chinese"
-msgstr "Chino"
+msgstr "Me China"
 
 #: VisualMatchActivity.py:370 VisualMatchActivity.py:657 visualmatch.py:109
 msgid "Mayan"
-msgstr "Maya"
+msgstr "Me Maya"
 
 #: VisualMatchActivity.py:378 VisualMatchActivity.py:658 visualmatch.py:113
 msgid "Quipu"
@@ -173,204 +173,204 @@ msgstr "Quipu"
 
 #: VisualMatchActivity.py:389 VisualMatchActivity.py:659
 msgid "hash marks"
-msgstr "ndantsux"
+msgstr "coc me hash"
 
 #: VisualMatchActivity.py:397 VisualMatchActivity.py:660
 msgid "dots in a circle"
-msgstr "ndanú manjuñ"
+msgstr "tonton iyi caikol"
 
 #: VisualMatchActivity.py:405 VisualMatchActivity.py:661
 msgid "points on a star"
-msgstr "ndanú nkjaí kangu't"
+msgstr "kakonoro ikom acer"
 
 #: VisualMatchActivity.py:413 VisualMatchActivity.py:662
 msgid "dice"
-msgstr "kiñuim'u lumei ndanú"
+msgstr "daici"
 
 #: VisualMatchActivity.py:421 VisualMatchActivity.py:663
 msgid "dots in a line"
-msgstr "ndanú lumei niñ'eje'"
+msgstr "toton i lain"
 
 #: VisualMatchActivity.py:429 VisualMatchActivity.py:644
 msgid "Play with the computer"
-msgstr "Namjeng pu nak'ujuly' nde'ets kily'e"
+msgstr "Tuku ki komputa"
 
 #: VisualMatchActivity.py:466
 msgid "Find a match."
-msgstr "Makjaik."
+msgstr "Nwong tuku me pyem."
 
 #: VisualMatchActivity.py:469 game.py:838 game.py:952
 msgid "cards"
-msgstr "rik'ix"
+msgstr "kad ducu"
 
 #: VisualMatchActivity.py:472 game.py:965 game.py:967
 msgid "matches"
-msgstr "kamjent"
+msgstr "tuku odilo"
 
 #: VisualMatchActivity.py:599
 msgid "A new game is loading."
-msgstr "Nda viñkjiu namjeng manajá vupu'."
+msgstr "Tuku manyen tye akete."
 
 #: VisualMatchActivity.py:628 VisualMatchActivity.py:669
 msgid "Tools"
-msgstr "Ri'ip"
+msgstr "Nyon tic"
 
 #: VisualMatchActivity.py:630
 msgid "Import image cards"
-msgstr "Ma'ujuñ rik'ix re xikji'ik"
+msgstr "Om ki oko kad ducu me mako cal"
 
 #: VisualMatchActivity.py:639 VisualMatchActivity.py:667
 msgid "Game"
-msgstr "Namjeng"
+msgstr "Tuku"
 
 #: VisualMatchActivity.py:645
 msgid "robot pause time"
-msgstr "tijiap mama'ai ne lee chipiá"
+msgstr "cawa me cung kong pa robot"
 
 #: VisualMatchActivity.py:652 VisualMatchActivity.py:668
 msgid "Numbers"
-msgstr "Rabe'en"
+msgstr "Mamba mapol"
 
 #: VisualMatchActivity.py:670
 msgid "number of cards remaining in deck"
-msgstr "rabe'en ngk'uix me'ets se lijiañ pu mazo"
+msgstr "namba me kad ducu ame odong iyi dek"
 
 #: VisualMatchActivity.py:671
 msgid "number of matches"
-msgstr "rabe'en me'ei makjaik"
+msgstr "namba me rwate"
 
 #: VisualMatchActivity.py:672
 msgid "elapsed time"
-msgstr "kunju' ni'ujuñ"
+msgstr "cawa okato donge"
 
 #: constants.py:71
 msgid "five"
-msgstr "kik'iaí"
+msgstr "abic"
 
 #: constants.py:71
 msgid "seven"
-msgstr "telñujuñ'"
+msgstr "abiro"
 
 #: constants.py:71
 msgid "eleven"
-msgstr "seska'ai nda"
+msgstr "apar acel"
 
 #: constants.py:71
 msgid "ten"
-msgstr "seska'ai"
+msgstr "apar"
 
 #: constants.py:72
 msgid "fourteen"
-msgstr "seska'ai kiñui"
+msgstr "apart angwen"
 
 #: constants.py:72
 msgid "fifteen"
-msgstr "seska'ai kik'iaí"
+msgstr "apar abic"
 
 #: constants.py:72
 msgid "twenty two"
-msgstr "lnda yen nui"
+msgstr "pyero aryo wie aryo"
 
 #: constants.py:73
 msgid "twenty one"
-msgstr "ndalyen nda"
+msgstr "pyero aryo wie acel"
 
 #: constants.py:73
 msgid "thirty three"
-msgstr "nda lyen seska'ai ranju'"
+msgstr "pyero adek wie adek"
 
 #: game.py:356
 msgid "Edit the custom cards."
-msgstr "Malejeiñ k'ua liji rik'ix."
+msgstr "Yiyiko kad me kare lung."
 
 #: game.py:384
 msgid "Edit the word cards."
-msgstr "Malejeiñ re ngk'uix lumei riñjá."
+msgstr "Yiyiko kad me lok."
 
 #: game.py:752
 msgid "Game over"
-msgstr "Maljung ne namjeng"
+msgstr "Tuku otum"
 
 #: game.py:765
 msgid "unsolvable"
-msgstr "kad-ep majau"
+msgstr "pe lare"
 
 #: game.py:796
 msgid "New record"
-msgstr "Viñkjiu namjeng"
+msgstr "Rekod manyen"
 
 #: game.py:958 game.py:960
 msgid "match"
-msgstr "namjeng"
+msgstr "tuku pyem"
 
 #: game.py:1203
 msgid "New custom game"
-msgstr "Viñkjiu namjeng masau'"
+msgstr "Tuku manyen me kare lung"
 
 #: helpbutton.py:47
 msgid "Help"
-msgstr "Nabaik"
+msgstr "Mi kony"
 
 #: visualmatch.py:34
 msgid "Click on cards to create sets of three."
-msgstr "Kis kimvia' ranji ngk'uix se manatsjau lamjaily' ranjut."
+msgstr "Di ikom kad me wek iyik duldul me adek."
 
 #: visualmatch.py:38
 msgid "Toggle level"
-msgstr "Mavaun' masau'"
+msgstr "Lebol me kadiyo"
 
 #: visualmatch.py:64
 msgid "Robot on/off"
-msgstr "Maleiñ/mavung lee chipiá"
+msgstr "Robot keti/kwanyi"
 
 #: visualmatch.py:68
 msgid "90 sec."
-msgstr "90 seg."
+msgstr "ceken 90"
 
 #: visualmatch.py:72
 msgid "60 sec."
-msgstr "60 seg."
+msgstr "ceken 60"
 
 #: visualmatch.py:76
 msgid "45 sec."
-msgstr "45 seg."
+msgstr "ceken 45"
 
 #: visualmatch.py:80
 msgid "30 sec."
-msgstr "30 seg."
+msgstr "ceken 30"
 
 #: visualmatch.py:84
 msgid "15 sec."
-msgstr "15 seg."
+msgstr "ceken 15"
 
 #: visualmatch.py:93
 msgid "Product"
-msgstr "Sania' matsjau"
+msgstr "Jami oya iye"
 
 #: visualmatch.py:97
 msgid "Roman"
-msgstr "Romano"
+msgstr "Dano me Rome"
 
 #: visualmatch.py:101
 msgid "Word"
-msgstr "Niñjá"
+msgstr "Lok"
 
 #: visualmatch.py:117
 msgid "Hash"
-msgstr "Ndantsux"
+msgstr "Bura"
 
 #: visualmatch.py:121
 msgid "Dice"
-msgstr "Kiñuimú luei ndanú"
+msgstr "Dice"
 
 #: visualmatch.py:125
 msgid "Dots"
-msgstr "Ndanú"
+msgstr "Toton"
 
 #: visualmatch.py:129
 msgid "Star"
-msgstr "Kang'u"
+msgstr "Acer"
 
 #: visualmatch.py:133
 msgid "Lines"
-msgstr "Riñ'eje'"
+msgstr "Lain mapol"

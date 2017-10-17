@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-10-30 00:33-0400\n"
-"PO-Revision-Date: 2012-11-10 15:53+0200\n"
+"POT-Creation-Date: 2013-07-05 22:11-0400\n"
+"PO-Revision-Date: 2016-04-25 14:42+0000\n"
 "Last-Translator: whe <heppew@yahoo.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: nl\n"
@@ -15,35 +15,33 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Pootle 2.0.5\n"
+"X-Generator: Pootle 2.5.1.1\n"
+"X-POOTLE-MTIME: 1461595330.000000\n"
 
 #. TRANS: "name" option from activity.info file
 #. TRANS: Please translate Visual Match as Dimensions
-#: VisualMatchActivity.py:627 VisualMatchActivity.py:659 game.py:983
+#: VisualMatchActivity.py:634 VisualMatchActivity.py:666 game.py:983
 #: visualmatch.py:33
 msgid "Visual Match"
 msgstr "Visueel Passend"
-
-msgid "Dimensions"
-msgstr "Afmetingen"
 
 #. TRANS: "summary" option from activity.info file
 #. TRANS: "description" option from activity.info file
 msgid "a pattern-matching game"
 msgstr "een patroon-passen spel"
 
-#: VisualMatchActivity.py:59 VisualMatchActivity.py:434
-#: VisualMatchActivity.py:639
+#: VisualMatchActivity.py:59 VisualMatchActivity.py:441
+#: VisualMatchActivity.py:646
 msgid "beginner"
 msgstr "beginner"
 
-#: VisualMatchActivity.py:59 VisualMatchActivity.py:442
-#: VisualMatchActivity.py:640
+#: VisualMatchActivity.py:59 VisualMatchActivity.py:449
+#: VisualMatchActivity.py:647
 msgid "intermediate"
 msgstr "tussenliggend"
 
-#: VisualMatchActivity.py:59 VisualMatchActivity.py:450
-#: VisualMatchActivity.py:641
+#: VisualMatchActivity.py:59 VisualMatchActivity.py:457
+#: VisualMatchActivity.py:648
 msgid "expert"
 msgstr "expert"
 
@@ -59,155 +57,189 @@ msgstr "Nieuw nummerspel"
 msgid "New word game"
 msgstr "Nieuw woordspel"
 
-#: VisualMatchActivity.py:73 VisualMatchActivity.py:324
+#: VisualMatchActivity.py:73 VisualMatchActivity.py:331
 msgid "Import custom cards"
 msgstr "Voer aangepaste kaarten in"
 
-#: VisualMatchActivity.py:128
+#: VisualMatchActivity.py:75
+msgid "Dimensions"
+msgstr "Afmetingen"
+
+#. TRANS: The prime number version of the dimensions game
+#: VisualMatchActivity.py:77
+msgid "Prime Dimensions"
+msgstr "Priemdimensies"
+
+#. TRANS: The word version of the dimensions game
+#: VisualMatchActivity.py:79
+msgid "Word Dimensions"
+msgstr "Woorddimensies"
+
+#: VisualMatchActivity.py:80
+msgid "15 seconds"
+msgstr "15 seconden"
+
+#: VisualMatchActivity.py:80
+msgid "30 seconds"
+msgstr "30 seconden"
+
+#: VisualMatchActivity.py:80
+msgid "1 minute"
+msgstr "1 minuut"
+
+#: VisualMatchActivity.py:80
+msgid "2 minutes"
+msgstr "2 minuten"
+
+#: VisualMatchActivity.py:80
+msgid "5 minutes"
+msgstr "5 minuten"
+
+#: VisualMatchActivity.py:135
 msgid "Play with the computer."
 msgstr "Speel met de computer."
 
-#: VisualMatchActivity.py:133
+#: VisualMatchActivity.py:140
 msgid "Stop playing with the computer."
 msgstr "Stop met de computer spelen."
 
-#: VisualMatchActivity.py:217 visualmatch.py:173
+#: VisualMatchActivity.py:224 visualmatch.py:173
 msgid "mouse"
 msgstr "muis"
 
-#: VisualMatchActivity.py:218 visualmatch.py:173
+#: VisualMatchActivity.py:225 visualmatch.py:173
 msgid "cat"
 msgstr "kat"
 
-#: VisualMatchActivity.py:219 visualmatch.py:173
+#: VisualMatchActivity.py:226 visualmatch.py:173
 msgid "dog"
 msgstr "hond"
 
-#: VisualMatchActivity.py:220 visualmatch.py:174
+#: VisualMatchActivity.py:227 visualmatch.py:174
 msgid "cheese"
 msgstr "kaas"
 
-#: VisualMatchActivity.py:221 visualmatch.py:174
+#: VisualMatchActivity.py:228 visualmatch.py:174
 msgid "apple"
 msgstr "appel"
 
-#: VisualMatchActivity.py:222 visualmatch.py:174
+#: VisualMatchActivity.py:229 visualmatch.py:174
 msgid "bread"
 msgstr "brood"
 
-#: VisualMatchActivity.py:223 visualmatch.py:175
+#: VisualMatchActivity.py:230 visualmatch.py:175
 msgid "moon"
 msgstr "maan"
 
-#: VisualMatchActivity.py:224 visualmatch.py:175
+#: VisualMatchActivity.py:231 visualmatch.py:175
 msgid "sun"
 msgstr "zon"
 
-#: VisualMatchActivity.py:225 visualmatch.py:175
+#: VisualMatchActivity.py:232 visualmatch.py:175
 msgid "earth"
 msgstr "aarde"
 
-#: VisualMatchActivity.py:296 VisualMatchActivity.py:628
+#: VisualMatchActivity.py:303 VisualMatchActivity.py:635
 msgid "Export scores to clipboard"
 msgstr "Exporteer scores naar klembord"
 
-#: VisualMatchActivity.py:320 VisualMatchActivity.py:622
+#: VisualMatchActivity.py:327 VisualMatchActivity.py:629
 msgid "Edit word lists."
 msgstr "Wijzig woordlijsten."
 
-#: VisualMatchActivity.py:331 VisualMatchActivity.py:646
+#: VisualMatchActivity.py:338 VisualMatchActivity.py:653
 msgid "product"
 msgstr "produkt"
 
-#: VisualMatchActivity.py:339 VisualMatchActivity.py:647
+#: VisualMatchActivity.py:346 VisualMatchActivity.py:654
 msgid "Roman numerals"
 msgstr "Romeinse cijfers"
 
-#: VisualMatchActivity.py:347 VisualMatchActivity.py:648
+#: VisualMatchActivity.py:354 VisualMatchActivity.py:655
 msgid "word"
 msgstr "woord"
 
-#: VisualMatchActivity.py:355 VisualMatchActivity.py:649 visualmatch.py:105
+#: VisualMatchActivity.py:362 VisualMatchActivity.py:656 visualmatch.py:105
 msgid "Chinese"
 msgstr "Chinees"
 
-#: VisualMatchActivity.py:363 VisualMatchActivity.py:650 visualmatch.py:109
+#: VisualMatchActivity.py:370 VisualMatchActivity.py:657 visualmatch.py:109
 msgid "Mayan"
 msgstr "Maya"
 
-#: VisualMatchActivity.py:371 VisualMatchActivity.py:651 visualmatch.py:113
+#: VisualMatchActivity.py:378 VisualMatchActivity.py:658 visualmatch.py:113
 msgid "Quipu"
 msgstr "Quipu"
 
-#: VisualMatchActivity.py:382 VisualMatchActivity.py:652
+#: VisualMatchActivity.py:389 VisualMatchActivity.py:659
 msgid "hash marks"
 msgstr "hekje tekens"
 
-#: VisualMatchActivity.py:390 VisualMatchActivity.py:653
+#: VisualMatchActivity.py:397 VisualMatchActivity.py:660
 msgid "dots in a circle"
 msgstr "stippen in een cirkel"
 
-#: VisualMatchActivity.py:398 VisualMatchActivity.py:654
+#: VisualMatchActivity.py:405 VisualMatchActivity.py:661
 msgid "points on a star"
 msgstr "punten aan een ster"
 
-#: VisualMatchActivity.py:406 VisualMatchActivity.py:655
+#: VisualMatchActivity.py:413 VisualMatchActivity.py:662
 msgid "dice"
 msgstr "dobbelstenen"
 
-#: VisualMatchActivity.py:414 VisualMatchActivity.py:656
+#: VisualMatchActivity.py:421 VisualMatchActivity.py:663
 msgid "dots in a line"
 msgstr "stippen op een lijn"
 
-#: VisualMatchActivity.py:422 VisualMatchActivity.py:637
+#: VisualMatchActivity.py:429 VisualMatchActivity.py:644
 msgid "Play with the computer"
 msgstr "Speel met de computer"
 
-#: VisualMatchActivity.py:459
+#: VisualMatchActivity.py:466
 msgid "Find a match."
 msgstr "Zoek een paar."
 
-#: VisualMatchActivity.py:462 game.py:838 game.py:952
+#: VisualMatchActivity.py:469 game.py:838 game.py:952
 msgid "cards"
 msgstr "kaarten"
 
-#: VisualMatchActivity.py:465 game.py:965 game.py:967
+#: VisualMatchActivity.py:472 game.py:965 game.py:967
 msgid "matches"
 msgstr "paren"
 
-#: VisualMatchActivity.py:592
+#: VisualMatchActivity.py:599
 msgid "A new game is loading."
 msgstr "Een nieuw spel wordt geladen."
 
-#: VisualMatchActivity.py:621 VisualMatchActivity.py:662
+#: VisualMatchActivity.py:628 VisualMatchActivity.py:669
 msgid "Tools"
 msgstr "Werktuigen"
 
-#: VisualMatchActivity.py:623
+#: VisualMatchActivity.py:630
 msgid "Import image cards"
 msgstr "Importeer afbeeldingkaarten"
 
-#: VisualMatchActivity.py:632 VisualMatchActivity.py:660
+#: VisualMatchActivity.py:639 VisualMatchActivity.py:667
 msgid "Game"
 msgstr "Spel"
 
-#: VisualMatchActivity.py:638
+#: VisualMatchActivity.py:645
 msgid "robot pause time"
 msgstr "robot pauze tijd"
 
-#: VisualMatchActivity.py:645 VisualMatchActivity.py:661
+#: VisualMatchActivity.py:652 VisualMatchActivity.py:668
 msgid "Numbers"
 msgstr "Getallen"
 
-#: VisualMatchActivity.py:663
+#: VisualMatchActivity.py:670
 msgid "number of cards remaining in deck"
 msgstr "aantal overblijvende kaarten in de stapel"
 
-#: VisualMatchActivity.py:664
+#: VisualMatchActivity.py:671
 msgid "number of matches"
 msgstr "aantal gelijkend"
 
-#: VisualMatchActivity.py:665
+#: VisualMatchActivity.py:672
 msgid "elapsed time"
 msgstr "verstreken tijd"
 

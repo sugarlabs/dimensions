@@ -7,15 +7,16 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2013-07-05 22:11-0400\n"
-"PO-Revision-Date: 2013-08-20 16:37+0200\n"
-"Last-Translator: EdgarQuispeChambi <quispedgar@yahoo.es>\n"
+"PO-Revision-Date: 2017-10-15 17:08+0000\n"
+"Last-Translator: Chris <cjl@sugarlabs.org>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: ayc\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Pootle 2.0.5\n"
+"X-Generator: Pootle 2.5.1.1\n"
+"X-POOTLE-MTIME: 1508087296.000000\n"
 
 #. TRANS: "name" option from activity.info file
 #. TRANS: Please translate Visual Match as Dimensions
@@ -32,17 +33,17 @@ msgstr "Qallta wakichatana chikt'ata anataña"
 #: VisualMatchActivity.py:59 VisualMatchActivity.py:441
 #: VisualMatchActivity.py:646
 msgid "beginner"
-msgstr "Chhijnuqasiri"
+msgstr "chhijnuqasiri"
 
 #: VisualMatchActivity.py:59 VisualMatchActivity.py:449
 #: VisualMatchActivity.py:647
 msgid "intermediate"
-msgstr "Tantiyu yatiri"
+msgstr "tantiyu yatiri"
 
 #: VisualMatchActivity.py:59 VisualMatchActivity.py:457
 #: VisualMatchActivity.py:648
 msgid "expert"
-msgstr "Wali yatiñani"
+msgstr "wali yatiñani"
 
 #: VisualMatchActivity.py:70 visualmatch.py:47
 msgid "New pattern game"
@@ -96,11 +97,11 @@ msgstr "5 pacha t'ijtäwi"
 
 #: VisualMatchActivity.py:135
 msgid "Play with the computer."
-msgstr "Computadora taypina wakichata anatañampi anataña"
+msgstr "Computadora taypina wakichata anatañampi anataña."
 
 #: VisualMatchActivity.py:140
 msgid "Stop playing with the computer."
-msgstr "Computadora taypina wakichata anatañampi anataña sayt'aña"
+msgstr "Computadora taypina wakichata anatañampi anataña sayt'aña."
 
 #: VisualMatchActivity.py:224 visualmatch.py:173
 msgid "mouse"
@@ -144,11 +145,11 @@ msgstr "Jani wakisiri wakichatanaka imata tuqita yatiyäwi apayaña"
 
 #: VisualMatchActivity.py:327 VisualMatchActivity.py:629
 msgid "Edit word lists."
-msgstr "Arunaka siqi wakichata chiqachaña"
+msgstr "Arunaka siqi wakichata chiqachaña."
 
 #: VisualMatchActivity.py:338 VisualMatchActivity.py:653
 msgid "product"
-msgstr "Wakichata"
+msgstr "wakichata"
 
 #: VisualMatchActivity.py:346 VisualMatchActivity.py:654
 msgid "Roman numerals"
@@ -156,7 +157,7 @@ msgstr "Romano Jakhunaka"
 
 #: VisualMatchActivity.py:354 VisualMatchActivity.py:655
 msgid "word"
-msgstr "Arunaka"
+msgstr "arunaka"
 
 #: VisualMatchActivity.py:362 VisualMatchActivity.py:656 visualmatch.py:105
 msgid "Chinese"
@@ -172,23 +173,23 @@ msgstr "Quipu nayra jakhunaka chimpu"
 
 #: VisualMatchActivity.py:389 VisualMatchActivity.py:659
 msgid "hash marks"
-msgstr "Siqinaka"
+msgstr "siqinaka"
 
 #: VisualMatchActivity.py:397 VisualMatchActivity.py:660
 msgid "dots in a circle"
-msgstr "Muyunaka chinunaka"
+msgstr "muyunaka chinunaka"
 
 #: VisualMatchActivity.py:405 VisualMatchActivity.py:661
 msgid "points on a star"
-msgstr "Wara waranaka wich'inka"
+msgstr "wara waranaka wich'inka"
 
 #: VisualMatchActivity.py:413 VisualMatchActivity.py:662
 msgid "dice"
-msgstr "Dado anataña"
+msgstr "dado anataña"
 
 #: VisualMatchActivity.py:421 VisualMatchActivity.py:663
 msgid "dots in a line"
-msgstr "Chiqanaka chinunaka"
+msgstr "chiqanaka chinunaka"
 
 #: VisualMatchActivity.py:429 VisualMatchActivity.py:644
 msgid "Play with the computer"
@@ -196,19 +197,19 @@ msgstr "Computadora taypina wakichata anatañampi anataña"
 
 #: VisualMatchActivity.py:466
 msgid "Find a match."
-msgstr "Khuskhachaña"
+msgstr "Khuskhachaña."
 
 #: VisualMatchActivity.py:469 game.py:838 game.py:952
 msgid "cards"
-msgstr "Thuru laphi qallunaka"
+msgstr "thuru laphi qallunaka"
 
 #: VisualMatchActivity.py:472 game.py:965 game.py:967
 msgid "matches"
-msgstr "Anatäwinaka"
+msgstr "anatäwinaka"
 
 #: VisualMatchActivity.py:599
 msgid "A new game is loading."
-msgstr "Maya machaqa anatäwiwa qalltasiski"
+msgstr "Maya machaqa anatäwiwa qalltasiski."
 
 #: VisualMatchActivity.py:628 VisualMatchActivity.py:669
 msgid "Tools"
@@ -225,7 +226,7 @@ msgstr "Anataña"
 
 #: VisualMatchActivity.py:645
 msgid "robot pause time"
-msgstr "Robot anataña sayt'äwi pacha"
+msgstr "robot anataña sayt'äwi pacha"
 
 #: VisualMatchActivity.py:652 VisualMatchActivity.py:668
 msgid "Numbers"
@@ -237,23 +238,23 @@ msgstr "Ñuqiñampi qhipaqtiri carta anataña laphinaka jakhupa"
 
 #: VisualMatchActivity.py:671
 msgid "number of matches"
-msgstr "Khuskhachatana jakhupa"
+msgstr "khuskhachatana jakhupa"
 
 #: VisualMatchActivity.py:672
 msgid "elapsed time"
-msgstr "Pacha tukuta"
+msgstr "pacha tukuta"
 
 #: constants.py:71
 msgid "five"
-msgstr "Phisqa"
+msgstr "phisqa"
 
 #: constants.py:71
 msgid "seven"
-msgstr "Paqallqu"
+msgstr "paqallqu"
 
 #: constants.py:71
 msgid "eleven"
-msgstr "Tunka mayani"
+msgstr "tunka mayani"
 
 #: constants.py:71
 msgid "ten"
@@ -269,23 +270,23 @@ msgstr "tunka phisqani"
 
 #: constants.py:72
 msgid "twenty two"
-msgstr "Paya tunkani payani"
+msgstr "paya tunkani payani"
 
 #: constants.py:73
 msgid "twenty one"
-msgstr "Paya tunkani mayani"
+msgstr "paya tunkani mayani"
 
 #: constants.py:73
 msgid "thirty three"
-msgstr "Kimsa tunka kimsani"
+msgstr "kimsa tunka kimsani"
 
 #: game.py:356
 msgid "Edit the custom cards."
-msgstr "Jaqichjata thuru laphi qallunaka chiqachaña"
+msgstr "Jaqichjata thuru laphi qallunaka chiqachaña."
 
 #: game.py:384
 msgid "Edit the word cards."
-msgstr "Arunaka thuru laphi qallunaka chiqachaña"
+msgstr "Arunaka thuru laphi qallunaka chiqachaña."
 
 #: game.py:752
 msgid "Game over"
@@ -293,7 +294,7 @@ msgstr "Anataña tukuya"
 
 #: game.py:765
 msgid "unsolvable"
-msgstr "Jani askichañani"
+msgstr "jani askichañani"
 
 #: game.py:796
 msgid "New record"
@@ -301,7 +302,7 @@ msgstr "Machaqa jikxatäwi"
 
 #: game.py:958 game.py:960
 msgid "match"
-msgstr "Anatäwi"
+msgstr "anatäwi"
 
 #: game.py:1203
 msgid "New custom game"
