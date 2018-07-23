@@ -9,4 +9,4 @@ show_launcher = yes
 summary = A pattern-matching game.
 tags = Maths;Game
 url = https://help.sugarlabs.org/en/dimensions.html
-repository = https://www.github.com/sugarlabs/dimensions
+repository = https://github.com/sugarlabs/dimensions
