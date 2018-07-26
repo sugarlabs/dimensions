@@ -48,11 +48,10 @@ from json import loads as jloads
 from io import StringIO
 
 from toolbar_utils import (radio_factory, button_factory, separator_factory)
-
 from constants import (DECKSIZE, PRODUCT, HASH, ROMAN, WORD, CHINESE, MAYAN,
                        INCAN, DOTS, STAR, DICE, LINES)
-
 from game import Game
+from helpbutton import help_windows, add_paragraph, add_section
 
 MODE = 'pattern'
 
