@@ -2,7 +2,6 @@
 '''Cairoplot installation script.'''
 
 from distutils.core import setup
-import os
 
 setup(
     description='Cairoplot',

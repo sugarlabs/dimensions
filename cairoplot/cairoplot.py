@@ -2331,7 +2331,3 @@ def stream_chart(name,
     plot.render()
     plot.commit()
 
-
-if __name__ == "__main__":
-    from . import tests
-    from . import seriestests
