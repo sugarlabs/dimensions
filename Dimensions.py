@@ -31,7 +31,7 @@ from sugar3 import profile
 
 import telepathy
 from dbus.service import signal
-from dbus.gobject_service import ExportedGObject
+from dbus.gi_service import ExportedGObject
 from sugar3.presence import presenceservice
 from sugar3.presence.tubeconn import TubeConnection
 
@@ -43,7 +43,7 @@ from json import dump as jdump
 from json import dumps as jdumps
 from json import loads as jloads
 
-from StringIO import StringIO
+from io import StringIO
 
 from toolbar_utils import (radio_factory, button_factory, separator_factory)
 
@@ -277,7 +277,7 @@ class Dimensions(activity.Activity):
         ''' SimpleGraph will plot the cululative results '''
         jscores = ''
         c = 0
-        for key in self.vmw.all_scores.keys():
+        for key in list(self.vmw.all_scores.keys()):
             for data in self.vmw.all_scores[key]:
                 jscores += '%s: %s\n' % (str(c + 1), data[1])
                 c += 1
@@ -601,7 +601,7 @@ class Dimensions(activity.Activity):
                 self.vmw.low_score[1])
             self.metadata['low_score_expert'] = int(self.vmw.low_score[2])
             self.metadata['all_scores'] = jdumps(self.vmw.all_scores)
-            print jdumps(self.vmw.all_scores)
+            print(jdumps(self.vmw.all_scores))
             self.metadata['robot_time'] = self.vmw.robot_time
             self.metadata['numberO'] = self.vmw.numberO
             self.metadata['numberC'] = self.vmw.numberC
@@ -621,7 +621,7 @@ class Dimensions(activity.Activity):
             self.metadata['earth'] = self.vmw.word_lists[2][2]
             self.metadata['editing_word_list'] = self.vmw.editing_word_list
             self.metadata['mime_type'] = 'application/x-visualmatch'
-            f = file(file_path, 'w')
+            f = open(file_path, 'w')
             f.write(self._dump())
             f.close()
         else:
@@ -927,7 +927,7 @@ class ChatTube(ExportedGObject):
 
 def image_from_svg_file(filename):
     path = os.path.join(activity.get_bundle_path(), 'icons', filename)
-    fd = open(path)
+    fd = open(path, 'rb')
     svg = fd.read()
     fd.close()
     pl = GdkPixbuf.PixbufLoader.new_with_type('svg')

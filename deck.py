@@ -51,7 +51,7 @@ class Deck:
         # Copy images into root/instance as squares
         for i, object in enumerate(lists):
             if object is not None and \
-               not isinstance(object, (str, unicode, list)):
+               not isinstance(object, (str, list)):
                 pixbuf = GdkPixbuf.Pixbuf.new_from_file(
                     object.file_path)
                 size = min(pixbuf.get_width(), pixbuf.get_height())

@@ -969,7 +969,7 @@ def generate_new_smiley_card(width=125, height=75):
 
 
 def open_file(datapath, filename):
-    return file(os.path.join(datapath, filename), "w")
+    return open(os.path.join(datapath, filename), "w")
 
 
 def close_file(f):

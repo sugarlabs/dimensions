@@ -34,7 +34,8 @@ __version__ = 1.2
 import cairo
 import math
 import random
-from series import Series, Group, Data
+from .series import Series, Group, Data
+import collections
 
 HORZ = 0
 VERT = 1
@@ -55,8 +56,8 @@ THEMES = {"black_red"         : [(0.0,0.0,0.0,1.0), (1.0,0.0,0.0,1.0)],
 
 def colors_from_theme( theme, series_length, mode = 'solid' ):
     colors = []
-    if theme not in THEMES.keys() :
-        raise Exception, "Theme not defined" 
+    if theme not in list(THEMES.keys()) :
+        raise Exception("Theme not defined") 
     color_steps = THEMES[theme]
     n_colors = len(color_steps)
     if series_length <= n_colors:
@@ -132,7 +133,7 @@ class Plot(object):
         if isinstance(surface, cairo.Surface):
             self.surface = surface
             return
-        if not type(surface) in (str, unicode): 
+        if not type(surface) in (str, str): 
             raise TypeError("Surface should be either a Cairo surface or a filename, not %s" % surface)
         sufix = surface.rsplit(".")[-1].lower()
         self.filename = surface
@@ -172,7 +173,7 @@ class Plot(object):
         
         #TODO: Remove on next version
         # The ugly way, keeping retrocompatibility...
-        if callable(data) or type(data) is list and callable(data[0]): # Lambda or List of lambdas
+        if isinstance(data, collections.Callable) or type(data) is list and isinstance(data[0], collections.Callable): # Lambda or List of lambdas
             self.series = data
             self.series_labels = None
         elif isinstance(data, Series): # Instance of Series
@@ -329,7 +330,7 @@ class ScatterPlot( Plot ):
     def convert_list_to_tuple(self, data):
         #Data must be converted from lists of coordinates to a single
         # list of tuples
-        out_data = zip(*data)
+        out_data = list(zip(*data))
         if len(data) == 3:
             self.variable_radius = True
         return out_data
@@ -350,10 +351,10 @@ class ScatterPlot( Plot ):
             
         #Dictionary with lists  
         if hasattr(data, "keys") :
-            if hasattr( data.values()[0][0], "__delitem__" ) :
-                for key in data.keys() :
+            if hasattr( list(data.values())[0][0], "__delitem__" ) :
+                for key in list(data.keys()) :
                     data[key] = self.convert_list_to_tuple(data[key])
-            elif len(data.values()[0][0]) == 3:
+            elif len(list(data.values())[0][0]) == 3:
                     self.variable_radius = True
         #List
         elif hasattr(data[0], "__delitem__") :
@@ -420,7 +421,7 @@ class ScatterPlot( Plot ):
         max_data_value = [0,0,0]
         
         for group in self.series:
-            if type(group[0].content) in (int, float, long):
+            if type(group[0].content) in (int, float, int):
                 group = [Data((index, item.content)) for index,item in enumerate(group)]
             
             for point in group:
@@ -813,7 +814,7 @@ class FunctionPlot(ScatterPlot):
                 
         #TODO: Finish the dict translation
         if hasattr(function, "keys"): #dictionary:
-            for key in function.keys():
+            for key in list(function.keys()):
                 group = Group(name=key)
                 #data[ key ] = []
                 i = x_bounds[0]
@@ -1180,7 +1181,7 @@ class HorizontalBarPlot(BarPlot):
             lines = 11
             horizontal_step = float(self.plot_dimensions[HORZ])/(lines-1)
             x = self.borders[HORZ]
-            for y in xrange(0, lines):
+            for y in range(0, lines):
                 self.context.move_to(x, self.border)
                 self.context.line_to(x, self.dimensions[VERT] - self.borders[VERT])
                 self.context.stroke()
@@ -1343,7 +1344,7 @@ class VerticalBarPlot(BarPlot):
             lines = 11
             vertical_step = float(self.plot_dimensions[self.main_dir])/(lines-1)
             y = 1.2*self.border + self.value_label
-        for x in xrange(0, lines):
+        for x in range(0, lines):
             self.context.move_to(self.borders[HORZ], y)
             self.context.line_to(self.dimensions[HORZ] - self.border, y)
             self.context.stroke()
@@ -2332,5 +2333,5 @@ def stream_chart(name,
 
 
 if __name__ == "__main__":
-    import tests
-    import seriestests
+    from . import tests
+    from . import seriestests
