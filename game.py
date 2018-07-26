@@ -1046,9 +1046,9 @@ class Game():
             i = self._where_in_clicked(spr)
             if i is None:
                 move = 'abort'
-               # Moving a card to the match area
-               # elif (self.portrait and y > self.grid.bottom) or \
-               #        (not self.portrait and x < self.grid.left):
+                # Moving a card to the match area
+                # elif (self.portrait and y > self.grid.bottom) or \
+                #        (not self.portrait and x < self.grid.left):
             elif y > self.grid.bottom:
                 self.grid.grid[self.grid.spr_to_grid(spr)] = None
                 spr.move(self._match_area[i].spr.get_xy())

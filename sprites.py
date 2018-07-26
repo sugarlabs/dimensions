@@ -76,8 +76,7 @@ def svg_str_to_pixbuf(svg_string):
 
 '''
 
-import gi
-from gi.repository import Gtk, GdkPixbuf, Gdk
+from gi.repository import Gdk
 from gi.repository import Pango, PangoCairo
 import cairo
 
@@ -197,7 +196,7 @@ class Sprite:
         self._sprites.append_to_list(self)
 
     def set_image(self, image, i=0, dx=0, dy=0):
-        if type(image) == list:
+        if isinstance(image, list):
             self._embedded_picture = image[1]
             image = image[0]
 

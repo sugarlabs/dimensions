@@ -90,12 +90,14 @@ def svg_str_to_pixbuf(string, embedded_picture=False):
                 p_size[1] = int(float(line[8:-1]))  # height="data"
 
         if p_path is not None and p_size != [0, 0]:
-            pixbuf2 = GdkPixbuf.Pixbuf.new_from_file_at_size(p_path, p_size[0], p_size[1])
+            pixbuf2 = GdkPixbuf.Pixbuf.new_from_file_at_size(
+                p_path, p_size[0], p_size[1])
 
     if pixbuf2 is None:
         return pixbuf
     else:
         return [pixbuf, pixbuf2]
+
 
 def load_image(object, scale):
     ''' Load pixbuf from file '''
