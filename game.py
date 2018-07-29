@@ -1313,7 +1313,7 @@ class Game():
         self.set_label('deck', '%d %s' %
                        (self.deck.cards_remaining(), _('cards')))
         self.set_label('status', '')
-        logging.error(
+        logging.debug(
             'update labels: %d %d' %
             (self.matches, self.robot_matches))
         user_matches = self.matches - self.robot_matches
@@ -1467,16 +1467,16 @@ class Game():
 
     def _robot_match(self, match):
         ''' Robot finds a match '''
-        logging.error('robot match %r' % match)
+        logging.debug('robot match %r' % match)
         if self._sugar:
             self._robot_card.spr.hide()
         if self.grid.grid[match[0]] is not None:
             self.clicked[0].spr = self.grid.grid[match[0]].spr
             self.grid.grid[match[0]].spr.move(self.grid.match_to_xy(0))
         else:
-            logging.error('in robot match, grid[%d] is None' % (match[0]))
+            logging.debug('in robot match, grid[%d] is None' % (match[0]))
         self.grid.grid[match[0]] = None
-        logging.error('calling next_robot_match %r 1' % match)
+        logging.debug('calling next_robot_match %r 1' % match)
         GObject.timeout_add(1500, self._next_robot_match, match, 1)
 
     def _next_robot_match(self, match, j):
@@ -1485,33 +1485,33 @@ class Game():
                 self.clicked[1].spr = self.grid.grid[match[1]].spr
                 self.grid.grid[match[1]].spr.move(self.grid.match_to_xy(1))
             else:
-                logging.error(
+                logging.debug(
                     'in robot match, j == 1, grid[%d] is None' %
                     (match[1]))
                 return
             self.grid.grid[match[1]] = None
-            logging.error('calling next_robot_match %r 2' % match)
+            logging.debug('calling next_robot_match %r 2' % match)
             GObject.timeout_add(1500, self._next_robot_match, match, 2)
         elif j == 2:
             if self.grid.grid[match[2]] is not None:
                 self.clicked[2].spr = self.grid.grid[match[2]].spr
                 self.grid.grid[match[2]].spr.move(self.grid.match_to_xy(2))
             else:
-                logging.error(
+                logging.debug(
                     'in robot match, j != 1, grid[%d] is None' %
                     (match[2]))
                 return
             self.grid.grid[match[2]] = None
             self._showing_robot_match = False
             self.robot_matches += 1
-            logging.error(
+            logging.debug(
                 'robot match +=1, now: %d %d' %
                 (self.matches, self.robot_matches))
             self._test_for_a_match()
             self._smiley[0].spr.set_layer(SMILE_LAYER)
             # self._matches_on_display = True
         else:
-            logging.error('j != 1 or 2??? %d' % j)
+            logging.debug('j != 1 or 2??? %d' % j)
 
     def _match_check(self, cardarray, card_type):
         ''' For each attribute, either it is the same or different. '''
