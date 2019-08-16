@@ -42,11 +42,7 @@ class Card:
                 self.color * NUMBER * FILLS + \
                 self.num * FILLS + \
                 self.fill
-            if self.spr is None:
-                self.spr = Sprite(sprites, 0, 0, svg_str_to_pixbuf(string))
-            else:
-                self.spr.set_image(svg_str_to_pixbuf(string, True))
-
+            self.spr = Sprite(sprites, 0, 0, svg_str_to_pixbuf(string, True))
             if file_path is not None:
                 self.spr.set_image(load_image(file_path, self._scale), i=1,
                                    dx=int(self._scale * CARD_WIDTH * .125),
