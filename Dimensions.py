@@ -19,6 +19,7 @@ import os
 
 import gi
 gi.require_version('Gtk', '3.0')
+gi.require_version('TelepathyGLib', '0.12')
 
 from gi.repository import Gtk
 from gi.repository import Gdk
@@ -38,7 +39,13 @@ from sugar3.graphics.xocolor import XoColor
 from sugar3.datastore import datastore
 from sugar3 import profile
 
-import telepathy
+from gi.repository import TelepathyGLib
+CHANNEL_TYPE_TUBES = TelepathyGLib.IFACE_CHANNEL_TYPE_TUBES
+CHANNEL_INTERFACE_GROUP = TelepathyGLib.IFACE_CHANNEL_INTERFACE_GROUP
+TUBE_TYPE_DBUS = TelepathyGLib.IFACE_CHANNEL_TYPE_DBUS_TUBE
+LOCAL_PENDING = TelepathyGLib.TubeState.LOCAL_PENDING
+
+
 from dbus.service import signal
 from dbus.gobject_service import ExportedGObject
 from sugar3.presence import presenceservice
@@ -784,11 +791,11 @@ class Dimensions(activity.Activity):
         self.tubes_chan = self.shared_activity.telepathy_tubes_chan
         self.text_chan = self.shared_activity.telepathy_text_chan
 
-        self.tubes_chan[telepathy.CHANNEL_TYPE_TUBES].connect_to_signal(
+        self.tubes_chan[CHANNEL_TYPE_TUBES].connect_to_signal(
             'NewTube', self._new_tube_cb)
 
         _logger.debug('This is my activity: making a tube...')
-        self.tubes_chan[telepathy.CHANNEL_TYPE_TUBES].OfferDBusTube(
+        self.tubes_chan[CHANNEL_TYPE_TUBES].OfferDBusTube(
             SERVICE, {})
 
     def _joined_cb(self, activity):
@@ -809,11 +816,11 @@ class Dimensions(activity.Activity):
         self.tubes_chan = self.shared_activity.telepathy_tubes_chan
         self.text_chan = self.shared_activity.telepathy_text_chan
 
-        self.tubes_chan[telepathy.CHANNEL_TYPE_TUBES].connect_to_signal(
+        self.tubes_chan[CHANNEL_TYPE_TUBES].connect_to_signal(
             'NewTube', self._new_tube_cb)
 
         _logger.debug('I am joining an activity: waiting for a tube...')
-        self.tubes_chan[telepathy.CHANNEL_TYPE_TUBES].ListTubes(
+        self.tubes_chan[CHANNEL_TYPE_TUBES].ListTubes(
             reply_handler=self._list_tubes_reply_cb,
             error_handler=self._list_tubes_error_cb)
 
@@ -841,14 +848,15 @@ class Dimensions(activity.Activity):
                       'params=%r state=%d', id, initiator, type, service,
                       params, state)
 
-        if (type == telepathy.TUBE_TYPE_DBUS and service == SERVICE):
-            if state == telepathy.TUBE_STATE_LOCAL_PENDING:
+        if (type == TUBE_TYPE_DBUS and service == SERVICE):
+            # TODO: not sure if this is correct constant
+            if state == LOCAL_PENDING:
                 self.tubes_chan[
-                    telepathy.CHANNEL_TYPE_TUBES].AcceptDBusTube(id)
+                    CHANNEL_TYPE_TUBES].AcceptDBusTube(id)
 
             tube_conn = TubeConnection(
-                self.conn, self.tubes_chan[telepathy.CHANNEL_TYPE_TUBES], id,
-                group_iface=self.text_chan[telepathy.CHANNEL_INTERFACE_GROUP])
+                self.conn, self.tubes_chan[CHANNEL_TYPE_TUBES], id,
+                group_iface=self.text_chan[CHANNEL_INTERFACE_GROUP])
 
             self.chattube = ChatTube(tube_conn, self.initiating,
                                      self.event_received_cb)
