@@ -24,7 +24,7 @@ gi.require_version('TelepathyGLib', '0.12')
 from gi.repository import Gtk
 from gi.repository import Gdk
 from gi.repository import GdkPixbuf
-from gi.repository import GObject
+from gi.repository import GLib
 
 from sugar3.activity import activity
 from sugar3.activity.widgets import ActivityToolbarButton
@@ -159,7 +159,7 @@ class Dimensions(activity.Activity):
         if not self.ready_to_play:
             return
         # self._notify_new_game(self._prompt)
-        GObject.idle_add(self._new_game, card_type, show_selector)
+        GLib.idle_add(self._new_game, card_type, show_selector)
 
     def _new_game(self, card_type, show_selector=True):
         if card_type == 'custom' and self.vmw.custom_paths[0] is None:
