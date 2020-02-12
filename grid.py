@@ -9,7 +9,7 @@
 # along with this library; if not, write to the Free Software
 # Foundation, 51 Franklin Street, Suite 500 Boston, MA 02110-1335 USA
 
-from gi.repository import GObject
+from gi.repository import GLib
 
 from constants import ROW, COL, DEAL, LABELH
 try:
@@ -127,7 +127,7 @@ class Grid:
                     i = self.find_an_empty_slot()
                     # Put new card in grid position of card we are replacing.
                     self.grid[i] = deck.deal_next_card()
-                    GObject.timeout_add(
+                    GLib.timeout_add(
                         1200, self.place_a_card, self.grid[i],
                         self.grid_to_xy(i)[0], self.grid_to_xy(i)[1], j)
 
@@ -142,7 +142,7 @@ class Grid:
             self.sy[i] = spr.get_xy()[1]
             self.dx[i] = int((self.ex[i] - self.sx[i]) / DELTA)
             self.dy[i] = int((self.ey[i] - self.sy[i]) / DELTA)
-            GObject.timeout_add(STEP_PAUSE, self._move_to_position, spr, i)
+            GLib.timeout_add(STEP_PAUSE, self._move_to_position, spr, i)
         else:
             self.stop_animation = True
             spr.move((self.ex[i], self.ey[i]))
@@ -158,7 +158,7 @@ class Grid:
         self.sy[j] = spr.get_xy()[1]
         self.dx[j] = int((self.ex[j] - self.sx[j]) / DELTA)
         self.dy[j] = int((self.ey[j] - self.sy[j]) / DELTA)
-        GObject.timeout_add(STEP_PAUSE, self._move_to_position, spr, j)
+        GLib.timeout_add(STEP_PAUSE, self._move_to_position, spr, j)
 
     def _move_to_position(self, spr, i):
         ''' Piece-wise animation of card movement '''
@@ -171,7 +171,7 @@ class Grid:
             spr.move((self.ex[i], self.ey[i]))
             self.animation_lock[i] = False
         else:
-            GObject.timeout_add(STEP_PAUSE, self._move_to_position, spr, i)
+            GLib.timeout_add(STEP_PAUSE, self._move_to_position, spr, i)
 
     def consolidate(self):
         ''' If we have removed cards from an expanded grid,
@@ -204,7 +204,7 @@ class Grid:
                 self.dy[animate + 3] = int(
                     (self.ey[animate + 3] - c.spr.get_xy()[1]) / DELTA)
                 self.animation_lock[animate + 3] = True
-                GObject.timeout_add(STEP_PAUSE, self._move_to_position,
+                GLib.timeout_add(STEP_PAUSE, self._move_to_position,
                                     c.spr, animate + 3)
 
     def xy_to_match(self, pos):

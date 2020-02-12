@@ -19,7 +19,7 @@ gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk
 from gi.repository import Gdk
 from gi.repository import GdkPixbuf
-from gi.repository import GObject
+from gi.repository import GLib
 gi.require_version('PangoCairo', '1.0')
 from gi.repository import Pango
 
@@ -442,7 +442,7 @@ class Game():
                 self._hide_number_type_selector()
             self.activity.get_window().set_cursor(Gdk.Cursor.new(
                 Gdk.CursorType.WATCH))
-        GObject.timeout_add(200, self._prepare_new_game)
+        GLib.timeout_add(200, self._prepare_new_game)
 
     def _prepare_new_game(self):
         # If there is already a deck, hide it.
@@ -530,14 +530,14 @@ class Game():
 
         if self._game_over():
             if hasattr(self, 'timeout_id') and self.timeout_id is not None:
-                GObject.source_remove(self.timeout_id)
+                GLib.source_remove(self.timeout_id)
         else:
             if hasattr(self, 'match_timeout_id') and \
                     self.match_timeout_id is not None:
-                GObject.source_remove(self.match_timeout_id)
+                GLib.source_remove(self.match_timeout_id)
             if hasattr(self, 'animation_timeout_id') and \
                     self.animation_timeout_id is not None:
-                GObject.source_remove(self.animation_timeout_id)
+                GLib.source_remove(self.animation_timeout_id)
             self._timer_reset()
 
         self._hide_smiley()
@@ -586,7 +586,7 @@ class Game():
             self._hide_number_type_selector()
             self.activity.get_window().set_cursor(Gdk.Cursor.new(
                 Gdk.CursorType.WATCH))
-        GObject.idle_add(self._edit_custom_card_action)
+        GLib.idle_add(self._edit_custom_card_action)
 
     def _edit_custom_card_action(self):
         # Set the card type to custom, and generate a new deck.
@@ -608,7 +608,7 @@ class Game():
         self._edit_card = None
         self._dead_key = None
         if hasattr(self, 'timeout_id') and self.timeout_id is not None:
-            GObject.source_remove(self.timeout_id)
+            GLib.source_remove(self.timeout_id)
 
         # Fill the grid with custom cards.
         self.grid.restore(self.deck, CUSTOM_CARD_INDICIES)
@@ -647,7 +647,7 @@ class Game():
         self._edit_card = None
         self._dead_key = None
         if hasattr(self, 'timeout_id') and self.timeout_id is not None:
-            GObject.source_remove(self.timeout_id)
+            GLib.source_remove(self.timeout_id)
         # Fill the grid with word cards.
         self.grid.restore(self.deck, WORD_CARD_INDICIES)
         self.set_label('deck', '')
@@ -724,7 +724,7 @@ class Game():
 
         # New game card
         if spr is not None and spr == self._new_game_spr:
-            GObject.timeout_add(100, self.new_game)
+            GLib.timeout_add(100, self.new_game)
 
         # Turn off help animation
         # not self._stop_help_on_click:
@@ -748,14 +748,14 @@ class Game():
             if spr.type == 'help-button':
                 self._help_buttons[0].hide()
                 self._help_buttons[1].set_layer(ANIMATION_LAYER)
-            GObject.timeout_add(100, self.help_animation)
+            GLib.timeout_add(100, self.help_animation)
             return True
 
         if spr.type in ['chart-button', 'chart-button-selected']:
             if spr.type == 'chart-button':
                 self._help_buttons[2].hide()
                 self._help_buttons[3].set_layer(ANIMATION_LAYER)
-            GObject.timeout_add(100, self.score_chart)
+            GLib.timeout_add(100, self.score_chart)
             return True
 
         # Change card type
@@ -784,7 +784,7 @@ class Game():
                 self.edit_custom_card()
             else:
                 self._choosing_card_type = False
-                GObject.timeout_add(100, self.new_game)
+                GLib.timeout_add(100, self.new_game)
             return True
 
         # Change number c type
@@ -803,7 +803,7 @@ class Game():
             self.numberC = i
             self._choosing_number_type = False
             self._choosing_card_type = False
-            GObject.timeout_add(100, self.new_game)
+            GLib.timeout_add(100, self.new_game)
             return True
 
         # Change number o type
@@ -822,7 +822,7 @@ class Game():
             self.numberO = i
             self._choosing_number_type = False
             self._choosing_card_type = False
-            GObject.timeout_add(100, self.new_game)
+            GLib.timeout_add(100, self.new_game)
             return True
 
         # Hide a frowny
@@ -1188,7 +1188,7 @@ class Game():
                            (_('Game over'), int(self.total_time / 60),
                             int(self.total_time % 60)))
             self._smiley[0].show_card()
-            self.animation_timeout_id = GObject.timeout_add(
+            self.animation_timeout_id = GLib.timeout_add(
                 100, self._show_animation, 0)
             self._the_game_is_over = True
         elif self.grid.cards_in_grid() == DEAL + 3 \
@@ -1206,8 +1206,8 @@ class Game():
             # Stop the timer.
             if hasattr(self, 'timeout_id'):
                 if self.timeout_id is not None:
-                    GObject.source_remove(self.timeout_id)
-                self.total_time += GObject.get_current_time() - self.start_time
+                    GLib.source_remove(self.timeout_id)
+                self.total_time += GLib.get_current_time() - self.start_time
 
             # Increment the match counter and add the match to the match list.
             self.matches += 1
@@ -1218,7 +1218,7 @@ class Game():
             # Test to see if the game is over.
             if self._game_over():
                 if hasattr(self, 'timeout_id'):
-                    GObject.source_remove(self.timeout_id)
+                    GLib.source_remove(self.timeout_id)
                 if self.low_score[self.level] == -1:
                     self.low_score[self.level] = self.total_time
                 elif self.total_time < self.low_score[self.level]:
@@ -1238,7 +1238,7 @@ class Game():
                 if self.deck.cards_remaining() > 0:
                     self._dealing = True
                     # Wait a few seconds before dealing new cards.
-                    GObject.timeout_add(2000, self._deal_new_cards)
+                    GLib.timeout_add(2000, self._deal_new_cards)
 
             # Keep playing.
             self._update_labels()
@@ -1374,7 +1374,7 @@ class Game():
 
     def _counter(self):
         ''' Display of seconds since start_time. '''
-        seconds = int(GObject.get_current_time() - self.start_time)
+        seconds = int(GLib.get_current_time() - self.start_time)
         self.set_label('clock', str(seconds))
 
         if seconds == 5:
@@ -1384,34 +1384,34 @@ class Game():
         if self.robot and self.robot_time < seconds:
             self._find_a_match(robot_match=True)
         else:
-            self.timeout_id = GObject.timeout_add(1000, self._counter)
+            self.timeout_id = GLib.timeout_add(1000, self._counter)
 
     def _timer_reset(self):
         ''' Reset the timer for the robot '''
-        self.start_time = GObject.get_current_time()
+        self.start_time = GLib.get_current_time()
         self.timeout_id = None
         if not self._the_game_is_over:
             self._counter()
 
     def _show_animation(self, i):
         if True in self.grid.animation_lock:
-            GObject.timeout_add(500, self._show_animation, 0)
+            GLib.timeout_add(500, self._show_animation, 0)
 
         ''' Show smiley animation '''
         '''
         if i < len(self._smiley) - 1:
             self._smiley[i].show_card(layer=ANIMATION_LAYER)
-            self.animation_timeout_id = GObject.timeout_add(
+            self.animation_timeout_id = GLib.timeout_add(
                 50, self._show_animation, i + 1)
         else:
             for card in self._smiley:
                 card.spr.hide()
-            self.match_timeout_id = GObject.timeout_add(
+            self.match_timeout_id = GLib.timeout_add(
                 1000, self._show_matches, 0)
         '''
         for i in range(3):
             self._smiley_sprs[i].set_layer(ANIMATION_LAYER)
-        self.match_timeout_id = GObject.timeout_add(
+        self.match_timeout_id = GLib.timeout_add(
             1000, self._show_matches, 0)
 
     def _show_matches(self, i):
@@ -1425,7 +1425,7 @@ class Game():
                 self.grid.display_match(
                     self.match_list[i * CARDS_IN_A_MATCH + j], j,
                     animate=False)
-            self.match_timeout_id = GObject.timeout_add(
+            self.match_timeout_id = GLib.timeout_add(
                 2000, self._show_matches, i + 1)
         else:
             for j in range(3):
@@ -1439,7 +1439,7 @@ class Game():
         if self._matches_on_display:
             if not self.deck.empty():
                 self._matches_on_display = False
-                GObject.timeout_add(1000, self.clean_up_match)
+                GLib.timeout_add(1000, self.clean_up_match)
         else:
             for c in self.clicked:
                 if c.spr is not None:
@@ -1459,7 +1459,7 @@ class Game():
                     self._showing_robot_match = True
                     # Stop animations before moving robot match
                     self.grid.stop_animation = True
-                    GObject.timeout_add(1500, self._robot_match, i)
+                    GLib.timeout_add(1500, self._robot_match, i)
                     if self._sugar:
                         self._robot_card.spr.set_layer(SMILE_LAYER)
                 return True
@@ -1477,7 +1477,7 @@ class Game():
             logging.debug('in robot match, grid[%d] is None' % (match[0]))
         self.grid.grid[match[0]] = None
         logging.debug('calling next_robot_match %r 1' % match)
-        GObject.timeout_add(1500, self._next_robot_match, match, 1)
+        GLib.timeout_add(1500, self._next_robot_match, match, 1)
 
     def _next_robot_match(self, match, j):
         if j == 1:
@@ -1491,7 +1491,7 @@ class Game():
                 return
             self.grid.grid[match[1]] = None
             logging.debug('calling next_robot_match %r 2' % match)
-            GObject.timeout_add(1500, self._next_robot_match, match, 2)
+            GLib.timeout_add(1500, self._next_robot_match, match, 2)
         elif j == 2:
             if self.grid.grid[match[2]] is not None:
                 self.clicked[2].spr = self.grid.grid[match[2]].spr
@@ -1549,7 +1549,7 @@ class Game():
         ''' Select a custom card from the Journal '''
         self.activity.get_window().set_cursor(Gdk.Cursor.new(
             Gdk.CursorType.WATCH))
-        GObject.idle_add(self._choose_custom_card_action)
+        GLib.idle_add(self._choose_custom_card_action)
 
     def _choose_custom_card_action(self):
         from sugar3.graphics.objectchooser import ObjectChooser
@@ -1968,7 +1968,7 @@ class Game():
             self._sprites.draw_all()
             return True
 
-        GObject.idle_add(draw_layer)
+        GLib.idle_add(draw_layer)
 
     def help_animation(self):
         ''' Simple explanatory animation at start of play '''
@@ -1979,7 +1979,7 @@ class Game():
         self.activity.get_window().set_cursor(Gdk.Cursor.new(
             Gdk.CursorType.WATCH))
 
-        GObject.idle_add(self._complete_loading)
+        GLib.idle_add(self._complete_loading)
 
     def _complete_loading(self):
         if self.portrait:
@@ -2014,7 +2014,7 @@ class Game():
         self.activity.get_window().set_cursor(self._old_cursor)
         self._sprites.draw_all()
 
-        self._help_timeout_id = GObject.timeout_add(2000, self._help_next)
+        self._help_timeout_id = GLib.timeout_add(2000, self._help_next)
 
     def _help_next(self):
         ''' Load the next frame in the animation '''
@@ -2028,7 +2028,7 @@ class Game():
             pause = 2000
         else:
             pause = 750
-        self._help_timeout_id = GObject.timeout_add(pause, self._help_next)
+        self._help_timeout_id = GLib.timeout_add(pause, self._help_next)
 
     def _generate_scorechart(self):
         y_labels = []
