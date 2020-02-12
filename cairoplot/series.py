@@ -27,13 +27,14 @@
 #import cairoplot
 import doctest
 
-NUMTYPES = (int, float, long)
+NUMTYPES = (int, float, int)
 LISTTYPES = (list, tuple)
-STRTYPES = (str, unicode)
+STRTYPES = (str)
 FILLING_TYPES = ['linear', 'solid', 'gradient']
 DEFAULT_COLOR_FILLING = 'solid'
 #TODO: Define default color list
 DEFAULT_COLOR_LIST = None
+
 
 class Data(object):
     '''
@@ -73,9 +74,10 @@ class Data(object):
         self.parent = parent
         self.name = name
         self.content = data
+
         
     # Name property
-    @apply
+    @property
     def name():
         doc = '''
             Name is a read/write property that controls the input of name.
@@ -115,7 +117,7 @@ class Data(object):
         return property(**locals())
 
     # Content property
-    @apply
+    @property
     def content():
         doc = '''
             Content is a read/write property that validate the data passed
@@ -157,15 +159,15 @@ class Data(object):
             elif type(data) in LISTTYPES:
                 # Ensures the correct size
                 if len(data) not in (2, 3):
-                    raise TypeError, "Data (as list/tuple) must have 2 or 3 items"
+                    raise TypeError("Data (as list/tuple) must have 2 or 3 items")
                     return
                     
                 # Ensures that all items in list/tuple is a number
                 isnum = lambda x : type(x) not in NUMTYPES
                     
-                if max(map(isnum, data)):
+                if max(list(map(isnum, data))):
                     # An item in data isn't an int or a float
-                    raise TypeError, "All content of data must be a number (int or float)"
+                    raise TypeError("All content of data must be a number (int or float)")
                     
                 # Convert the tuple to list
                 if type(data) is list:
@@ -177,7 +179,7 @@ class Data(object):
             # Unknown type!
             else:
                 self.__content = None
-                raise TypeError, "Data must be an int, float or a tuple with two or three items"
+                raise TypeError("Data must be an int, float or a tuple with two or three items")
                 return
             
         return property(**locals())
@@ -292,7 +294,7 @@ class Group(object):
         self.data_list = group
         
     # Name property
-    @apply
+    @property
     def name():
         doc = '''
             Name is a read/write property that controls the input of name.
@@ -330,7 +332,7 @@ class Group(object):
         return property(**locals())
 
     # data_list property
-    @apply
+    @property
     def data_list():
         doc = '''
             The data_list is a read/write property that can be a list of
@@ -417,7 +419,7 @@ class Group(object):
                 # Don't have range anywhere
                 else:
                     # x_data don't exist
-                    raise Exception, "Data argument is valid but to use function type please set x_range first"
+                    raise Exception("Data argument is valid but to use function type please set x_range first")
                 
             # Coordinate Lists
             elif type(group) in LISTTYPES and type(group[0]) is list:
@@ -425,21 +427,21 @@ class Group(object):
                 self.__data_list = []
                 data = []
                 if len(group) == 3:
-                    data = zip(group[0], group[1], group[2])
+                    data = list(zip(group[0], group[1], group[2]))
                 elif len(group) == 2:
-                    data = zip(group[0], group[1])
+                    data = list(zip(group[0], group[1]))
                 else:
-                    raise TypeError, "Only one list of coordinates was received."
+                    raise TypeError("Only one list of coordinates was received.")
                 
                 for item in data:
                     self.add_data(item)
                 
             else:
-                raise TypeError, "Group type not supported"
+                raise TypeError("Group type not supported")
 
         return property(**locals())
 
-    @apply
+    @property
     def range():
         doc = '''
             The range is a read/write property that generates a range of values
@@ -483,7 +485,7 @@ class Group(object):
             # A list, just convert to float
             if type(x_range) is list and len(x_range) > 0:
                 # Convert all to float
-                x_range = map(float, x_range)
+                x_range = list(map(float, x_range))
                 # Prevents repeated values and convert back to list
                 self.__range = list(set(x_range[:]))
                 # Sort the list to ascending order
@@ -492,7 +494,7 @@ class Group(object):
             # A tuple, must check the lengths and generate the values
             elif type(x_range) is tuple and len(x_range) in (1,2,3):
                 # Convert all to float
-                x_range = map(float, x_range)
+                x_range = list(map(float, x_range))
                 
                 # Inital values
                 start = 0.0
@@ -524,7 +526,7 @@ class Group(object):
                 
             # Incorrect type
             else:
-                raise Exception, "x_range must be a list with one or more items or a tuple with 2 or 3 items"
+                raise Exception("x_range must be a list with one or more items or a tuple with 2 or 3 items")
         
         return property(**locals())
 
@@ -650,7 +652,7 @@ class Colors(object):
         
         self.color_list = color_list
     
-    @apply
+    @property
     def color_list():
         doc = '''
         >>> c = Colors([[1,1,1],[2,2,2,'linear'],[3,3,3,'gradient']])
@@ -681,26 +683,26 @@ class Colors(object):
                 old_color_list = color_list[:]
                 color_list = {}
                 for index, color in enumerate(old_color_list):
-                    if len(color) is 3 and max(map(type, color)) in NUMTYPES:
+                    if len(color) is 3 and max(list(map(type, color))) in NUMTYPES:
                         color_list['Color '+str(index+1)] = list(color)+[DEFAULT_COLOR_FILLING]
-                    elif len(color) is 4 and max(map(type, color[:-1])) in NUMTYPES and color[-1] in FILLING_TYPES:
+                    elif len(color) is 4 and max(list(map(type, color[:-1]))) in NUMTYPES and color[-1] in FILLING_TYPES:
                         color_list['Color '+str(index+1)] = list(color)
                     else:
-                        raise TypeError, "Unsuported color format"
+                        raise TypeError("Unsuported color format")
             elif type(color_list) is not dict:
-                raise TypeError, "Unsuported color format"
+                raise TypeError("Unsuported color format")
             
-            for name, color in color_list.items():
+            for name, color in list(color_list.items()):
                 if len(color) is 3:
-                    if max(map(type, color)) in NUMTYPES:
+                    if max(list(map(type, color))) in NUMTYPES:
                         color_list[name] = list(color)+[DEFAULT_COLOR_FILLING]
                     else:
-                        raise TypeError, "Unsuported color format"
+                        raise TypeError("Unsuported color format")
                 elif len(color) is 4:
-                    if max(map(type, color[:-1])) in NUMTYPES and color[-1] in FILLING_TYPES:
+                    if max(list(map(type, color[:-1]))) in NUMTYPES and color[-1] in FILLING_TYPES:
                         color_list[name] = list(color)
                     else:
-                        raise TypeError, "Unsuported color format"
+                        raise TypeError("Unsuported color format")
             self.__color_list = color_list.copy()
         
         return property(**locals())
@@ -772,7 +774,7 @@ class Series(object):
         self.colors = colors
         
     # Name property
-    @apply
+    @property
     def name():
         doc = '''
             Name is a read/write property that controls the input of name.
@@ -812,7 +814,7 @@ class Series(object):
         
         
     # Colors property
-    @apply
+    @property
     def colors():
         doc = '''
         >>> s = Series()
@@ -840,7 +842,7 @@ class Series(object):
         
         return property(**locals())
         
-    @apply
+    @property
     def range():
         doc = '''
             The range is a read/write property that generates a range of values
@@ -884,7 +886,7 @@ class Series(object):
             # A list, just convert to float
             if type(x_range) is list and len(x_range) > 0:
                 # Convert all to float
-                x_range = map(float, x_range)
+                x_range = list(map(float, x_range))
                 # Prevents repeated values and convert back to list
                 self.__range = list(set(x_range[:]))
                 # Sort the list to ascending order
@@ -893,7 +895,7 @@ class Series(object):
             # A tuple, must check the lengths and generate the values
             elif type(x_range) is tuple and len(x_range) in (1,2,3):
                 # Convert all to float
-                x_range = map(float, x_range)
+                x_range = list(map(float, x_range))
                 
                 # Inital values
                 start = 0.0
@@ -925,11 +927,11 @@ class Series(object):
                 
             # Incorrect type
             else:
-                raise Exception, "x_range must be a list with one or more item or a tuple with 2 or 3 items"
+                raise Exception("x_range must be a list with one or more item or a tuple with 2 or 3 items")
             
         return property(**locals())
     
-    @apply
+    @property
     def group_list():
         doc = '''
             The group_list is a read/write property used to pre-process the list
@@ -1008,7 +1010,7 @@ class Series(object):
                 
                 is_function = lambda x: callable(x)
                 # Groups
-                if list in map(type, series) or max(map(is_function, series)):
+                if list in list(map(type, series)) or max(list(map(is_function, series))):
                     for group in series:
                         self.add_group(group)
                         
@@ -1030,7 +1032,7 @@ class Series(object):
             # Dict representing series of groups
             elif type(series) is dict:
                 self.__group_list = []
-                names = series.keys()
+                names = list(series.keys())
                 names.sort()
                 for name in names:
                     self.add_group(Group(series[name],name,self))
@@ -1047,7 +1049,7 @@ class Series(object):
                 
             # Default
             else:
-                raise TypeError, "Serie type not supported"
+                raise TypeError("Serie type not supported")
 
         return property(**locals())
     

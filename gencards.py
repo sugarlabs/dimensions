@@ -377,19 +377,19 @@ class SVG:
     def _dots_in_a_line(self, number):
         if number % 3 == 0:
             y = 12.5
-            n = number / 3
+            n = number // 3
         elif number % 2 == 0:
             y = 22.5
-            n = number / 2
+            n = number // 2
         else:
             y = 32.5
             n = number
         if number % 5 == 0:
-            number /= 5
+            number //= 5
         elif number % 7 == 0:
-            number /= 7
+            number //= 7
         else:
-            number /= 11
+            number //= 11
         svg_string = ""
         for i in range(number):
             svg_string += self._svg_line_of_dots(n, 5, y)
@@ -400,21 +400,21 @@ class SVG:
         svg_string = ""
         if number % 3 == 0:
             x = 25
-            n = number / 3
+            n = number // 3
         elif number % 2 == 0:
             x = 37.5
-            n = number / 2
+            n = number // 2
         else:
             x = 62.5
             n = number
         if number % 5 == 0:
-            number /= 5
+            number //= 5
             y = 15
         elif number % 7 == 0:
-            number /= 7
+            number //= 7
             y = 15
         else:
-            number /= 11
+            number //= 11
             y = 15
         for i in range(number):
             if number == 3:
@@ -435,21 +435,21 @@ class SVG:
         svg_string = ""
         if number % 3 == 0:
             x = 25
-            n = number / 3
+            n = number // 3
         elif number % 2 == 0:
             x = 37.5
-            n = number / 2
+            n = number // 2
         else:
             x = 62.5
             n = number
         if number % 5 == 0:
-            number /= 5
+            number //= 5
             y = 5
         elif number % 7 == 0:
-            number /= 7
+            number //= 7
             y = 5
         else:
-            number /= 11
+            number //= 11
             y = 5
         for i in range(number):
             if number == 3:
@@ -470,19 +470,19 @@ class SVG:
         svg_string = ""
         if number % 3 == 0:
             y = 12.5
-            n = number / 3
+            n = number // 3
         elif number % 2 == 0:
             y = 22.5
-            n = number / 2
+            n = number // 2
         else:
             y = 32.5
             n = number
         if number % 5 == 0:
-            number /= 5
+            number //= 5
         elif number % 7 == 0:
-            number /= 7
+            number //= 7
         else:
-            number /= 11
+            number //= 11
         for i in range(number):
             svg_string += self._svg_hash(n, 5, y)
             y += 20
@@ -969,7 +969,7 @@ def generate_new_smiley_card(width=125, height=75):
 
 
 def open_file(datapath, filename):
-    return file(os.path.join(datapath, filename), "w")
+    return open(os.path.join(datapath, filename), "w")
 
 
 def close_file(f):

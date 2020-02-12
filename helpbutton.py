@@ -53,7 +53,7 @@ class HelpButton(Gtk.ToolItem):
         help_button.connect('clicked', self.__help_button_clicked_cb)
 
     def __help_button_clicked_cb(self, button):
-        for key in help_buttons.keys():
+        for key in list(help_buttons.keys()):
             if help_buttons[key].is_expanded():
                 self._palette.set_content(help_windows[key])
                 help_windows[key].show_all()

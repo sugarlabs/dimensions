@@ -65,7 +65,7 @@ class Card:
 def svg_str_to_pixbuf(string, embedded_picture=False):
     ''' Load pixbuf from SVG string '''
     pl = GdkPixbuf.PixbufLoader.new_with_type('svg')
-    pl.write(string)
+    pl.write(string.encode('utf-8'))
     pl.close()
     pixbuf = pl.get_pixbuf()
     pixbuf2 = None
