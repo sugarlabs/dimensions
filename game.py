@@ -712,7 +712,7 @@ class Game():
         ''' Look for a card under the button press and save its position. '''
         win.grab_focus()
 
-        x, y = map(int, event.get_coords())
+        x, y = list(map(int, event.get_coords()))
         self._button_press(x, y)
 
     def _button_press(self, x, y):
@@ -909,7 +909,7 @@ class Game():
     def _mouse_move_cb(self, win, event):
         ''' Drag the card with the mouse. '''
         win.grab_focus()
-        x, y = map(int, event.get_coords())
+        x, y = list(map(int, event.get_coords()))
         self._drag_event(x, y)
 
     def _drag_event(self, x, y):
@@ -926,7 +926,7 @@ class Game():
     def _button_release_cb(self, win, event):
         ''' Lots of possibilities here between clicks and drags '''
         win.grab_focus()
-        x, y = map(int, event.get_coords())
+        x, y = list(map(int, event.get_coords()))
         self._button_release(x, y)
 
     def _button_release(self, x, y):
@@ -2043,7 +2043,7 @@ class Game():
         total_games = 1
         all_numbers = []
 
-        for key in self.all_scores.keys():
+        for key in list(self.all_scores.keys()):
             for data in self.all_scores[key]:
                 if data[0] == 0:
                     level1.append(data[1])
@@ -2102,16 +2102,16 @@ class Permutation:
         self._sofar = []
 
     def __iter__(self):
-        return self.next()
+        return next(self)
 
-    def next(self):
+    def __next__(self):
         for e in self._data:
             if e not in self._sofar:
                 self._sofar.append(e)
                 if len(self._sofar) == 3:
                     yield self._sofar[:]
                 else:
-                    for v in self.next():
+                    for v in next(self):
                         yield v
                 self._sofar.pop()
 
@@ -2120,7 +2120,7 @@ def svg_str_to_pixbuf(svg_string, w, h):
     """ Load pixbuf from SVG string """
     pl = GdkPixbuf.PixbufLoader.new_with_type('svg')
     pl.set_size(w, h)
-    pl.write(svg_string)
+    pl.write(svg_string.encode('utf-8'))
     pl.close()
     pixbuf = pl.get_pixbuf()
     return pixbuf
@@ -2128,7 +2128,7 @@ def svg_str_to_pixbuf(svg_string, w, h):
 
 def svg_from_file(pathname):
     """ Read SVG string from a file """
-    f = file(pathname, 'r')
+    f = open(pathname, 'r')
     svg = f.read()
     f.close()
     return(svg)

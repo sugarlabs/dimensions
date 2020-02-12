@@ -69,7 +69,7 @@ Example usage:
 # method for converting SVG to a gtk pixbuf
 def svg_str_to_pixbuf(svg_string):
     pl = GdkPixbuf.PixbufLoader('svg')
-    pl.write(svg_string)
+    pl.write(svg_string.encode('utf-8'))
     pl.close()
     pixbuf = pl.get_pixbuf()
     return pixbuf
@@ -279,7 +279,7 @@ class Sprite:
     def set_label(self, new_label, i=0):
         ''' Set the label drawn on the sprite '''
         self._extend_labels_array(i)
-        if isinstance(new_label, str) or isinstance(new_label, unicode):
+        if isinstance(new_label, str) or isinstance(new_label, str):
             # pango doesn't like nulls
             self.labels[i] = new_label.replace("\0", " ")
         else:
