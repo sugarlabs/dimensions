@@ -849,7 +849,6 @@ class Dimensions(activity.Activity):
                       params, state)
 
         if (type == TUBE_TYPE_DBUS and service == SERVICE):
-            # TODO: not sure if this is correct constant
             if state == LOCAL_PENDING:
                 self.tubes_chan[
                     CHANNEL_TYPE_TUBES].AcceptDBusTube(id)

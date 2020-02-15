@@ -422,6 +422,9 @@ class Game():
     def new_game(self, saved_state=None, deck_index=0, show_selector=False):
         ''' Start a new game '''
         # If we were editing the word list, time to stop
+        self.timeout_id = None
+        self.match_timeout_id = None
+        self.animation_timeout_id = None
         self.grid.stop_animation = True
         self.editing_word_list = False
         self.editing_custom_cards = False
@@ -529,7 +532,7 @@ class Game():
         self._the_game_is_over = False
 
         if self._game_over():
-            if hasattr(self, 'timeout_id') and self.timeout_id is not None:
+            if hasattr(self, 'timeout_id') and self.timeout_id:
                 GLib.source_remove(self.timeout_id)
         else:
             if hasattr(self, 'match_timeout_id') and \
@@ -607,7 +610,7 @@ class Game():
         self.total_time = 0
         self._edit_card = None
         self._dead_key = None
-        if hasattr(self, 'timeout_id') and self.timeout_id is not None:
+        if hasattr(self, 'timeout_id') and self.timeout_id:
             GLib.source_remove(self.timeout_id)
 
         # Fill the grid with custom cards.
@@ -646,7 +649,7 @@ class Game():
         self.total_time = 0
         self._edit_card = None
         self._dead_key = None
-        if hasattr(self, 'timeout_id') and self.timeout_id is not None:
+        if hasattr(self, 'timeout_id') and self.timeout_id:
             GLib.source_remove(self.timeout_id)
         # Fill the grid with word cards.
         self.grid.restore(self.deck, WORD_CARD_INDICIES)
@@ -1205,7 +1208,7 @@ class Game():
                              self.card_type):
             # Stop the timer.
             if hasattr(self, 'timeout_id'):
-                if self.timeout_id is not None:
+                if self.timeout_id:
                     GLib.source_remove(self.timeout_id)
                 self.total_time += GLib.get_current_time() - self.start_time
 
@@ -1217,8 +1220,9 @@ class Game():
 
             # Test to see if the game is over.
             if self._game_over():
-                if hasattr(self, 'timeout_id'):
+                if hasattr(self, 'timeout_id') and self.timeout_id:
                     GLib.source_remove(self.timeout_id)
+                    self.timeout_id = None
                 if self.low_score[self.level] == -1:
                     self.low_score[self.level] = self.total_time
                 elif self.total_time < self.low_score[self.level]:
