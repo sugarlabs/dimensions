@@ -1,6 +1,6 @@
 import cairo, math, sys
 
-from . import cairoplot
+import cairoplot
 from .series import Series
 
 # non-random data for needs of visual comparison of changes

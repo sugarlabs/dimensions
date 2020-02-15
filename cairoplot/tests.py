@@ -1,6 +1,6 @@
 import cairo, math, random
 
-from . import cairoplot
+import cairoplot
 
 # Line plotting
 test_scatter_plot = 1

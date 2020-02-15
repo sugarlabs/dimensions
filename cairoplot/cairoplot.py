@@ -35,6 +35,7 @@ import cairo
 import math
 import random
 from .series import Series, Group, Data
+import collections
 
 HORZ = 0
 VERT = 1
@@ -62,7 +63,7 @@ def colors_from_theme( theme, series_length, mode = 'solid' ):
     if series_length <= n_colors:
         colors = [color + tuple([mode]) for color in color_steps[0:n_colors]]
     else:
-        iterations = [(series_length - n_colors)/(n_colors - 1) for i in color_steps[:-1]]
+        iterations = [(series_length - n_colors)//(n_colors - 1) for i in color_steps[:-1]]
         over_iterations = (series_length - n_colors) % (n_colors - 1)
         for i in range(n_colors - 1):
             if over_iterations <= 0:
@@ -97,7 +98,7 @@ def other_direction(direction):
 
 #Class definition
 
-class Plot(object):
+class Plot:
     def __init__(self, 
                  surface=None,
                  data=None,
@@ -108,22 +109,24 @@ class Plot(object):
                  x_labels = None,
                  y_labels = None,
                  series_colors = None):
-        random.seed(2)
-        self.create_surface(surface, width, height)
+        if isinstance(surface, cairo.Context):
+            self.context = surface
+        else:
+            self.create_surface(surface, width, height)
+            self.context = cairo.Context(self.surface)
         self.dimensions = {}
         self.dimensions[HORZ] = width
         self.dimensions[VERT] = height
-        self.context = cairo.Context(self.surface)
-        self.labels={}
+        self.labels = {}
         self.labels[HORZ] = x_labels
         self.labels[VERT] = y_labels
         self.load_series(data, x_labels, y_labels, series_colors)
         self.font_size = 10
-        self.set_background (background)
+        self.set_background(background)
         self.border = border
         self.borders = {}
         self.line_color = (0.5, 0.5, 0.5)
-        self.line_width = 1
+        self.line_width = 0.5
         self.label_color = (0.0, 0.0, 0.0)
         self.grid_color = (0.8, 0.8, 0.8)
     
@@ -132,7 +135,7 @@ class Plot(object):
         if isinstance(surface, cairo.Surface):
             self.surface = surface
             return
-        if not type(surface) in (str):
+        if type(surface) is not str:
             raise TypeError("Surface should be either a Cairo surface or a filename, not %s" % surface)
         sufix = surface.rsplit(".")[-1].lower()
         self.filename = surface
@@ -148,6 +151,8 @@ class Plot(object):
             self.surface = cairo.SVGSurface(self.filename, width, height)
 
     def commit(self):
+        if not hasattr(self, "surface"):
+            return
         try:
             self.context.show_page()
             if self.filename and self.filename.endswith(".png"):
@@ -160,7 +165,7 @@ class Plot(object):
     def load_series (self, data, x_labels=None, y_labels=None, series_colors=None):
         self.series_labels = []
         self.series = None
-        
+
         #The pretty way
         #if not isinstance(data, Series):
         #    # Not an instance of Series
@@ -169,10 +174,10 @@ class Plot(object):
         #    self.series = data
         #    
         #self.series_labels = self.series.get_names()
-        
+
         #TODO: Remove on next version
         # The ugly way, keeping retrocompatibility...
-        if callable(data) or type(data) is list and callable(data[0]): # Lambda or List of lambdas
+        if isinstance(data, collections.Callable) or type(data) is list and isinstance(data[0], collections.Callable): # Lambda or List of lambdas
             self.series = data
             self.series_labels = None
         elif isinstance(data, Series): # Instance of Series
@@ -183,7 +188,7 @@ class Plot(object):
             self.series_labels = self.series.get_names()
             
         #TODO: allow user passed series_widths
-        self.series_widths = [3.0 for group in self.series]
+        self.series_widths = [1.0 for group in self.series]
 
         #TODO: Remove on next version
         self.process_colors( series_colors )
@@ -199,12 +204,12 @@ class Plot(object):
             self.series_colors = [ [random.random() for i in range(3)] + [1.0, mode]  for series in range( length ) ]
         else:
             #Just theme pattern
-            if not hasattr( series_colors, "__iter__" ):
+            if not (hasattr(series_colors, "__iter__" ) and not isinstance(series_colors, str)):
                 theme = series_colors
                 self.series_colors = colors_from_theme( theme.lower(), length )
                 
             #Theme pattern and mode
-            elif not hasattr(series_colors, '__delitem__') and not hasattr( series_colors[0], "__iter__" ):
+            elif not hasattr(series_colors, '__delitem__') and not (hasattr(series_colors[0], "__iter__" ) and not isinstance(series_colors[0], str)):
                 theme = series_colors[0]
                 mode = series_colors[1]
                 self.series_colors = colors_from_theme( theme.lower(), length, mode )
@@ -214,7 +219,7 @@ class Plot(object):
                 self.series_colors = series_colors
                 for index, color in enumerate( self.series_colors ):
                     #element is a color name
-                    if not hasattr(color, "__iter__"):
+                    if not (hasattr(color, "__iter__") and not isinstance(color, str)):
                         self.series_colors[index] = COLORS[color.lower()] + tuple([mode])
                     #element is rgb tuple instead of rgba
                     elif len( color ) == 3 :
@@ -222,7 +227,7 @@ class Plot(object):
                     #element has 4 elements, might be rgba tuple or rgb tuple with mode
                     elif len( color ) == 4 :
                         #last element is mode
-                        if not hasattr(color[3], "__iter__"):
+                        if not (hasattr(color[3], "__iter__") and not isinstance(color[3], str)):
                             self.series_colors[index] += tuple([color[3]])
                             self.series_colors[index][3] = 1.0
                         #last element is alpha
@@ -230,17 +235,17 @@ class Plot(object):
                             self.series_colors[index] += tuple([mode])
 
     def get_width(self):
-        return self.surface.get_width()
+        return self.dimensions[HORZ]
     
     def get_height(self):
-        return self.surface.get_height()
+        return self.dimensions[VERT]
 
     def set_background(self, background):
         if background is None:
-            self.background = (0.0,0.0,0.0,0.0)
+            self.background = (0.0, 0.0, 0.0, 0.0)
         elif type(background) in (cairo.LinearGradient, tuple):
             self.background = background
-        elif not hasattr(background,"__iter__"):
+        elif isinstance(background, str):
             colors = background.split(" ")
             if len(colors) == 1 and colors[0] in COLORS:
                 self.background = COLORS[background]
@@ -347,13 +352,13 @@ class ScatterPlot( Plot ):
                 for item in group:
                     if len(item) is 3:
                         self.variable_radius = True
-            
+
         #Dictionary with lists  
         if hasattr(data, "keys") :
-            if hasattr( list(data.values())[0][0], "__delitem__" ) :
+            if hasattr(next(iter(data.values()))[0], "__delitem__") :
                 for key in list(data.keys()) :
                     data[key] = self.convert_list_to_tuple(data[key])
-            elif len(list(data.values())[0][0]) == 3:
+            elif len(next(iter(data.values()))[0]) == 3:
                     self.variable_radius = True
         #List
         elif hasattr(data[0], "__delitem__") :
@@ -410,7 +415,7 @@ class ScatterPlot( Plot ):
                 self.labels[VERT] = ["%d" % (int(self.bounds[VERT][0] + (amplitude * i / 10.0))) for i in range(11) ]
 
     def calc_extents(self, direction):
-        self.context.set_font_size(self.font_size * 2)
+        self.context.set_font_size(self.font_size * 0.8)
         self.max_value[direction] = max(self.context.text_extents(item)[2] for item in self.labels[direction])
         self.borders[other_direction(direction)] = self.max_value[direction] + self.border + 20
 
@@ -420,7 +425,7 @@ class ScatterPlot( Plot ):
         max_data_value = [0,0,0]
         
         for group in self.series:
-            if type(group[0].content) in (int, float, int):
+            if type(group[0].content) in (int, float):
                 group = [Data((index, item.content)) for index,item in enumerate(group)]
             
             for point in group:
@@ -501,7 +506,7 @@ class ScatterPlot( Plot ):
         cr.stroke()
 
         cr.set_source_rgba(*self.label_color)
-        self.context.set_font_size( 2 * self.font_size )
+        self.context.set_font_size( 1.2 * self.font_size )
         if self.titles[HORZ]:
             title_width,title_height = cr.text_extents(self.titles[HORZ])[2:4]
             cr.move_to( self.dimensions[HORZ]/2 - title_width/2, self.borders[VERT] - title_height/2 )
@@ -537,7 +542,7 @@ class ScatterPlot( Plot ):
             y -= horizontal_step
     
     def render_labels(self):
-        self.context.set_font_size(self.font_size * 2)
+        self.context.set_font_size(self.font_size * 0.8)
         self.render_horz_labels()
         self.render_vert_labels()
     
@@ -575,7 +580,7 @@ class ScatterPlot( Plot ):
 
     def render_legend(self):
         cr = self.context
-        cr.set_font_size(self.font_size * 2)
+        cr.set_font_size(self.font_size)
         cr.set_line_width(self.line_width)
 
         widest_word = max(self.series_labels, key = lambda item: self.context.text_extents(item)[2])
@@ -1049,7 +1054,7 @@ class BarPlot(Plot):
         self.context.fill()
 
     def render_labels(self):
-        self.context.set_font_size(self.font_size * 2)
+        self.context.set_font_size(self.font_size * 0.8)
         if self.labels[HORZ]:
             self.render_horz_labels()
         if self.labels[VERT]:
@@ -1057,7 +1062,7 @@ class BarPlot(Plot):
             
     def render_legend(self):
         cr = self.context
-        cr.set_font_size(self.font_size * 2)
+        cr.set_font_size(self.font_size)
         cr.set_line_width(self.line_width)
 
         widest_word = max(self.series_labels, key = lambda item: self.context.text_extents(item)[2])
@@ -1164,7 +1169,7 @@ class HorizontalBarPlot(BarPlot):
     def render_grid(self):
         self.context.set_source_rgba(0.8, 0.8, 0.8)
         if self.labels[HORZ]:
-            self.context.set_font_size(self.font_size * 2)
+            self.context.set_font_size(self.font_size * 0.8)
             step = (self.dimensions[HORZ] - 2*self.borders[HORZ] - self.value_label)/(len(self.labels[HORZ])-1)
             x = self.borders[HORZ]
             next_x = 0
@@ -1215,7 +1220,7 @@ class HorizontalBarPlot(BarPlot):
 
     def render_values(self):
         self.context.set_source_rgba(*self.value_label_color)
-        self.context.set_font_size(self.font_size * 2)
+        self.context.set_font_size(self.font_size * 0.8)
         if self.stack:
             for i,group in enumerate(self.series):
                 value = sum(group.to_list())
@@ -1391,7 +1396,7 @@ class VerticalBarPlot(BarPlot):
 
     def render_values(self):
         self.context.set_source_rgba(*self.value_label_color)
-        self.context.set_font_size(self.font_size * 2)
+        self.context.set_font_size(self.font_size * 0.8)
         if self.stack:
             for i,group in enumerate(self.series):
                 value = sum(group.to_list())
@@ -1432,7 +1437,7 @@ class VerticalBarPlot(BarPlot):
                         self.context.fill()
                     y0 += data.content*self.steps[VERT]
         else:
-            for i,group in enumerate(self.series):
+            for i, group in enumerate(self.series):
                 inner_step = self.steps[HORZ]/len(group)
                 y0 = self.borders[VERT]
                 x0 = self.borders[HORZ] + i*self.steps[HORZ] + (i+1)*self.space
@@ -1864,7 +1869,7 @@ class GanttChart (Plot) :
         cr.stroke()
 
     def render_labels(self):
-        self.context.set_font_size(2 * self.dimensions[HORZ])
+        self.context.set_font_size(0.02 * self.dimensions[HORZ])
 
         self.render_horz_labels()
         self.render_vert_labels()
@@ -2332,5 +2337,5 @@ def stream_chart(name,
 
 
 if __name__ == "__main__":
-    from . import tests
-    from . import seriestests
+    import tests
+    import seriestests
