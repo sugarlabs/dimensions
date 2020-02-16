@@ -56,8 +56,8 @@ THEMES = {"black_red"         : [(0.0,0.0,0.0,1.0), (1.0,0.0,0.0,1.0)],
 
 def colors_from_theme( theme, series_length, mode = 'solid' ):
     colors = []
-    if theme not in list(THEMES.keys()):
-        raise Exception("Theme not defined")
+    if theme not in list(THEMES.keys()) :
+        raise Exception("Theme not defined") 
     color_steps = THEMES[theme]
     n_colors = len(color_steps)
     if series_length <= n_colors:
@@ -135,7 +135,7 @@ class Plot:
         if isinstance(surface, cairo.Surface):
             self.surface = surface
             return
-        if type(surface) is not str:
+        if type(surface) is not str: 
             raise TypeError("Surface should be either a Cairo surface or a filename, not %s" % surface)
         sufix = surface.rsplit(".")[-1].lower()
         self.filename = surface
@@ -165,7 +165,7 @@ class Plot:
     def load_series (self, data, x_labels=None, y_labels=None, series_colors=None):
         self.series_labels = []
         self.series = None
-
+        
         #The pretty way
         #if not isinstance(data, Series):
         #    # Not an instance of Series
@@ -174,7 +174,7 @@ class Plot:
         #    self.series = data
         #    
         #self.series_labels = self.series.get_names()
-
+        
         #TODO: Remove on next version
         # The ugly way, keeping retrocompatibility...
         if isinstance(data, collections.Callable) or type(data) is list and isinstance(data[0], collections.Callable): # Lambda or List of lambdas
@@ -352,10 +352,10 @@ class ScatterPlot( Plot ):
                 for item in group:
                     if len(item) is 3:
                         self.variable_radius = True
-
+            
         #Dictionary with lists  
         if hasattr(data, "keys") :
-            if hasattr(next(iter(data.values()))[0], "__delitem__") :
+            if hasattr( next(iter(data.values()))[0], "__delitem__" ) :
                 for key in list(data.keys()) :
                     data[key] = self.convert_list_to_tuple(data[key])
             elif len(next(iter(data.values()))[0]) == 3:

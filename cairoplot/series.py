@@ -24,6 +24,7 @@
 
 # Contributor: Rodrigo Moreiro Araujo <alf.rodrigo@gmail.com>
 
+#import cairoplot
 import doctest
 import collections
 
@@ -33,7 +34,6 @@ FILLING_TYPES = ['linear', 'solid', 'gradient']
 DEFAULT_COLOR_FILLING = 'solid'
 #TODO: Define default color list
 DEFAULT_COLOR_LIST = None
-
 
 class Data(object):
     '''
@@ -96,7 +96,7 @@ class Data(object):
             13
         '''
         return self.__name
-
+    
     @name.setter
     def name(self, name):
         '''
@@ -138,32 +138,32 @@ class Data(object):
         if data is None:
             self.__content = None
             return
-
+        
         # Type: Int or Float
         elif type(data) in NUMTYPES:
             self.__content = data
-
+        
         # Type: List or Tuple
         elif type(data) in LISTTYPES:
             # Ensures the correct size
             if len(data) not in (2, 3):
                 raise TypeError("Data (as list/tuple) must have 2 or 3 items")
                 return
-
+                
             # Ensures that all items in list/tuple is a number
             isnum = lambda x : type(x) not in NUMTYPES
-
+                
             if max(list(map(isnum, data))):
                 # An item in data isn't an int or a float
                 raise TypeError("All content of data must be a number (int or float)")
-
+                
             # Convert the tuple to list
             if type(data) is list:
                 data = tuple(data)
-
+                
             # Append a copy and sets the type
             self.__content = data[:]
-
+        
         # Unknown type!
         else:
             self.__content = None
@@ -301,7 +301,7 @@ class Group(object):
             ['13']
         '''
         return self.__name
-
+    
     @name.setter
     def name(self, name):
         '''
@@ -319,7 +319,7 @@ class Group(object):
             The data_list is a read/write property that can be a list of
             numbers, a list of points or a list of 2 or 3 coordinate lists. This
             property uses mainly the self.add_data method.
-
+            
             Usage:
             >>> g = Group(); g.data_list = 13; print g
             ['13']
@@ -350,18 +350,18 @@ class Group(object):
         # None
         if group is None:
             self.__data_list = []
-
+        
         # Int/float/long or Instance of Data
         elif type(group) in NUMTYPES or isinstance(group, Data):
             # Clean data_list
             self.__data_list = []
             self.add_data(group)
-
+        
         # One point
         elif type(group) is tuple and len(group) in (2,3):
             self.__data_list = []
             self.add_data(group)
-
+        
         # list of items
         elif type(group) in LISTTYPES and type(group[0]) is not list:
             # Clean data_list
@@ -369,7 +369,7 @@ class Group(object):
             for item in group:
                 # try to append and catch an exception
                 self.add_data(item)
-
+        
         # function lambda
         elif isinstance(group, collections.Callable):
             # Explicit is better than implicit
@@ -382,7 +382,7 @@ class Group(object):
                 for x in self.range:
                     #self.add_data((x,round(group(x),2)))
                     self.add_data((x,function(x)))
-
+                    
             # Only have range in parent
             elif self.parent is not None and len(self.parent.range) is not 0:
                 # Copy parent range
@@ -393,12 +393,12 @@ class Group(object):
                 for x in self.range:
                     #self.add_data((x,round(group(x),2)))
                     self.add_data((x,function(x)))
-
+                    
             # Don't have range anywhere
             else:
                 # x_data don't exist
                 raise Exception("Data argument is valid but to use function type please set x_range first")
-
+            
         # Coordinate Lists
         elif type(group) in LISTTYPES and type(group[0]) is list:
             # Clean data_list
@@ -410,10 +410,10 @@ class Group(object):
                 data = list(zip(group[0], group[1]))
             else:
                 raise TypeError("Only one list of coordinates was received.")
-
+            
             for item in data:
                 self.add_data(item)
-
+            
         else:
             raise TypeError("Group type not supported")
 
@@ -445,7 +445,7 @@ class Group(object):
             [0.0, 10.0, 20.0]
         '''
         return self.__range
-
+        
     @range.setter
     def range(self, x_range):
         '''
@@ -454,7 +454,7 @@ class Group(object):
         # if passed a simple number convert to tuple
         if type(x_range) in NUMTYPES:
             x_range = (x_range,)
-
+        
         # A list, just convert to float
         if type(x_range) is list and len(x_range) > 0:
             # Convert all to float
@@ -463,7 +463,7 @@ class Group(object):
             self.__range = list(set(x_range[:]))
             # Sort the list to ascending order
             self.__range.sort()
-
+        
         # A tuple, must check the lengths and generate the values
         elif type(x_range) is tuple and len(x_range) in (1,2,3):
             # Convert all to float
@@ -473,22 +473,22 @@ class Group(object):
             start = 0.0
             step = 1.0
             end = 0.0
-
+            
             # Only the end and it can't be less or iqual to 0
             if len(x_range) is 1 and x_range > 0:
                     end = x_range[0]
-
+            
             # The start and the end but the start must be less then the end
             elif len(x_range) is 2 and x_range[0] < x_range[1]:
                     start = x_range[0]
                     end = x_range[1]
-
+            
             # All 3, but the start must be less then the end
             elif x_range[0] <= x_range[1]:
                     start = x_range[0]
                     end = x_range[1]
                     step = x_range[2]
-
+            
             # Starts the range
             self.__range = []
             # Generate the range
@@ -496,7 +496,7 @@ class Group(object):
             while start < end:
                 self.__range.append(start)
                 start += step
-
+            
         # Incorrect type
         else:
             raise Exception("x_range must be a list with one or more items or a tuple with 2 or 3 items")
@@ -526,11 +526,12 @@ class Group(object):
         if not isinstance(data, Data):
             # Try to convert
             data = Data(data,name,self)
-
+        
         if data.content is not None:
             self.__data_list.append(data.copy())
             self.__data_list[-1].parent = self
- 
+        
+
     def to_list(self):
         '''
             Returns the group as a list of numbers (int, float or long) or a
@@ -545,7 +546,7 @@ class Group(object):
             [(1, 2, 3), (3, 4, 5)]
         '''
         return [data.content for data in self]
-
+    
     def copy(self):
         '''
             Returns a copy of this group
@@ -557,7 +558,7 @@ class Group(object):
         for data in self:
             new_group.add_data(data.copy())
         return new_group
- 
+    
     def get_names(self):
         '''
             Return a list with the names of all data in this group
@@ -569,7 +570,8 @@ class Group(object):
             else:
                 names.append(data.name)
         return names
-
+        
+    
     def __str__ (self):
         '''
             Returns a string representing the Group
@@ -583,13 +585,13 @@ class Group(object):
         else:
             ret += "[]"
         return ret
-
+    
     def __getitem__(self, key):
         '''
             Makes a Group iterable, based in the data_list property
         '''
         return self.data_list[key]
-
+    
     def __len__(self):
         '''
             Returns the length of the Group, based in the data_list property
@@ -618,9 +620,9 @@ class Colors(object):
             @ color_list - the list or dict contaning the colors properties.
         '''
         self.__color_list = None
-
+        
         self.color_list = color_list
-
+    
     @property
     def color_list(self):
         doc = '''
@@ -634,7 +636,7 @@ class Colors(object):
         >>> print c.color_list
         {'a': [1, 1, 1, 'solid'], 'c': [3, 3, 3, 'linear'], 'b': [2, 2, 2, 'solid'], 'd': [4, 4, 4, 'solid']}
         '''
-
+        
     @color_list.setter
     def color_list(self, color_list):
         '''
@@ -643,7 +645,7 @@ class Colors(object):
         if color_list is None:
             self.__color_list = None
             return
-
+        
         if type(color_list) in LISTTYPES and type(color_list[0]) in LISTTYPES:
             old_color_list = color_list[:]
             color_list = {}
@@ -656,7 +658,7 @@ class Colors(object):
                     raise TypeError("Unsuported color format")
         elif type(color_list) is not dict:
             raise TypeError("Unsuported color format")
-
+        
         for name, color in list(color_list.items()):
             if len(color) is 3:
                 if max(list(map(type, color))) in NUMTYPES:
@@ -669,8 +671,7 @@ class Colors(object):
                 else:
                     raise TypeError("Unsuported color format")
         self.__color_list = color_list.copy()
-
-
+    
 class Series:
     '''
         Class that models a Series (group of groups). Every value (int, float,
@@ -728,14 +729,14 @@ class Series:
         self.__group_list = []
         self.__name = None
         self.__range = None
-
+        
         # TODO: Implement colors with filling
         self.__colors = None
-
+        
         self.name = name
         self.group_list = series
         self.colors = colors
-
+        
     # Name property
     @property
     def name(self):
@@ -758,7 +759,7 @@ class Series:
             ["Group 1 ['13']"]
         '''
         return self.__name
-
+    
     @name.setter
     def name(self, name):
         '''
@@ -768,7 +769,8 @@ class Series:
             self.__name = name
         else:
             self.__name = None
-
+        
+        
     # Colors property
     @property
     def colors(self):
@@ -785,14 +787,14 @@ class Series:
         {'a': [1, 1, 1, 'solid'], 'c': [3, 3, 3, 'linear'], 'b': [2, 2, 2, 'solid'], 'd': [4, 4, 4, 'solid']}
         '''
         return self.__colors.color_list
-
+    
     @colors.setter
     def colors(self, colors):
         '''
             Format the color list to a dictionary
         '''
         self.__colors = Colors(colors)
-
+        
     @property
     def range(self):
         doc = '''
@@ -821,7 +823,7 @@ class Series:
             [0.0, 10.0, 20.0]
         '''
         return self.__range
-
+    
     @range.setter
     def range(self, x_range):
         '''
@@ -830,7 +832,7 @@ class Series:
         # if passed a simple number convert to tuple
         if type(x_range) in NUMTYPES:
             x_range = (x_range,)
-
+        
         # A list, just convert to float
         if type(x_range) is list and len(x_range) > 0:
             # Convert all to float
@@ -839,7 +841,7 @@ class Series:
             self.__range = list(set(x_range[:]))
             # Sort the list to ascending order
             self.__range.sort()
-
+        
         # A tuple, must check the lengths and generate the values
         elif type(x_range) is tuple and len(x_range) in (1,2,3):
             # Convert all to float
@@ -849,22 +851,22 @@ class Series:
             start = 0.0
             step = 1.0
             end = 0.0
-
+            
             # Only the end and it can't be less or iqual to 0
             if len(x_range) is 1 and x_range > 0:
                     end = x_range[0]
-
+            
             # The start and the end but the start must be lesser then the end
             elif len(x_range) is 2 and x_range[0] < x_range[1]:
                     start = x_range[0]
                     end = x_range[1]
-
+            
             # All 3, but the start must be lesser then the end
             elif x_range[0] < x_range[1]:
                     start = x_range[0]
                     end = x_range[1]
                     step = x_range[2]
-
+            
             # Starts the range
             self.__range = []
             # Generate the range
@@ -872,10 +874,11 @@ class Series:
             while start <= end:
                 self.__range.append(start)
                 start += step
-
+            
+        # Incorrect type
         else:
             raise Exception("x_range must be a list with one or more item or a tuple with 2 or 3 items")
-
+    
     @property
     def group_list(self):
         doc = '''
@@ -934,32 +937,43 @@ class Series:
             ["g1 ['(1, 2)', '(2, 3)']"]
         '''
         return self.__group_list
-
+    
     @group_list.setter
     def group_list(self, series):
         '''
             Controls the input of a valid group list.
         '''
         #TODO: Add support to the following strem of data: [ (0.5,5.5) , [(0,4),(6,8)] , (5.5,7) , (7,9)]
-
+        
         # Type: None
         if series is None:
             self.__group_list = []
-
+        
         # List or Tuple
         elif type(series) in LISTTYPES:
             self.__group_list = []
-
+            
             is_function = lambda x: isinstance(x, collections.Callable)
             # Groups
             if list in list(map(type, series)) or max(list(map(is_function, series))):
                 for group in series:
                     self.add_group(group)
-
+                    
             # single group
             else:
                 self.add_group(series)
-
+            
+            #old code
+            ## List of numbers
+            #if type(series[0]) in NUMTYPES or type(series[0]) is tuple:
+            #    print series
+            #    self.add_group(series)
+            #    
+            ## List of anything else
+            #else:
+            #    for group in series:
+            #        self.add_group(group)
+        
         # Dict representing series of groups
         elif type(series) is dict:
             self.__group_list = []
@@ -967,17 +981,17 @@ class Series:
             names.sort()
             for name in names:
                 self.add_group(Group(series[name],name,self))
-
+                
         # A single lambda
         elif isinstance(series, collections.Callable):
             self.__group_list = []
             self.add_group(series)
-
+            
         # Int/float, instance of Group or Data
         elif type(series) in NUMTYPES or isinstance(series, Group) or isinstance(series, Data):
             self.__group_list = []
             self.add_group(series)
-
+            
         # Default
         else:
             raise TypeError("Serie type not supported")
@@ -997,7 +1011,7 @@ class Series:
             
             self.__group_list.append(group)
             self.__group_list[-1].parent = self
-
+            
     def copy(self):
         '''
             Returns a copy of the Series
@@ -1008,12 +1022,12 @@ class Series:
             new_series.__range = self.__range[:]
         #Add color property in the copy method
         #self.__colors = None
-
+        
         for group in self:
             new_series.add_group(group.copy())
             
         return new_series
-
+    
     def get_names(self):
         '''
             Returns a list of the names of all groups in the Serie
