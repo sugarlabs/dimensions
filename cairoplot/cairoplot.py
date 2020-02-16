@@ -126,7 +126,7 @@ class Plot:
         self.border = border
         self.borders = {}
         self.line_color = (0.5, 0.5, 0.5)
-        self.line_width = 0.5
+        self.line_width = 3
         self.label_color = (0.0, 0.0, 0.0)
         self.grid_color = (0.8, 0.8, 0.8)
     
@@ -415,7 +415,7 @@ class ScatterPlot( Plot ):
                 self.labels[VERT] = ["%d" % (int(self.bounds[VERT][0] + (amplitude * i / 10.0))) for i in range(11) ]
 
     def calc_extents(self, direction):
-        self.context.set_font_size(self.font_size * 0.8)
+        self.context.set_font_size(self.font_size * 2)
         self.max_value[direction] = max(self.context.text_extents(item)[2] for item in self.labels[direction])
         self.borders[other_direction(direction)] = self.max_value[direction] + self.border + 20
 
@@ -506,7 +506,7 @@ class ScatterPlot( Plot ):
         cr.stroke()
 
         cr.set_source_rgba(*self.label_color)
-        self.context.set_font_size( 1.2 * self.font_size )
+        self.context.set_font_size( 2 * self.font_size )
         if self.titles[HORZ]:
             title_width,title_height = cr.text_extents(self.titles[HORZ])[2:4]
             cr.move_to( self.dimensions[HORZ]/2 - title_width/2, self.borders[VERT] - title_height/2 )
@@ -542,7 +542,7 @@ class ScatterPlot( Plot ):
             y -= horizontal_step
     
     def render_labels(self):
-        self.context.set_font_size(self.font_size * 0.8)
+        self.context.set_font_size(self.font_size * 2)
         self.render_horz_labels()
         self.render_vert_labels()
     
@@ -580,7 +580,7 @@ class ScatterPlot( Plot ):
 
     def render_legend(self):
         cr = self.context
-        cr.set_font_size(self.font_size)
+        cr.set_font_size(self.font_size * 2)
         cr.set_line_width(self.line_width)
 
         widest_word = max(self.series_labels, key = lambda item: self.context.text_extents(item)[2])
@@ -1054,7 +1054,7 @@ class BarPlot(Plot):
         self.context.fill()
 
     def render_labels(self):
-        self.context.set_font_size(self.font_size * 0.8)
+        self.context.set_font_size(self.font_size * 2)
         if self.labels[HORZ]:
             self.render_horz_labels()
         if self.labels[VERT]:
@@ -1062,7 +1062,7 @@ class BarPlot(Plot):
             
     def render_legend(self):
         cr = self.context
-        cr.set_font_size(self.font_size)
+        cr.set_font_size(self.font_size * 2)
         cr.set_line_width(self.line_width)
 
         widest_word = max(self.series_labels, key = lambda item: self.context.text_extents(item)[2])
@@ -1169,7 +1169,7 @@ class HorizontalBarPlot(BarPlot):
     def render_grid(self):
         self.context.set_source_rgba(0.8, 0.8, 0.8)
         if self.labels[HORZ]:
-            self.context.set_font_size(self.font_size * 0.8)
+            self.context.set_font_size(self.font_size * 2)
             step = (self.dimensions[HORZ] - 2*self.borders[HORZ] - self.value_label)/(len(self.labels[HORZ])-1)
             x = self.borders[HORZ]
             next_x = 0
@@ -1220,7 +1220,7 @@ class HorizontalBarPlot(BarPlot):
 
     def render_values(self):
         self.context.set_source_rgba(*self.value_label_color)
-        self.context.set_font_size(self.font_size * 0.8)
+        self.context.set_font_size(self.font_size * 2)
         if self.stack:
             for i,group in enumerate(self.series):
                 value = sum(group.to_list())
@@ -1396,7 +1396,7 @@ class VerticalBarPlot(BarPlot):
 
     def render_values(self):
         self.context.set_source_rgba(*self.value_label_color)
-        self.context.set_font_size(self.font_size * 0.8)
+        self.context.set_font_size(self.font_size * 2)
         if self.stack:
             for i,group in enumerate(self.series):
                 value = sum(group.to_list())
@@ -1869,7 +1869,7 @@ class GanttChart (Plot) :
         cr.stroke()
 
     def render_labels(self):
-        self.context.set_font_size(0.02 * self.dimensions[HORZ])
+        self.context.set_font_size(2 * self.dimensions[HORZ])
 
         self.render_horz_labels()
         self.render_vert_labels()
