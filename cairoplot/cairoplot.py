@@ -126,7 +126,7 @@ class Plot:
         self.border = border
         self.borders = {}
         self.line_color = (0.5, 0.5, 0.5)
-        self.line_width = 3
+        self.line_width = 1
         self.label_color = (0.0, 0.0, 0.0)
         self.grid_color = (0.8, 0.8, 0.8)
     
@@ -188,7 +188,7 @@ class Plot:
             self.series_labels = self.series.get_names()
             
         #TODO: allow user passed series_widths
-        self.series_widths = [1.0 for group in self.series]
+        self.series_widths = [3.0 for group in self.series]
 
         #TODO: Remove on next version
         self.process_colors( series_colors )
