@@ -468,8 +468,7 @@ class Dimensions(activity.Activity):
     def _robot_selection_cb(self, widget):
         if self._robot_palette:
             if not self._robot_palette.is_up():
-                self._robot_palette.popup(immediate=True,
-                                          state=self._robot_palette.SECONDARY)
+                self._robot_palette.popup(immediate=True)
             else:
                 self._robot_palette.popdown(immediate=True)
             return
