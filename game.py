@@ -534,13 +534,16 @@ class Game():
         if self._game_over():
             if hasattr(self, 'timeout_id') and self.timeout_id:
                 GLib.source_remove(self.timeout_id)
+                self.timeout_id = None
         else:
             if hasattr(self, 'match_timeout_id') and \
                     self.match_timeout_id is not None:
                 GLib.source_remove(self.match_timeout_id)
+                self.match_timeout_id = None
             if hasattr(self, 'animation_timeout_id') and \
                     self.animation_timeout_id is not None:
                 GLib.source_remove(self.animation_timeout_id)
+                self.animation_timeout_id = None
             self._timer_reset()
 
         self._hide_smiley()
@@ -612,6 +615,7 @@ class Game():
         self._dead_key = None
         if hasattr(self, 'timeout_id') and self.timeout_id:
             GLib.source_remove(self.timeout_id)
+            self.timeout_id = None
 
         # Fill the grid with custom cards.
         self.grid.restore(self.deck, CUSTOM_CARD_INDICIES)
@@ -651,6 +655,7 @@ class Game():
         self._dead_key = None
         if hasattr(self, 'timeout_id') and self.timeout_id:
             GLib.source_remove(self.timeout_id)
+            self.timeout_id = None
         # Fill the grid with word cards.
         self.grid.restore(self.deck, WORD_CARD_INDICIES)
         self.set_label('deck', '')
@@ -1210,6 +1215,7 @@ class Game():
             if hasattr(self, 'timeout_id'):
                 if self.timeout_id:
                     GLib.source_remove(self.timeout_id)
+                    self.timeout_id = None
                 self.total_time += GLib.get_current_time() - self.start_time
 
             # Increment the match counter and add the match to the match list.
