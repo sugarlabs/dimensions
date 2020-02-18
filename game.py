@@ -655,6 +655,7 @@ class Game():
         if self._counter_id:
             GLib.source_remove(self._counter_id)
             self._counter_id = None
+
         # Fill the grid with word cards.
         self.grid.restore(self.deck, WORD_CARD_INDICIES)
         self.set_label('deck', '')
@@ -1195,8 +1196,7 @@ class Game():
                            (_('Game over'), int(self.total_time / 60),
                             int(self.total_time % 60)))
             self._smiley[0].show_card()
-            self._animation_id = GLib.timeout_add(
-                100, self._show_animation, 0)
+            self._animation_id = GLib.timeout_add(100, self._show_animation, 0)
             self._the_game_is_over = True
         elif self.grid.cards_in_grid() == DEAL + 3 \
                 and not self._find_a_match():
@@ -1419,8 +1419,7 @@ class Game():
         '''
         for i in range(3):
             self._smiley_sprs[i].set_layer(ANIMATION_LAYER)
-        self._match_id = GLib.timeout_add(
-            1000, self._show_matches, 0)
+        self._match_id = GLib.timeout_add(1000, self._show_matches, 0)
 
     def _show_matches(self, i):
         ''' Show all the matches as a simple animation. '''
@@ -1433,8 +1432,7 @@ class Game():
                 self.grid.display_match(
                     self.match_list[i * CARDS_IN_A_MATCH + j], j,
                     animate=False)
-            self._match_id = GLib.timeout_add(
-                2000, self._show_matches, i + 1)
+            self._match_id = GLib.timeout_add(2000, self._show_matches, i + 1)
         else:
             for j in range(3):
                 self._smiley_sprs[j].set_layer(ANIMATION_LAYER)
