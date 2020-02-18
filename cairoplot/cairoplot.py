@@ -350,7 +350,7 @@ class ScatterPlot( Plot ):
         if  isinstance(data, Series):
             for group in data:
                 for item in group:
-                    if len(item) is 3:
+                    if len(item) == 3:
                         self.variable_radius = True
             
         #Dictionary with lists  
@@ -788,7 +788,7 @@ class FunctionPlot(ScatterPlot):
     def load_series(self, data, x_labels = None, y_labels = None, series_colors=None):
         Plot.load_series(self, data, x_labels, y_labels, series_colors)
         
-        if len(self.series[0][0]) is 1:          
+        if len(self.series[0][0]) == 1:          
             for group_id, group in enumerate(self.series) :
                 for index,data in enumerate(group):
                     group[index].content = (self.bounds[HORZ][0] + self.step*index, data.content)

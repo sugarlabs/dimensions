@@ -375,7 +375,7 @@ class Group(object):
             # Explicit is better than implicit
             function = group
             # Has range
-            if len(self.range) is not 0:
+            if len(self.range) != 0:
                 # Clean data_list
                 self.__data_list = []
                 # Generate values for the lambda function
@@ -384,7 +384,7 @@ class Group(object):
                     self.add_data((x,function(x)))
                     
             # Only have range in parent
-            elif self.parent is not None and len(self.parent.range) is not 0:
+            elif self.parent is not None and len(self.parent.range) != 0:
                 # Copy parent range
                 self.__range = self.parent.range[:]
                 # Clean data_list
@@ -475,11 +475,11 @@ class Group(object):
             end = 0.0
             
             # Only the end and it can't be less or iqual to 0
-            if len(x_range) is 1 and x_range > 0:
+            if len(x_range) == 1 and x_range > 0:
                     end = x_range[0]
             
             # The start and the end but the start must be less then the end
-            elif len(x_range) is 2 and x_range[0] < x_range[1]:
+            elif len(x_range) == 2 and x_range[0] < x_range[1]:
                     start = x_range[0]
                     end = x_range[1]
             
@@ -650,9 +650,9 @@ class Colors(object):
             old_color_list = color_list[:]
             color_list = {}
             for index, color in enumerate(old_color_list):
-                if len(color) is 3 and max(list(map(type, color))) in NUMTYPES:
+                if len(color) == 3 and max(list(map(type, color))) in NUMTYPES:
                     color_list['Color '+str(index+1)] = list(color)+[DEFAULT_COLOR_FILLING]
-                elif len(color) is 4 and max(list(map(type, color[:-1]))) in NUMTYPES and color[-1] in FILLING_TYPES:
+                elif len(color) == 4 and max(list(map(type, color[:-1]))) in NUMTYPES and color[-1] in FILLING_TYPES:
                     color_list['Color '+str(index+1)] = list(color)
                 else:
                     raise TypeError("Unsuported color format")
@@ -660,12 +660,12 @@ class Colors(object):
             raise TypeError("Unsuported color format")
         
         for name, color in list(color_list.items()):
-            if len(color) is 3:
+            if len(color) == 3:
                 if max(list(map(type, color))) in NUMTYPES:
                     color_list[name] = list(color)+[DEFAULT_COLOR_FILLING]
                 else:
                     raise TypeError("Unsuported color format")
-            elif len(color) is 4:
+            elif len(color) == 4:
                 if max(list(map(type, color[:-1]))) in NUMTYPES and color[-1] in FILLING_TYPES:
                     color_list[name] = list(color)
                 else:
@@ -853,11 +853,11 @@ class Series:
             end = 0.0
             
             # Only the end and it can't be less or iqual to 0
-            if len(x_range) is 1 and x_range > 0:
+            if len(x_range) == 1 and x_range > 0:
                     end = x_range[0]
             
             # The start and the end but the start must be lesser then the end
-            elif len(x_range) is 2 and x_range[0] < x_range[1]:
+            elif len(x_range) == 2 and x_range[0] < x_range[1]:
                     start = x_range[0]
                     end = x_range[1]
             
@@ -1004,7 +1004,7 @@ class Series:
             #Try to convert
             group = Group(group, name, self)
             
-        if len(group.data_list) is not 0:
+        if len(group.data_list) != 0:
             # Auto naming groups
             if group.name is None:
                 group.name = "Group "+str(len(self.__group_list)+1)
