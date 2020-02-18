@@ -1440,7 +1440,7 @@ class Game():
                 self._smiley_sprs[j].set_layer(ANIMATION_LAYER)
             self._smiley[0].spr.hide()
             self._new_game_spr.set_layer(ANIMATION_LAYER)
-        self._match_id = None
+            self._match_id = None
 
     def _find_a_match(self, robot_match=False):
         ''' Check to see whether there are any matches on the board. '''
