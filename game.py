@@ -1391,6 +1391,7 @@ class Game():
 
         if self.robot and self.robot_time < seconds:
             self._find_a_match(robot_match=True)
+            self._counter_id = None
         else:
             self._counter_id = GLib.timeout_add(1000, self._counter)
 
@@ -1420,6 +1421,7 @@ class Game():
         for i in range(3):
             self._smiley_sprs[i].set_layer(ANIMATION_LAYER)
         self._match_id = GLib.timeout_add(1000, self._show_matches, 0)
+        self._animation_id = None
 
     def _show_matches(self, i):
         ''' Show all the matches as a simple animation. '''
@@ -1438,6 +1440,7 @@ class Game():
                 self._smiley_sprs[j].set_layer(ANIMATION_LAYER)
             self._smiley[0].spr.hide()
             self._new_game_spr.set_layer(ANIMATION_LAYER)
+        self._match_id = None
 
     def _find_a_match(self, robot_match=False):
         ''' Check to see whether there are any matches on the board. '''
@@ -2026,6 +2029,7 @@ class Game():
         ''' Load the next frame in the animation '''
         self._help[self._help_index].hide()
         if self._stop_help_on_click:
+            self._help_id = None
             return
         self._help_index += 1
         self._help_index %= len(self._help)
