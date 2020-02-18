@@ -123,9 +123,9 @@ class Game():
         self.activity = parent
         self._first_time = True
 
-        self.animation_timeout_id = None
-        self.timeout_id = None
-        self.match_timeout_id = None
+        self._animation_id = None
+        self._counter_id = None
+        self._match_id = None
 
         if parent is None:  # Starting from command line
             self._sugar = False
@@ -172,7 +172,7 @@ class Game():
         self._robot_card = None
         self._help = []
         self._chart_sprite = []
-        self._help_timeout_id = None
+        self._help_id = None
         self._stop_help_on_click = False
         self._failure = None
         self.clicked = []
@@ -533,16 +533,16 @@ class Game():
         self._the_game_is_over = False
 
         if self._game_over():
-            if self.timeout_id:
-                GLib.source_remove(self.timeout_id)
-                self.timeout_id = None
+            if self._counter_id:
+                GLib.source_remove(self._counter_id)
+                self._counter_id = None
         else:
-            if self.match_timeout_id:
-                GLib.source_remove(self.match_timeout_id)
-                self.match_timeout_id = None
-            if self.animation_timeout_id:
-                GLib.source_remove(self.animation_timeout_id)
-                self.animation_timeout_id = None
+            if self._match_id:
+                GLib.source_remove(self._match_id)
+                self._match_id = None
+            if self._animation_id:
+                GLib.source_remove(self._animation_id)
+                self._animation_id = None
             self._timer_reset()
 
         self._hide_smiley()
@@ -612,9 +612,9 @@ class Game():
         self.total_time = 0
         self._edit_card = None
         self._dead_key = None
-        if self.timeout_id:
-            GLib.source_remove(self.timeout_id)
-            self.timeout_id = None
+        if self._counter_id:
+            GLib.source_remove(self._counter_id)
+            self._counter_id = None
 
         # Fill the grid with custom cards.
         self.grid.restore(self.deck, CUSTOM_CARD_INDICIES)
@@ -652,9 +652,9 @@ class Game():
         self.total_time = 0
         self._edit_card = None
         self._dead_key = None
-        if self.timeout_id:
-            GLib.source_remove(self.timeout_id)
-            self.timeout_id = None
+        if self._counter_id:
+            GLib.source_remove(self._counter_id)
+            self._counter_id = None
         # Fill the grid with word cards.
         self.grid.restore(self.deck, WORD_CARD_INDICIES)
         self.set_label('deck', '')
@@ -1195,7 +1195,7 @@ class Game():
                            (_('Game over'), int(self.total_time / 60),
                             int(self.total_time % 60)))
             self._smiley[0].show_card()
-            self.animation_timeout_id = GLib.timeout_add(
+            self._animation_id = GLib.timeout_add(
                 100, self._show_animation, 0)
             self._the_game_is_over = True
         elif self.grid.cards_in_grid() == DEAL + 3 \
@@ -1211,9 +1211,9 @@ class Game():
                               self.deck.spr_to_card(self.clicked[2].spr)],
                              self.card_type):
             # Stop the timer.
-            if self.timeout_id:
-                GLib.source_remove(self.timeout_id)
-                self.timeout_id = None
+            if self._counter_id:
+                GLib.source_remove(self._counter_id)
+                self._counter_id = None
             self.total_time += GLib.get_current_time() - self.start_time
 
             # Increment the match counter and add the match to the match list.
@@ -1224,9 +1224,9 @@ class Game():
 
             # Test to see if the game is over.
             if self._game_over():
-                if self.timeout_id:
-                    GLib.source_remove(self.timeout_id)
-                    self.timeout_id = None
+                if self._counter_id:
+                    GLib.source_remove(self._counter_id)
+                    self._counter_id = None
                 if self.low_score[self.level] == -1:
                     self.low_score[self.level] = self.total_time
                 elif self.total_time < self.low_score[self.level]:
@@ -1392,12 +1392,12 @@ class Game():
         if self.robot and self.robot_time < seconds:
             self._find_a_match(robot_match=True)
         else:
-            self.timeout_id = GLib.timeout_add(1000, self._counter)
+            self._counter_id = GLib.timeout_add(1000, self._counter)
 
     def _timer_reset(self):
         ''' Reset the timer for the robot '''
         self.start_time = GLib.get_current_time()
-        self.timeout_id = None
+        self._counter_id = None
         if not self._the_game_is_over:
             self._counter()
 
@@ -1409,17 +1409,17 @@ class Game():
         '''
         if i < len(self._smiley) - 1:
             self._smiley[i].show_card(layer=ANIMATION_LAYER)
-            self.animation_timeout_id = GLib.timeout_add(
+            self._animation_id = GLib.timeout_add(
                 50, self._show_animation, i + 1)
         else:
             for card in self._smiley:
                 card.spr.hide()
-            self.match_timeout_id = GLib.timeout_add(
+            self._match_id = GLib.timeout_add(
                 1000, self._show_matches, 0)
         '''
         for i in range(3):
             self._smiley_sprs[i].set_layer(ANIMATION_LAYER)
-        self.match_timeout_id = GLib.timeout_add(
+        self._match_id = GLib.timeout_add(
             1000, self._show_matches, 0)
 
     def _show_matches(self, i):
@@ -1433,7 +1433,7 @@ class Game():
                 self.grid.display_match(
                     self.match_list[i * CARDS_IN_A_MATCH + j], j,
                     animate=False)
-            self.match_timeout_id = GLib.timeout_add(
+            self._match_id = GLib.timeout_add(
                 2000, self._show_matches, i + 1)
         else:
             for j in range(3):
@@ -2022,7 +2022,7 @@ class Game():
         self.activity.get_window().set_cursor(self._old_cursor)
         self._sprites.draw_all()
 
-        self._help_timeout_id = GLib.timeout_add(2000, self._help_next)
+        self._help_id = GLib.timeout_add(2000, self._help_next)
 
     def _help_next(self):
         ''' Load the next frame in the animation '''
@@ -2036,7 +2036,7 @@ class Game():
             pause = 2000
         else:
             pause = 750
-        self._help_timeout_id = GLib.timeout_add(pause, self._help_next)
+        self._help_id = GLib.timeout_add(pause, self._help_next)
 
     def _generate_scorechart(self):
         y_labels = []
