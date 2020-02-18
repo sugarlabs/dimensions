@@ -1912,7 +1912,7 @@ class Game():
         title = _("High score chart")
         if not chart_path:
             msg = _(
-                "High Score cant be created. Try again playing more times.")
+                "No High Score chart yet. Try again playing more times.")
 
             if self._sugar and NOTIFY:
                 alert = NotifyAlert(5)
