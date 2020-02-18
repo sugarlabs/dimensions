@@ -123,6 +123,10 @@ class Game():
         self.activity = parent
         self._first_time = True
 
+        self.animation_timeout_id = None
+        self.timeout_id = None
+        self.match_timeout_id = None
+
         if parent is None:  # Starting from command line
             self._sugar = False
             self._canvas = canvas
@@ -422,9 +426,6 @@ class Game():
     def new_game(self, saved_state=None, deck_index=0, show_selector=False):
         ''' Start a new game '''
         # If we were editing the word list, time to stop
-        self.timeout_id = None
-        self.match_timeout_id = None
-        self.animation_timeout_id = None
         self.grid.stop_animation = True
         self.editing_word_list = False
         self.editing_custom_cards = False
@@ -532,16 +533,14 @@ class Game():
         self._the_game_is_over = False
 
         if self._game_over():
-            if hasattr(self, 'timeout_id') and self.timeout_id:
+            if self.timeout_id:
                 GLib.source_remove(self.timeout_id)
                 self.timeout_id = None
         else:
-            if hasattr(self, 'match_timeout_id') and \
-                    self.match_timeout_id is not None:
+            if self.match_timeout_id:
                 GLib.source_remove(self.match_timeout_id)
                 self.match_timeout_id = None
-            if hasattr(self, 'animation_timeout_id') and \
-                    self.animation_timeout_id is not None:
+            if self.animation_timeout_id:
                 GLib.source_remove(self.animation_timeout_id)
                 self.animation_timeout_id = None
             self._timer_reset()
@@ -613,7 +612,7 @@ class Game():
         self.total_time = 0
         self._edit_card = None
         self._dead_key = None
-        if hasattr(self, 'timeout_id') and self.timeout_id:
+        if self.timeout_id:
             GLib.source_remove(self.timeout_id)
             self.timeout_id = None
 
@@ -653,7 +652,7 @@ class Game():
         self.total_time = 0
         self._edit_card = None
         self._dead_key = None
-        if hasattr(self, 'timeout_id') and self.timeout_id:
+        if self.timeout_id:
             GLib.source_remove(self.timeout_id)
             self.timeout_id = None
         # Fill the grid with word cards.
@@ -1212,11 +1211,10 @@ class Game():
                               self.deck.spr_to_card(self.clicked[2].spr)],
                              self.card_type):
             # Stop the timer.
-            if hasattr(self, 'timeout_id'):
-                if self.timeout_id:
-                    GLib.source_remove(self.timeout_id)
-                    self.timeout_id = None
-                self.total_time += GLib.get_current_time() - self.start_time
+            if self.timeout_id:
+                GLib.source_remove(self.timeout_id)
+                self.timeout_id = None
+            self.total_time += GLib.get_current_time() - self.start_time
 
             # Increment the match counter and add the match to the match list.
             self.matches += 1
@@ -1226,7 +1224,7 @@ class Game():
 
             # Test to see if the game is over.
             if self._game_over():
-                if hasattr(self, 'timeout_id') and self.timeout_id:
+                if self.timeout_id:
                     GLib.source_remove(self.timeout_id)
                     self.timeout_id = None
                 if self.low_score[self.level] == -1:
