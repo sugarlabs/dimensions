@@ -339,8 +339,8 @@ msgstr ""
 msgid "High score chart"
 msgstr ""
 
-#: game.py:1906
-msgid "High Score cant be created. Try again playing more times."
+#: game.py:1915
+msgid "No High Score chart yet. Try again playing more times."
 msgstr ""
 
 #: game.py:2089
