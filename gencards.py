@@ -278,6 +278,7 @@ class SVG:
         svg_string += "<svg\n"
         svg_string += "   xmlns:svg=\"http://www.w3.org/2000/svg\"\n"
         svg_string += "   xmlns=\"http://www.w3.org/2000/svg\"\n"
+        svg_string += "   xmlns:xlink=\"http://www.w3.org/1999/xlink\"\n"
         svg_string += "   version=\"1.0\"\n"
         svg_string += "%s%f%s" % ("   width=\"", width * self._scale, "\"\n")
         svg_string += "%s%f%s" % ("   height=\"",
