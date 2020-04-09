@@ -616,7 +616,7 @@ class Dimensions(activity.Activity):
                 self.vmw.low_score[1])
             self.metadata['low_score_expert'] = int(self.vmw.low_score[2])
             self.metadata['all_scores'] = jdumps(self.vmw.all_scores)
-            print(jdumps(self.vmw.all_scores))
+            _logger.debug("{}".format(jdumps(self.vmw.all_scores)))
             self.metadata['robot_time'] = self.vmw.robot_time
             self.metadata['numberO'] = self.vmw.numberO
             self.metadata['numberC'] = self.vmw.numberC
