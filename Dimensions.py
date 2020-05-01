@@ -67,6 +67,7 @@ from constants import (DECKSIZE, PRODUCT, HASH, ROMAN, WORD, CHINESE, MAYAN,
                        INCAN, DOTS, STAR, DICE, LINES)
 
 from game import Game
+from collabwrapper import CollabWrapper
 
 MODE = 'pattern'
 
@@ -106,28 +107,13 @@ class Dimensions(activity.Activity):
         ''' Initialize the Sugar activity '''
         super(Dimensions, self).__init__(handle)
         self.ready_to_play = False
+        self.initiating = False
         self._prompt = ''
         self._read_journal_data()
         self._sep = []
         self._setup_toolbars()
         self._setup_canvas()
-
-        if self.shared_activity:
-            # We're joining
-            if not self.get_shared():
-                xocolors = XoColor(profile.get_color().to_string())
-                share_icon = Icon(icon_name='zoom-neighborhood',
-                                  xo_color=xocolors)
-                self._joined_alert = Alert()
-                self._joined_alert.props.icon = share_icon
-                self._joined_alert.props.title = _('Please wait')
-                self._joined_alert.props.msg = _('Starting connection...')
-                self.add_alert(self._joined_alert)
-
-                # Wait for joined signal
-                self.connect("joined", self._joined_cb)
-
-        self._setup_presence_service()
+        self.connect('shared', self._shared_cb)
 
         if not hasattr(self, '_saved_state'):
             self._saved_state = None
@@ -147,17 +133,30 @@ class Dimensions(activity.Activity):
         Gdk.Screen.get_default().connect('size-changed', self._configure_cb)
         self._configure_cb(None)
 
+        self._collab = CollabWrapper(self)
+        self._collab.buddy_joined.connect(self._buddy_joined_cb)
+        self._collab.buddy_left.connect(self._buddy_left_cb)
+        self._collab.joined.connect(self._joined_cb)
+        self._collab.message.connect(self._message_cb)
+        self._collab.setup()
+
+    def get_data(self):
+        return None
+
+    def set_data(self, data):
+        pass
+
     def _select_game_cb(self, button, card_type):
         ''' Choose which game we are playing. '''
         if self.vmw.joiner():  # joiner cannot change level
             return
-        # self.vmw.card_type = card_type
         self._prompt = PROMPT_DICT[card_type]
         self._load_new_game(card_type)
 
     def _load_new_game(self, card_type=None, show_selector=True):
         if not self.ready_to_play:
             return
+
         # self._notify_new_game(self._prompt)
         GLib.idle_add(self._new_game, card_type, show_selector)
 
@@ -763,65 +762,28 @@ class Dimensions(activity.Activity):
             add_paragraph(help_box, _('dice'), icon='dice')
             add_paragraph(help_box, _('dots in a line'), icon='lines')
 
-    def _setup_presence_service(self):
-        ''' Setup the Presence Service. '''
-        self.pservice = presenceservice.get_instance()
-        self.initiating = None  # sharing (True) or joining (False)
+    def _buddy_joined_cb(self, collab, buddy):
+        if buddy.nick in self.vmw.buddies:
+            return
+        self.vmw.buddies.append(buddy.nick)
 
-        owner = self.pservice.get_owner()
-        self.owner = owner
-        self.vmw.buddies.append(self.owner)
-        self._share = ''
-        self.connect('shared', self._shared_cb)
-        self.connect('joined', self._joined_cb)
+    def _buddy_left_cb(self, collab, buddy):
+        if buddy.nick not in self.vmw.buddies:
+            return
+        del self.vmw.buddies[self.vmw.buddies.index(buddy.nick)]
 
-    def _shared_cb(self, activity):
-        ''' Either set up initial share...'''
+    def _shared_cb(self, owner):
         if self.shared_activity is None:
-            _logger.error('Failed to share or join activity ... \
+            _logger.error('Failed to share or join activity...\
                 shared_activity is null in _shared_cb()')
             return
-
+        _logger.debug('Sharing...')
         self.initiating = True
         self.waiting_for_deck = False
-        _logger.debug('I am sharing...')
 
-        self.conn = self.shared_activity.telepathy_conn
-        self.tubes_chan = self.shared_activity.telepathy_tubes_chan
-        self.text_chan = self.shared_activity.telepathy_text_chan
-
-        self.tubes_chan[CHANNEL_TYPE_TUBES].connect_to_signal(
-            'NewTube', self._new_tube_cb)
-
-        _logger.debug('This is my activity: making a tube...')
-        self.tubes_chan[CHANNEL_TYPE_TUBES].OfferDBusTube(
-            SERVICE, {})
-
-    def _joined_cb(self, activity):
-        ''' ...or join an exisiting share. '''
-        if self.shared_activity is None:
-            _logger.error('Failed to share or join activity ... \
-                shared_activity is null in _shared_cb()')
+    def _joined_cb(self, sender):
+        if self._collab.leader:
             return
-
-        if self._joined_alert is not None:
-            self.remove_alert(self._joined_alert)
-            self._joined_alert = None
-
-        self.initiating = False
-        _logger.debug('I joined a shared activity.')
-
-        self.conn = self.shared_activity.telepathy_conn
-        self.tubes_chan = self.shared_activity.telepathy_tubes_chan
-        self.text_chan = self.shared_activity.telepathy_text_chan
-
-        self.tubes_chan[CHANNEL_TYPE_TUBES].connect_to_signal(
-            'NewTube', self._new_tube_cb)
-
-        _logger.debug('I am joining an activity: waiting for a tube...')
-        self.tubes_chan[CHANNEL_TYPE_TUBES].ListTubes(
-            reply_handler=self._list_tubes_reply_cb,
-            error_handler=self._list_tubes_error_cb)
 
         self.waiting_for_deck = True
 
@@ -831,113 +793,61 @@ class Dimensions(activity.Activity):
         self.beginner_button.set_sensitive(False)
         self.intermediate_button.set_sensitive(False)
         self.expert_button.set_sensitive(False)
+        self._collab.post(dict(action='joined'))
 
-    def _list_tubes_reply_cb(self, tubes):
-        ''' Reply to a list request. '''
-        for tube_info in tubes:
-            self._new_tube_cb(*tube_info)
+    def _message_cb(self, collab, buddy, message):
+        ''' Data is passed as dict(action='action') '''
+        action = message.get('action')
 
-    def _list_tubes_error_cb(self, e):
-        ''' Log errors. '''
-        _logger.error('ListTubes() failed: %s', e)
-
-    def _new_tube_cb(self, id, initiator, type, service, params, state):
-        ''' Create a new tube. '''
-        _logger.debug('New tube: ID=%d initator=%d type=%d service=%s '
-                      'params=%r state=%d', id, initiator, type, service,
-                      params, state)
-
-        if (type == TUBE_TYPE_DBUS and service == SERVICE):
-            if state == LOCAL_PENDING:
-                self.tubes_chan[
-                    CHANNEL_TYPE_TUBES].AcceptDBusTube(id)
-
-            tube_conn = TubeConnection(
-                self.conn, self.tubes_chan[CHANNEL_TYPE_TUBES], id,
-                group_iface=self.text_chan[CHANNEL_INTERFACE_GROUP])
-
-            self.chattube = ChatTube(tube_conn, self.initiating,
-                                     self.event_received_cb)
-
-            if self.waiting_for_deck:
-                self._send_event('j')
-
-    def event_received_cb(self, text):
-        ''' Data is passed as tuples: cmd:text '''
-        if text[0] == 'B':
-            e, card_index = text.split(':')
+        if action == 'clicked_card':
+            card_index = message.get('clicked_card')
             self.vmw.add_to_clicked(
                 self.vmw.deck.index_to_card(int(card_index)).spr)
-        elif text[0] == 'r':
+        elif action == 'unselect_cards':
             self.vmw.clean_up_match()
-        elif text[0] == 'R':
+        elif action == 'return_card':
             self.vmw.clean_up_no_match(None)
-        elif text[0] == 'S':
-            e, card_index = text.split(':')
-            i = int(card_index)
-            self.vmw.process_click(self.vmw.clicked[i].spr)
-            self.vmw.process_selection(self.vmw.clicked[i].spr)
-        elif text[0] == 'j':
+        elif action == 'select_card':
+            card = message.get('select_card')
+            self.vmw.process_click(self.vmw.clicked[card].spr)
+            self.vmw.process_selection(self.vmw.clicked[card].spr)
+        elif action == 'joined':
             if self.initiating:  # Only the sharer 'shares'.
-                self._send_event('P:' + str(self.vmw.level))
-                self._send_event('X:' + str(self.vmw.deck.index))
-                self._send_event('M:' + str(self.vmw.matches))
-                self._send_event('C:' + self.vmw.card_type)
-                self._send_event('D:' + str(self._dump()))
-        elif text[0] == 'J':  # Force a request for current state.
-            self._send_event('j')
+                self._collab.post(dict(action='level',
+                    level=self.vmw.level))
+                self._collab.post(dict(action='index',
+                    index=self.vmw.deck.index))
+                self._collab.post(dict(action='matches',
+                    matches=self.vmw.matches))
+                self._collab.post(dict(action='card_type',
+                    card_type=self.vmw.card_type))
+                self._collab.post(dict(action='data',
+                    data=self._dump()))
+        elif action == 'req_state':  # Force a request for current state.
+            self._collab.post(dict(action='joined'))
             self.waiting_for_deck = True
-        elif text[0] == 'C':
-            e, text = text.split(':')
-            self.vmw.card_type = text
-        elif text[0] == 'P':
-            e, text = text.split(':')
-            self.vmw.level = int(text)
+        elif action == 'card_type':
+            card_type = message.get('card_type')
+            self.vmw.card_type = card_type
+        elif action == 'level':
+            level = message.get('level')
+            self.vmw.level = level
             # self.level_label.set_text(self.calc_level_label(
             #     self.vmw.low_score, self.vmw.level))
             LEVEL_BUTTONS[self.vmw.level].set_active(True)
-        elif text[0] == 'X':
-            e, text = text.split(':')
-            self.vmw.deck.index = int(text)
-        elif text[0] == 'M':
-            e, text = text.split(':')
-            self.vmw.matches = int(text)
-        elif text[0] == 'D':
+        elif action == 'index':
+            index = message.get('index')
+            self.vmw.deck.index = index
+        elif action == 'matches':
+            matches = message.get('matches')
+            self.vmw.matches = matches
+        elif action == 'data':
             if self.waiting_for_deck:
-                e, text = text.split(':')
-                self._load(text)
+                data = message.get('data')
+                self._load(data)
                 self.waiting_for_deck = False
             self.vmw.new_game(self._saved_state, self.vmw.deck.index)
 
-    def _send_event(self, entry):
-        ''' Send event through the tube. '''
-        if hasattr(self, 'chattube') and self.chattube is not None:
-            self.chattube.SendText(entry)
-
-
-class ChatTube(ExportedGObject):
-
-    ''' Class for setting up tube for sharing '''
-
-    def __init__(self, tube, is_initiator, stack_received_cb):
-        super(ChatTube, self).__init__(tube, PATH)
-        self.tube = tube
-        self.is_initiator = is_initiator  # Are we sharing or joining activity?
-        self.stack_received_cb = stack_received_cb
-        self.stack = ''
-
-        self.tube.add_signal_receiver(self.send_stack_cb, 'SendText', IFACE,
-                                      path=PATH, sender_keyword='sender')
-
-    def send_stack_cb(self, text, sender=None):
-        if sender == self.tube.get_unique_name():
-            return
-        self.stack = text
-        self.stack_received_cb(text)
-
-    @signal(dbus_interface=IFACE, signature='s')
-    def SendText(self, text):
-        self.stack = text
 
 
 def image_from_svg_file(filename):
