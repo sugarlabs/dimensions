@@ -435,6 +435,7 @@ class Game():
         self._saved_state = saved_state
         self._deck_index = deck_index
         self._stop_help_on_click = True
+
         if self._sugar:
             if show_selector:
                 self.choose_card_type()
@@ -446,6 +447,7 @@ class Game():
                 self._hide_number_type_selector()
             self.activity.get_window().set_cursor(Gdk.Cursor.new(
                 Gdk.CursorType.WATCH))
+
         GLib.timeout_add(200, self._prepare_new_game)
 
     def _prepare_new_game(self):
@@ -526,7 +528,7 @@ class Game():
 
         # When sharer starts a new game, joiners should be notified.
         if self.sharer():
-            self.activity._send_event('J')
+            self.activity._collab.post(dict(action='req_state'))
 
         self._update_labels()
 
@@ -565,8 +567,7 @@ class Game():
 
     def _sharing(self):
         ''' Are we sharing? '''
-        if self._sugar and hasattr(self.activity, 'chattube') and \
-                self.activity.chattube is not None:
+        if self._sugar and self.activity.get_shared():
             return True
         return False
 
@@ -902,7 +903,7 @@ class Game():
         if self._sugar:
             self._robot_card.spr.hide()
         if share and self._sharing():
-            self.activity._send_event('r:')
+            self.activity._collab.post(dict(action='unselect_cards'))
 
     def clean_up_no_match(self, spr, share=False):
         ''' Return last card played to grid '''
@@ -910,7 +911,7 @@ class Game():
             self.return_card_to_grid(2)
             self.last_click = 2
             if share and self._sharing():
-                self.activity._send_event('R:2')
+                self.activity._collab.post(dict(action='return_card'))
         self._hide_frowny()
         self._failure = None
 
@@ -981,13 +982,18 @@ class Game():
         if self._sharing():
             if self.deck.spr_to_card(self._press) is not None:
                 # Tell everyone about the card we just clicked
-                self.activity._send_event(
-                    'B:%d' % (self.deck.spr_to_card(self._press).index))
+                self.activity._collab.post(dict(
+                    action='clicked_card',
+                    clicked_card=self.deck.spr_to_card(self._press).index))
             i = self._where_in_clicked(self._press)
             if i is not None:
-                self.activity._send_event('S:%d' % (i))
+                self.activity._collab.post(dict(
+                    action='select_card',
+                    select_card=i))
             elif self.last_click is not None:
-                self.activity._send_event('S:%d' % (self.last_click))
+                self.activity._collab.post(dict(
+                action='select_card',
+                select_card=self.last_click))
             else:
                 _logger.error('WARNING: Cannot find last click')
             self.last_click = None
