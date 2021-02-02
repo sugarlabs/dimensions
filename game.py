@@ -242,9 +242,6 @@ class Game():
 
         self.deck = Deck(self._cards, scale=self._scale)
 
-        if self._sugar:
-            self._old_cursor = self.activity.get_window().get_cursor()
-
         for i in range(CARDS_IN_A_MATCH):
             self.clicked.append(Click())
             self._match_area.append(Card(scale=self._scale))
@@ -445,8 +442,7 @@ class Game():
             else:  # if self._saved_state is not None:
                 self._hide_card_type_selector()
                 self._hide_number_type_selector()
-            self.activity.get_window().set_cursor(Gdk.Cursor.new(
-                Gdk.CursorType.WATCH))
+            self.activity.busy()
 
         GLib.timeout_add(200, self._prepare_new_game)
 
@@ -585,7 +581,7 @@ class Game():
         self._sprites.draw_all()
 
         if self._sugar:
-            self.activity.get_window().set_cursor(self._old_cursor)
+            self.activity.unbusy()
 
         '''
         if self._saved_state == None and not self._played_animation:
@@ -620,8 +616,7 @@ class Game():
 
         if self._sugar:
             self._hide_number_type_selector()
-            self.activity.get_window().set_cursor(Gdk.Cursor.new(
-                Gdk.CursorType.WATCH))
+            self.activity.busy()
         GLib.idle_add(self._edit_custom_card_action)
 
     def _edit_custom_card_action(self):
@@ -659,7 +654,7 @@ class Game():
         self._sprites.draw_all()
 
         if self._sugar:
-            self.activity.get_window().set_cursor(self._old_cursor)
+            self.activity.unbusy()
 
     def edit_word_list(self):
         ''' Update the word cards '''
@@ -1592,8 +1587,7 @@ class Game():
 
     def _choose_custom_card(self):
         ''' Select a custom card from the Journal '''
-        self.activity.get_window().set_cursor(Gdk.Cursor.new(
-            Gdk.CursorType.WATCH))
+        self.activity.busy()
         GLib.idle_add(self._choose_custom_card_action)
 
     def _choose_custom_card_action(self):
@@ -1654,7 +1648,7 @@ class Game():
             self.deck.hide()
             self.grid.restore(self.deck, CUSTOM_CARD_INDICIES)
 
-        self.activity.get_window().set_cursor(self._old_cursor)
+        self.activity.unbusy()
 
     def _find_custom_paths(self, jobject):
         ''' Associate a Journal object with a card '''
@@ -2021,8 +2015,7 @@ class Game():
             return
 
         # self._played_animation = True
-        self.activity.get_window().set_cursor(Gdk.Cursor.new(
-            Gdk.CursorType.WATCH))
+        self.activity.busy()
 
         GLib.idle_add(self._complete_loading)
 
@@ -2056,7 +2049,7 @@ class Game():
         else:
             self.backgrounds[1].hide()
             self.backgrounds[0].set_layer(ANIMATION_LAYER)
-        self.activity.get_window().set_cursor(self._old_cursor)
+        self.activity.unbusy()
         self._sprites.draw_all()
 
         self._help_id = GLib.timeout_add(2000, self._help_next)
