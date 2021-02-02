@@ -829,6 +829,12 @@ class Dimensions(activity.Activity):
         elif action == 'card_type':
             card_type = message.get('card_type')
             self.vmw.card_type = card_type
+        elif action == 'numberO':
+            numberO = message.get('numberO')
+            self.vmw.numberO = numberO
+        elif action == 'numberC':
+            numberC = message.get('numberC')
+            self.vmw.numberC = numberC
         elif action == 'level':
             level = message.get('level')
             self.vmw.level = level
