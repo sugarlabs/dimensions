@@ -472,11 +472,25 @@ class Game():
             _logger.debug('Restoring state: %s' % (str(self._saved_state)))
             self._first_time = False
             if self.card_type == 'custom':
+                if self._sharing():
+                    self.activity._collab.post(dict(action='card_type',
+                                                    card_type=self.card_type))
+                    self.activity._collab.post(dict(action='numberO',
+                                                    numberO=self.numberO))
+                    self.activity._collab.post(dict(action='numberC',
+                                                    numberC=self.numberC))
                 self.deck.create(self._sprites, self.card_type,
                                  [self.numberO, self.numberC],
                                  self.custom_paths,
                                  DIFFICULTY_LEVEL[self.level])
             else:
+                if self._sharing():
+                    self.activity._collab.post(dict(action='card_type',
+                                                    card_type=self.card_type))
+                    self.activity._collab.post(dict(action='numberO',
+                                                    numberO=self.numberO))
+                    self.activity._collab.post(dict(action='numberC',
+                                                    numberC=self.numberC))
                 self.deck.create(self._sprites, self.card_type,
                                  [self.numberO, self.numberC],
                                  self.word_lists,
@@ -508,11 +522,27 @@ class Game():
         elif not self.joiner():
             _logger.debug('Starting new game.')
             if self.card_type == 'custom':
+                if self._sharing():
+                    self.activity._collab.post(dict(action='card_type',
+                                                    card_type=self.card_type))
+                    self.activity._collab.post(dict(action='numberO',
+                                                    numberO=self.numberO))
+                    self.activity._collab.post(dict(action='numberC',
+                                                    numberC=self.numberC))
+
                 self.deck.create(self._sprites, self.card_type,
                                  [self.numberO, self.numberC],
                                  self.custom_paths,
                                  DIFFICULTY_LEVEL[self.level])
             else:
+                if self._sharing():
+                    self.activity._collab.post(dict(action='card_type',
+                                                    card_type=self.card_type))
+                    self.activity._collab.post(dict(action='numberO',
+                                                    numberO=self.numberO))
+                    self.activity._collab.post(dict(action='numberC',
+                                                    numberC=self.numberC))
+
                 self.deck.create(self._sprites, self.card_type,
                                  [self.numberO, self.numberC], self.word_lists,
                                  DIFFICULTY_LEVEL[self.level])
