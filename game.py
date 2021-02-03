@@ -436,6 +436,8 @@ class Game():
         if self._sugar:
             if show_selector:
                 self.choose_card_type()
+                if self._sharing():
+                    self.activity._collab.post(dict(action='choose_c_type'))
                 return
             elif self._choosing_number_type:
                 return
@@ -593,9 +595,7 @@ class Game():
 
     def _sharing(self):
         ''' Are we sharing? '''
-        if self._sugar and self.activity.get_shared():
-            return True
-        return False
+        return self._sugar and self.activity.get_shared()
 
     def joiner(self):
         ''' Are you the one joining? '''

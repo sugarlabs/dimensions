@@ -206,7 +206,7 @@ class DimensionsMain:
             f = open(os.path.join(os.path.abspath('.'),
                                   'visualmatch.score'), "r")
             s = f.readlines()
-            f.close
+            f.close()
             self.vmw.low_score = [int(s[0].split(':')[1].strip()),
                                   int(s[1].split(':')[1].strip())]
             print("low score is: %s" % (self.vmw.low_score))
@@ -217,7 +217,7 @@ class DimensionsMain:
         f = open(os.path.join(os.path.abspath('.'), 'visualmatch.score'), "w")
         f.writelines(["low_score_beginner:%d\n" % int(self.vmw.low_score[0]),
                       "low_score_expert:%d\n" % int(self.vmw.low_score[1])])
-        f.close
+        f.close()
 
     def set_title(self, title):
         self.win.set_title(title)
