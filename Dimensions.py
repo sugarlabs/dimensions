@@ -826,6 +826,8 @@ class Dimensions(activity.Activity):
         elif action == 'req_state':  # Force a request for current state.
             self._collab.post(dict(action='joined'))
             self.waiting_for_deck = True
+        elif action == 'choose_c_type':
+            self.vmw.choose_card_type()
         elif action == 'card_type':
             card_type = message.get('card_type')
             self.vmw.card_type = card_type

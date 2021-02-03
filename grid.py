@@ -238,8 +238,8 @@ class Grid:
 
     def grid_to_xy(self, i):
         ''' Convert from grid index to sprite x,y. '''
-        x = (self.left + i % COL * self.xinc)
-        y = (self.top + (i // COL) * self.yinc)
+        x = self.left + i % COL * self.xinc
+        y = self.top + (i // COL) * self.yinc
         return (x, y)
 
     def grid_to_spr(self, i):
