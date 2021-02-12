@@ -1,3 +1,16 @@
+60
+* Fix sub png images render bug
+* L10 refresh, trim headers
+* Update POT file
+* License changes
+* Fix card image persistence
+* Port telepathy static bindings to TelepathyGLib
+* Port to Python 3
+* Update cairoplot
+* Fix XML parse error
+* Fix collaboration
+* Avoid use of set_cursor
+
 59
 
 * New translations
