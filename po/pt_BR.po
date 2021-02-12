@@ -7,8 +7,8 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2013-07-05 22:11-0400\n"
-"PO-Revision-Date: 2016-08-02 18:22+0000\n"
-"Last-Translator: betoraposa <humberto.celiasilva@gmail.com>\n"
+"PO-Revision-Date: 2018-09-10 19:09+0000\n"
+"Last-Translator: Paulo Francisco <slomp@ufrgs.br>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: pt_BR\n"
 "MIME-Version: 1.0\n"
@@ -16,19 +16,19 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: Pootle 2.5.1.1\n"
-"X-POOTLE-MTIME: 1470162160.000000\n"
+"X-POOTLE-MTIME: 1536606584.000000\n"
 
 #. TRANS: "name" option from activity.info file
 #. TRANS: Please translate Visual Match as Dimensions
 #: VisualMatchActivity.py:634 VisualMatchActivity.py:666 game.py:983
 #: visualmatch.py:33
 msgid "Visual Match"
-msgstr "Combinador Visual"
+msgstr "Dimensões"
 
 #. TRANS: "summary" option from activity.info file
 #. TRANS: "description" option from activity.info file
 msgid "a pattern-matching game"
-msgstr "um jogo de casamento de padrões"
+msgstr "um jogo de combinação de padrões"
 
 #: VisualMatchActivity.py:59 VisualMatchActivity.py:441
 #: VisualMatchActivity.py:646
@@ -38,12 +38,12 @@ msgstr "iniciante"
 #: VisualMatchActivity.py:59 VisualMatchActivity.py:449
 #: VisualMatchActivity.py:647
 msgid "intermediate"
-msgstr "intermédio"
+msgstr "intermediário"
 
 #: VisualMatchActivity.py:59 VisualMatchActivity.py:457
 #: VisualMatchActivity.py:648
 msgid "expert"
-msgstr "experiente"
+msgstr "avançado"
 
 #: VisualMatchActivity.py:70 visualmatch.py:47
 msgid "New pattern game"
@@ -68,12 +68,12 @@ msgstr "Dimensões"
 #. TRANS: The prime number version of the dimensions game
 #: VisualMatchActivity.py:77
 msgid "Prime Dimensions"
-msgstr "Prime Dimensions"
+msgstr "Dimensões Primos"
 
 #. TRANS: The word version of the dimensions game
 #: VisualMatchActivity.py:79
 msgid "Word Dimensions"
-msgstr "Word Dimensions"
+msgstr "Dimensões Palavras"
 
 #: VisualMatchActivity.py:80
 msgid "15 seconds"
@@ -105,7 +105,7 @@ msgstr "Encerrar jogo contra o computador."
 
 #: VisualMatchActivity.py:224 visualmatch.py:173
 msgid "mouse"
-msgstr "rato"
+msgstr "mouse"
 
 #: VisualMatchActivity.py:225 visualmatch.py:173
 msgid "cat"
@@ -145,7 +145,7 @@ msgstr "Exportar pontuações para a área de transferência"
 
 #: VisualMatchActivity.py:327 VisualMatchActivity.py:629
 msgid "Edit word lists."
-msgstr "Editar as listas de palavras."
+msgstr "Editar listas de palavras."
 
 #: VisualMatchActivity.py:338 VisualMatchActivity.py:653
 msgid "product"
@@ -153,7 +153,7 @@ msgstr "produto"
 
 #: VisualMatchActivity.py:346 VisualMatchActivity.py:654
 msgid "Roman numerals"
-msgstr "Algarismos romanos"
+msgstr "Números romanos"
 
 #: VisualMatchActivity.py:354 VisualMatchActivity.py:655
 msgid "word"
@@ -189,7 +189,7 @@ msgstr "dados"
 
 #: VisualMatchActivity.py:421 VisualMatchActivity.py:663
 msgid "dots in a line"
-msgstr "pontos em uma reta"
+msgstr "pontos em uma linha"
 
 #: VisualMatchActivity.py:429 VisualMatchActivity.py:644
 msgid "Play with the computer"
@@ -293,11 +293,11 @@ msgstr "Fim do jogo"
 
 #: game.py:765
 msgid "unsolvable"
-msgstr "insolucionável"
+msgstr "sem solução"
 
 #: game.py:796
 msgid "New record"
-msgstr "Novo registro"
+msgstr "Novo record"
 
 #: game.py:958 game.py:960
 msgid "match"
@@ -313,11 +313,11 @@ msgstr "Ajuda"
 
 #: visualmatch.py:34
 msgid "Click on cards to create sets of three."
-msgstr "Clique nas cardas para criar grupos de três."
+msgstr "Clique nas cartas para criar grupos de três."
 
 #: visualmatch.py:38
 msgid "Toggle level"
-msgstr "Alterar nível"
+msgstr "Trocar nível"
 
 #: visualmatch.py:64
 msgid "Robot on/off"

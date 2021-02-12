@@ -2,13 +2,49 @@
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2013-07-05 22:11-0400\n"
-"PO-Revision-Date: 2017-10-15 17:26+0000\n"
-"Last-Translator: Chris <cjl@sugarlabs.org>\n"
+"PO-Revision-Date: 2018-02-10 16:53+0000\n"
+"Last-Translator: Besnik_b <besnik@programeshqip.org>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: sq\n"
 "MIME-Version: 1.0\n"
@@ -16,7 +52,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: Pootle 2.5.1.1\n"
-"X-POOTLE-MTIME: 1508088365.000000\n"
+"X-POOTLE-MTIME: 1518281630.000000\n"
 
 #. TRANS: "name" option from activity.info file
 #. TRANS: Please translate Visual Match as Dimensions
@@ -43,7 +79,7 @@ msgstr "mesatar"
 #: VisualMatchActivity.py:59 VisualMatchActivity.py:457
 #: VisualMatchActivity.py:648
 msgid "expert"
-msgstr "ekspert"
+msgstr "i sprovuar"
 
 #: VisualMatchActivity.py:70 visualmatch.py:47
 msgid "New pattern game"
@@ -59,7 +95,7 @@ msgstr "Lojë e re fjalësh"
 
 #: VisualMatchActivity.py:73 VisualMatchActivity.py:331
 msgid "Import custom cards"
-msgstr ""
+msgstr "Importoni letra vetjake"
 
 #: VisualMatchActivity.py:75
 msgid "Dimensions"
@@ -97,7 +133,7 @@ msgstr "5 minuta"
 
 #: VisualMatchActivity.py:135
 msgid "Play with the computer."
-msgstr "Luanij me kompjuterin."
+msgstr "Luani me kompjuterin."
 
 #: VisualMatchActivity.py:140
 msgid "Stop playing with the computer."
@@ -145,7 +181,7 @@ msgstr "Eksportoji pikët në të papastër"
 
 #: VisualMatchActivity.py:327 VisualMatchActivity.py:629
 msgid "Edit word lists."
-msgstr "Ndryshoni listën e fjalëve."
+msgstr "Përpunoni listë fjalësh."
 
 #: VisualMatchActivity.py:338 VisualMatchActivity.py:653
 msgid "product"
@@ -165,15 +201,15 @@ msgstr "Kinez"
 
 #: VisualMatchActivity.py:370 VisualMatchActivity.py:657 visualmatch.py:109
 msgid "Mayan"
-msgstr ""
+msgstr "e Majave"
 
 #: VisualMatchActivity.py:378 VisualMatchActivity.py:658 visualmatch.py:113
 msgid "Quipu"
-msgstr ""
+msgstr "Kuipu"
 
 #: VisualMatchActivity.py:389 VisualMatchActivity.py:659
 msgid "hash marks"
-msgstr ""
+msgstr "përzieji shenjat"
 
 #: VisualMatchActivity.py:397 VisualMatchActivity.py:660
 msgid "dots in a circle"
@@ -217,7 +253,7 @@ msgstr "Mjete"
 
 #: VisualMatchActivity.py:630
 msgid "Import image cards"
-msgstr ""
+msgstr "Importoni letra me figura"
 
 #: VisualMatchActivity.py:639 VisualMatchActivity.py:667
 msgid "Game"
@@ -233,7 +269,7 @@ msgstr "Numra"
 
 #: VisualMatchActivity.py:670
 msgid "number of cards remaining in deck"
-msgstr ""
+msgstr "numër letrash të mbetura në tufë"
 
 #: VisualMatchActivity.py:671
 msgid "number of matches"
@@ -277,15 +313,15 @@ msgstr "njëzetenjë"
 
 #: constants.py:73
 msgid "thirty three"
-msgstr "tridhjetetre"
+msgstr "tridhjetëetre"
 
 #: game.py:356
 msgid "Edit the custom cards."
-msgstr ""
+msgstr "Përpunoni letra vetjake."
 
 #: game.py:384
 msgid "Edit the word cards."
-msgstr "Ndryshoni kartat me fjalë."
+msgstr "Përpunoni letrat me fjalë."
 
 #: game.py:752
 msgid "Game over"
@@ -313,7 +349,7 @@ msgstr "Ndihmë"
 
 #: visualmatch.py:34
 msgid "Click on cards to create sets of three."
-msgstr "Klikoni mbi kartat për të krijuar grupe treshe."
+msgstr "Klikoni mbi letra për të krijuar grupe treshe."
 
 #: visualmatch.py:38
 msgid "Toggle level"
@@ -321,7 +357,7 @@ msgstr "Ndryshoni nivel"
 
 #: visualmatch.py:64
 msgid "Robot on/off"
-msgstr "Robot on/off"
+msgstr "Roboti on/off"
 
 #: visualmatch.py:68
 msgid "90 sec."
@@ -349,7 +385,7 @@ msgstr "Produkt"
 
 #: visualmatch.py:97
 msgid "Roman"
-msgstr "Romak"
+msgstr "Romake"
 
 #: visualmatch.py:101
 msgid "Word"

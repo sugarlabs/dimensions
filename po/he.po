@@ -2,47 +2,76 @@
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2013-07-05 22:11-0400\n"
-"PO-Revision-Date: 2011-08-25 21:40+0200\n"
-"Last-Translator: <annatawa@gmail.com>\n"
+"PO-Revision-Date: 2018-06-12 08:08+0000\n"
+"Last-Translator: Yaron <sh.yaron@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: he\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Pootle 2.0.1\n"
+"X-Generator: Pootle 2.5.1.1\n"
+"X-POOTLE-MTIME: 1528790910.000000\n"
 
 #. TRANS: "name" option from activity.info file
 #. TRANS: Please translate Visual Match as Dimensions
 #: VisualMatchActivity.py:634 VisualMatchActivity.py:666 game.py:983
 #: visualmatch.py:33
 msgid "Visual Match"
-msgstr "התאמה ויזואלית"
+msgstr "התאמה חזותית"
 
 #. TRANS: "summary" option from activity.info file
 #. TRANS: "description" option from activity.info file
 msgid "a pattern-matching game"
-msgstr ""
+msgstr "משחק התאמת תבניות"
 
 #: VisualMatchActivity.py:59 VisualMatchActivity.py:441
 #: VisualMatchActivity.py:646
 msgid "beginner"
-msgstr ""
+msgstr "מתחיל"
 
 #: VisualMatchActivity.py:59 VisualMatchActivity.py:449
 #: VisualMatchActivity.py:647
 msgid "intermediate"
-msgstr ""
+msgstr "מתקדם"
 
 #: VisualMatchActivity.py:59 VisualMatchActivity.py:457
 #: VisualMatchActivity.py:648
 msgid "expert"
-msgstr ""
+msgstr "מומחה"
 
 #: VisualMatchActivity.py:70 visualmatch.py:47
 msgid "New pattern game"
@@ -58,7 +87,7 @@ msgstr "משחק מילים חדש"
 
 #: VisualMatchActivity.py:73 VisualMatchActivity.py:331
 msgid "Import custom cards"
-msgstr ""
+msgstr "ייבוא קלפים בהתאמה אישית"
 
 #: VisualMatchActivity.py:75
 msgid "Dimensions"
@@ -67,40 +96,40 @@ msgstr "ממדים"
 #. TRANS: The prime number version of the dimensions game
 #: VisualMatchActivity.py:77
 msgid "Prime Dimensions"
-msgstr ""
+msgstr "ממדים עיקריים"
 
 #. TRANS: The word version of the dimensions game
 #: VisualMatchActivity.py:79
 msgid "Word Dimensions"
-msgstr ""
+msgstr "ממדי מילים"
 
 #: VisualMatchActivity.py:80
 msgid "15 seconds"
-msgstr ""
+msgstr "15 שניות"
 
 #: VisualMatchActivity.py:80
 msgid "30 seconds"
-msgstr ""
+msgstr "חצי דקה"
 
 #: VisualMatchActivity.py:80
 msgid "1 minute"
-msgstr ""
+msgstr "דקה"
 
 #: VisualMatchActivity.py:80
 msgid "2 minutes"
-msgstr ""
+msgstr "2 דקות"
 
 #: VisualMatchActivity.py:80
 msgid "5 minutes"
-msgstr ""
+msgstr "5 דקות"
 
 #: VisualMatchActivity.py:135
 msgid "Play with the computer."
-msgstr ""
+msgstr "משחק מול המחשב."
 
 #: VisualMatchActivity.py:140
 msgid "Stop playing with the computer."
-msgstr ""
+msgstr "להפסיק לשחק מול המחשב."
 
 #: VisualMatchActivity.py:224 visualmatch.py:173
 msgid "mouse"
@@ -140,23 +169,21 @@ msgstr "כדור הארץ"
 
 #: VisualMatchActivity.py:303 VisualMatchActivity.py:635
 msgid "Export scores to clipboard"
-msgstr ""
+msgstr "יצוא תוצאות ללוח גזירים"
 
 #: VisualMatchActivity.py:327 VisualMatchActivity.py:629
 msgid "Edit word lists."
-msgstr ""
+msgstr "עריכת רשימות מילים."
 
 #: VisualMatchActivity.py:338 VisualMatchActivity.py:653
-#, fuzzy
 msgid "product"
 msgstr "מוצר"
 
 #: VisualMatchActivity.py:346 VisualMatchActivity.py:654
 msgid "Roman numerals"
-msgstr ""
+msgstr "ספרות רומיות"
 
 #: VisualMatchActivity.py:354 VisualMatchActivity.py:655
-#, fuzzy
 msgid "word"
 msgstr "מילה"
 
@@ -170,80 +197,79 @@ msgstr "מאיה"
 
 #: VisualMatchActivity.py:378 VisualMatchActivity.py:658 visualmatch.py:113
 msgid "Quipu"
-msgstr ""
+msgstr "קיפו"
 
 #: VisualMatchActivity.py:389 VisualMatchActivity.py:659
 msgid "hash marks"
-msgstr ""
+msgstr "סולמיות"
 
 #: VisualMatchActivity.py:397 VisualMatchActivity.py:660
 msgid "dots in a circle"
-msgstr ""
+msgstr "נקודות בתוך עיגול"
 
 #: VisualMatchActivity.py:405 VisualMatchActivity.py:661
 msgid "points on a star"
-msgstr ""
+msgstr "נקודות בתוך כוכב"
 
 #: VisualMatchActivity.py:413 VisualMatchActivity.py:662
-#, fuzzy
 msgid "dice"
 msgstr "קוביות"
 
 #: VisualMatchActivity.py:421 VisualMatchActivity.py:663
 msgid "dots in a line"
-msgstr ""
+msgstr "נקודות בשורה"
 
 #: VisualMatchActivity.py:429 VisualMatchActivity.py:644
 msgid "Play with the computer"
-msgstr ""
+msgstr "משחק מול המחשב"
 
 #: VisualMatchActivity.py:466
 msgid "Find a match."
-msgstr ""
+msgstr "יש למצוא התאמה."
 
 #: VisualMatchActivity.py:469 game.py:838 game.py:952
 msgid "cards"
-msgstr ""
+msgstr "קלפים"
 
 #: VisualMatchActivity.py:472 game.py:965 game.py:967
 msgid "matches"
-msgstr ""
+msgstr "התאמות"
 
 #: VisualMatchActivity.py:599
 msgid "A new game is loading."
-msgstr ""
+msgstr "משחק חדש נטען."
 
 #: VisualMatchActivity.py:628 VisualMatchActivity.py:669
 msgid "Tools"
-msgstr ""
+msgstr "כלים"
 
 #: VisualMatchActivity.py:630
 msgid "Import image cards"
-msgstr ""
+msgstr "ייבוא קלפי תמונות"
 
 #: VisualMatchActivity.py:639 VisualMatchActivity.py:667
 msgid "Game"
-msgstr ""
+msgstr "משחק"
 
 #: VisualMatchActivity.py:645
 msgid "robot pause time"
-msgstr ""
+msgstr "זמן השהיית רובוט"
 
 #: VisualMatchActivity.py:652 VisualMatchActivity.py:668
 msgid "Numbers"
-msgstr ""
+msgstr "מספרים"
 
 #: VisualMatchActivity.py:670
 msgid "number of cards remaining in deck"
-msgstr ""
+msgstr "מספר הקלפים שנותרו בחפיסה"
 
 #: VisualMatchActivity.py:671
 msgid "number of matches"
-msgstr ""
+msgstr "מספר ההתאמות"
 
 #: VisualMatchActivity.py:672
 msgid "elapsed time"
-msgstr ""
+msgstr "זמן שעבר"
 
 #: constants.py:71
 msgid "five"
@@ -283,39 +309,39 @@ msgstr "שלשים ושלוש"
 
 #: game.py:356
 msgid "Edit the custom cards."
-msgstr ""
+msgstr "עריכת הכרטיסים שהותאמו אישית."
 
 #: game.py:384
 msgid "Edit the word cards."
-msgstr ""
+msgstr "עריכת כרטיסי המילים."
 
 #: game.py:752
 msgid "Game over"
-msgstr ""
+msgstr "המשחק הסתיים"
 
 #: game.py:765
 msgid "unsolvable"
-msgstr ""
+msgstr "ללא פתרון"
 
 #: game.py:796
 msgid "New record"
-msgstr ""
+msgstr "שיא חדש"
 
 #: game.py:958 game.py:960
 msgid "match"
-msgstr ""
+msgstr "התאמה"
 
 #: game.py:1203
 msgid "New custom game"
-msgstr ""
+msgstr "משחק חדש בהתאמה אישית"
 
 #: helpbutton.py:47
 msgid "Help"
-msgstr ""
+msgstr "עזרה"
 
 #: visualmatch.py:34
 msgid "Click on cards to create sets of three."
-msgstr "הקלק על כרטיס ליצירה של קבוצה של שלש"
+msgstr "יש ללחוץ על כרטיסים ליצירת קבוצות של שלוש."
 
 #: visualmatch.py:38
 msgid "Toggle level"
@@ -323,7 +349,7 @@ msgstr "הפעל רמה"
 
 #: visualmatch.py:64
 msgid "Robot on/off"
-msgstr "הפעל/הפסק רובוט"
+msgstr "הפעלה/הפסקה של רובוט"
 
 #: visualmatch.py:68
 msgid "90 sec."
@@ -359,7 +385,7 @@ msgstr "מילה"
 
 #: visualmatch.py:117
 msgid "Hash"
-msgstr ""
+msgstr "גיבוב"
 
 #: visualmatch.py:121
 msgid "Dice"
@@ -375,4 +401,4 @@ msgstr "כוכב"
 
 #: visualmatch.py:133
 msgid "Lines"
-msgstr "קוים"
+msgstr "קווים"

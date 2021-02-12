@@ -2,20 +2,49 @@
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2013-07-05 22:11-0400\n"
-"PO-Revision-Date: 2013-11-06 23:54+0200\n"
-"Last-Translator: arosella <arosella@yahoo.com>\n"
+"PO-Revision-Date: 2017-10-19 12:56+0000\n"
+"Last-Translator: PaoloPelloni <info@paolopelloni.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: it\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Pootle 2.0.5\n"
+"X-Generator: Pootle 2.5.1.1\n"
+"X-POOTLE-MTIME: 1508417806.000000\n"
 
 #. TRANS: "name" option from activity.info file
 #. TRANS: Please translate Visual Match as Dimensions
@@ -66,12 +95,12 @@ msgstr "Importa carte personalizzate"
 #. TRANS: The prime number version of the dimensions game
 #: VisualMatchActivity.py:77
 msgid "Prime Dimensions"
-msgstr ""
+msgstr "Dimensioni prime"
 
 #. TRANS: The word version of the dimensions game
 #: VisualMatchActivity.py:79
 msgid "Word Dimensions"
-msgstr ""
+msgstr "Dimensioni parola"
 
 #: VisualMatchActivity.py:80
 msgid "15 seconds"
@@ -223,7 +252,7 @@ msgstr "Partita"
 
 #: VisualMatchActivity.py:645
 msgid "robot pause time"
-msgstr ""
+msgstr "Tempo di pausa robot"
 
 #: VisualMatchActivity.py:652 VisualMatchActivity.py:668
 msgid "Numbers"
