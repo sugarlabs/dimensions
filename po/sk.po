@@ -1,0 +1,359 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2021-02-12 03:00+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: Automatically generated\n"
+"Language-Team: none\n"
+"Language: sk\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: activity/activity.info:2 Dimensions.py:725 Dimensions.py:741
+#: dimensions.py:43
+msgid "Dimensions"
+msgstr ""
+
+#: activity/activity.info:3
+msgid "A pattern-matching game."
+msgstr ""
+
+#: Dimensions.py:79 Dimensions.py:536 Dimensions.py:737 dimensions.py:47
+msgid "beginner"
+msgstr ""
+
+#: Dimensions.py:79 Dimensions.py:544 Dimensions.py:738 dimensions.py:51
+msgid "intermediate"
+msgstr ""
+
+#: Dimensions.py:79 Dimensions.py:552 Dimensions.py:739 dimensions.py:55
+msgid "expert"
+msgstr ""
+
+#: Dimensions.py:90 dimensions.py:66
+msgid "New pattern game"
+msgstr ""
+
+#: Dimensions.py:91 dimensions.py:70
+msgid "New number game"
+msgstr ""
+
+#: Dimensions.py:92 dimensions.py:74
+msgid "New word game"
+msgstr ""
+
+#: Dimensions.py:93 Dimensions.py:353
+msgid "Import custom cards"
+msgstr ""
+
+#: Dimensions.py:96 dimensions.py:107
+msgid "15 seconds"
+msgstr ""
+
+#: Dimensions.py:96 dimensions.py:103
+msgid "30 seconds"
+msgstr ""
+
+#: Dimensions.py:97 dimensions.py:99
+msgid "1 minute"
+msgstr ""
+
+#: Dimensions.py:97 dimensions.py:95
+msgid "2 minutes"
+msgstr ""
+
+#: Dimensions.py:98 dimensions.py:91
+msgid "5 minutes"
+msgstr ""
+
+#: Dimensions.py:174
+msgid "Play with the computer."
+msgstr ""
+
+#: Dimensions.py:179
+msgid "Stop playing with the computer."
+msgstr ""
+
+#: Dimensions.py:269 dimensions.py:198
+msgid "mouse"
+msgstr ""
+
+#: Dimensions.py:270 dimensions.py:198
+msgid "cat"
+msgstr ""
+
+#: Dimensions.py:271 dimensions.py:198
+msgid "dog"
+msgstr ""
+
+#: Dimensions.py:272 dimensions.py:199
+msgid "cheese"
+msgstr ""
+
+#: Dimensions.py:273 dimensions.py:199
+msgid "apple"
+msgstr ""
+
+#: Dimensions.py:274 dimensions.py:199
+msgid "bread"
+msgstr ""
+
+#: Dimensions.py:275 dimensions.py:200
+msgid "moon"
+msgstr ""
+
+#: Dimensions.py:276 dimensions.py:200
+msgid "sun"
+msgstr ""
+
+#: Dimensions.py:277 dimensions.py:200
+msgid "earth"
+msgstr ""
+
+#: Dimensions.py:328 game.py:1760
+msgid "New game"
+msgstr ""
+
+#: Dimensions.py:341 Dimensions.py:742
+msgid "Export scores to clipboard"
+msgstr ""
+
+#: Dimensions.py:349 Dimensions.py:749
+msgid "Edit word lists."
+msgstr ""
+
+#: Dimensions.py:357
+msgid "New custom game"
+msgstr ""
+
+#: Dimensions.py:369 Dimensions.py:753
+msgid "product"
+msgstr ""
+
+#: Dimensions.py:377 Dimensions.py:754
+msgid "Roman numerals"
+msgstr ""
+
+#: Dimensions.py:385 Dimensions.py:755
+msgid "word"
+msgstr ""
+
+#: Dimensions.py:393 Dimensions.py:756 dimensions.py:129
+msgid "Chinese"
+msgstr ""
+
+#: Dimensions.py:401 Dimensions.py:757 dimensions.py:133
+msgid "Mayan"
+msgstr ""
+
+#: Dimensions.py:409 Dimensions.py:758 dimensions.py:137
+msgid "Quipu"
+msgstr ""
+
+#: Dimensions.py:420 Dimensions.py:759
+msgid "hash marks"
+msgstr ""
+
+#: Dimensions.py:428 Dimensions.py:760
+msgid "dots in a circle"
+msgstr ""
+
+#: Dimensions.py:436 Dimensions.py:761
+msgid "points on a star"
+msgstr ""
+
+#: Dimensions.py:444 Dimensions.py:762
+msgid "dice"
+msgstr ""
+
+#: Dimensions.py:452 Dimensions.py:763
+msgid "dots in a line"
+msgstr ""
+
+#: Dimensions.py:520 Dimensions.py:735 dimensions.py:111
+msgid "Play with the computer"
+msgstr ""
+
+#: Dimensions.py:526 Dimensions.py:736
+msgid "robot pause time"
+msgstr ""
+
+#: Dimensions.py:697
+msgid "A new game is loading."
+msgstr ""
+
+#: Dimensions.py:726 Dimensions.py:745
+msgid "Tools"
+msgstr ""
+
+#: Dimensions.py:728 dimensions.py:82
+msgid "Game"
+msgstr ""
+
+#: Dimensions.py:732 Dimensions.py:752
+msgid "Numbers"
+msgstr ""
+
+#: Dimensions.py:746
+msgid "Import image cards"
+msgstr ""
+
+#: collabwrapper.py:197
+msgid "Joining activity..."
+msgstr ""
+
+#: collabwrapper.py:198 collabwrapper.py:210
+msgid "Please wait for the connection..."
+msgstr ""
+
+#: collabwrapper.py:209
+msgid "Resuming shared activity..."
+msgstr ""
+
+#: constants.py:77
+msgid "five"
+msgstr ""
+
+#: constants.py:77
+msgid "seven"
+msgstr ""
+
+#: constants.py:77
+msgid "eleven"
+msgstr ""
+
+#: constants.py:77
+msgid "ten"
+msgstr ""
+
+#: constants.py:78
+msgid "fourteen"
+msgstr ""
+
+#: constants.py:78
+msgid "fifteen"
+msgstr ""
+
+#: constants.py:78
+msgid "twenty two"
+msgstr ""
+
+#: constants.py:79
+msgid "twenty one"
+msgstr ""
+
+#: constants.py:79
+msgid "thirty three"
+msgstr ""
+
+#: dimensions.py:43
+msgid "Click on cards to create sets of three."
+msgstr ""
+
+#. TRANS: Level of difficulty
+#: dimensions.py:60
+msgid "Level"
+msgstr ""
+
+#: dimensions.py:78
+msgid "Show High Score chart"
+msgstr ""
+
+#: dimensions.py:87
+msgid "Robot on/off"
+msgstr ""
+
+#: dimensions.py:117
+msgid "Product"
+msgstr ""
+
+#: dimensions.py:121
+msgid "Roman"
+msgstr ""
+
+#: dimensions.py:125
+msgid "Word"
+msgstr ""
+
+#: dimensions.py:141
+msgid "Hash"
+msgstr ""
+
+#: dimensions.py:145
+msgid "Dice"
+msgstr ""
+
+#: dimensions.py:149
+msgid "Dots"
+msgstr ""
+
+#: dimensions.py:153
+msgid "Star"
+msgstr ""
+
+#: dimensions.py:157
+msgid "Lines"
+msgstr ""
+
+#: game.py:651
+msgid "Edit the custom cards."
+msgstr ""
+
+#: game.py:691
+msgid "Edit the word cards."
+msgstr ""
+
+#: game.py:1227
+msgid "Game over"
+msgstr ""
+
+#: game.py:1234
+msgid "unsolvable"
+msgstr ""
+
+#: game.py:1266
+msgid "New record"
+msgstr ""
+
+#: game.py:1314 game.py:1353
+msgid "cards"
+msgstr ""
+
+#: game.py:1360
+msgid "match"
+msgstr ""
+
+#: game.py:1362
+msgid "matches"
+msgstr ""
+
+#: game.py:1365
+msgid "robot"
+msgstr ""
+
+#: game.py:1942
+msgid "High score chart"
+msgstr ""
+
+#: game.py:1945
+msgid "No High Score chart yet. Try again playing more times."
+msgstr ""
+
+#: game.py:2128
+msgid "Time (in seconds)"
+msgstr ""
+
+#: game.py:2129
+msgid "Total games played"
+msgstr ""
+
+#: helpbutton.py:47
+msgid "Help"
+msgstr ""
