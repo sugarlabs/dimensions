@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-02-12 03:00+0100\n"
-"PO-Revision-Date: 2026-03-18 06:28+0000\n"
+"PO-Revision-Date: 2026-04-01 08:11+0000\n"
 "Last-Translator: NF <rkavt@smartprojects.ge>\n"
 "Language-Team: Georgian <http://weblate.sugarlabs.org/projects/"
 "sugar-activities/dimensions/ka/>\n"
@@ -198,7 +198,7 @@ msgstr ""
 
 #: Dimensions.py:728 dimensions.py:82
 msgid "Game"
-msgstr ""
+msgstr "თამაში"
 
 #: Dimensions.py:732 Dimensions.py:752
 msgid "Numbers"
