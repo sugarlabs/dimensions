@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-02-12 03:00+0100\n"
-"PO-Revision-Date: 2026-04-01 08:11+0000\n"
+"PO-Revision-Date: 2026-05-19 12:28+0000\n"
 "Last-Translator: NF <rkavt@smartprojects.ge>\n"
 "Language-Team: Georgian <http://weblate.sugarlabs.org/projects/"
 "sugar-activities/dimensions/ka/>\n"
@@ -22,7 +22,7 @@ msgstr ""
 #: activity/activity.info:2 Dimensions.py:725 Dimensions.py:741
 #: dimensions.py:43
 msgid "Dimensions"
-msgstr ""
+msgstr "განზომილებები"
 
 #: activity/activity.info:3
 msgid "A pattern-matching game."
@@ -30,15 +30,15 @@ msgstr ""
 
 #: Dimensions.py:79 Dimensions.py:536 Dimensions.py:737 dimensions.py:47
 msgid "beginner"
-msgstr ""
+msgstr "დამწყები"
 
 #: Dimensions.py:79 Dimensions.py:544 Dimensions.py:738 dimensions.py:51
 msgid "intermediate"
-msgstr ""
+msgstr "შუალედური"
 
 #: Dimensions.py:79 Dimensions.py:552 Dimensions.py:739 dimensions.py:55
 msgid "expert"
-msgstr ""
+msgstr "ექსპერტი"
 
 #: Dimensions.py:90 dimensions.py:66
 msgid "New pattern game"
@@ -86,39 +86,39 @@ msgstr ""
 
 #: Dimensions.py:269 dimensions.py:198
 msgid "mouse"
-msgstr ""
+msgstr "თაგვი"
 
 #: Dimensions.py:270 dimensions.py:198
 msgid "cat"
-msgstr ""
+msgstr "კატა"
 
 #: Dimensions.py:271 dimensions.py:198
 msgid "dog"
-msgstr ""
+msgstr "ძაღლი"
 
 #: Dimensions.py:272 dimensions.py:199
 msgid "cheese"
-msgstr ""
+msgstr "ყველი"
 
 #: Dimensions.py:273 dimensions.py:199
 msgid "apple"
-msgstr ""
+msgstr "ვაშლი"
 
 #: Dimensions.py:274 dimensions.py:199
 msgid "bread"
-msgstr ""
+msgstr "პური"
 
 #: Dimensions.py:275 dimensions.py:200
 msgid "moon"
-msgstr ""
+msgstr "მთვარე"
 
 #: Dimensions.py:276 dimensions.py:200
 msgid "sun"
-msgstr ""
+msgstr "მზე"
 
 #: Dimensions.py:277 dimensions.py:200
 msgid "earth"
-msgstr ""
+msgstr "დედამიწა"
 
 #: Dimensions.py:328 game.py:1760
 msgid "New game"
@@ -138,7 +138,7 @@ msgstr ""
 
 #: Dimensions.py:369 Dimensions.py:753
 msgid "product"
-msgstr ""
+msgstr "პროდუქტი"
 
 #: Dimensions.py:377 Dimensions.py:754
 msgid "Roman numerals"
@@ -146,19 +146,19 @@ msgstr ""
 
 #: Dimensions.py:385 Dimensions.py:755
 msgid "word"
-msgstr ""
+msgstr "სიტყვა"
 
 #: Dimensions.py:393 Dimensions.py:756 dimensions.py:129
 msgid "Chinese"
-msgstr ""
+msgstr "ჩინური"
 
 #: Dimensions.py:401 Dimensions.py:757 dimensions.py:133
 msgid "Mayan"
-msgstr ""
+msgstr "მააის ენა"
 
 #: Dimensions.py:409 Dimensions.py:758 dimensions.py:137
 msgid "Quipu"
-msgstr ""
+msgstr "კიპუ"
 
 #: Dimensions.py:420 Dimensions.py:759
 msgid "hash marks"
@@ -174,7 +174,7 @@ msgstr ""
 
 #: Dimensions.py:444 Dimensions.py:762
 msgid "dice"
-msgstr ""
+msgstr "კამათელი"
 
 #: Dimensions.py:452 Dimensions.py:763
 msgid "dots in a line"
@@ -194,7 +194,7 @@ msgstr ""
 
 #: Dimensions.py:726 Dimensions.py:745
 msgid "Tools"
-msgstr ""
+msgstr "ხელსაწყოები"
 
 #: Dimensions.py:728 dimensions.py:82
 msgid "Game"
@@ -202,7 +202,7 @@ msgstr "თამაში"
 
 #: Dimensions.py:732 Dimensions.py:752
 msgid "Numbers"
-msgstr ""
+msgstr "რიცხვები"
 
 #: Dimensions.py:746
 msgid "Import image cards"
@@ -222,27 +222,27 @@ msgstr ""
 
 #: constants.py:77
 msgid "five"
-msgstr ""
+msgstr "ხუთი"
 
 #: constants.py:77
 msgid "seven"
-msgstr ""
+msgstr "შვიდი"
 
 #: constants.py:77
 msgid "eleven"
-msgstr ""
+msgstr "თერთმეტი"
 
 #: constants.py:77
 msgid "ten"
-msgstr ""
+msgstr "ათი"
 
 #: constants.py:78
 msgid "fourteen"
-msgstr ""
+msgstr "თოთხმეტი"
 
 #: constants.py:78
 msgid "fifteen"
-msgstr ""
+msgstr "თხუთმეტი"
 
 #: constants.py:78
 msgid "twenty two"
@@ -275,11 +275,11 @@ msgstr ""
 
 #: dimensions.py:117
 msgid "Product"
-msgstr ""
+msgstr "პროდუქტი"
 
 #: dimensions.py:121
 msgid "Roman"
-msgstr ""
+msgstr "რომაული"
 
 #: dimensions.py:125
 msgid "Word"
@@ -319,7 +319,7 @@ msgstr ""
 
 #: game.py:1234
 msgid "unsolvable"
-msgstr ""
+msgstr "არამოხსნადი"
 
 #: game.py:1266
 msgid "New record"
@@ -327,15 +327,15 @@ msgstr ""
 
 #: game.py:1314 game.py:1353
 msgid "cards"
-msgstr ""
+msgstr "კარტი"
 
 #: game.py:1360
 msgid "match"
-msgstr ""
+msgstr "დამთხვევა"
 
 #: game.py:1362
 msgid "matches"
-msgstr ""
+msgstr "დამთხვევა"
 
 #: game.py:1365
 msgid "robot"
