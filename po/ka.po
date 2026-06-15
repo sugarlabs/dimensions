@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-02-12 03:00+0100\n"
-"PO-Revision-Date: 2026-05-19 12:28+0000\n"
+"PO-Revision-Date: 2026-06-15 05:10+0000\n"
 "Last-Translator: NF <rkavt@smartprojects.ge>\n"
 "Language-Team: Georgian <http://weblate.sugarlabs.org/projects/"
 "sugar-activities/dimensions/ka/>\n"
@@ -283,15 +283,15 @@ msgstr "რომაული"
 
 #: dimensions.py:125
 msgid "Word"
-msgstr ""
+msgstr "სიტყვა"
 
 #: dimensions.py:141
 msgid "Hash"
-msgstr ""
+msgstr "ჰეში"
 
 #: dimensions.py:145
 msgid "Dice"
-msgstr ""
+msgstr "კამათელი"
 
 #: dimensions.py:149
 msgid "Dots"
