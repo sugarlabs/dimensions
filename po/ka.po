@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-02-12 03:00+0100\n"
-"PO-Revision-Date: 2026-06-15 05:10+0000\n"
+"PO-Revision-Date: 2026-06-15 07:48+0000\n"
 "Last-Translator: NF <rkavt@smartprojects.ge>\n"
 "Language-Team: Georgian <http://weblate.sugarlabs.org/projects/"
 "sugar-activities/dimensions/ka/>\n"
@@ -295,15 +295,15 @@ msgstr "კამათელი"
 
 #: dimensions.py:149
 msgid "Dots"
-msgstr ""
+msgstr "წერტილები"
 
 #: dimensions.py:153
 msgid "Star"
-msgstr ""
+msgstr "ვარსკვლავი"
 
 #: dimensions.py:157
 msgid "Lines"
-msgstr ""
+msgstr "ხაზები"
 
 #: game.py:651
 msgid "Edit the custom cards."
