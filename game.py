@@ -376,7 +376,6 @@ class Game():
             i = CARD_STYLES.index(self.card_type)
         else:
             i = None
-        self._first_time = False
         for j in range(n):
             if j == i:
                 self._card_type_buttons[i + n].set_layer(ANIMATION_LAYER)
@@ -449,6 +448,7 @@ class Game():
         GLib.timeout_add(200, self._prepare_new_game)
 
     def _prepare_new_game(self):
+        self._first_time = False
         # If there is already a deck, hide it.
         if hasattr(self, 'deck'):
             self.deck.hide()
@@ -468,7 +468,6 @@ class Game():
 
         if self._saved_state is not None:
             _logger.debug('Restoring state: %s' % (str(self._saved_state)))
-            self._first_time = False
             if self.card_type == 'custom':
                 if self._sharing():
                     self.activity._collab.post(dict(action='card_type',
@@ -624,6 +623,7 @@ class Game():
         self._hide_clicked()
 
         self.deck.hide()
+        self._first_time = False
         self.card_type = 'custom'
         if len(self.custom_paths) < 3:
             for i in range(len(self.custom_paths), 81):
@@ -667,6 +667,7 @@ class Game():
         # Set the card type to words, and generate a new deck.
         self._hide_clicked()
         self.deck.hide()
+        self._first_time = False
         self.card_type = 'word'
         self.deck.create(self._sprites, self.card_type,
                          [self.numberO, self.numberC], self.word_lists,
@@ -794,6 +795,7 @@ class Game():
 
         # Change card type
         if spr.type in ['card-type-button', 'card-type-button-selected']:
+            self._first_time = False
             n = len(CARD_STYLES)
             i = CARD_STYLES.index(spr.name)
             for j in range(n):

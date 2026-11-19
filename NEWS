@@ -1,3 +1,6 @@
+Unreleased
+* Keep the initial card choices unchanged after the help demo.
+
 60
 * Fix sub png images render bug
 * L10 refresh, trim headers
