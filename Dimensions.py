@@ -211,6 +211,7 @@ class Dimensions(activity.Activity):
         if self.vmw.joiner():  # joiner cannot change decks
             return
         self.vmw.numberO = numberO
+        self.vmw._first_time = False
         self.vmw.card_type = 'number'
         self._load_new_game()
 
@@ -219,6 +220,7 @@ class Dimensions(activity.Activity):
         if self.vmw.joiner():  # joiner cannot change decks
             return
         self.vmw.numberC = numberC
+        self.vmw._first_time = False
         self.vmw.card_type = 'number'
         self._load_new_game()
 
@@ -830,6 +832,7 @@ class Dimensions(activity.Activity):
             self.vmw.choose_card_type()
         elif action == 'card_type':
             card_type = message.get('card_type')
+            self.vmw._first_time = False
             self.vmw.card_type = card_type
         elif action == 'numberO':
             numberO = message.get('numberO')
